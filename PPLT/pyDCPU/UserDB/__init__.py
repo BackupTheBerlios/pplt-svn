@@ -20,4 +20,6 @@
 
 
 from UserDB import *;
+from User import User;
+from Group import Group;
 from Possession import Possession;

@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+<ModuleSet>
+    <Install file="SendMail.zip" as="SendMail" in="Master.Interface"/>
+    <Install file="WGet.zip" as="WGet" in="Master.Interface"/>
+    <Install file="Socket.zip" as="Socket" in="Master.Interface"/>
+    <Install file="UniSerial.zip" as="UniSerial" in="Master.Interface"/>
+    
+    <Install file="PPI.zip" as="PPI" in="Master.Transport"/>
+    <Install file="ReadLine.zip" as="ReadLine" in="Master.Transport"/>
+    <Install file="MEWCOM-TL.zip" as="MEWCOM-TL" in="Master.Transport"/>
+    
+    <Install file="5462X.zip" as="5462X" in="Master.Device"/>
+    <Install file="GSM.zip" as="GSM" in="Master.Device"/>
+    <Install file="A200.zip" as="A200" in="Master.Device"/>
+    <Install file="S7.zip" as="S7" in="Master.Device"/>
+    
+    <Install file="Statistic.zip" as="Statistic" in="Master.Debug"/>
+    <Install file="HexDump.zip" as="HexDump" in="Master.Debug"/>
+    <Install file="Random.zip" as="Random" in="Master.Debug"/>
+    
+    <Install file="JVisu.zip" as="JVisu" in="Export"/>
+    <Install file="SimpleExport.zip" as="SimpleExport" in="Export"/>
+</ModuleSet>

@@ -58,7 +58,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         return(Element.GetValue(SessionID));
 
 
-    
+
     def SetValue(self, PathToSymbol, Value, SessionID):
         """ Write the value in Value into the symbol addressed by
             PathToSymbol """
@@ -68,14 +68,14 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
             return(False);
         return(Element.SetValue(Value, SessionID));
 
-    
+
 
     def ListFolders(self, PathToFolder, SessionID):
         """ List all folders in folder addressed by PathToFolder """
         if PathToFolder == '/':
             return(self.FolderHash.keys());
 
-        PList = pyDCPUSymbolTools.SplitPath(PathToFolder);        
+        PList = pyDCPUSymbolTools.SplitPath(PathToFolder);
         Element = self.__GetElementByPath(PList);
         if not isinstance(Element, pyDCPUSymbolFolder.Folder):
             return(None);
@@ -86,7 +86,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         """ List all symbols in folder addressed by PathToFolder """
         if PathToFolder == '/':
             return(self.SymbolHash.keys());
-        PList = pyDCPUSymbolTools.SplitPath(PathToFolder);        
+        PList = pyDCPUSymbolTools.SplitPath(PathToFolder);
         Element = self.__GetElementByPath(PList);
         if not isinstance(Element, pyDCPUSymbolFolder.Folder):
             return(None);
@@ -96,17 +96,16 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
     #
     # The next methods are used by the CoreObject
-    # (you would need the SystemSessionID to exec)
     #
-    
-    
+
+
     def CreateFolder(self, PathToFolder):
         """ """
         PList = pyDCPUSymbolTools.SplitPath(PathToFolder);
         if len(PList) == 0:
             return(False);
         Name = PList[-1];
-        
+
         Parent = self.__GetElementByPath(PList[:-1]);
 
         Possession = UserDB.Possession(self.__DefaultUser,
@@ -157,7 +156,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
 
 
-    def CreateSymbol(self, PathToSymbol, SymbolSlot, Type):
+    def CreateSymbol(self, PathToSymbol, SymbolSlot):
         """ Create a new Symbol """
         PList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
         if len(PList) == 0:
@@ -180,7 +179,6 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
         newSymbol = pyDCPUSymbol.Symbol(Name,
                                         SymbolSlot,
-                                        Type,
                                         Possession,
                                         self.Logger);
         
@@ -229,7 +227,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         if not Element:
             return(False);
 
-        Possession = UserDBPossession(self.__User,
+        Possession = UserDB.Possession(self.__User,
                                       self.__Group,
                                       self.__permissions,
                                       self.__UserDB);

@@ -25,6 +25,8 @@ class pyObjectNode:
         self.ID = ObjectID;
         self.Logger = Logger;
         self.Children = [];
+        self.ChildrenHash = {};     #Hashtable between childid an his parameter/address/class hash
+                                    #to provide searching a loaded module with the same configuration
         self.Parent = None;
 
     def AddChild(self,NewNode):
@@ -61,7 +63,7 @@ class pyObjectNode:
         if self.ID == ChildID:
             #self.Logger.debug("Obj Found...");
             return(self);
-        
+
         for Node in self.Children:
             Found = Node.search(ChildID);
             if Found:
@@ -80,7 +82,7 @@ class pyObjectNode:
 
     def GetID(self):
         return(self.ID);
-    
+
 class pyObjectTree:
     def __init__(self,Logger):
         self.Logger = Logger;

@@ -23,6 +23,7 @@ import pyDCPU;
 import logging;
 import traceback;
 import sys;
+import md5;
 
 class MasterConnection:
     """ This is the Connection Object,
@@ -106,6 +107,13 @@ class MasterConnection:
         return(self.AddrStr);
     def _SetAddrStr(self,Addr):
         self.AddrStr = Addr;
+    def _GetFingerprint(self):
+        """ This method is used internal. It create a fingerprint of this connection """
+        ParentID = str(self.Parent._GetID());
+        AddrStr  = str(self._GetAddrStr());
+        return(md5.new(ParentID+AddrStr).hexdigest());	#uhh...
+
+
         
 class MasterObject:
     """ This is the Class of the Master-Object

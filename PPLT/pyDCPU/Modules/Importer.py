@@ -37,22 +37,18 @@ import thread;
 import string;
 import sys;
 import os.path;
-
-
+import md5;
+import Fingerprint;
 
 class Importer:
-    def __init__(self, ModuleDBFile, Logger):
-        self.__ModuleDBFileName = ModuleDBFile;
-        self.__ModuleDataBase = ModuleDB(ModuleDBFile,Logger);
+    def __init__(self, Logger):
+        self.__ModuleDataBase = ModuleDB(Logger);
         self.__ModuleRootDir = self.__ModuleDataBase.GetRootDir();
         self.__Logger = Logger;
-        self.__IDCount = 0;
-
-    def NewID(self):
-        self.__IDCount +=1;
-        return(self.__IDCount);
     
-    def NewMaster(self, Name, Connection, Parameters):
+    def NewMaster(self, Name, Connection, Parameters, Fingerprint):
+        """ This Method create a object from the module [Name] with [Parameters] """
+       
         Mod = self.__ModuleDataBase.GetModule(Name);
         if not Mod:
             self.__Logger.error("Error while Load Module [%s]"%Name)
@@ -68,12 +64,13 @@ class Importer:
             return(None);
         
         try:
-            Obj = Mod.Object(self.NewID(), Connection, Parameters, Name, self.__Logger);
+            Obj = Mod.Object(Fingerprint, Connection, Parameters, Name, self.__Logger);
         except pyDCPU.SetupModError:
             self.__Logger.error("Error while init instance of %s"%Name);
             return(None);
         except:
             self.__Logger.error("Unknown error while init module %s"%Name);
+            traceback.print_exc();
             return(None);
         
         if not Obj.setup():
@@ -82,7 +79,7 @@ class Importer:
         return(Obj);
 
 
-    def NewExporter(self, Name, Parameters, SymbolTree):
+    def NewExporter(self, Name, Parameters, Fingerprint, SymbolTree):
         Mod = self.__ModuleDataBase.GetModule(Name);
         if not Mod:
             self.__Logger.error("Error while Load Module [%s]"%Name)
@@ -95,7 +92,7 @@ class Importer:
             return(None);
 
         try:
-            Obj = Mod.Object(self.NewID(), SymbolTree, Parameters, Name, self.__Logger);
+            Obj = Mod.Object(Fingerprint, SymbolTree, Parameters, Name, self.__Logger);
         except pyDCPU.SetupModError:
             self.__Logger.error("Error while init instance of %s"%Name);
             return(None);
@@ -119,8 +116,6 @@ class Importer:
         return(Obj);
     
 
-    def GetModuleList(self):
-        return(self.__ModuleDataBase.GetModuleList());
     def GetModuleInfoXML(self, Name, Lang):
         return(self.__ModuleDataBase.GetModuleInfoXML(Name,Lang));
     def IsModule(self, Name):
@@ -207,31 +202,16 @@ class Importer:
             return(Para.get('strict_options'));
         return(False);
         
-    def AddModuleToDB(self, Name):
-        return(self.__ModuleDataBase.AddModuleToDB(Name));
 
-    
 class ModuleDB:
-    def __init__(self,ModuleDBFile, Logger):
+    def __init__(self, Logger):
         self.__Logger = Logger;
-        self.__DBFile = ModuleDBFile;
-        self.__ModuleList = ParseDB(ModuleDBFile);
         self.__RootDir = os.path.normpath(sys.exec_prefix+"/PPLT/");
-#        self.__ModuleLoader = ihooks.BasicModuleLoader();
         self.__ModuleHash = {};
         
     def GetRootDir(self):
         return(self.__RootDir);
 
-    def GetModuleList(self):
-        return(self.__ModuleList);
-
-    def AddModuleToDB(self, Name):
-        if not self.__ModuleList.count(Name):
-            self.__ModuleList.append(Name);
-            return(SaveDB(self.__DBFile,self.__ModuleList));
-        return(True);
-    
     def __ModDir(self,ModName):
         tmp = ModName.split('.');
         tmp.insert(0,self.GetRootDir());
@@ -242,9 +222,6 @@ class ModuleDB:
         #    self.__Logger.debug("Module %s already loaded"%Name);
         #    return(self.__ModuleHash[Name]);
         
-        if self.__ModuleList.count(Name)==0:
-            self.__Logger.error("No Module Named %s"%Name);
-            return(None);
         Path = self.__ModDir(Name);
 
         tmp = Name.split(".");
@@ -284,39 +261,3 @@ class ModuleDB:
 
 
 
-#
-# Usefull functions
-#
-        
-def ParseDB(FileName):
-    DOC = xml.dom.minidom.parse(FileName);
-    
-    MIL = DOC.getElementsByTagName('Module');
-    ModList = [];
-    for ModItem in MIL:
-        ModList.append(GetTextFromNode(ModItem.childNodes));
-        
-    return(ModList);
-
-def GetTextFromNode(Nodes):
-    T = "";
-    for Node in Nodes:
-        if Node.nodeType == Node.TEXT_NODE:
-            T = T+Node.data;
-    return(T.strip());
-
-
-def SaveDB(FileName, List):
-    impl = xml.dom.minidom.getDOMImplementation();
-    DOC = impl.createDocument(None, 'ModuleDataBase', None);
-    ROOT = DOC.documentElement;
-    for name in List:
-        child = DOC.createElement('Module');
-        txt = DOC.createTextNode(name);
-        child.appendChild(txt);
-        ROOT.appendChild(child);
-
-    f = open(FileName, 'w');
-    f.write(DOC.toprettyxml('   '));
-    f.close();
-    return(True);

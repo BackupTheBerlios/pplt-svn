@@ -22,23 +22,13 @@ def InstallFile(FileName,Name,InGroup,ModulePath):
             pathlst.append(item);
 
     dirname =  os.path.normpath(string.join(pathlst,'/'));
-    print "Install to %s"%dirname;
+    print "Install %s to %s"%(FileName,dirname);
     if not os.path.isdir(dirname):
         os.makedirs(dirname,0755);
     shutil.copy(FileName, dirname+'/'+Name+'.zip');
     return(True);
 
-def InstallToDB(Name, Group, Core):
-    tmp = Group.split('.');
-    path = [];
-    for item in tmp:
-        if item != '':
-            path.append(item);
-    path.append(Name);
-    FullName = string.join(path,'.');
-    return(Core.ModInfoAddMod(FullName));
-
-def InstallSet(FileName, ModulePath, Core):
+def InstallSet(FileName, ModulePath):
     doc = xml.dom.minidom.parse(FileName);
     modlist = doc.getElementsByTagName('Install');
 
@@ -48,7 +38,7 @@ def InstallSet(FileName, ModulePath, Core):
         fname = os.path.join(zipdir,mod.getAttribute('file'));
         name = mod.getAttribute('as');
         group = mod.getAttribute('in');
-        if InstallFile(fname, name, group, ModulePath):
-           InstallToDB(name, group, Core);
+        if not InstallFile(fname, name, group, ModulePath):
+           print "Error while install %s"%name;
     return(True);
         

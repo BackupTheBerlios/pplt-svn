@@ -18,11 +18,13 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    #
 # ############################################################################ #
 
-#__path__ = 'pyDCPU/';
-#__version__ = 1;
+__author__  = 'Hannes Matuschek <hmatuschek@gmx.net>'
+__status__  = 'alpha'
+__version__ = '0.1.0'
+__date__    = '2005-03-30'
 
-
-VERSION = 0x000100;
+VERSION = 0x000100;              # this version-number is used internal to check
+                                 # if a module fit in this system.
 
 from Exceptions import *;
 from pyDCPUCore import *;

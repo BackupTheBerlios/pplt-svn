@@ -380,6 +380,7 @@ class UserDB:
             self.__GroupNameList.remove(GroupName);
             return(False);
 
+        # if the group is a sub group of mine
         if self.__GroupHash.has_key(GroupName):
             Group = self.__GroupHash.get(GroupName);
             if Group.HasMembers():
@@ -390,13 +391,14 @@ class UserDB:
             if self.__AutoSave:
                 self.SaveToFile();
             return(True);
-
+    
         ParentGroup = Group.GetParent();
         if not ParentGroup:
             print "Oh my god!!!"
             return(False);
         
-        ParentGroup.DeleteSubGroup(GroupName);
+        if not ParentGroup.DeleteSubGroup(GroupName):
+            return(False);
         self.__GroupNameList.remove(GroupName);
 
         if self.__AutoSave:

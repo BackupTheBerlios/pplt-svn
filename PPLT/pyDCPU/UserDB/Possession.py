@@ -1,20 +1,20 @@
 # ############################################################################ #
-# This is part of the pyDCPU project. pyDCPU is a framework for industrial     # 
-# communication.                                                               # 
-# Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                # 
-#                                                                              # 
-# This library is free software; you can redistribute it and/or                # 
-# modify it under the terms of the GNU Lesser General Public                   # 
-# License as published by the Free Software Foundation; either                 #     
-# version 2.1 of the License, or (at your option) any later version.           # 
-#                                                                              # 
-# This library is distributed in the hope that it will be useful,              # 
-# but WITHOUT ANY WARRANTY; without even the implied warranty of               #     
-# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU             # 
-# Lesser General Public License for more details.                              # 
-#                                                                              # 
-# You should have received a copy of the GNU Lesser General Public             # 
-# License along with this library; if not, write to the Free Software          # 
+# This is part of the pyDCPU project. pyDCPU is a framework for industrial     #
+# communication.                                                               #
+# Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                #
+#                                                                              #
+# This library is free software; you can redistribute it and/or                #
+# modify it under the terms of the GNU Lesser General Public                   #
+# License as published by the Free Software Foundation; either                 #
+# version 2.1 of the License, or (at your option) any later version.           #
+#                                                                              #
+# This library is distributed in the hope that it will be useful,              #
+# but WITHOUT ANY WARRANTY; without even the implied warranty of               #
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU             #
+# Lesser General Public License for more details.                              #
+#                                                                              #
+# You should have received a copy of the GNU Lesser General Public             #
+# License along with this library; if not, write to the Free Software          #
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    #
 # ############################################################################ #
 
@@ -22,14 +22,14 @@
 import string;
 
 class Possession:
-    def __init__(self, UserName, GroupName, RightsString, UserDB):
-        self.__OwnerName = UserName;
-        self.__GroupName = GroupName;
-        self.__RightString = RightsString;
+    def __init__(self, UserName, GroupName, Right, UserDB):
+        self.__OwnerName = UserName;         # save username
+        self.__GroupName = GroupName;        # save groupname
+        self.__Right = Right;                # save rights-number
         (self.__OwnerRight,
          self.__GroupRight,
-         self.__AnyRight) = SplitRights(RightsString);
-        self.__UserDB    = UserDB;
+         self.__AnyRight) = SplitRights(Right);    # split the number into objects
+        self.__UserDB    = UserDB;           # the user-db
 
 
     def GetOwner(self):
@@ -37,8 +37,8 @@ class Possession:
     def GetGroup(self):
         return(self.__GroupName);
     def GetRight(self):
-        return(self.__RightString);
-    
+        return(self.__Right);
+
     def CanRead(self, SessionID):
         if self.__UserDB.IsSystemSession(SessionID):
             return(True);
@@ -54,7 +54,7 @@ class Possession:
         else:
             return(self.__AnyRight.read());
         return(False);
-    
+
     def CanWrite(self, SessionID):
         if self.__UserDB.IsSystemSession(SessionID):
             return(True);
@@ -94,13 +94,13 @@ class Possession:
     def chgrp(self, newGroup):
         self.__GroupName = newGroup;
         return(True);
-    def chmod(self, RightsString):
-        self.__RightString = RightsString;
+    def chmod(self, Right):
+        self.__Right = Right;
         (self.__OwnerRight,
          self.__GroupRight,
-         self.__AnyRight) = SplitRights(RightsString);
+         self.__AnyRight) = SplitRights(Right);
         return(True);
-    
+
     def copy(self):
         return(copy.copy(self));
 
@@ -108,10 +108,11 @@ class Possession:
 
 class Rights:
     def __init__(self, Right = 0):
-        self.__read = Right & 0x01;
-        self.__write = (Right>>1)&0x01;
-        self.__execute = (Right>>2)&0x01;
-        
+        self.__execute = Right & 0x01;
+        self.__write   = (Right>>1) & 0x01;
+        self.__read    = (Right>>2) & 0x01;
+
+
     def read(self):
         return(self.__read);
     def write(self):
@@ -119,26 +120,20 @@ class Rights:
     def execute(self):
         return(self.__execute);
     def SetRight(self, Right):
-        self.__read = Right & 0x01;
-        self.__write = (Right>>1)&0x01;
-        self.__execute = (Right>>2)&0x01;
+        self.__read    = (Right >> 2) & 0x01;
+        self.__write   = (Right >> 1) & 0x01;
+        self.__execute = Right & 0x01;
         return(True);
 
 
 
-def SplitRights(RightString):
+def SplitRights(Right):
     Owner = Rights();
     Group = Rights();
     Any   = Rights();
-    
-    if not len(RightString)==3:
-        return((Owner, Group, Any));
 
-    OwnerR = string.atoi(RightString[0]);
-    GroupR = string.atoi(RightString[1]);
-    AnyR   = string.atoi(RightString[2]);
+    Any.SetRight(Right & 0x3);
+    Group.SetRight((Right >> 3) & 0x3);
+    Any.SetRight((Right >> 6) & 0x3);
 
-    Owner.SetRight(OwnerR);
-    Group.SetRight(GroupR);
-    Any.SetRight(AnyR);
     return( (Owner, Group, Any) );

@@ -29,7 +29,7 @@ Valid_Type_Names = ['Bool','Byte','Word','DWord','Float','Double','String'];
 
 
 class Symbol:
-    def __init__(self, Name, SymbolSlot, TypeName, Possession, Logger):
+    def __init__(self, Name, SymbolSlot, Possession, Logger):
         self.__Logger = Logger;
         self.__Valid = True;
         if not Name:
@@ -38,18 +38,13 @@ class Symbol:
         if not isinstance(SymbolSlot, pyDCPUSymbolSlot.SymbolSlot):
             self.__Logger.error("No symbolslot given");
             self.__Valid = False;
-        if not Valid_Type_Names.count(TypeName):
-            self.__Logger.error("Bad Type");
-            self.__Valid = False;
         if not isinstance(Possession, UserDB.Possession):
             self.__Logger.error("No PossessionObj given");
             self.__Valid = False;
             
         self.__Name = Name;
         self.__Possession = Possession;
-        self.__TypeName = TypeName;         #FIXME: Convert to numbers...
         self.__SymbolSlot = SymbolSlot;
-        self.__Converter = pyDCPUConverter.Converter(self.__TypeName);
         
 
 
@@ -69,19 +64,6 @@ class Symbol:
             return(False);
         return(self.__SymbolSlot.SetValue(Value));
 
-    def GetData(self, Length, SessionID):
-        if not self.__Possession.CanRead(SessionID):
-            self.__Logger.warning("Session %s: Access denied"%SessionID);
-            return(None);
-        Value = self.__GetValue(SessionID);
-        return(self.__Converter.ConvertToData(Value));
-
-    def SetData(self, Data, SessionID):
-        if not self.__Possession.CanWrite(SessionID):
-            self.__Logger.warning("Session %s: Access denied"%SessionID);
-            return(False);
-        return(self.__SetValue(self.__Converter.ConvertToValue(Data),SessionID));
-        
     def SetPossession(self, Possession):
         self.__Possession = Possession;
         return(True);

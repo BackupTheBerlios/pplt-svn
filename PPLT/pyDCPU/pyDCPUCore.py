@@ -57,7 +57,7 @@ class Core:
     #   + create a logger-object                                               #
     #   + init internal managment objects                                      #
     # ######################################################################## #
-    def __init__(self, ModuleDBFile=None,
+    def __init__(self,
                  UserDBFile=None,
                  LogLevel='info',
                  LogFile = None,
@@ -65,11 +65,10 @@ class Core:
         
         """ This Function will set the Runtime-Options """
         # Save Parameter
-        self.__UserDBFile = UserDBFile;
+        self.__UserDBFile   = UserDBFile;
         self.__LoggingLevel = LogLevel;
         self.__LoggingFile  = LogFile;
         self.__IsSysLogging = SysLog;
-        self.__ModuleDBFile = ModuleDBFile;
         
         # Setup Logging...
         self.Logger = pyDCPUCoreLogging.SetupLogger(self.__LoggingLevel,
@@ -85,22 +84,18 @@ class Core:
         self.__ObjectHash      = {};   
 
         self.Logger.debug("Load modulemanager");
-        self.__ModuleManager = Modules.Importer(ModuleDBFile,self.Logger);
+        self.__ModuleManager = Modules.Importer(self.Logger);
         self.Logger.debug("all modules loaded");
 
         #Setup Trees: 
         self.__MasterObjTree = pyDCPUObjectTree.pyObjectTree(self.Logger);
-        self.__MasterTreeChangeID = 0;
 
         self.__SymbolTree    = pyDCPUSymbolTree.SymbolTree(self.__UserDataBase.GetSuperUser(),  
                                                            self.__UserDataBase.GetSuperUserGrp(),
-                                                           '710',
+                                                           640,
                                                            self.__UserDataBase,
                                                            self.Logger);
-        self.__SymbolTreeChangeID = 0;
-
         self.__ExporterList  = [];
-        self.__ExporterChangeID = 0;
         
  
     #END OF INIT()
@@ -119,6 +114,15 @@ class Core:
         """
             This method cares about Object creation and connections... 
         """
+        #check if this module was loaded in the sameplace with the same prams.
+        fingerprint = Modules.Fingerprint(Name = ModName, 
+                                          Parent = ParentID, 
+                                          Address = Address, 
+                                          Parameter = Parameter);
+        if self.__ObjectHash.has_key(fingerprint):
+            Object = self.__ObjectHash[fingerprint];
+            self.Logger.debug("Return cached Object");
+            return(Object._GetID());
         
         # Connect new Object with Parent
         if ParentID:
@@ -132,13 +136,12 @@ class Core:
             Connection = None;
             pass;
 
-
-        Object = self.__ModuleManager.NewMaster(ModName, Connection, Parameter);
+        Object = self.__ModuleManager.NewMaster(ModName, Connection, Parameter, fingerprint);
         if not Object:
             self.Logger.error("Error while create Object");
             return(None);
 
-        self.Logger.debug("Obj from %s with ID:%i created"%(ModName,Object._GetID()));
+        self.Logger.debug("Obj from %s with ID:%s created"%(ModName,Object._GetID()));
                
         if not self.__MasterObjTree.Add(ParentID,Object._GetID()):
             self.Logger.error("Can't add Object...");
@@ -148,8 +151,6 @@ class Core:
 
         self.__ObjectHash.update({Object._GetID():Object});
         self.Logger.debug("Object Added to Tree...");
-
-        self.__UpdateMasterTreeChangeID();
         return(Object._GetID());
 
 
@@ -163,7 +164,7 @@ class Core:
         """ This method deletes a object from the tree... """
         Object = self.__ObjectHash[ObjectID];
         if not Object:
-            self.Logger.error("No Object with ID %i"%ObjectID);
+            self.Logger.error("No Object with ID %s"%str(ObjectID));
             return(False);
 
         if not self.__MasterObjTree.Del(ObjectID):
@@ -171,12 +172,10 @@ class Core:
             return(False);
 
         if not Object.destroy():
-            self.Logger.error("Error while delete object %i"%ObjectID);
+            self.Logger.error("Error while delete object %s"%str(ObjectID));
             return(False);
         del Object;
         self.Logger.debug("Object removed and destroyed");
-
-        self.__UpdateMasterTreeChangeID();
         return(True);
 
 
@@ -191,36 +190,38 @@ class Core:
             This method will create and attach a new SymbolSlot to the
             ObjectTree...
         """
+        fingerprint = Modules.Fingerprint(Name = '[SymbolSlot]', 
+                                          Parent = ParentID, 
+                                          Address = Address, 
+                                          TypeName = TypeName,
+                                          CacheTime = TimeOut);
+        if self.__ObjectHash.has_key(fingerprint):
+            Object = self.__ObjectHash[fingerprint];
+            self.Logger.debug("Return cached Slot");
+            return(Object._GetID());
+        
         Parent = self.__ObjectHash.get(ParentID);
         if not Parent:
             self.Logger.error("Invalid Parent ID");
             return(None);
-
+            
         Connection = Parent.connect(Address);
         if not Connection:
             self.Logger.error("Error while Connect parent");
             return(None);
         Connection._SetAddrStr(Address);
         
-        SlotID = self.__ModuleManager.NewID();
-        if not SlotID:
-            self.Logger.error("Can't create a new ID for SlotObj...");
-            return(None);
-        
-        Slot = pyDCPUSymbolSlot.MasterSlot(Connection, SlotID, TypeName, self.Logger, TimeOut);
+        Slot = pyDCPUSymbolSlot.MasterSlot(Connection, fingerprint, TypeName, self.Logger, TimeOut);
         if not Slot:
             self.Logger.error("Error while create Slot Object");
             return(None);
 
-        if not self.__MasterObjTree.Add(ParentID,SlotID):
+        if not self.__MasterObjTree.Add(ParentID,fingerprint):
             self.Logger.error("Error while add SlotObject To Tree...");
             return(None);
 
-        self.__ObjectHash.update( {SlotID:Slot} );
-        
-        self.__UpdateMasterTreeChangeID();
-        
-        return(SlotID);
+        self.__ObjectHash.update( {fingerprint:Slot} );
+        return(fingerprint);
         
     def MasterTreeToXML(self,doc):
         """ This method create a xml.dom.minidom.Node with all
@@ -242,24 +243,26 @@ class Core:
     # ######################################################################## #
     def ExporterAdd(self, ExportModule, Parameters, DefaultUser):
         """ This method load an export-module """
+        
+        fingerprint = Modules.Fingerprint(Name = ExportModule, 
+                                          DefaultUser = DefaultUser, 
+                                          Parameter = Parameters);
 
         ExpSymTree = ExportableSymbolTree.ExportableSymbolTree(self.__SymbolTree,
                                                                self.__UserDataBase,
                                                                DefaultUser);
 
-        Obj = self.__ModuleManager.NewExporter(ExportModule, Parameters, ExpSymTree);
+        Obj = self.__ModuleManager.NewExporter(ExportModule, Parameters, fingerprint, ExpSymTree);
         if not Obj:
             self.Logger.error("Can't create object from %s"%ExportModule);
             return(None);
 
-        self.Logger.debug("Export Module %s loaded as ID %i"%(ExportModule,Obj._GetID()));
+        self.Logger.debug("Export Module %s loaded as ID %s"%(ExportModule,Obj._GetID()));
 
         self.__ExporterList.append(Obj._GetID());
 
         self.__ObjectHash.update({Obj._GetID():Obj});
         self.Logger.debug("Object Added to Tree...");
-
-#        self.__UpdateMasterTreeChangeID();
         return(Obj._GetID());
         
        
@@ -267,7 +270,7 @@ class Core:
         """ This method stop a export-module """
         Obj = self.__ObjectHash.get(ObjectID);
         if not Obj:
-            self.Logger.error("No Object with id %i"%ObjectID);
+            self.Logger.error("No Object with id %s"%ObjectID);
             return(False);
         if not Obj.stop():
             self.Logger.error("Error while stop Object");
@@ -310,7 +313,7 @@ class Core:
         self.Logger.debug("Folder %s deleted"%Path);
         return(True);
     
-    def SymbolTreeCreateSymbol(self, Path, SymbolSlotID, TypeName):
+    def SymbolTreeCreateSymbol(self, Path, SymbolSlotID):
         """
             This method create a new symbol in the symbol-tree with the slot
             of symbol-slot-ID.
@@ -319,7 +322,7 @@ class Core:
         if not Slot:
             self.Logger.error("No Slot with this ID Found");
             return(False);
-        if not self.__SymbolTree.CreateSymbol(Path, Slot, TypeName):
+        if not self.__SymbolTree.CreateSymbol(Path, Slot):
             self.Logger.error("Error while create Symbol in SymbolTree");
             return(False);
         return(True);
@@ -338,22 +341,23 @@ class Core:
         return(self.__SymbolTree.SetValue(Path, Value, self.__GetSystemSession()));
     def SymbolTreeListSymbols(self, Path):
         return(self.__SymbolTree.ListSymbols(Path, self.__GetSystemSession()));
-    def SymbolTreeListFolder(self, Path):
+    def SymbolTreeListFolders(self, Path):
         return(self.__SymbolTree.ListFolders(Path, self.__GetSystemSession()));
 
-    def SymbolTreeGetOwner(self, Path):
-        return(self.__SymbolTree.GetOwnerName(Path));
-    def SymbolTreeSetOwner(self, Path, Name):
-        return(self.__SymbolTree.SetOwnerName(Path, Name));
-    def SymbolTreeGetGroup(self, Path):
-        return(self.__SymbolTree.GetGroupName(Path));
-    def SymbolTreeSetGroup(self, Path, Name):
-        return(self.__SymbolTree.SetGroupName(Path, Name));
-    def SymbolTreeGetRight(self, Path):
-        return(self.__SymbolTree.GetRightString(Path));
-    def SymbolTreeSetRight(self, Path, Right):
-        return(self.__SymbolTree.SetRightString(Path, Right));
-    
+    def SymbolTreeGetAccess(self, Path):
+        owner = self.__SymbolTree.GetOwnerName(Path);
+        group = self.__SymbolTree.GetGroupName(Path);
+        modus = self.__SymbolTree.GetRightString(Path);
+        return( (owner, group, modus) );
+    def SymbolTreeSetAccess(self, Path, Owner, Group, Modus):
+        if not self.__SymbolTree.SetOwnerName(Path, Owner):
+            return(False);
+        if not self.__SymbolTree.SetGroupName(Path, Group):
+            return(False);
+        if not self.__SymbolTree.SetRightString(Path, Modus):
+            return(False);
+        return(True);
+
     def SymbolTreeToXML(self, doc):        
         return(self.__SymbolTree.ToXML(doc));
 
@@ -375,23 +379,6 @@ class Core:
 
 
 
-    # ######################################################################## #
-    # Methods to provide information about the state of module trees           #
-    # ######################################################################## #
-    def MasterTreeChangeID(self):
-        """
-            This method returns a ID that indicates if the master tree
-            has been changed.
-        """
-        return(self.__MasterTreeChangeID);
-
-    def __UpdateMasterTreeChangeID(self):
-        """
-            This (private) method creates a new MasterTreeChangeID
-        """
-        self.__MasterTreeChangeID += 1;
-        return(None);
-    
 
     # ######################################################################## #
     # Methods for User/Group handling                                          #
@@ -442,6 +429,7 @@ class Core:
     # ######################################################################## #
     # Methods for object access                                                #
     # ######################################################################## #
+	# will may be removed
     def GetAConnection(self, ObjectID, Address):
         """
             This method will return a connection object.
@@ -454,6 +442,7 @@ class Core:
             return(None);
         return(Obj.connect(Address));
 
+	# will be removed
     def GetObjectClass(self, ObjectID):
         Obj = self.__GetObjectByID(ObjectID);
         if not Obj:
@@ -461,12 +450,12 @@ class Core:
         return(Obj._GetClass());
 
 
-
+	# will be removed
     def GetExportableSymbolTree(self, DefaultUser):
         return(ExportableSymbolTree.ExportableSymbolTree(self.__SymbolTree,
                                                          self.__UserDataBase,
                                                          DefaultUser));
-
+	# will be removed
     def GetTheUserDB(self):
         """ Please don't use this method!"""
         return(self.__UserDataBase);
