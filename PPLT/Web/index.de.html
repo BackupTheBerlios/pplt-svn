@@ -1,0 +1,123 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN" "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+    <head>
+        <title>Potsdamer Prozess-LeitTechnik</title>
+        <link rel="stylesheet" type="text/css" href="/main.css">
+        <style>
+        </style>
+    </head>
+    <body>
+        <div class="MainHead">PPLT - Potsdamer Prozess LeitTechnik</div>
+        <div class="LangMenu"><a href="index.de.html">de</a> | <a href="index.html">en</a></div>
+        <div class="MainMenu"></div>
+        <div class="TextBody">
+            <div class="Text">
+               <p>Auf dieser Seite will ich ihnen eine (sehr) kurze Einf&uuml;hrung in das
+               Konzept der Potsdamer Prozess Leittechnik geben. Wenn sie mehr wissen wollen,
+               folgen sie bitte den Verweisen innerhab des textes.
+            </div>
+
+
+            <div class="Head">Ziele</div>
+            <div class="Text">
+               Das Hauptziel was es, ein flexibles, modulares und vor allem platformunabhängiges
+               System zu schaffen, das auf Informationen aus verschiedenen Quellen über 
+               unterschiedlichste Schnittstellen zu greifen kann. Dabei vor allem auf 
+               Steuerungen und sog. intelligente Sensoren. All diese Informationen sollen
+               dann zentral in einem sog. Symbol-Baum abgelegt werden.
+
+               <p>Als zweites sollte das System eine eigene Benutzer- und Gruppenverwaltung haben
+               um den Zugriff auf den Symbol-Baum regeln zu können.</p>
+
+               <p>Als letztes sollte es die M&ouml;glichkeit geben, &uuml;ber Module diesen Symbolbaum wieder
+               anderen Systemen zur Verf&uuml;gung zu stellen. So dass man nicht an eine bestimmte Applikation,
+               wie zum Beispiel eine Visualisierung, gebunden ist.</p>
+            </div>
+
+
+
+            <div class="Head">Disign</div>
+            <div class="Text">
+            Im Groben l&auml;sst sich das PPLT System in drei Bereiche teilen.
+
+            <p style="text-align:center"><img src="/img/BasicConcept.png" alt="" title="Grundkonzept"></p>
+
+            <p>Der erste Teil ist etwas schwierig zu verstehen, weil sie mit einer Vielzahl
+            an Modulen arbeiten m&uuml;ssen. Er ist dazu da, Informationen und Daten aus
+            anderen Systemen zu importieren. Dazu ben&ouml;tigt man zum Beispiel, um aus
+            den Merkern einer Steuerung zu lesen, ein Modul f&uuml;r die Schnittstelle,
+            eins f&uuml;r das BUS-Protokoll und eins das das Kommando-Nachrichtenformat
+            der Steuerung implementiert, bevor man die Daten auslesen kann. So m&uuml;ssen
+            sie zu mindest wissen, welches BUS-Protokoll, und welche Schnittstelle verwendet
+            wird um mit der Steuerung zu kommunizieren. Dies ist jedoch auch einer Vorteile
+            des PPLT Systems, da sie nun lediglich das Schnittstellen- und das BUS-Modul
+            austauschen m&uuml;ssen um mit der Steuerung &uuml;ber einen anderen BUS zu
+            kommunizieren.</p>
+
+            <p>Der andere Teil verwaltet diese importierten Informationen in einem
+            Dateisystem ähnlichen Symbol-Baum. Stellen sie sich diesen Baum als eine
+            Art mini Dateisystem mit Verzeichnissen und Dateien vor. Jede Datei (hier
+            Symbol genannt) representiert zum Beispiel einen Merker in einer Steuerung
+            oder den aktuellen Wert eines Sensors. Um diese ganzen Symbole besser
+            organisieren zu können, gibt es Verzeichnisse oder Ordner.<br>
+            Wie jedes Datei-System besitzt auch der Symbol-Baum eine Rechteverwaltung,
+            mit der sie den Zugriff von Benutzern oder Gruppen auf jedes Symbol oder jedes
+            Verzeichnis einzeln regeln.</p>
+
+            <p>Der lezte Teil exportiert diesen Symbol-Baum zu anderen Systemen, wie zum
+            Beispiel Visualisierungen oder Datenbanken. Dieser Export-Teil arbeitet auch mit
+            Modulen, so dass sie die Daten im Symbolbaum in belibiegen Anwendungen verwenden
+            k&ouml;nnen (insofern f&uuml;r diese ein Export-Modul existiert). Es gibt ein
+            Export-Modul, das die <a href="SimpleExport.de.html">XML-RPC</a> Bibliothek 
+            verwendet um den Symbol-Baum zu exportieren. Auf diese Weise k&ouml;nnen sie 
+            auf die Symbole in ihren selbgeschriebenen Applikationenen zugreifen.</p>
+
+            Das Beste ist jedoch, dass es in Python geschrieben ist.
+
+
+
+            <div class="Head">Unterstützte Hardware<div>
+            <div class="Text">
+               Hier habe ich die Geräte, meißt Steuerungen, aufgelistet, für
+               die es Module für PPLT gibt. Es ist möglich dass noch andere
+               Geräte mit diesen Modulen angesprochen werden können, da sehr
+               von der Art und Weise abhängt, wie die Module aneinander
+               gekoppelt werden.
+               <ul>
+                  <li><b>NAIS FP0/FP2</b> - Es ist möglich die Merker dieser beiden
+                  Steuerungen über den ToolPort anzusprechen. Es ist ebenfalls möglich
+                  die FP0 (wenn vorhanden) über den Web Server <b>FP-WEB</b> zu erreichen.
+
+                  <li><b>NAIS A200</b> - Das ist ein sog. Image-Checker zu optischen
+                  Qualitätsprüfung. Um ihn anzusprechen nutzte ich die eingebaute RS232
+                  Schnittstelle.
+
+                  <li><b>Siemens SIMATIC S7-200</b> - PPLT kann auf die Merker dieser
+                  Steuerung über den PPI-Bus zugreifen.
+
+                  <li><b>Siemens S55</b> Handy. Ich bin mir sicher, dass auch andere
+                  Handys mit diesem Modul ausgelesen werden können, die dem GSM Standard
+                  entsprechen.
+               </ul>
+            <div>
+
+
+            <div class="Head">Zukunft</div>
+            <div class="Text">
+               Zunächst habe ich vor, eine stabile Version von PPLT zu veröffentlichen.
+
+               <p>In naher Zukunft will ich noch eine verwendbare Dokumentation 
+                  veröffentlichen.</p>
+
+               <p>Ich habe für eine spätere Version eine Erweiterung der Kern-Bibliothek
+               vor gesehen, so dass auch Steuerungen auf den Symbol-Baum zu greifen können.</p>
+
+               <p>Um all dies zu erreichen benötige ich <u>Unterstützung</u>. Ich studiere Physik
+               an der Universität zu Potsdam und das Schreiben von Open Source Software und
+               Studieren gleichzeitig dürfte wohl über meine Grenzen gehen. <br>
+               Wenn sie also Interesse haben diese Software weiter zu entwickeln,
+               melden sie sich bei mir. (Bitte)</p>
+            </div>
+        </div>
+    </body>
+</html>

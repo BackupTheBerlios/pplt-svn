@@ -1,0 +1,19 @@
+
+JVISU_TYP_DOUBLE = 0x01;
+JVISU_TYP_STRING = 0x02;
+JVISU_TYP_BOOL   = 0x03;
+JVISU_TYP_BYTE   = 0x04;
+JVISU_TYP_WORD   = 0x05;
+JVISU_TYP_DWORD  = 0x06;
+JVISU_TYP_FLOAT  = 0x07;
+
+JVISU_CMD_REGVAR = 0x01;
+JVISU_CMD_DELVAR = 0x02;
+JVISU_CMD_SNDVAR = 0x03;
+
+JVISU_SIZE_TABLE = {JVISU_TYP_BOOL: 1,
+                    JVISU_TYP_BYTE: 1,
+                    JVISU_TYP_WORD: 2,
+                    JVISU_TYP_DWORD: 4,
+                    JVISU_TYP_FLOAT: 4,
+                    JVISU_TYP_DOUBLE: 8};

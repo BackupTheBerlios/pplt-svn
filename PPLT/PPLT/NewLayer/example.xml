@@ -1,0 +1,88 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PPLTSet name="NAIS FP0/2 ToolPort" version="0.1">
+   <Description>
+      <Author>Hannes Matuschek</Author>
+      <AuthorEmail>pplt at berlios.de</AuthorEmail>
+      <URL>http://pplt.berlios.de</URL>
+
+      <Class>Automation::Simple</Class>
+
+      <Short lang="en-uk">
+         This Module provides the access to a NAIS FP0 or FP2 over
+         several interfaces. Maybe other PLCs are also supported.
+         
+         Note: If you are using more than one PLC in a BUS this
+         module will be a bad choice.
+      </Short>
+      <Long lang="en-uk">
+         See short description.
+      </Long>
+   </Description>
+
+   <Require>
+      <DCPUModule>Master.Interface.UniSerial</DCPUModule>
+      <DCPUModule>Master.Interface.Socket</DCPUModule>
+      <DCPUModule>Master.Transport.ReadLine</DCPUModule>
+      <DCPUModule>Master.Transport.MEWCOM-TL</DCPUModule>
+      <DCPUModule>Master.Device.MEWCOM-CL</DCPUModule>
+   </Require>
+
+   <Config>
+      <Selection name="Interface">
+         <Help lang="en-uk">Select the interface to access the FP</Help>
+         
+         <Case name="Tunneld METCOL">
+            <Parameter name="Network Address">
+               <Help lang="en-uk">Select the host address. In form of ADDRESS:PORT</Help>
+            </Parameter>
+            <Parameter name="MEWTOCOL Address" default="1">
+               <Help lang="en-uk">Select the address of the NAIS FP(0|2)</Select>
+            </Parameter>
+
+            <Setup>
+               <LoadModule name="Master.Interface.Socket">
+                  <Option name="TimeOut">1.0</Option>
+                  <LoadModule name="Master.Transport.ReadLine">
+                     <Address><Parameter name="Network Address"/></Address>
+                     <Option name="LineEnd">0D</LineEnd>
+                     <LoadModule name="Master.Transport.MEWCOM-TL">
+                        <Option name="BCD">True</Option>
+                        <LoadModule name="Master.Device.MEWCOM-CL">
+                           <Option name="Address"><Parameter name="MEWTOCOL Address"/></Option>
+                        </LoadModule>
+                     </LoadModule>
+                  </LoadModule>
+               </LoadModule>
+            </Setup>
+         </Case>
+
+         <Case name="ToolPort (serial)">
+            <Parameter name="Port">
+               <Help lang="en-uk">Select the serial inface to use. NOTE: COM1:0, COM2:1, etc</Help>
+            </Parameter>
+            <Parameter name="MEWTOCOL Address" default="1">
+               <Help lang="en-uk">Select the MEWTOCOL address of the FP</Help>
+            </Parameter>
+
+            <Setup>
+               <LoadModule name="Master.Interface.UniSerial">
+                  <Option name="Port"><Parameter name="Port"/></Option>
+                  <Option name="Speed">19200</Option>
+                  <Option name="Parity">None</Option>
+                  <Option name="TimeOut">1.0</Option>
+                  <LoadModule name="Master.Transport.ReadLine">
+                     <Option name="LineEnd">0D</LineEnd>
+                     <LoadModule name="Master.Transport.MEWCOM-TL">
+                        <Option name="BCD">True</Option>
+                        <LoadModule name="Master.Device.MEWCOM-CL">
+                           <Option name="Address"><Parameter name="MEWTOCOL Address"/></Option>
+                        </LoadModule>
+                     </LoadModule>
+                  </LoadModule>
+               </LoadModule>
+            </Setup>
+         </Case>
+      </Select>
+   </Config>
+</PPLTSet>
