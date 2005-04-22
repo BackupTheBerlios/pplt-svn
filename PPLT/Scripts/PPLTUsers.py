@@ -246,7 +246,7 @@ class MainTree(wx.TreeCtrl):
         group = self.UserDB.GetGroupByUserName(name);
         groupname = group.GetName();
         if not self.UserDB.DeleteMember(groupname, name):
-            info = CreateErrorInfo(self, "Error while delete user %s.\n Maybe it is the superuser.");
+            info = CreateErrorInfo(self, "Error while delete user %s.\n Maybe it is the superuser."%name);
             info.ShowModal();
             info.Destroy();
             return(None);
@@ -294,7 +294,6 @@ class MainTree(wx.TreeCtrl):
         self.SuperUserItem = self.selitem;
         self.SetItemImage(self.SuperUserItem,3);
         self.UserDB.SetSuperUser(newsu);
-        print self.UserDB.GetInfo();
 
 
 class MainFrame(wx.Frame):
@@ -331,7 +330,6 @@ class MainFrame(wx.Frame):
 
 class MainApp(wx.App):
    def OnInit(self):
-      #wx.InitAllImageHandlers();
       frame = MainFrame(None, 'User-DataBase Editor');
       self.SetTopWindow(frame);
       frame.Show(True);

@@ -35,7 +35,7 @@ class DataBase:
             nametag = doc.createTextNode(mod);
             modtag.appendChild(nametag);
         docstr = doc.toprettyxml('   ');
-        fp = open(         
+        #fp = open(
     def Add(self, ModName):
         if not self.__ModuleList.count(ModName):
             self.__ModuleList.append(ModName);

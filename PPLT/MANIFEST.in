@@ -1,3 +1,5 @@
-PPLTConsole.py
-ModuleDB.xml
 UserDB.xml
+icons/superuser.xpm
+icons/user.xpm
+icons/root.xpm
+icons/group.xpm
