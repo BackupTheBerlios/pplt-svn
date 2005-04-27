@@ -62,6 +62,7 @@ class Folder:
         
     def DeleteSymbol(self, Name):
         if self.SymbolHash.has_key(Name):
+	    self.SymbolHash[Name].Unregister();
             del self.SymbolHash[Name];
             return(True);
 

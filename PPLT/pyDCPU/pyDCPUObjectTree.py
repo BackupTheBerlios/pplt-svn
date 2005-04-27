@@ -123,7 +123,7 @@ class pyObjectTree:
             self.Logger.debug("Child deleted");
             return(True);
         else:
-            self.Logger.warinig("Object not found");
+            self.Logger.warning("Object not found");
             return(False);
         
 

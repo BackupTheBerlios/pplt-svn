@@ -28,6 +28,6 @@ setup(name = "PPLT",
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python',
-        'Topic :: Communications',
+	'Topic :: Communications',
         'Topic :: Software Development :: Libraries',
     ]);

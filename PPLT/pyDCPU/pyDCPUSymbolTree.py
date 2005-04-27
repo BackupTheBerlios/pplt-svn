@@ -206,6 +206,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
         if len(PList)==1:
             if self.SymbolHash.has_key(Name):
+		self.SymbolHash[Name].Unregiser();
                 del self.SymbolHash[Name];
                 return(True);
             return(False);

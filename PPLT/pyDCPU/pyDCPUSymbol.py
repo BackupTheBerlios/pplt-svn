@@ -45,12 +45,15 @@ class Symbol:
         self.__Name = Name;
         self.__Possession = Possession;
         self.__SymbolSlot = SymbolSlot;
-        
+	self.__SymbolSlot.RegisterSymbol();        
 
 
     def IsValid(self):
         return(self.__Valid);
 
+    def Unregister(self):
+	return(self.__SymbolSlot.UnRegisterSymbol());
+	    
     def GetValue(self, SessionID):
         if not self.__Possession.CanRead(SessionID):
             self.__Logger.warning("Session %s: Access denied"%SessionID);

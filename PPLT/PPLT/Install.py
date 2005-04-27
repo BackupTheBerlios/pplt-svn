@@ -6,7 +6,7 @@ import string;
 
 """ This module install PPLT-Modules """
 
-def InstallFile(FileName,Name,InGroup,ModulePath):
+def InstallDCPUMod(FileName,Name,InGroup,ModulePath):
     if not os.path.exists(FileName):
         print "Error %s not found"%FileName;
         return(False);
@@ -28,17 +28,41 @@ def InstallFile(FileName,Name,InGroup,ModulePath):
     shutil.copy(FileName, dirname+'/'+Name+'.zip');
     return(True);
 
-def InstallSet(FileName, ModulePath):
-    doc = xml.dom.minidom.parse(FileName);
-    modlist = doc.getElementsByTagName('Install');
 
-    zipdir = os.path.dirname(os.path.abspath(FileName));
+
+def InstallPPLTMod(FileName, ModulePath):
+	#construct new filepath
+	dest = os.path.normpath(os.path.join(ModulePath,'Mods'));
+	filename = os.path.normpath(os.path.join(dest, os.path.basename(FileName)));
+
+	print "Install %s"%FileName;
+
+	if not os.path.isdir(dest):
+		os.makedirs(dest,0755);
+
+	shutil.copy(FileName, filename);
+	return(True);
+
+
+
+def InstallSet(FileName, ModulePath):
+	doc = xml.dom.minidom.parse(FileName);
+	coremodlist = doc.getElementsByTagName('DCPUMod');
+	ppltmodlist = doc.getElementsByTagName('PPLTMod');
+
+	zipdir = os.path.dirname(os.path.abspath(FileName));
     
-    for mod in modlist:
-        fname = os.path.join(zipdir,mod.getAttribute('file'));
-        name = mod.getAttribute('as');
-        group = mod.getAttribute('in');
-        if not InstallFile(fname, name, group, ModulePath):
-           print "Error while install %s"%name;
-    return(True);
+	for mod in coremodlist:
+		fname = os.path.join(zipdir,mod.getAttribute('file'));
+		name = mod.getAttribute('as');
+		group = mod.getAttribute('in');
+		if not InstallDCPUMod(fname, name, group, ModulePath):
+			print "Error while install %s"%name;
+
+	for mod in ppltmodlist:
+		fname = os.path.join(zipdir,mod.getAttribute('file'));
+		if not InstallPPLTMod(fname, ModulePath):
+			print "Error while install %s"%fname;
+
+	return(True);
         
