@@ -38,10 +38,10 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         self.Logger = Logger;
         self.__UserDB = UserDBObj;
         self.__Name = "/";
-        self.__Possession = UserDB.Possession(self.__DefaultUser,
-                                                self.__DefaultGroup,
-                                                self.__DefaultRights,
-                                                self.__UserDB);
+#        self.__Possession = UserDB.Possession(self.__DefaultUser,
+#                                                self.__DefaultGroup,
+#                                                self.__DefaultRights,
+#                                                self.__UserDB);
         self.SymbolHash = {};
         self.FolderHash = {};
 

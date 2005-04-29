@@ -92,7 +92,7 @@ class Core:
 
         self.__SymbolTree    = pyDCPUSymbolTree.SymbolTree(self.__UserDataBase.GetSuperUser(),  
                                                            self.__UserDataBase.GetSuperUserGrp(),
-                                                           640,
+                                                           384,
                                                            self.__UserDataBase,
                                                            self.Logger);
         self.__ExporterList  = [];

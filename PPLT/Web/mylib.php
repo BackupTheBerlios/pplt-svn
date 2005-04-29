@@ -5,7 +5,8 @@
 <html>
     <head>
         <title>Potsdamer Prozess-LeitTechnik</title>
-        <link rel="stylesheet" type="text/css" href="/main.css">
+        <link rel="stylesheet" type="text/css" media="screen" href="/main.css">
+        <link rel="stylesheet" type="text/css" media="print" href="/print.css">
     </head>
     <body>
         <div class="MainHead">PPLT - Potsdamer Prozess LeitTechnik</div>
@@ -16,12 +17,13 @@
             <ul>
                <li><a href="/index.php?lang=<?=$lang?>&site=pyDCPU_Intro">pyDCPU Introduction</a></li>
                <li><a href="/index.php?lang=<?=$lang?>&site=pyDCPU">pyDCPU Reference</a></li>
-               <li id="last"><a href="/index.php?lang=<?=$lang?>&site=SimpleExport">SimpleExport Ref.</a></li>
+               <li id="last"><a href="/index.php?lang=<?=$lang?>&site=SimpleExport">SimpleExport Tutorial</a></li>
             </ul>
          </li>
          <li><a href="http://developer.berlios.de/project/showfiles.php?group_id=3237">Download</a></li>
+         <li><a href="http://developer.berlios.de/sendmessage.php?touser=14093">Contact</a></li>
         </ul>
-<?      
+<?
     }
 
     function GetLangMenu($lang, $site, $llist){
@@ -50,7 +52,7 @@
             ?>
                 <div class="TextBody">                    
                     <div class="Head">File Not Found</div>
-            <?            
+            <?
             
             $slist = CheckFor($Site, $LList);             
             if (count($slist) == 0){

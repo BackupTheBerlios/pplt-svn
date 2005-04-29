@@ -101,30 +101,38 @@ def PathUp(path):
     return('/'+string.join(npl[:-1],'/'));
 
 
-if __name__ == '__main__':
-    Config = PPLT.Config();
-    Core = pyDCPU.Core(UserDBFile = Config.GetUserDB(),
-                       LogLevel = Config.GetLogLevel());
-    RandID = Core.MasterTreeAdd(None, 'Master.Debug.Random', None, {});
-    a = Core.MasterTreeAttachSymbolSlot(RandID,
-                                        'Bool',
-                                        'Bool');
-    b = Core.MasterTreeAttachSymbolSlot(RandID,
-                                        'Byte',
-                                        'Byte');
-    c = Core.MasterTreeAttachSymbolSlot(RandID,
-                                        'Word',
-                                        'Word');
-    d = Core.MasterTreeAttachSymbolSlot(RandID,
-                                        'DWord',
-                                        'DWord');
-    Core.SymbolTreeCreateFolder('/rand');
-    Core.SymbolTreeCreateFolder('/rand/rand');
+class Object(pyDCPU.ExportObject):
+	def setup(self):
+		self.__BindAddress = self.Parameters.get('Address');
+		if not self.__BindAddress:
+			self.Logger.error("No Address given...");
+			return(False);
+		
+		self.__Port = None;
+		try:
+			self.__Port = int(self.Parameters.get("Port"));
+		except:
+			self.Logger.error("Invalid Port format: have to be a Number as String");
+			return(False);
+		if self.__Port == None:
+			self.Logger.error("No Port given");
+			return(False);
+		try:
+			self.__ServerObject = PPLTWebServer((self.__BindAddress,self.__Port), PPLTWebHandler, self.SymbolTree);
+		except:
+			self.Logger.error("Error while setup create object");
+			return(False);
+		if not self.__ServerObject:
+			self.Logger.error("No server object");
+			return(False);
+		self.__Loop = True;
+		return(True);
 
-    Core.SymbolTreeCreateSymbol('/rand/a',a);
-    Core.SymbolTreeCreateSymbol('/rand/b',b);
-    Core.SymbolTreeCreateSymbol('/rand/rand/c',c);
-    Core.SymbolTreeCreateSymbol('/rand/rand/d',d);
-    st = Core.GetExportableSymbolTree('admin');
-    server = PPLTWebServer(('',80),PPLTWebHandler,st);
-    server.serve_forever();
+	def start(self):
+		while self.__Loop:
+			self.__ServerObject.handle_request();
+		return(Ture);
+	def stop(self):
+		self.__Loop = False;
+
+

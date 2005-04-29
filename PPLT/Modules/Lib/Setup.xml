@@ -21,7 +21,14 @@
     
     <DCPUMod file="JVisu.zip" as="JVisu" in="Export"/>
     <DCPUMod file="SimpleExport.zip" as="SimpleExport" in="Export"/>
+	<DCPUMod file="PPLTWeb.zip" as="PPLTWeb" in="Export"/>
 
 	<PPLTMod file="SimpleExportServer-0.1.xml"/>
 	<PPLTMod file="GSMMobilePhone-0.1.xml"/>
+	<PPLTMod file="PPLTWebServer.xml"/>
+	<PPLTMod file="RandomGenerator.xml"/>
+	<PPLTMod file="AGILENT_5462X-0.1.xml"/>
+	<PPLTMod file="NAiS_FPWEB-0.1.xml"/>
+	<PPLTMod file="NAiS_FPX-0.1.xml"/>
+	<PPLTMod file="SIMATIC_S7_200-0.1.xml"/>
 </ModuleSet>

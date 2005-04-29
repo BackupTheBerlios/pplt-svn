@@ -16,8 +16,8 @@
     GetSite($LANG, $SITE, $LANG_LIST);
     
 ?>
-<div style="font-size:10pt; text-align:right; color:#aaaaaa; border-top:3px double #000000; margin-top:50px;">
-    Hosted by: 
+<div class="Footer">
+    Hosted by:
     <a href="http://developer.berlios.de" title="BerliOS Developer">
         <img src="http://developer.berlios.de/bslogo.php?group_id=3237"
              width="124px"

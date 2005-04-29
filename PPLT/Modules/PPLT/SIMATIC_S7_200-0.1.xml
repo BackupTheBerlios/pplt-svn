@@ -1,0 +1,27 @@
+<?xml version="1.0"?>
+
+<PPLTDevice name="S7-200" class="PLC">
+    <Head>
+        <Require>
+            <DCPUModule>Master.Interface.UniSerial</DCPUModule>
+            <DCPUModule>Master.Transport.PPI</DCPUModule>
+            <DCPUModule>Master.Device.S7</DCPUModule>
+        </Require>
+    </Head>
+    
+    <Setup>
+        <Load name="Master.Interface.UniSerial">
+            <Parameter name="Port"><Variable name="Port"/></Parameter>
+            <Parameter name="TimeOut">1.0</Parameter>
+			<Parameter name="Parity">Even</Parameter>
+            <Parameter name="Speed">9600</Parameter>
+            <Load name="Master.Transport.PPI">
+				<Parameter name="Address"><Variable name="PCAddr"/></Parameter>
+				<Load name="Master.Device.S7" namespace="Marker">
+					<Address><Variable name="S7Addr"/></Address>
+				</Load>
+			</Load>
+        </Load>
+    </Setup>
+        
+</PPLTDevice>

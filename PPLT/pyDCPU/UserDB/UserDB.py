@@ -95,6 +95,9 @@ class UserDB:
         """ This method returns the name of the superuser"""
         return(self.__SuperUser);
 
+    def IsSuperUser(self, Name):
+		return(self.__SuperUser == Name);
+
     def GetSuperUserGrp(self):
         """ This method returns the grp-name of the grp where superuser is member of """
         Grp = self.GetGroupByUserName(self.GetSuperUser());

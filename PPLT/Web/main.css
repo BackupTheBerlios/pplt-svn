@@ -20,6 +20,7 @@ body{
 }
 
 ul.Menu{
+   list-style:none;
    display:block;
    padding:0px;
    padding-left:10px;
@@ -29,35 +30,39 @@ ul.Menu{
    border-bottom: 1px solid #000000;
 }
 
-ul.Menu li{
-   list-style:none inside;
+ul.Menu > li{
    float:left;
    padding:0px;
    margin:0px;
    padding-right:15px;
 }
-ul.Menu li ul{
+
+ul.Menu > li > ul{
+   list-style:none;
    padding:0px;
+   margin:0px;
+   margin-left:-5px;
    display:none;
    position:absolute;
 }
 
-ul.Menu li:hover ul{
-   padding:0px;
-   margin:0px;
-   margin-left:-5px;
+ul.Menu > li:hover > ul{
    display:block;
 }
-ul.Menu li ul li{
+
+ul.Menu > li > ul > li{
    padding:0px 4px;
    float:none;
    background-color:#eeeeee;
    border-left: 1px solid #000000;
    border-right: 1px solid #000000;
 }
-ul.Menu li ul li#last{
+
+ul.Menu > li > ul > li#last{
    border-bottom: 1px solid #000000;
 }
+
+
 
 span[title]{
    border-bottom: 1px dotted #000000;
@@ -118,4 +123,13 @@ a:hover{
 table{
    margin-top:5px;
    border:1px solid #000000;
+}
+
+.Footer{
+   font-size:10pt;
+   text-align:right;
+   color:#aaaaaa;
+   border-top:3px
+   double #000000;
+   margin-top:50px;
 }

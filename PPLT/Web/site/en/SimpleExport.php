@@ -62,7 +62,7 @@ print con.Get('/PLC/Marker1')
 <pre>
 #!/usr/bin/python
 import xmlrpclib
-import sys;
+import sys
 
 con = xmlrpclib.server_proxy("http://10.1.1.4:8000")
 
@@ -72,7 +72,7 @@ if not session:
    sys.exit()
 
 print con.Get("/PLC/Marker1",session)
-con.LogOff(session);
+con.LogOff(session)
 </pre>
                This does quite the same like the first example but in this case you
                will be logged-in befor you call the Get() method.</p>

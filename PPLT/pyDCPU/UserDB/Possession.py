@@ -18,7 +18,7 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    #
 # ############################################################################ #
 
-
+import logging;
 import string;
 
 class Possession:
@@ -30,6 +30,11 @@ class Possession:
          self.__GroupRight,
          self.__AnyRight) = SplitRights(Right);    # split the number into objects
         self.__UserDB    = UserDB;           # the user-db
+        self.__Logger    = logging.getLogger('pyDCPU');
+        rtmp = self.__OwnerRight.ToString();
+        rtmp+= self.__GroupRight.ToString();
+        rtmp+= self.__AnyRight.ToString();
+        self.__Logger.debug("New possession: %s %s %s(%i)"%(self.__OwnerName, self.__GroupName, rtmp,Right));
 
 
     def GetOwner(self):
@@ -41,11 +46,18 @@ class Possession:
 
     def CanRead(self, SessionID):
         if self.__UserDB.IsSystemSession(SessionID):
+            self.__Logger.debug("SystemSession: Access OK");
             return(True);
 
         sesUser = self.__UserDB.SessionGetUserName(SessionID);
         if not sesUser:
+            self.__Logger.debug("No Username for session %s"%SessionID);
             return(False);
+        self.__Logger.debug("Session of %s"%sesUser);
+
+        if self.__UserDB.IsSuperUser(sesUser):
+            self.__Logger.debug("SuperUserSession: Access OK");
+            return(True);
 
         if sesUser == self.__OwnerName:
             return(self.__OwnerRight.read());
@@ -62,6 +74,9 @@ class Possession:
         sesUser = self.__UserDB.SessionGetUserName(SessionID);
         if not sesUser:
             return(False);
+        
+        if self.__UserDB.IsSuperUser(sesUser):
+            return(True);
 
         if sesUser == self.__OwnerName:
             return(self.__OwnerRight.write());
@@ -124,16 +139,28 @@ class Rights:
         self.__write   = (Right >> 1) & 0x01;
         self.__execute = Right & 0x01;
         return(True);
-
+    def ToString(self):
+        tmp = "";
+        if self.__read: tmp += "r";
+        else: tmp+="-";
+        if self.__write: tmp+= "w";
+        else: tmp +="-";
+        if self.__execute: tmp+="x";
+        else: tmp += "-";
+        return(tmp);
 
 
 def SplitRights(Right):
     Owner = Rights();
     Group = Rights();
     Any   = Rights();
+    
+    print "Any  : 0x%x"%(Right&0x07);
+    print "Group: 0x%x"%((Right>>3)&0x07);
+    print "Owner: 0x%x"%((Right>>6)&0x07);
 
-    Any.SetRight(Right & 0x3);
-    Group.SetRight((Right >> 3) & 0x3);
-    Any.SetRight((Right >> 6) & 0x3);
+    Any.SetRight(Right & 0x7);
+    Group.SetRight((Right >> 3) & 0x7);
+    Owner.SetRight((Right >> 6) & 0x7);
 
     return( (Owner, Group, Any) );

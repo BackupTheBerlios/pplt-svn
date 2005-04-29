@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+
+<PPLTDevice name="AGILENT-5462X" class="Measure">
+    <Head>
+        <Require>
+            <DCPUModule>Master.Interface.UniSerial</DCPUModule>
+            <DCPUModule>Master.Transport.ReadLine</DCPUModule>
+            <DCPUModule>Master.Device.5462X</DCPUModule>
+        </Require>
+    </Head>
+    
+    <Setup>
+        <Load name="Master.Interface.UniSerial">
+            <Parameter name="Port"><Variable name="Port"/></Parameter>
+            <Parameter name="TimeOut">1.0</Parameter>
+			<Parameter name="Parity">None</Parameter>
+            <Parameter name="Speed">57600</Parameter>
+            <Load name="Master.Transport.ReadLine">
+				<Parameter name="LineEnd">0A</Parameter>
+            	<Load name="Master.Device.5462X" namespace="Values">
+					<Parameter name="PSource"><Variable name="Primary"/></Parameter>
+					<Parameter name="SSource"><Variable name="Secondary"/></Parameter>
+				</Load>
+			</Load>
+        </Load>
+    </Setup>
+        
+</PPLTDevice>
