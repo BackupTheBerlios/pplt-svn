@@ -13,7 +13,7 @@
         <Load name="Master.Interface.UniSerial">
             <Parameter name="Port"><Variable name="Port"/></Parameter>
             <Parameter name="TimeOut">0.5</Parameter>
-				<Parameter name="Parity">None</Parameter>
+			<Parameter name="Parity">None</Parameter>
             <Parameter name="Speed"><Variable name="Speed"/></Parameter>
             <Load name="Master.Transport.ReadLine">
 				<Parameter name="LineEnd">0D0A</Parameter>

@@ -70,6 +70,20 @@
 
         <li><b>Siemens S55</b> Mobiltelefon. Ich bin mir sicher, dass auch andere
         GSM konforme Telefone abgefragt werden k&ouml;nnen.</li>
-    </ul>
+    	
+		<li><b>Agilent 5462X</b> Ozilloskope. Sie k&ouml;nnen die Frequenz, 
+		Aplitude, u.s.w der anliegenden Signale messen.</li>
+	
+		<li><b>JVisu</b> ist eine in Java geschriebene freie Visualisierung. Mit dem
+		Servermodul k&ouml;nnen sie den Symbolbaum zu JVisu exportieren.</li>
+
+		<li>Ein einfache <b>HTTP</b> Webserver ist ebenfalls als Servermodul
+		vohanden. So k&ouml;nnen sie den Symbolbaum mit ihrem Webbrowser (z.B. Firefox)
+		durchsuchen.</li>
+
+		<li>Ein <b>XML-RPC</b> Server, der hier <i>SimpleExport</i> genannt wird,
+		erm&ouml;glich es ihnen auf die Werte im Symbolbaum, mit fast jeder 
+		Programmiersprache und auf jeder Platform zuzugreifen.</li>
+	</ul>
     </div>
 </div>

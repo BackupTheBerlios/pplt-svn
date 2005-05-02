@@ -31,4 +31,5 @@
 	<PPLTMod file="NAiS_FPWEB-0.1.xml"/>
 	<PPLTMod file="NAiS_FPX-0.1.xml"/>
 	<PPLTMod file="SIMATIC_S7_200-0.1.xml"/>
+	<PPLTMod file="JVisuServer-0.1.xml"/>
 </ModuleSet>

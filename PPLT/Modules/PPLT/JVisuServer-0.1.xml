@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<PPLTServer name="JVisuServer" class="Visu">
+	<Head>
+		<Require>
+			<DCPUModule>Export.JVisu</DCPUModule>
+		</Require>
+	</Head>
+	
+	<Setup>
+		<Load name="Export.JVisu">
+			<Parameter name="Address" var="Address"/>
+			<Parameter name="Port" var="Port"/>
+		</Load>
+	</Setup>
+</PPLTServer>

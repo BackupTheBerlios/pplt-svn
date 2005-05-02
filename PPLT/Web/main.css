@@ -133,3 +133,7 @@ table{
    double #000000;
    margin-top:50px;
 }
+
+pre{
+	font-size: 0.8em;
+}

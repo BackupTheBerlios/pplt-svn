@@ -315,7 +315,15 @@ class UserDB:
             self.SaveToFile();
         return(True);
 
-
+    def ChangePassword(self, MemberName, Passwd):
+        """ This method will change the passwd of the given user. Return True
+ on success and False else. """
+        if not self.__MemberNameList.count(MemberName):
+            return(False);
+        user = self.GetUserByName(MemberName);
+        if self.__AutoSave:
+            self.SaveToFile();
+        return(user.SetPasswd(Passwd));
 
 
 

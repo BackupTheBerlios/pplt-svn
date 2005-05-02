@@ -76,6 +76,11 @@ class ObjClassContainer:
 			return(self.__SubClassList.get(Name));
 		return(None);
 	
+	def ListSubClasses(self):
+		return(self.__SubClassList.keys());
+	def ListItems(self):
+		return(self.__ObjList.keys());
+
 	def AddObject(self, Obj):
 		# check type
 		if not isinstance(Obj, DBObjBaseClass):
@@ -108,7 +113,7 @@ class ObjClassContainer:
 	def IsEmpty(self):
 		# check if there are no 
 		if len(self.__SubClassList.keys())==0 and len(self.__ObjList.kes())==0:
-			return(Ture);
+			return(True);
 		return(False);
 
 
@@ -140,11 +145,26 @@ class ObjRootClass(ObjClassContainer):
 		pclass = self;
 		for cname in ClassList:
 			pclass = pclass.GetSubClass(cname);
-			if not pclass:		# if class can not be cound
+			if not pclass:		# if class can not be found
 				return(None);
 		# --- done ---
 		return(pclass.GetObject(Name));
+	
+	def ListClassesOf(self, ClassList):
+		pclass = self;
+		for cname in ClassList:
+			pclass = pclass.GetSubClass(cname);
+			if not pclass:
+				return(None);
+		return(pclass.ListSubClasses());
 
+	def GetObjectsOf(self, ClassList):
+		pclass = self;
+		for cname in ClassList:
+			pclass = pclass.GetSubClass(cname);
+			if not pclass:
+				return(None);
+		return(pclass.ListItems());
 
 
 class DataBase:
@@ -160,6 +180,7 @@ class DataBase:
 	def __SearchXML(self, Path):
 		self.__Logger.debug("Search %s..."%Path);
 		xml_list = glob.glob1(Path,'*.xml');
+
 		for fname in xml_list:
 			fname = Path+'/'+fname;
 			#try:
@@ -192,4 +213,24 @@ class DataBase:
 			self.__Logger.warning("Server %s not"%serName);
 			return(None);
 		return(ser.GetFileName());
-			
+	
+	def ListServersIn(self, ClassPath):
+		if not ClassPath: ClassPath = "";
+		clist = ClassPath.split('.');
+		return(self.__Servers.ListObjectsOf(clist));
+
+	def ListServerClassesIn(self, ClassPath):
+		if not ClassPath: ClassPath = "";
+		clist = ClassPath.split('.');
+		return(self.__Servers.ListClassesOf(clist));
+
+	def ListDevicesIn(self, ClassPath):
+		if not ClassPath: ClassPath = "";
+		clist = ClassPath.split('.');
+		return(self.__Devices.ListObjectsOf(clist));
+
+	def ListDeviceClassesIn(self, ClassPath):
+		if not ClassPath: ClassPath = "";
+		clist = ClassPath.split('.');
+		return(self.__Devices.ListClassesIn(clist));
+

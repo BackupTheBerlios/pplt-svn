@@ -26,11 +26,7 @@ import pyDCPUSymbolSlot;
 import pyDCPUSymbolTree;
 import pyDCPUObjectTree;
 import ExportableSymbolTree;
-import Exceptions;
 
-#import sys;
-import os;
-import thread;
 
 
 
@@ -476,7 +472,6 @@ class Core:
 
         docnode.setAttribute('loglevel',self.__LoggingLevel);
         docnode.setAttribute('userdb',self.__UserDBFile);
-        docnode.setAttribute('moduledb',self.__ModuleDBFile);
 
         mat = self.MasterTreeToXML(doc);
         docnode.appendChild(mat);
@@ -492,11 +487,11 @@ class Core:
     def SaveProjectToFile(self, FileName):
         cont = self.SaveProjectToString();
         try:
-            file = open(FileName, 'w');
+            fp = open(FileName, 'w');
         except:
             self.Logger.error("Can't open/create file");
             return(False);
-        file.write(cont);
-        file.close();
+        fp.write(cont);
+        fp.close();
         return(True);
 

@@ -21,8 +21,8 @@ setup(name = "PPLT",
       long_description="PPLT is an industrial communication framework.",
       classifiers = [
         'Intended Audience :: Developers',
-        'License :: OSI Approved :: Lesser GNU Public License',
-        'License :: OSI Approved :: GNU Public License',
+        'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',
+        'License :: OSI Approved :: GNU General Public License (GPL)',
         'Natural Language :: English',
         'Natural Language :: German',
         'Operating System :: POSIX',
@@ -30,4 +30,4 @@ setup(name = "PPLT",
         'Programming Language :: Python',
 	'Topic :: Communications',
         'Topic :: Software Development :: Libraries',
-    ]);
+    ]); 

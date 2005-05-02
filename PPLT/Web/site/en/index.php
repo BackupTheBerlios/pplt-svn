@@ -52,7 +52,7 @@
     modules but with abstract devices. </p>
     </div>
     
-    <div class="Head">Supported Hardware</div>
+    <div class="Head">Supported Hardware/Sofware</div>
     <div class="Text">
     <ul>
         <li><b>NAIS FP0/FP2</b> - I tested them over the ToolPort. It was
@@ -67,6 +67,18 @@
 
         <li><b>Siemens S55</b> mobile phone. I am sure that other GSM
         compatible mobile phones will also work fine.</li>
+		
+		<li><b>Agilent 5462X</b> Oscilloscopes. You can measure frequency,
+		aplitude, etc. of signals.</li>
+
+		<li><b>JVisu 1.0</b> This is a open visualisation written in Java.
+		There is a server module to export the symboltree to this application.</li>
+
+		<li>A <b>simple HTTP</b> webserver is also aviable as a server module.
+		So you can browse the symboltree with FireFox or other webbrowser.</li>
+
+		<li>A <b>XML-RPC</b> server module called <i>SimpleExport</i> serves
+		you the symboltree for nearly every programing language on every platform.</li>
     </ul>
     </div>
 </div>

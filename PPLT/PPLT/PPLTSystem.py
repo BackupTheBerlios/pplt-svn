@@ -1,7 +1,6 @@
 import pyDCPU;
 import Configuration;
 import Logging;
-import AliasTable;
 import Install;
 import Device;
 import Server;
@@ -10,9 +9,8 @@ import DataBase;
 
 MODUS_FMT_OCTAL = 1;
 MODUS_FMT_STRING = 2;
-MODGRP_MASTER = 'Master';
-MODGRP_SERVER = 'Server';
-MODGRP_DEVICE = 'Device';
+MODUS_FMT_INTEGER = 3;
+
 
 class System:
 	def __init__(self):
@@ -26,14 +24,20 @@ class System:
 
 		self.__Logger = Logging.Logger();									# Start Logging
 
-		self.__DataBase = DataBase.DataBase(self.__Config.GetDBPath());	# Load the Module/Device 
-        
+		self.__DataBase = DataBase.DataBase(self.__Config.GetDBPath());		# Load the Module/Device database
+		self.__UserDataBase = self.__Core.GetTheUserDB();
 		self.__DeviceHash = {}												# init some tables
 		self.__ServerHash = {}												# ...
 		self.__SymbolTable = {};											# ...
 		self.__SlotDeviceTable = {};										# ...
 
-    
+
+	def Stop(self):
+		""" This methow will stop the system. Meaning stopping all servers,
+ clear the whole Symboltree ans unload all devices. """ 
+		pass;
+
+
     # ######################################################################## #
     # Module/Device handling                                                   #
     # ######################################################################## #
@@ -42,46 +46,79 @@ class System:
     # ######################################################################## #
 	def Install(self, InstallFile):
 		""" This method will install all core-modules and pplt-devices listed in
-the InstallFile. """
-		pass;
+ the InstallFile. """
+		return(Install.InstallSet(InstallFile, self.__Config.GetBasePath()));
     
 	def UnIstall(self, ModuleName):
-		""" This method will uninstall the given module/divice """
+		""" This method will uninstall the given module/divice/server """
+		#FIXME implement!
 		pass;
 
-	def ListKnownModules(self, ModGroup):
+	def ListKnownServers(self, Class=None):
+		return(self.__DataBase.ListServersIn(Class));
+	def ListKnownServerClasses(self, Class=None):
+		return(self.__DataBase.ListServerClassesIn(Class));
+	def ListKnownDevices(self, Class=None):
+		return(self.__DataBase.ListDevicesIn(Class));
+	def ListKnownDeviceClasses(self, Class=None):
+		return(self.__DataBase.ListDeviceClassesIn(Class));
+	def GetServerInfo(self, Name):
+		""" Return a info object """
 		pass;
-
-	def GetModuleInfo(self, Name):
-		""" Return a info object... """
-        #return(self.__ModuleDB.Info(Name));
+	def GetDeviceInfo(self, Name):
+		#FIXME implement!
 		pass;
-    
     
     # ######################################################################## #
     # User/Group management                                                    #
     # ######################################################################## #
     # ######################################################################## #
 	def CreateGroup(self, ParentGroup, Name):
-		pass;
+		return(self.__UserDataBase.CreateGroup(ParentGroup,Name));
+
 	def DeleteGroup(self, Name):
-		pass;
-	def ListGroups(self, Name):
-		pass;
+		return(self.__UserDataBase.DeleteGroup(Name));
+
+	def ListGroups(self, GroupName = None):
+		if not GroupName:
+			group = self.__UserDataBase;
+		else:
+			group = self.__UserDataBase.GetGroupByName(GroupName);
+		if not group:
+			return(None);
+		# list subgroups:
+		return(group.ListSubGroups());
+
+	def ListMembers(self, GroupName = None):
+		if not GroupName:
+			return([]);
+		group = self.__UserDataBase.GetGroupByName(GroupName);
+		if not group:
+			return(None);
+		#list memebers:
+		return(group.ListMembers());
+
 	def CreateMember(self, Group, Name, Password, Description):
-		pass;
+		return(self.__UserDataBase.CreateMember(Group, Name, Password, Description));
+
 	def DeleteMember(self, Name):
-		pass;
-	def ListMembers(self, Name):
-		pass;
+		group = self.__UserDataBase.GetGroupByUserName(Name);
+		if not group:
+			self.__Logger.warning("No group found for user %s: does he/she exists?"%Name);
+			return(False);
+		return(self.__UserDataBase.DeleteMember(group, Name));
+
 	def CheckPassword(self, Name, Password):
-		pass;
-	def ChangePassword(self, Name, NewPassword):
-		pass;
+		return(self.__UserDataBase.ValidUser(Name,Password));
+
+	def ChangePassword(self, Name, Password):
+		return(self.__UserDataBase.ChangePassword(Name,Password));
+
 	def SetSuperUser(self, Name):
-		pass;
+		return(self.__UserDataBase.SetSuperUser(Name));
+
 	def GetSuperUser(self):
-		pass;
+		return(self.__UserDataBase.GetSuperUser());
         
         
     
@@ -120,6 +157,7 @@ the InstallFile. """
 		#remove from table
 		del self.__DeviceHash[Alias];
 		return(True);
+
 
 	def ListDevices(self):
 		# simply return the keys of device table
@@ -167,10 +205,18 @@ the InstallFile. """
 		# map call to core-object:
 		if not self.__Core.SymbolTreeCreateFolder(Path):
 			return(False);
-		#FIXME Add chown
-		#FIXME Add chgrp
-		#FIXME Add chmod
-
+		if Owner:
+			if not self.ChangeOwner(Path,Owner):
+				self.__Logger.warning("Error while set owner to %s"%Owner);
+		if not Group:
+			if Owner:
+				Group = self.__UserDataBase.GetGroupByUserName(Owner);
+				if not Group:
+					self.__Logger.warning("Unknown owner %s"%Owner);
+				self.ChangeGroup(Path, Group);
+		if Modus != '600':
+			self.ChangeModus(Path,Modus);
+		return(True);
 
 	def DeleteFolder(self, Path, Recur=False):
 		#simply map call to core:
@@ -188,7 +234,7 @@ the InstallFile. """
 		# split slot:
 		tmp = Slot.split('::');
 		if len(tmp) < 2 or len(tmp) > 3:
-			self.__Logger.error("Slot address format: DEVICE::NAMESPACE::ADDRESS\n Namespace is optional if device only have one.");
+			self.__Logger.error("Slot address format: DEVICE::NAMESPACE::ADDRESS");
 			return(False);
 		# get device name:
 		DevName = tmp[0];
@@ -218,6 +264,20 @@ the InstallFile. """
 		# fin
 		self.__SymbolTable.update( {Path:SlotID} );
 		self.__SlotDeviceTable.update( {SlotID:DevName} );
+		# CHANGE ACCESS
+		# set modus:
+		if Modus != '600':
+			if not self.ChangeModus(Path,Modus):
+				self.__Logger.warning("Unable to change modus to %s"%Modus);
+		if Owner:
+			if not self.ChangeOwner(Path,Owner):
+				self.__Logger.warning("Unable to change owner to %s"%Owner);
+			if not Group:
+				if not self.ChangeGroup(Path,self.__UserDataBase.GetGroupByUserName(Owner)):
+					self.__Logger.warning("Unable to set Group");
+		if Group:
+			if not self.ChangeGroup(Path,Group):
+				self.__Logger.warning("Unable to change group to %s"%Group);
 		return(True);
 
 
@@ -248,7 +308,7 @@ the InstallFile. """
 			return(False);
 		del self.__SymbolTable[Path];
 		#FIXME check if it is ness. to del some else...
-		return(Ture);
+		return(True);
 
 
 	def ListSymbols(self, Path):
@@ -257,27 +317,49 @@ the InstallFile. """
 
 
 	def GetModus(self, Path, Format=MODUS_FMT_OCTAL):
-		pass;
+		(User, Group, Modus) = self.__Core.SymbolTreeGetAccess(Path);
+		if Modus == None:
+			self.__Logger.warning("Error while get modus of %s, maybe it does not exist"%Path);
+			return(None);
+		if Format==MODUS_FMT_OCTAL:
+			return(ModusToOctString(Modus));
+		if Format==MODUS_FMT_STRING:
+			return(ModusToString(Modus));
+		if Format==MODUS_FMT_INTEGER:
+			return(Modus);
+		self.__Logger.warning("Invalid format...");
+		return(None);
 
 
 	def ChangeModus(self, Path, Modus):
-		pass;
-
+		(user, group, old_modus) = self.__Core.GetAccess(Path);
+		if isinstance(Modus,int):
+			new_modus = Modus;
+		elif isinstance(Modus,str):
+			try:
+				new_modus = int(Modus,8);
+			except:
+				self.__Logger.warning("Invalid vormat");
+				return(None);
+		return(self.__Core.SymbolTreeSetAccess(Path,user,group,new_modus));
 
 	def GetOwner(self, Path):
-		pass;
-
+		(user, group, modus) = self.__Core.SymbolTreeGetAccess(Path);
+		return(user);
 
 	def ChangeOwner(self, Path, Owner):
-		pass;
+		(old_user, group, modus) = self.__Core.SymbolTreeGetAccess(Path);
+		return(self.__Core.SymbolTreeSetAccess(Owner, group, modus));
 
 
 	def GetGroup(self, Path):
-		pass;
+		(owner, group, modus) = self.__Core.SymbolTreeGetAccess(Path);
+		return(group);
 
 
 	def ChangeGroup(self, Path, Group):
-		pass;
+		(owner, old_group, modus) = self.__Core.SymbolTreeGetAccess(Path);
+		return(self.__Core.SymbolTreeSetAccess(Path, owner, Group, modus));
 
 
 	def GetValue(self, Path):
@@ -286,3 +368,39 @@ the InstallFile. """
 
 	def SetValue(self, Path, Value):
 		return(self.__Core.SymbolTreeSetValue(Path, Value));
+
+
+
+
+
+#
+# Usefull functions
+#
+def ModusToOctString(modus):
+	any = modus & 0x07;
+	grp = (modus>>3) &0x07;
+	own = (modus>>6) &0x07;
+	return("%i%i%i"%(any,grp,own));
+	
+def ModusToString(modus):
+	any = modus & 0x07;
+	grp = (modus>>3) & 0x07;
+	own = (modus>>6) & 0x07;
+	rstr= "";
+	tmp = "";
+	for mod in (own,grp,any):
+		if mod & 0x01:
+			tmp += "r";
+		else:
+			tmp += "-";
+		if (mod>>1)&0x01:
+			tmp += "w";
+		else:
+			tmp += "-";
+		if (mod>>2)&0x01:
+			tmp += "x";
+		else:
+			tmp += "-";
+		rstr += tmp;
+		tmp = "";
+	return(rstr);
