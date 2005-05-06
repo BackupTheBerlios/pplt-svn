@@ -1,5 +1,7 @@
 <div class="TextBody">
-    <div class="Head">News</div>
+    <div class="Head">News 
+		<a style="font-size:0.5em;" href="/en/NewsHistory.html">[History]</a>
+	</div>
     <div class="NewsItem">
     <b>2005-04-28 - Release PPLT version 0.1pre3</b><br>
 	This release is nearly the same like <i>0.1pre2</i>
@@ -43,7 +45,7 @@
     load and unload the modules, cares about the central symbol-tree and handle
     users/groups. If you want to know more about the core library, please look
     at the pyDCPU
-    <a href="/doc/pyDCPU_Intro.html"
+    <a href="/en/pyDCPU_Intro.html"
         title="Intoduction into the pyDCPU Core library.">introduction</a>.
 
     <p>The second part is called PPLT-Library. This library is build on the top

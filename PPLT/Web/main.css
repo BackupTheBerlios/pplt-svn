@@ -30,14 +30,14 @@ ul.Menu{
    border-bottom: 1px solid #000000;
 }
 
-ul.Menu > li{
+ul.Menu  li{
    float:left;
    padding:0px;
    margin:0px;
    padding-right:15px;
 }
 
-ul.Menu > li > ul{
+ul.Menu  li  ul{
    list-style:none;
    padding:0px;
    margin:0px;
@@ -46,11 +46,11 @@ ul.Menu > li > ul{
    position:absolute;
 }
 
-ul.Menu > li:hover > ul{
+ul.Menu  li:hover  ul{
    display:block;
 }
 
-ul.Menu > li > ul > li{
+ul.Menu  li  ul  li{
    padding:0px 4px;
    float:none;
    background-color:#eeeeee;
@@ -58,7 +58,7 @@ ul.Menu > li > ul > li{
    border-right: 1px solid #000000;
 }
 
-ul.Menu > li > ul > li#last{
+ul.Menu  li  ul  li#last{
    border-bottom: 1px solid #000000;
 }
 
@@ -131,7 +131,14 @@ table{
    color:#aaaaaa;
    border-top:3px
    double #000000;
-   margin-top:50px;
+   margin-top:5px;
+}
+
+.LastModLine{
+	font-size:8pt;
+	text-align:right;
+	color:#aaaaaa;
+	margin-top:30px;
 }
 
 pre{

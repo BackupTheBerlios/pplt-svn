@@ -20,7 +20,7 @@
 		Verf&uuml;gung stellt.</p>
 
 		<p>Unabh&auml;ngig vom Betriebsystem sollten sie auch die 
-		<a href="pyserial.sf.net">PySerial Bibliothek</a> installieren.
+		<a href="http://pyserial.sf.net">PySerial Bibliothek</a> installieren.
 		Diese Bibliothek wird von dem Modul f&uuml;r die serielle Schnittstelle 
 		verwendet. Fall sie sich sicher sind, dass sie die
 		serielle Schnittstelle nicht verwenden werden, k&ouml;nnen sie auch auf 
@@ -28,7 +28,7 @@
 
 		<p>Wenn sie die PPLT nicht nur als Bibliothek benutzen, sonder auch die 
 		teils grafischen Scripte verwenden wollen,
-		sollten sie die <a href="www.wxpython.org">wxPython Bibliothek</a> 
+		sollten sie die <a href="http://www.wxpython.org">wxPython Bibliothek</a> 
 		installieren. Diese Bibliothek bietet eine Platformunabh&auml;ngige
 		API zur grafischen Oberfl&auml;chenprogrammierung und wurde in einigen 
 		Scripten, die zur PPLT geh&ouml;ren verwendet.</p>  

@@ -17,10 +17,10 @@
 
     function GetLangMenu($lang, $site, $llist){
         if ($lang=='de'){
-            ?><div class="LangMenu">de | <a href="/index.php?lang=en&site=<?=$site?>">en</a></div><?
+            ?><div class="LangMenu">de | <a href="/en/<?=$site?>.html">en</a></div><?
         }
         if ($lang=='en'){
-            ?><div class="LangMenu"><a href="/index.php?lang=de&site=<?=$site?>">de</a> | en</div><?
+            ?><div class="LangMenu"><a href="/de/<?=$site?>.html">de</a> | en</div><?
         }
     }
     
@@ -60,12 +60,17 @@
             
             foreach($slist as $lang){
                 ?>
-                    <a href="/index.php?lang=<?=$lang?>&site=<?=$Site?>"><?=$lang?></a>&nbsp;
+                    <a href="/<?=$lang?>/<?=$Site?>.html"><?=$lang?></a>&nbsp;
                 <?
             }
             ?></div><?
-        }else
+        }else{
             include($filename);
+			$tms = filemtime($filename);
+			if ($tms != FALSE){
+				echo "<div class=\"LastModLine\">Last modified: ".date("Y-m-d",$tms)."</div>";
+			}
+		}
     }
     
     function GetLangList(){

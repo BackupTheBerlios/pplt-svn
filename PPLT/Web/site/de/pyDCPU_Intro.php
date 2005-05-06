@@ -1,24 +1,24 @@
 <div class="TextBody">
     <div class="Text">
-        <p>Auf dieser Seite will ich ihnen eine (sehr) kurze Einf&uuml;hrung in das
-        Konzept der Kernbibliothek, der Potsdamer Prozess Leittechnik geben. Wenn 
-        sie mehr wissen wollen, folgen sie bitte den Verweisen innerhab des textes.
+        <p>Auf dieser Seite will ich Ihnen eine (sehr) kurze Einf&uuml;hrung in das
+        Konzept der Kernbibliothek, der Potsdamer Prozess Leittechnik, geben. Wenn 
+        Sie mehr wissen wollen, folgen sie bitte den Verweisen innerhalb des Textes.
     </div>
 
 
     <div class="Head">Ziele</div>
     <div class="Text">
-        Das Hauptziel was es, ein flexibles, modulares und vor allem plattformunabh&auml;ngiges
+        Das Hauptziel was es, ein flexibles, modulares und vorallem plattformunabh&auml;ngiges
         System zu schaffen, das auf Informationen aus verschiedenen Quellen &uuml;ber 
-        unterschiedlichste Schnittstellen zugreifen kann, dabei vor allem auf
+        unterschiedlichste Schnittstellen zugreifen kann, dabei vorallem auf
         Steuerungen und sog. intelligente Sensoren. All diese Informationen sollen
         dann zentral in einem sog. Symbol-Baum abgelegt werden.
 
-        <p>Als Zweites sollte das System eine eigene Benutzer- und Gruppenverwaltung haben
-        um den Zugriff auf den Symbol-Baum regeln zu k&ouml;nen.</p>
+        <p>Als Zweites sollte das System eine eigene Benutzer- und Gruppenverwaltung haben,
+        um den Zugriff auf den Symbol-Baum regeln zuk&ouml;nen.</p>
 
         <p>Als Letztes sollte es die M&ouml;glichkeit geben, &uuml;ber Module diesen Symbol-Baum wieder
-        anderen Systemen zur Verf&uuml;gung zu stellen. So dass man nicht an eine bestimmte Applikation,
+        anderen Systemen zur Verf&uuml;gung zu stellen. So, dass man nicht an eine bestimmte Applikation,
         wie zum Beispiel eine Visualisierung, gebunden ist.</p>
     </div>
 
@@ -36,15 +36,15 @@
     den Merkern einer Steuerung zu lesen, ein Modul f&uuml;r die Schnittstelle,
     eins f&uuml;r das BUS-Protokoll und eins das das Kommando-Nachrichtenformat
     der Steuerung implementiert, bevor man die Daten auslesen kann. So m&uuml;ssen
-    sie zu mindest wissen, welches BUS-Protokoll, und welche Schnittstelle verwendet
-    wird um mit der Steuerung zu kommunizieren. Dies ist jedoch auch einer Vorteile
+    sie zumindest wissen, welches BUS-Protokoll und welche Schnittstelle verwendet
+    wird, um mit der Steuerung zu kommunizieren. Dies ist jedoch auch einer der Vorteile
     des pyDCPU Systems, da sie nun lediglich das Schnittstellen- und das BUS-Modul
-    austauschen m&uuml;ssen um mit der Steuerung &uuml;ber einen anderen BUS zu
+    austauschen m&uuml;ssen, um mit der Steuerung &uuml;ber einen anderen BUS zu
     kommunizieren.</p>
 
     <p>Der andere Teil verwaltet diese importierten Informationen in einem
-    Dateisystem &auml;hnlichen Symbol-Baum. Stellen sie sich diesen Baum als eine
-    Art mini Dateisystem mit Verzeichnissen und Dateien vor. Jede Datei (hier
+    dateisystem-&auml;hnlichen Symbol-Baum. Stellen sie sich diesen Baum als eine
+    Art Minidateisystem mit Verzeichnissen und Dateien vor. Jede Datei (hier
     Symbol genannt) representiert zum Beispiel einen Merker in einer Steuerung
     oder den aktuellen Wert eines Sensors. Um diese ganzen Symbole besser
     organisieren zu k&ouml;nnen, gibt es Verzeichnisse oder Ordner.<br>
@@ -54,11 +54,11 @@
 
     <p>Der lezte Teil exportiert diesen Symbol-Baum zu anderen Systemen, wie zum
     Beispiel Visualisierungen oder Datenbanken. Dieser Export-Teil arbeitet auch mit
-    Modulen, so dass sie die Daten im Symbolbaum in belibiegen Anwendungen verwenden
+    Modulen, so dass sie die Daten im Symbolbaum in beliebiegen Anwendungen verwenden
     k&ouml;nnen (insofern f&uuml;r diese ein Export-Modul existiert). Es gibt ein
-    Export-Modul, das die <a href="/index.php/lang=de/site=SimpleExport">XML-RPC</a> Bibliothek 
-    verwendet um den Symbol-Baum zu exportieren. Auf diese Weise k&ouml;nnen sie 
-    auf die Symbole in ihren selbgeschriebenen Applikationenen zugreifen.</p>
+    Export-Modul, das die <a href="/index.php/de/SimpleExport.html">XML-RPC</a> Bibliothek 
+    verwendet, um den Symbol-Baum zu exportieren. Auf diese Weise k&ouml;nnen sie 
+    auf die Symbole in ihren selbgeschriebenen Applikationen zugreifen.</p>
 
     Das Beste ist jedoch, dass es in Python geschrieben ist.
 
@@ -70,7 +70,7 @@
         <p>In naher Zukunft will ich noch eine verwendbare Dokumentation
             ver&ouml;ffentlichen.</p>
 
-        <p>Um all dies zu erreichen ben&ouml;tige ich <u>Untersttzung</u>. Ich studiere Physik
+        <p>Um all dies zu erreichen ben&ouml;tige ich <u>Unterst&uuml;tzung</u>. Ich studiere Physik
         an der Universit&auml;t zu Potsdam und das Schreiben von Open Source Software und
         Studieren gleichzeitig d&uuml;rfte wohl &uuml;ber meine Grenzen gehen. <br>
         Wenn sie also Interesse haben diese Software weiter zu entwickeln,

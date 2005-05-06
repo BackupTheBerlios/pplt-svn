@@ -47,7 +47,7 @@
     <p>The last part exports this symboltree to other systems, like visualisations or
     databases. This export-part also work with modules, so it is possible to process
     the information in the symbol-tree in a many applications (if there are implemented
-    with a module). For example there is a module which use <a href="/doc/SimpleExport.html">XML-RPC</a>
+    with a module). For example there is a module which use <a href="/en/SimpleExport.html">XML-RPC</a>
     to export this symbols for other applications.</p>
 
     But the best of all is, it was written in Python.
