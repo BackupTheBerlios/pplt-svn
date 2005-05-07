@@ -54,6 +54,7 @@ class Core:
     #   + init internal managment objects                                      #
     # ######################################################################## #
     def __init__(self,
+                 ModulePath,
                  UserDBFile=None,
                  LogLevel='info',
                  LogFile = None,
@@ -61,6 +62,7 @@ class Core:
         
         """ This Function will set the Runtime-Options """
         # Save Parameter
+        self.__ModuleBase   = ModulePath;
         self.__UserDBFile   = UserDBFile;
         self.__LoggingLevel = LogLevel;
         self.__LoggingFile  = LogFile;
@@ -77,10 +79,11 @@ class Core:
 #        self.__ExportList      = [];   
         
         # Hash of all created Objects
-        self.__ObjectHash      = {};   
+        self.__ObjectHash      = {};
+        self.__ObjectRefCount  = {};
 
         self.Logger.debug("Load modulemanager");
-        self.__ModuleManager = Modules.Importer(self.Logger);
+        self.__ModuleManager = Modules.Importer(self.__ModuleBase);
         self.Logger.debug("all modules loaded");
 
         #Setup Trees: 
@@ -88,7 +91,7 @@ class Core:
 
         self.__SymbolTree    = pyDCPUSymbolTree.SymbolTree(self.__UserDataBase.GetSuperUser(),  
                                                            self.__UserDataBase.GetSuperUserGrp(),
-                                                           384,
+                                                           384,		#meaning 600 in OCT
                                                            self.__UserDataBase,
                                                            self.Logger);
         self.__ExporterList  = [];
@@ -118,6 +121,11 @@ class Core:
         if self.__ObjectHash.has_key(fingerprint):
             Object = self.__ObjectHash[fingerprint];
             self.Logger.debug("Return cached Object");
+            c = self.__ObjectRefCount.get(Object._GetID());
+            if not c:
+                self.Logger.warning("Ref count is inconsisten!");
+                c = 0;
+            self.__ObjectRefCount.update( {Object._GetID():c+1} );
             return(Object._GetID());
         
         # Connect new Object with Parent
@@ -147,6 +155,7 @@ class Core:
 
         self.__ObjectHash.update({Object._GetID():Object});
         self.Logger.debug("Object Added to Tree...");
+        self.__ObjectRefCount.update( {Object._GetID():1} );
         return(Object._GetID());
 
 
@@ -163,6 +172,15 @@ class Core:
             self.Logger.error("No Object with ID %s"%str(ObjectID));
             return(False);
 
+        c = self.__ObjectRefCount.get(ObjectID);
+        if c == None:
+            self.Logger.warning("Inconsistent ref counter");
+            self.__ObjectRefCount.update( {ObjectID:1} );
+        if c > 1:
+            self.__ObjectRefCount.update( {ObjectID:c-1} );
+            self.Logger.debug("Object ref counter redused.");
+            return(True);
+		
         if not self.__MasterObjTree.Del(ObjectID):
             self.Logger.error("Error while del Object from tree");
             return(False);
@@ -171,6 +189,7 @@ class Core:
             self.Logger.error("Error while delete object %s"%str(ObjectID));
             return(False);
         del Object;
+        del self.__ObjectRefCount[ObjectID];
         self.Logger.debug("Object removed and destroyed");
         return(True);
 
@@ -194,6 +213,8 @@ class Core:
         if self.__ObjectHash.has_key(fingerprint):
             Object = self.__ObjectHash[fingerprint];
             self.Logger.debug("Return cached Slot");
+            c = self.__ObjectRefCount.get(Object._GetID());
+            self.__ObjectRefCount.update( {Object._GetID():c+1} );
             return(Object._GetID());
         
         Parent = self.__ObjectHash.get(ParentID);
@@ -217,6 +238,7 @@ class Core:
             return(None);
 
         self.__ObjectHash.update( {fingerprint:Slot} );
+        self.__ObjectRefCount.update( {Slot._GetID():1} );
         return(fingerprint);
         
     def MasterTreeToXML(self,doc):
@@ -243,6 +265,12 @@ class Core:
         fingerprint = Modules.Fingerprint(Name = ExportModule, 
                                           DefaultUser = DefaultUser, 
                                           Parameter = Parameters);
+        if self.__ObjectHash.has_key(fingerprint):
+            self.Logger.debug("Return cached object");
+            Obj = self.__ObjectHash[fingerprint];
+            c = self.__ObjectRefCount.get(Obj._GetID());
+            self.__ObjectRefCount.update( {Obj._GetID():c+1} );
+            return(Obj._GetID());
 
         ExpSymTree = ExportableSymbolTree.ExportableSymbolTree(self.__SymbolTree,
                                                                self.__UserDataBase,
@@ -258,6 +286,7 @@ class Core:
         self.__ExporterList.append(Obj._GetID());
 
         self.__ObjectHash.update({Obj._GetID():Obj});
+        self.__ObjectRefCount.update( {Obj._GetID():1} );
         self.Logger.debug("Object Added to Tree...");
         return(Obj._GetID());
         
@@ -268,11 +297,19 @@ class Core:
         if not Obj:
             self.Logger.error("No Object with id %s"%ObjectID);
             return(False);
+
+        c = self.__ObjectRefCount.get(ObjectID);
+        if c > 1:
+            self.__ObjectRefCount.update( {ObjectID:c-1} );
+            return(True);
+
         if not Obj.stop():
             self.Logger.error("Error while stop Object");
             return(False);
+
         del self.__ObjectHash[ObjectID];
         self.__ExporterList.remove(ObjectID);
+        del self.__ObjectRefCount[ObjectID];
         return(True);
     
     def ExporterList(self):

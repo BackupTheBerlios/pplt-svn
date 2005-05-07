@@ -22,15 +22,41 @@
 import logging;
 import sys;
 
-def Logger():
+def Logger(Level,File,SysLog):
     
     Logger = logging.getLogger("PPLT");
 
-    LogHndl = logging.StreamHandler(sys.stderr);
-    LogFmt = logging.Formatter('%(asctime)s %(filename)s '
-                               '%(lineno)d %(levelname)s: %(message)s');
-    LogHndl.setFormatter(LogFmt);
-    Logger.addHandler(LogHndl);
-    Logger.setLevel(logging.DEBUG);
+    if not Level == 'off':
+        if SysLog:
+            if sys.platform == 'linux2':
+                try:
+                    LogHndl = logging.SysLogHandler();
+                except:
+                    LogHndl = logging.StreamHandler(sys.stderr);
+            else:
+                try:
+                    LogHndl = NTEventLogHandler('PPLT');
+                except:
+                    LogHndl = logging.StreamHandler(sys.stderr);
+        elif File:
+            LogHndl = logging.FileHandler(File);
+        else:
+            LogHndl = logging.StreamHandler(sys.stderr);
+            
+        LogFmt = logging.Formatter('PPLT: %(asctime)s %(levelname)s: %(filename)s('
+                               '%(lineno)d): %(message)s');
+        LogHndl.setFormatter(LogFmt);
+        Logger.addHandler(LogHndl);
+        if Level == 'debug':
+            Logger.setLevel(logging.DEBUG);
+        elif Level == 'info':
+            Logger.setLevel(logging.INFO);
+        elif Level == 'warning':
+            Logger.setLevel(logging.WARNING);
+        elif Level == 'error':
+            Logger.setLevel(logging.ERROR);
+        else:
+            #default level: error;
+            Logger.setLevel(logging.ERROR);
     Logger.info("Start logging");
     return(Logger);

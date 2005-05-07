@@ -1,27 +1,59 @@
+import ConfigParser;
 import os.path;
 import sys;
 
 class Config:
-	def __init__(self):
-		self.__LogLevel   = 'debug';
-		self.__LogFile    = None; #os.path.normpath(sys.exec_prefix+'/PPLT/LogFile.log');
-		self.__SysLog     = False;
-		self.__BasePath   = os.path.normpath(sys.exec_prefix+'/PPLT/');
-		self.__UserDB     = os.path.normpath(self.__BasePath+'/UserDB.xml');
-		self.__DBPath     = os.path.normpath(self.__BasePath+'/Mods');
-		self.__IconPath   = os.path.normpath(self.__BasePath+'/icons');
+	def __init__(self, ConfigFileName):
+		if not ConfigFileName:
+			ConfigFileName = os.path.normpath(sys.exec_prefix+"/PPLT/PPLT.conf");
+		self.__Conf = ConfigParser.SafeConfigParser();
+		self.__Conf.read(ConfigFileName);
+
     
 	def GetBasePath(self):
-		return(self.__BasePath);
+		tmp = self.__Conf.get("path","BasePath");
+		if tmp == "AUTOMATIC":
+			return(os.path.normpath(sys.exec_prefix+"/PPLT/"));
+		return(os.path.normpath(tmp));
+	
 	def GetUserDB(self):
-		return(self.__UserDB);
+		tmp = self.__Conf.get("path","UserDB");
+		if tmp == "AUTOMATIC":
+			return(os.path.normpath(sys.exec_prefix+"/PPLT/UserDB.xml"));
+		return(os.path.normpath(tmp));
+
 	def GetDBPath(self):
-		return(self.__DBPath);
+		tmp = self.__Conf.get("path","DBPath");
+		if tmp == "AUTOMATIC":
+			return(os.path.normpath(sys.exec_prefix+"/PPLT/Mods/"));
+		return(os.path.normpath(tmp));
+
 	def GetIconPath(self):
-		return(self.__IconPath);
-	def GetLogLevel(self):
-		return(self.__LogLevel);
+		tmp = self.__Conf.get("path","IconPath");
+		if tmp == "AUTOMATIC":
+			return(os.path.normpath(sys.exec_prefix+"/PPLT/icons/"));
+		return(os.path.normpath(tmp));
+
+	def GetCoreLogLevel(self):
+		tmp = self.__Conf.get("logging","CoreLevel");
+		if tmp == "No":
+			return(None);
+		return(tmp);
+	
+	def GetPPLTLogLevel(self):
+		tmp = self.__Conf.get("logging","PPLTLevel");
+		if tmp == "No":
+			return(None);
+		return(tmp);
+
 	def GetLogFile(self):
-		return(self.__LogFile);
+		tmp = self.__Conf.get("logging","File");
+		if tmp == "No":
+			return(None);
+		return(tmp);
+
 	def GetSysLog(self):
-		return(self.__SysLog);
+		tmp = self.__Conf.get("logging","SysLog");
+		if tmp == "Yes":
+			return(True);
+		return(False);

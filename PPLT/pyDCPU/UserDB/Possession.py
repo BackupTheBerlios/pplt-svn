@@ -155,9 +155,9 @@ def SplitRights(Right):
     Group = Rights();
     Any   = Rights();
     
-    print "Any  : 0x%x"%(Right&0x07);
-    print "Group: 0x%x"%((Right>>3)&0x07);
-    print "Owner: 0x%x"%((Right>>6)&0x07);
+#    print "Any  : 0x%x"%(Right&0x07);
+#    print "Group: 0x%x"%((Right>>3)&0x07);
+#    print "Owner: 0x%x"%((Right>>6)&0x07);
 
     Any.SetRight(Right & 0x7);
     Group.SetRight((Right >> 3) & 0x7);

@@ -39,12 +39,14 @@ import sys;
 import os.path;
 import md5;
 import Fingerprint;
+import logging;
+
 
 class Importer:
-    def __init__(self, Logger):
-        self.__ModuleDataBase = ModuleDB(Logger);
-        self.__ModuleRootDir = self.__ModuleDataBase.GetRootDir();
-        self.__Logger = Logger;
+    def __init__(self, ModuleRootDir):
+        self.__ModuleDataBase = ModuleDB(ModuleRootDir);
+        self.__ModuleRootDir = ModuleRootDir;
+        self.__Logger = logging.getLogger("pyDCPU");
     
     def NewMaster(self, Name, Connection, Parameters, Fingerprint):
         """ This Method create a object from the module [Name] with [Parameters] """
@@ -204,9 +206,9 @@ class Importer:
         
 
 class ModuleDB:
-    def __init__(self, Logger):
-        self.__Logger = Logger;
-        self.__RootDir = os.path.normpath(sys.exec_prefix+"/PPLT/");
+    def __init__(self, RootDir):
+        self.__Logger = logging.getLogger("pyDCPU");
+        self.__RootDir = RootDir;
         self.__ModuleHash = {};
         
     def GetRootDir(self):

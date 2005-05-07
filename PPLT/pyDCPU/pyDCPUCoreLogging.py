@@ -43,8 +43,8 @@ def SetupLogger(Level,File,SysLog):
         else:
             LogHndl = logging.StreamHandler(sys.stderr);
             
-        LogFmt = logging.Formatter('%(asctime)s %(filename)s '
-                               '%(lineno)d %(levelname)s: %(message)s');
+        LogFmt = logging.Formatter('Core: %(asctime)s %(levelname)s: %(filename)s('
+                               '%(lineno)d): %(message)s');
         LogHndl.setFormatter(LogFmt);
         Logger.addHandler(LogHndl);
         if Level == 'debug':

@@ -1,0 +1,2 @@
+before 0.1 release:
+	+ reference counter for objects

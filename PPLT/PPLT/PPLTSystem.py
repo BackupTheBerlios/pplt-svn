@@ -13,16 +13,27 @@ MODUS_FMT_INTEGER = 3;
 
 
 class System:
-	def __init__(self):
-		""" This is the PPLTSystem class all work can be don over a instanc if this class """
-		self.__Config = Configuration.Config();								# Load Config
+	"""This is the PPLTSystem class all work can be done over a instanc if this 
+ class. To get a instance of this class simply call:
+   >>> obj = PPLT.System(). 
+ 
+ There is a optional parameter for this method: "ConfigFile":
+   >>> obj = PPLT.System(ConfigFile="/home/hannes/PPLT.conf")
+ If you miss this parameter, the default sys.exec_prefix+"/PPLT/PPLT.conf" will
+ be used. (will be installed)"""
 
-		self.__Core = pyDCPU.Core(UserDBFile = self.__Config.GetUserDB(),	# Start Core
-                                  LogLevel = self.__Config.GetLogLevel(),
+	def __init__(self,ConfigFile=None):
+		self.__Config = Configuration.Config(ConfigFile);					# Load Config
+
+		self.__Core = pyDCPU.Core(ModulePath = self.__Config.GetBasePath(),
+                                  UserDBFile = self.__Config.GetUserDB(),	# Start Core
+                                  LogLevel = self.__Config.GetCoreLogLevel(),
                                   LogFile = self.__Config.GetLogFile(),
                                   SysLog = self.__Config.GetSysLog());
 
-		self.__Logger = Logging.Logger();									# Start Logging
+		self.__Logger = Logging.Logger(self.__Config.GetPPLTLogLevel(),
+										self.__Config.GetLogFile(),
+										self.__Config.GetSysLog());			# Start Logging
 
 		self.__DataBase = DataBase.DataBase(self.__Config.GetDBPath());		# Load the Module/Device database
 		self.__UserDataBase = self.__Core.GetTheUserDB();
@@ -33,8 +44,9 @@ class System:
 
 
 	def Stop(self):
-		""" This methow will stop the system. Meaning stopping all servers,
- clear the whole Symboltree ans unload all devices. """ 
+		""" This method will stop the system. Meaning stopping all servers,
+ clear the whole Symboltree ans unload all devices. (no parameters needed)""" 
+		#FIXME implement!
 		pass;
 
 
@@ -46,40 +58,62 @@ class System:
     # ######################################################################## #
 	def Install(self, InstallFile):
 		""" This method will install all core-modules and pplt-devices listed in
- the InstallFile. """
+ the InstallFile. Return True on success."""
 		return(Install.InstallSet(InstallFile, self.__Config.GetBasePath()));
     
 	def UnIstall(self, ModuleName):
-		""" This method will uninstall the given module/divice/server """
+		""" This method will uninstall the given module/divice/server. 
+ Return True on success. """
 		#FIXME implement!
 		pass;
 
 	def ListKnownServers(self, Class=None):
+		""" List all Servers in Class. Return a list of strings. """
 		return(self.__DataBase.ListServersIn(Class));
+
 	def ListKnownServerClasses(self, Class=None):
+		""" List all server classes in give class. if class is missed, all
+ root-classes will be listed. Return a list of strings. """
 		return(self.__DataBase.ListServerClassesIn(Class));
+
 	def ListKnownDevices(self, Class=None):
+		""" List all devices in class. Return a list of strings. """
 		return(self.__DataBase.ListDevicesIn(Class));
+
 	def ListKnownDeviceClasses(self, Class=None):
+		""" List all device classes. like "ListKnownServerClasses()". 
+Return a list of strings. """
 		return(self.__DataBase.ListDeviceClassesIn(Class));
+
 	def GetServerInfo(self, Name):
-		""" Return a info object """
+		""" Return a info object for the server Name. """
+		#FIXME implement!
 		pass;
+
 	def GetDeviceInfo(self, Name):
+		""" Return a info object for the device Name. """
 		#FIXME implement!
 		pass;
     
+
+
     # ######################################################################## #
     # User/Group management                                                    #
     # ######################################################################## #
     # ######################################################################## #
 	def CreateGroup(self, ParentGroup, Name):
+		""" Create a group within ParentGroup with Name. If ParentGroup is None,
+ a new root group will be generated. Return True on success. """ 
 		return(self.__UserDataBase.CreateGroup(ParentGroup,Name));
 
 	def DeleteGroup(self, Name):
+		""" Delete a group. Return True on success."""
 		return(self.__UserDataBase.DeleteGroup(Name));
 
 	def ListGroups(self, GroupName = None):
+		""" List all subgroups of given GroupName. If GroupName = None or 
+ missed, all root groups will be listed. Return a list of string. """
+
 		if not GroupName:
 			group = self.__UserDataBase;
 		else:
@@ -90,6 +124,7 @@ class System:
 		return(group.ListSubGroups());
 
 	def ListMembers(self, GroupName = None):
+		""" List all members of a give group. Return a list of strings. """
 		if not GroupName:
 			return([]);
 		group = self.__UserDataBase.GetGroupByName(GroupName);
@@ -99,9 +134,12 @@ class System:
 		return(group.ListMembers());
 
 	def CreateMember(self, Group, Name, Password, Description):
+		""" Create a new group member for the give Group with Name, Password 
+ and Description. Return True on success. """
 		return(self.__UserDataBase.CreateMember(Group, Name, Password, Description));
 
 	def DeleteMember(self, Name):
+		""" Delete a user. Return True pn success. """
 		group = self.__UserDataBase.GetGroupByUserName(Name);
 		if not group:
 			self.__Logger.warning("No group found for user %s: does he/she exists?"%Name);
@@ -109,15 +147,20 @@ class System:
 		return(self.__UserDataBase.DeleteMember(group, Name));
 
 	def CheckPassword(self, Name, Password):
+		""" Test Password if its match to user Name's one. Return True on 
+ success. """
 		return(self.__UserDataBase.ValidUser(Name,Password));
 
 	def ChangePassword(self, Name, Password):
+		""" Change the passwd for a the user Name. """
 		return(self.__UserDataBase.ChangePassword(Name,Password));
 
 	def SetSuperUser(self, Name):
+		""" Make user Name become the SuperUser. """
 		return(self.__UserDataBase.SetSuperUser(Name));
 
 	def GetSuperUser(self):
+		""" Return the name of the SuperUser """
 		return(self.__UserDataBase.GetSuperUser());
         
         
@@ -127,7 +170,8 @@ class System:
     # ######################################################################## #
     # ######################################################################## #
 	def LoadDevice(self, DeviceName, Alias, Parameters):
-		""" Return a device object """
+		""" Load an init device DeviceName as Alias with Parameters. Return
+ True on success."""
 		# try to find out file name of DeviceName
 		devFileName = self.__DataBase.GetDeviceFile(DeviceName);
 		if not devFileName:
@@ -145,6 +189,7 @@ class System:
 
 
 	def UnLoadDevice(self, Alias):
+		""" Unload and destroy the given device. Return True on success. """
 		#get device from table
 		device = self.__DeviceHash.get(Alias);
 		if not device:
@@ -160,6 +205,7 @@ class System:
 
 
 	def ListDevices(self):
+		""" List all loaded devices. Return a list of strings. """
 		# simply return the keys of device table
 		return(self.__DeviceHash.keys());
     
@@ -170,6 +216,8 @@ class System:
     # ######################################################################## #
     # ######################################################################## #
 	def LoadServer(self, ServerName, Alias, DefaultUser, Parameters):
+		""" Load the server ServerName as Alias with Parameters and with
+ default rights of the given DefaultUser. Return True on success."""
 		serverFileName = self.__DataBase.GetServerFile(ServerName);
 		if not serverFileName:
 			self.__Logger.warning("No server found named %s"%ServerName);
@@ -183,6 +231,7 @@ class System:
 		return(True);
 
 	def UnLoadServer(self, Name):
+		""" Unload a desatroy the give Server. Return True on success."""
 		# get Obj by name
 		serverObj = self.__ServerHash.get(Name);
 		if not serverObj:
@@ -192,6 +241,7 @@ class System:
 		return(serverObj.destroy());
 
 	def ListRunningServers(self):
+		""" List all running or hanging servers. Return a list of strings. """
 		# simply return a list of known aliases:
 		return(self.__ServerHash.keys());
         
@@ -202,6 +252,10 @@ class System:
     # ######################################################################## #
     # ######################################################################## #
 	def CreateFolder(self, Path, Modus='600', Owner=None, Group=None):
+		""" Create a new Folder in Folder "Path" with Modus, Owner, Group.
+ Modus, Owner, Group can be obmitted, then the SuperUser and the 
+ SuperUserGroup will be used for Owner and Group and 600 will be used as
+ the modus. Return True on success."""
 		# map call to core-object:
 		if not self.__Core.SymbolTreeCreateFolder(Path):
 			return(False);
@@ -219,17 +273,22 @@ class System:
 		return(True);
 
 	def DeleteFolder(self, Path, Recur=False):
+		""" Simply delete a (empty) Folder. Return True on success. """
 		#simply map call to core:
 		return(self.__Core.SymbolTreeDeleteFolder(Path));
 		#FIXME Add recursive detete
 
 
 	def ListFolders(self, Path):
+		""" List all folder in Path. """
 		# simply map call to core:
 		return(self.__Core.SymbolTreeListFolders(Path));
 
 
 	def CreateSymbol(self, Path, Slot, Type, Modus='600', Owner=None, Group=None):
+		""" Create a Symbol with Type in Path and attach it to Slot. Modus, Owner, Group
+ can be obmitted. Then SuperUser, SuperUserGroup and 600 will be used. Return True on
+ success. """
 		# check if symbol allready exists:
 		# split slot:
 		tmp = Slot.split('::');
@@ -282,6 +341,7 @@ class System:
 
 
 	def DeleteSymbol(self, Path):
+		""" Simply delete the symbol in Path. Return True on success."""
 		# get slotID by symbol path:
 		SlotID = self.__SymbolTable.get(Path);
 		if not SlotID:
@@ -312,11 +372,18 @@ class System:
 
 
 	def ListSymbols(self, Path):
+		""" List all Symbols in Path. Return a lsit of strings. """
 		#simple map call to core:
 		return(self.__Core.SymbolTreeListSymbols(Path));
 
 
 	def GetModus(self, Path, Format=MODUS_FMT_OCTAL):
+		""" Return the modus of a symbol or folder in Format.
+ If Format is OCTAL, a string with the octal representation of the
+ modus will be returnd. If Format is STRING, a string formated like
+ the modus in ls -l command will be returned. If Format is INTEGER
+ the integer representation of the modus will be returned (base=10!!!)."""
+ 
 		(User, Group, Modus) = self.__Core.SymbolTreeGetAccess(Path);
 		if Modus == None:
 			self.__Logger.warning("Error while get modus of %s, maybe it does not exist"%Path);
@@ -332,6 +399,8 @@ class System:
 
 
 	def ChangeModus(self, Path, Modus):
+		""" Change the modus of the symbol or folder pointed by path.
+ Only the OCTAL string format is accepted. Return True on success. """
 		(user, group, old_modus) = self.__Core.GetAccess(Path);
 		if isinstance(Modus,int):
 			new_modus = Modus;
@@ -344,29 +413,36 @@ class System:
 		return(self.__Core.SymbolTreeSetAccess(Path,user,group,new_modus));
 
 	def GetOwner(self, Path):
+		""" Return the owner name. """
 		(user, group, modus) = self.__Core.SymbolTreeGetAccess(Path);
 		return(user);
 
 	def ChangeOwner(self, Path, Owner):
+		""" Set the owner of a symbol or folder. Return True
+ on success. """
 		(old_user, group, modus) = self.__Core.SymbolTreeGetAccess(Path);
 		return(self.__Core.SymbolTreeSetAccess(Owner, group, modus));
 
 
 	def GetGroup(self, Path):
+		""" Return the groupname of a symbol or folder."""
 		(owner, group, modus) = self.__Core.SymbolTreeGetAccess(Path);
 		return(group);
 
 
 	def ChangeGroup(self, Path, Group):
+		""" Set the group of a symbol or folder. Return True on success."""
 		(owner, old_group, modus) = self.__Core.SymbolTreeGetAccess(Path);
 		return(self.__Core.SymbolTreeSetAccess(Path, owner, Group, modus));
 
 
 	def GetValue(self, Path):
+		""" Return the actual value of the symbol pointed by Path. """
 		return(self.__Core.SymbolTreeGetValue(Path));
 
 
 	def SetValue(self, Path, Value):
+		""" Set the Value of a symbol pointed by path. """
 		return(self.__Core.SymbolTreeSetValue(Path, Value));
 
 
