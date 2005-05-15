@@ -1,6 +1,6 @@
 pack:
-	make -C Master pack
-	make -C Server pack
-	make -C PPLT
+	make -s -C Master pack
+	make -s -C Server pack
+	make -s -C PPLT
 	mv *.zip Lib/
 	mv *.xml Lib/

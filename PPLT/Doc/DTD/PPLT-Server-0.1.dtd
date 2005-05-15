@@ -1,0 +1,41 @@
+<!ELEMENT PPLTServer (Head, Setup)>
+	<!ELEMENT Head (Description*, Require)>
+	 
+		<!ELEMENT Description (#PCDATA)>
+	
+		<!ELEMENT Require (DCPUModule+, Variable*)>
+			<!ELEMENT DCPUModule (#PCDATA)>
+			<!ELEMENT Variable (Description*)>
+
+
+	<!ELEMENT Setup (Load+)>
+		<!ELEMENT Load (Parameter*)>
+			<!ELEMENT Address (#PCDATA | Variable)*>
+			<!ELEMENT Parameter (#PCDATA?)>
+		
+
+
+
+<!ATTLIST PPLTServer
+ name	CDATA	#REQUIRED
+ class	CDATA	#REQUIRED
+>
+
+<!ATTLIST Description
+ lang	CDATA	#REQUIRED
+>
+
+<!ATTLIST Variable
+ name		CDATA	#REQUIRED
+ default	CDATA	#IMPLIED
+>
+
+<!ATTLIST Load
+ name		CDATA	#REQUIRED
+ namespace 	CDATA	#IMPLIED
+>
+
+<!ATTLIST Parameter
+ name	CDATA	#REQUIRED
+ var	CDATA	#IMPLIED
+>

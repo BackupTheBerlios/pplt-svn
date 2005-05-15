@@ -3,6 +3,10 @@
 		<a href="/de/NewsHistory.html" style="font-size:0.5em;">[Archiv]</a>
 	</div>
     <div class="NewsItem">
+    <b>2005-05-10 - Erstes Alpha Release</b><br>
+    	Die PPLT Bibliothek hat nun ihren vollen Funktionsumfang
+	erreicht. Des weiteren habe ich einen Fehler in der 
+	Kernbibliothek entfernt.<br><br>
     <b>2005-04-28 - Release PPLT Version 0.1pre 3</b><br>
 	Dieses Release ist identisch mit dem Release <i>0.1pre 2</i>,
 	jedoch habe ich einige &uuml;ble Fehler entfernt.<br><br>

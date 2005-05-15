@@ -3,7 +3,7 @@ import os.path;
 import sys;
 
 class Config:
-	def __init__(self, ConfigFileName):
+	def __init__(self, ConfigFileName = None):
 		if not ConfigFileName:
 			ConfigFileName = os.path.normpath(sys.exec_prefix+"/PPLT/PPLT.conf");
 		self.__Conf = ConfigParser.SafeConfigParser();
@@ -33,6 +33,12 @@ class Config:
 		if tmp == "AUTOMATIC":
 			return(os.path.normpath(sys.exec_prefix+"/PPLT/icons/"));
 		return(os.path.normpath(tmp));
+
+	def GetLang(self):
+		return(self.__Conf.get("lang","language"));
+
+	def GetAltLang(self):
+		return(self.__Conf.get("lang","alt-lang"));
 
 	def GetCoreLogLevel(self):
 		tmp = self.__Conf.get("logging","CoreLevel");

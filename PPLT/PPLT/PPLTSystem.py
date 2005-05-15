@@ -5,6 +5,8 @@ import Install;
 import Device;
 import Server;
 import DataBase;
+import DeviceDescription;
+import ServerDescription;
 
 
 MODUS_FMT_OCTAL = 1;
@@ -87,14 +89,24 @@ Return a list of strings. """
 
 	def GetServerInfo(self, Name):
 		""" Return a info object for the server Name. """
-		#FIXME implement!
-		pass;
+		srvFileName = self.__DataBase.GetServerFile(Name);
+		if not srvFileName:
+			self.__Logger.error("No server named \"%s\" found!"%Name);
+			return(None);
+		return(ServerDescription.LoadDescription(srvFileName,
+													self.__Config.GetLang(),
+													self.__Config.GetAltLang()));
 
 	def GetDeviceInfo(self, Name):
 		""" Return a info object for the device Name. """
-		#FIXME implement!
-		pass;
-    
+		devFileName = self.__DataBase.GetDeviceFile(Name);
+		if not devFileName:
+			self.__Logger.error("No Device named \"%s\" found"%Name);
+			return(None);
+		self.__Logger.debug("Load info from file \"%s\""%devFileName);
+		return(DeviceDescription.LoadDescription(devFileName,
+													self.__Config.GetLang(),
+													self.__Config.GetAltLang()));
 
 
     # ######################################################################## #
@@ -162,8 +174,12 @@ Return a list of strings. """
 	def GetSuperUser(self):
 		""" Return the name of the SuperUser """
 		return(self.__UserDataBase.GetSuperUser());
-        
-        
+	def GetSuperUserGrp(self):
+		""" Return the group of the SuperUser """
+		return(self.__UserDataBase.GetSuperUserGrp());
+	def GetGroupByUser(self, UserName):
+		""" Return the group of given user """
+		return(self.__UserDataBase.GetGroupByUserName(UserName));
     
     # ######################################################################## #
     # Manage Devices                                                           #
@@ -172,17 +188,24 @@ Return a list of strings. """
 	def LoadDevice(self, DeviceName, Alias, Parameters):
 		""" Load an init device DeviceName as Alias with Parameters. Return
  True on success."""
+		#check alias:
+		if self.__DeviceHash.has_key(Alias):
+			self.__Logger.error("Alias %s already exists"%Alias);
+			return(False);
 		# try to find out file name of DeviceName
 		devFileName = self.__DataBase.GetDeviceFile(DeviceName);
 		if not devFileName:
 			self.__Logger.error("Can't load Device %s: not known!"%DeviceName);
 		# load and init device
 		try:
-			device = Device.Device(self.__Core, devFileName, Parameters);
+			device = Device.Device(self.__Core, devFileName, DeviceName, Parameters);
 		except:
 			self.__Logger.error("Error while load Device \"%s\""%DeviceName);
 			return(False);
-		
+		if not device:
+			self.__Logger.error("Error while load device %s"%DeviceName);
+			return(None);
+
 		#add device to table
 		self.__DeviceHash.update( {Alias:device} );
 		return(True);
@@ -208,7 +231,14 @@ Return a list of strings. """
 		""" List all loaded devices. Return a list of strings. """
 		# simply return the keys of device table
 		return(self.__DeviceHash.keys());
-    
+
+	def GetFQDeviceName(self, Alias):
+		dev = self.__DeviceHash.get(Alias);
+		if not dev:
+			self.__Logger.error("No device named \"%s\" found."%Alias);
+			return(None);
+		return(dev.getClassAndName());
+ 
             
     
     # ######################################################################## #
@@ -218,14 +248,22 @@ Return a list of strings. """
 	def LoadServer(self, ServerName, Alias, DefaultUser, Parameters):
 		""" Load the server ServerName as Alias with Parameters and with
  default rights of the given DefaultUser. Return True on success."""
+		#check alias:
+		if self.__ServerHash.has_key(Alias):
+			self.__Logger.error("Alias %s already exists"%Alias);
+			return(False);
+
 		serverFileName = self.__DataBase.GetServerFile(ServerName);
 		if not serverFileName:
 			self.__Logger.warning("No server found named %s"%ServerName);
 			return(False);
 		try:
-			server = Server.Server(self.__Core, serverFileName, DefaultUser, Parameters);
+			server = Server.Server(self.__Core, serverFileName, ServerName, DefaultUser, Parameters);
 		except:
 			self.__Logger.warning("Error while load server %s"%ServerName);
+			return(False);
+		if not server:
+			self.__Logger.error("Error while load Server %s"%ServerName);
 			return(False);
 		self.__ServerHash.update( {Alias:server} );
 		return(True);
@@ -244,7 +282,13 @@ Return a list of strings. """
 		""" List all running or hanging servers. Return a list of strings. """
 		# simply return a list of known aliases:
 		return(self.__ServerHash.keys());
-        
+	def GetFQServerName(self, Alias):
+		srv = self.__ServerHash.get(Alias);
+		if not srv:
+			self.__Logger.error("No server named \"%s\" found"%Alias);
+			return(None);
+		return(srv.getClassAndName());
+
 
 
     # ######################################################################## #
@@ -401,7 +445,7 @@ Return a list of strings. """
 	def ChangeModus(self, Path, Modus):
 		""" Change the modus of the symbol or folder pointed by path.
  Only the OCTAL string format is accepted. Return True on success. """
-		(user, group, old_modus) = self.__Core.GetAccess(Path);
+		(user, group, old_modus) = self.__Core.SymbolTreeGetAccess(Path);
 		if isinstance(Modus,int):
 			new_modus = Modus;
 		elif isinstance(Modus,str):
@@ -421,7 +465,7 @@ Return a list of strings. """
 		""" Set the owner of a symbol or folder. Return True
  on success. """
 		(old_user, group, modus) = self.__Core.SymbolTreeGetAccess(Path);
-		return(self.__Core.SymbolTreeSetAccess(Owner, group, modus));
+		return(self.__Core.SymbolTreeSetAccess(Path, Owner, group, modus));
 
 
 	def GetGroup(self, Path):
@@ -456,7 +500,7 @@ def ModusToOctString(modus):
 	any = modus & 0x07;
 	grp = (modus>>3) &0x07;
 	own = (modus>>6) &0x07;
-	return("%i%i%i"%(any,grp,own));
+	return("%i%i%i"%(own,grp,any));
 	
 def ModusToString(modus):
 	any = modus & 0x07;

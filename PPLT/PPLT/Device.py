@@ -5,12 +5,13 @@ import pyDCPU;
 
 
 class Device:
-	def __init__(self, CoreObject, FileName, Parameters):
+	def __init__(self, CoreObject, FileName, DeviceName, Parameters):
 		""" This is the Device Object for the PPLT system. 
  It parse the given device-decription-file load all pyDCPU modules
  descibed."""
 		#save core object
 		self.__CoreObject = CoreObject;
+		self.__DeviceName = DeviceName;
 		# get logger
 		self.__Logger = logging.getLogger('PPLT');
 		self.__SlotTable = {};
@@ -72,3 +73,5 @@ class Device:
 			return(self.__CoreObject.MasterTreeDel(SlotID));
 		return(True);
 
+	def getClassAndName(self):
+		return(self.__DeviceName);

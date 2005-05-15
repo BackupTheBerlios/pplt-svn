@@ -2,12 +2,13 @@ import xml.dom.minidom;
 import logging;
 
 class Server:
-	def __init__(self, CoreObject, FileName, DefaultUser, Parameters):
+	def __init__(self, CoreObject, FileName, ServerName, DefaultUser, Parameters):
 		"""This is the class for pplt-server"""
 		self.__Logger = logging.getLogger('PPLT');
 		self.__CoreObject = CoreObject;
 		self.__ServerObjects = [];
 		self.__FileName = FileName;
+		self.__ServerName = ServerName;
 		self.__DefaultUser = DefaultUser;
 		self.__Parameters = Parameters;
 		self.__load();
@@ -34,6 +35,8 @@ class Server:
 			self.__CoreObject.ExporterDel(server);
 		return(True);
 
+	def getClassAndName(self):
+		return(self.__ServerName);
 
 
 

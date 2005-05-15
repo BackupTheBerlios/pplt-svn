@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+<!DOCTYPE PPLTServer SYSTEM "PPLT-Server-0.1.dtd">
+<PPLTServer name="PPLTWebServer" class="Web">
+	<Head>
+		<Description lang="de">Mit diesem Server können sie den Symbolbaum über
+		einen Webserver exportieren und dan mit ihrem Browser darauf zu 
+		greifen.</Description>
+		<Description lang="en">With this server you can export the symboltree
+		as an webserver. Then you can browse the through the symboltree with
+		you favorite FireFox.</Description>
+
+		<Require>
+			<DCPUModule>Export.PPLTWeb</DCPUModule>
+			<Variable name="Address" default="127.0.0.1">
+				<Description lang="de">Geben sie hier die Adresse der 
+				Schnitstelle an, auf dem der Server auf neue Verbindungen 
+				warten soll.</Description>
+				<Description lang="en">Put here the address to bind to.
+				</Description>
+			</Variable>
+			<Variable name="Port" default="8080">
+				<Description lang="de">Geben sie hier den Port an, auf dem der
+				Server auf neue Verbindungen warten soll.</Description>
+				<Description lang="en">Put here the port to bind to.
+				</Description>
+			</Variable>
+		</Require>
+	</Head>
+
+	<Setup>
+		<Load name="Export.PPLTWeb">
+			<Parameter name="Address" var="Address"/>
+			<Parameter name="Port" var="Port"/>
+		</Load>
+	</Setup>
+</PPLTServer>

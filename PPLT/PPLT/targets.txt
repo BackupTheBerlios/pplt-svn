@@ -7,28 +7,28 @@ PPLTSystem:
         + Geting all configuration information like where the pyDCPUModules are
         - maybe later: parsing/changing a configuration file, etc.
     [Logging]
-        - own logging-system
-        - control pyDCPU logging
+        + own logging-system
+        + control pyDCPU logging
     [User/Group]
-        - create a group
-        - delete a group
-        - list a group (members and subgroups)
-        - create a member
-        - delete a member
-        - change the superuser
+        + create a group
+        + delete a group
+        + list a group (members and subgroups)
+        + create a member
+        + delete a member
+        + change the superuser
     [CoreModules]
-        + install
+        - install
         - uninstall
     [PPLTDevice]
         - manage (install/uninstall)
-        - load 
-        - unload
+        + load 
+        + unload
     [SymbolTree]
-        - create folders
-        - delete folders
-        - create symbols by name, and device(namespace)
-        - change modus (symbols an folders)
-        - list folders
+        + create folders
+        + delete folders
+        + create symbols by name, and device(namespace)
+        + change modus (symbols an folders)
+        + list folders
     [Server]
-        - load
-        - unload
+        + load
+        + unload

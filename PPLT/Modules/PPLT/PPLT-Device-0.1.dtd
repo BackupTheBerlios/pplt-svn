@@ -1,0 +1,61 @@
+<!ELEMENT PPLTDevice (Head, Setup)>
+	<!ELEMENT Head (Description*, Require, Provide)>
+	 
+		<!ELEMENT Description (#PCDATA)>
+	
+		<!ELEMENT Require (DCPUModule+, Variable*)>
+			<!ELEMENT DCPUModule (#PCDATA)>
+			<!ELEMENT Variable (Description*)>
+
+		<!ELEMENT Provide (NameSpace+)>
+			<!ELEMENT NameSpace (Slot*,SlotRange*)>
+				<!ELEMENT Slot (Description*)>
+				<!ELEMENT SlotRange (Description*)>
+
+
+	<!ELEMENT Setup (Load+)>
+		<!ELEMENT Load (Address?, Parameter*, Load*)>
+			<!ELEMENT Address (#PCDATA | Variable)*>
+			<!ELEMENT Parameter (#PCDATA | Variable)*>
+		
+
+
+
+<!ATTLIST PPLTDevice 
+ name	CDATA	#REQUIRED
+ class	CDATA	#REQUIRED
+>
+
+<!ATTLIST Description
+ lang	CDATA	#REQUIRED
+>
+
+<!ATTLIST Variable
+ name		CDATA	#REQUIRED
+ default	CDATA	#IMPLIED
+>
+
+<!ATTLIST NameSpace
+ name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Slot
+ name	CDATA	#REQUIRED
+ type	CDATA	#IMPLIED
+ mode 	CDATA	#IMPLIED
+>
+
+<!ATTLIST SlotRange
+ name	CDATA	#REQUIRED
+ mode	CDATA	#IMPLIED
+ type 	CDATA	#IMPLIED
+>
+
+<!ATTLIST Load
+ name		CDATA	#REQUIRED
+ namespace 	CDATA	#IMPLIED
+>
+
+<!ATTLIST Parameter
+ name	CDATA	#REQUIRED
+>

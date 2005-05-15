@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE PPLTDevice SYSTEM "PPLT-Device-0.1.dtd">
+<PPLTDevice name="NAiS-FPX" class="PLC">
+    <Head>
+		<Description lang="de">Dieses Gerät gibt ihnen den Zugriff auf die 
+		Merker einer NAiS Steuerung und auf den Modus dieser.</Description>
+		<Description lang="en">This device give you access to the makers and
+		mode of a NAiS PLC.</Description>
+
+        <Require>
+            <DCPUModule>Master.Interface.UniSerial</DCPUModule>
+            <DCPUModule>Master.Transport.ReadLine</DCPUModule>
+			<DCPUModule>Master.Transport.MEWCOM-TL</DCPUModule>
+            <DCPUModule>Master.Device.MEWCOM-CL</DCPUModule>
+			<Variable name="Port">
+				<Description lang="de">Geben sie hier die serielle 
+				Schnittstelle an, an die die Steuerung angschlossen ist.
+				0 = COM1(ttyS0), 1 = COM2(ttyS1), ...</Description>
+				<Description lang="en">Put here the number of the serial
+				interface. 0 = COM1(ttyS0), 1 = COM2(ttyS1), ...
+				</Description>
+			</Variable>
+			<Variable name="Address">
+				<Description lang="de">Geben sie hier die Addresse der 
+				Steuerung an, die sie ansprechen wollen. (Wenn sie den ToolPort
+				verwenden ist diese egal.) Gültige Werte sind die ganzen Zahlen
+				zwischen 0 und 255.</Description>
+				<Description lang="en">Put here the address of the PLC. (If you
+				use the ToolPort you can choose one) Valid values are the 
+				numbers between 0 and 255.</Description> 
+			</Variable>
+        </Require>
+
+		<Provide>
+			<NameSpace name="Marker">
+				<Slot name="STATUS" type="Bool" mode="rw">
+					<Description lang="de">Dieser Slot is Wahr, wenn die 
+					Steuerung im RUN modus ist, und Falsch wenn im STOP 
+					Modus. Sie können diesen Slot auch schreiben, und somit
+					die Steuerung starten und stoppen.</Description>
+					<Description lang="en">This Slot is True if the PLC is in
+					the RUN mode and False otherwise. You can also write 
+					this slot to switch the mode.</Description>
+				</Slot>
+				<SlotRange name="Marker" mode="rw">
+					<Description lang="de">Dieser Slot-Bereich gibt ihnen den 
+					Zugriff auf die Merker der Steuerung. Geben sie den Merker 
+					an, den sie einbinden möchten.</Description>
+					<Description lang="en">This Slot-Range gives you the access
+					to the markers of the PLC. Put here the name of the Marker
+					you want to bind.</Description>
+				</SlotRange>
+			</NameSpace>
+		</Provide>
+    </Head>
+    
+
+    <Setup>
+        <Load name="Master.Interface.UniSerial">
+            <Parameter name="Port"><Variable name="Port"/></Parameter>
+            <Parameter name="TimeOut">1.0</Parameter>
+			<Parameter name="Parity">Odd</Parameter>
+            <Parameter name="Speed">19200</Parameter>
+            <Load name="Master.Transport.ReadLine">
+				<Parameter name="LineEnd">0D</Parameter>
+				<Load name="Master.Transport.MEWCOM-TL">
+					<Parameter name="BCC">True</Parameter>
+					<Load name="Master.Device.MEWCOM-CL" namespace="Marker">
+						<Address><Variable name="Address"/></Address>
+					</Load>
+				</Load>
+            </Load>
+        </Load>
+    </Setup>
+        
+</PPLTDevice>

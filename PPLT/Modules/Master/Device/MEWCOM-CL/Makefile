@@ -1,3 +1,3 @@
 pack:
-	zip MEWCOM-CL.zip *.py
-	zip MEWCOM-CL.zip ../
+	zip -q MEWCOM-CL.zip *.py
+	mv MEWCOM-CL.zip ../

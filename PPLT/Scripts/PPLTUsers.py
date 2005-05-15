@@ -1,3 +1,4 @@
+#!/usr/bin/python
 import logging;
 import sys;
 import wx;
@@ -307,7 +308,7 @@ class MainFrame(wx.Frame):
       self.UserDB = pyDCPU.UserDB.UserDB(self.Logger, Config.GetUserDB());
 
       self.myTree = MainTree(self, 1, wx.DefaultPosition, wx.DefaultSize,
-                             wx.TR_HAS_BUTTONS|wx.TR_TWIST_BUTTONS, self.UserDB);
+                             wx.TR_HAS_BUTTONS, self.UserDB);
 
 
       self.ImageList = createImageList(Config.GetIconPath());

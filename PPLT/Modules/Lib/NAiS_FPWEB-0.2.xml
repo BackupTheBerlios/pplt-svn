@@ -1,0 +1,76 @@
+<?xml version="1.0"?>
+<!DOCTYPE PPLTDevice SYSTEM "PPLT-Device-0.1.dtd">
+<PPLTDevice name="FPWEB" class="PLC">
+    <Head>
+		<Description lang="de">Mit diesem Gerät könenn sie auf die Merker einer
+		NAiS Steuerung zugreifen, die an einen FPWEB-Server angschlossen ist.
+		Dazu wird der vom Webserver getunnelte ToolPort benutzt.</Description>
+		<Description lang="en">With this device you can access a NAiS PLC
+		that is connected with a NAiS Webserver. The tunneld ToolPort will be
+		used.</Description>
+        
+		<Require>
+            <DCPUModule>Master.Interface.Socket</DCPUModule>
+            <DCPUModule>Master.Transport.ReadLine</DCPUModule>
+            <DCPUModule>Master.Transport.MEWCOM-TL</DCPUModule>
+			<DCPUModule>Master.Transport.MEWCOM-CL</DCPUModule>
+			<Variable name="NetAddr">
+				<Description lang="de">Geben sie hier die Adresse der Webservers und
+				den Port des ToolPort-Tunnels (dieser ist meißt 9094) in der Form
+				HOSTADDR:PORT an. </Description>
+				<Description lang="en">Put here the address and port of the Webserver.
+				The port of the tunneld ToolPort is mostly 9094. Form: HOSTADDR:PORT
+				</Description>
+			</Variable>
+			<Variable name="MEWAddr" default="1">
+				<Description lang="de">Geben sie hier die Adresse der Steuerung 
+				im MEWTOCOL Bus an. Wenn der Webserver mit dem ToolPort des 
+				Steuerung verbunden ist, dann ist die Adresse egal. Gültige
+				Werte liegen zwischen 1..255.</Description>
+				<Description lang="en">Put here the MEWTOCOL address of the 
+				PLC. If the webserver is connected to the ToolPort of the 
+				PLC you can choos a address. Valid values are 1..255.
+				</Description>
+			</Variable>
+        </Require>
+		
+		<Provide>
+			<NameSpace name="Marker">
+				<Slot name="STATUS" type="Bool" mode="rw">
+					<Description lang="de">Dieser Slot is Wahr, wenn die 
+					Steuerung im RUN modus ist, und Falsch wenn im STOP 
+					Modus. Sie können diesen Slot auch schreiben, und somit
+					die Steuerung starten und stoppen.</Description>
+					<Description lang="en">This Slot is True if the PLC is in
+					the RUN mode and False otherwise. You can also write 
+					this slot to switch the mode.</Description>
+				</Slot>
+				<SlotRange name="Marker" mode="rw">
+					<Description lang="de">Dieser Slot-Bereich gibt ihnen den 
+					Zugriff auf die Merker der Steuerung. Geben sie den Merker 
+					an, den sie einbinden möchten.</Description>
+					<Description lang="en">This Slot-Range gives you the access
+					to the markers of the PLC. Put here the name of the Marker
+					you want to bind.</Description>
+				</SlotRange>
+			</NameSpace>
+		</Provide>
+    </Head>
+    
+    <Setup>
+        <Load name="Master.Interface.Socket">
+            <Parameter name="TimeOut">1.0</Parameter>
+            <Load name="Master.Transport.ReadLine">
+				<Address><Variable name="NetAddr"/></Address>
+				<Parameter name="LineEnd">0D</Parameter>
+				<Load name="Master.Transport.MEWCOM-TL">
+					<Parameter name="BCC">True</Parameter>
+					<Load name="Master.Device.MEWCOM-CL" namespace="Marker">
+						<Address><Variable name="MEWAddr"/></Address>
+					</Load>
+				</Load>
+			</Load>
+        </Load>
+    </Setup>
+        
+</PPLTDevice>

@@ -1,8 +1,11 @@
 <div class="TextBody">
-    <div class="Head">News 
+    <div class="Head">News
 		<a style="font-size:0.5em;" href="/en/NewsHistory.html">[History]</a>
 	</div>
     <div class="NewsItem">
+    <b>2005-05-10 - Alpharelease of PPLT (Version 0.1)</b><br>
+   The library has now the full planned functional range. Also there was a bug
+   in the Core library, that was removed.<br><br>
     <b>2005-04-28 - Release PPLT version 0.1pre3</b><br>
 	This release is nearly the same like <i>0.1pre2</i>
 	but I've removed some ugly bugs.<br><br>
