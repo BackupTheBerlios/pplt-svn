@@ -11,6 +11,8 @@
             <DCPUModule>Master.Interface.UniSerial</DCPUModule>
             <DCPUModule>Master.Transport.PPI</DCPUModule>
             <DCPUModule>Master.Device.S7</DCPUModule>
+			<DCPUModule>Master.Debug.Statistic</DCPUModule>
+
 			<Variable name="Port" default="0">
 				<Description lang="de">Geben sie hier die serielle 
 				Schnittstelle an, an die die Steuerung angschlossen ist.
@@ -45,6 +47,13 @@
 					marker you want to use.</Description>
 				</SlotRange>
 			</NameSpace>
+			<NameSpace name="PPIStatistic">
+				<Slot name="read_data"></Slot>
+				<Slot name="write_data"></Slot>
+				<Slot name="read_speed"></Slot>
+				<Slot name="write_speed"></Slot>
+				<Slot name="error"></Slot>
+			</Name>
 		</Provide>
     </Head>
 
@@ -57,8 +66,11 @@
             <Parameter name="Speed">9600</Parameter>
             <Load name="Master.Transport.PPI">
 				<Parameter name="Address"><Variable name="PCAddr"/></Parameter>
-				<Load name="Master.Device.S7" namespace="Marker">
+				<Load name="Master.Debug.Statistic" namespace="PPIStatistic">
 					<Address><Variable name="S7Addr"/></Address>
+					<Load name="Master.Device.S7" namespace="Marker">
+						<Address>tunnel</Address>
+					</Load>
 				</Load>
 			</Load>
         </Load>

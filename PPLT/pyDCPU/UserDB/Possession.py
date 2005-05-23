@@ -59,13 +59,11 @@ class Possession:
             self.__Logger.debug("SuperUserSession: Access OK");
             return(True);
 
-        if sesUser == self.__OwnerName:
-            return(self.__OwnerRight.read());
-        elif self.__UserDB.IsMemberOf(self.__GroupName, sesUser):
-            return(self.__GroupRight.read());
-        else:
-            return(self.__AnyRight.read());
-        return(False);
+        if sesUser == self.__OwnerName and self.__OwnerRight.read():
+            return(True);
+        if self.__UserDB.IsMemberOf(self.__GroupName, sesUser) and self.__GroupRight.read():
+            return(True);
+        return(self.__AnyRight.read());
 
     def CanWrite(self, SessionID):
         if self.__UserDB.IsSystemSession(SessionID):
@@ -78,13 +76,11 @@ class Possession:
         if self.__UserDB.IsSuperUser(sesUser):
             return(True);
 
-        if sesUser == self.__OwnerName:
-            return(self.__OwnerRight.write());
-        elif self.__UserDB.IsMemeberOf(self.__GroupName, sesUser):
-            return(self.__GroupRight.write());
-        else:
-            return(self.__AnyRight.write());
-        return(False);
+        if sesUser == self.__OwnerName and self.__OwnerRight.write():
+            return(True);
+        if self.__UserDB.IsMemeberOf(self.__GroupName, sesUser) and self.__GroupRight.write():
+            return(True);
+        return(self.__AnyRight.write());
 
     def CanExecute(self, SessionID):
         if self.__UserDB.IsSystemSession(SessionID):
@@ -93,15 +89,15 @@ class Possession:
         sesUser = self.__UserDB.SessionGetUserName(SessionID);
         if not sesUser:
             return(False);
+        
+        if self.__UserDB.IsSuperUser(sesUser):
+            return(True);
 
-        if sesUser == self.__OwnerName:
-            return(self.__OwnerRight.execute());
-        elif self.__UserDB.IsMemeberOf(self.__GroupName, sesUser):
-            return(self.__GroupRight.execute());
-        else:
-            return(self.__AnyRight.execute());
-        return(False);
-
+        if sesUser == self.__OwnerName and self.__OwnerRight.execute():
+            return(True);
+        if self.__UserDB.IsMemeberOf(self.__GroupName, sesUser) and self.__GroupRight.execute():
+            return(True);
+        return(self.__AnyRight.execute());
 
     def chown(self, newOwner):
         self.__OwnerName = newOwner;
@@ -155,9 +151,9 @@ def SplitRights(Right):
     Group = Rights();
     Any   = Rights();
     
-#    print "Any  : 0x%x"%(Right&0x07);
-#    print "Group: 0x%x"%((Right>>3)&0x07);
-#    print "Owner: 0x%x"%((Right>>6)&0x07);
+    #print "Any  : 0x%x"%(Right&0x07);
+    #print "Group: 0x%x"%((Right>>3)&0x07);
+    #print "Owner: 0x%x"%((Right>>6)&0x07);
 
     Any.SetRight(Right & 0x7);
     Group.SetRight((Right >> 3) & 0x7);

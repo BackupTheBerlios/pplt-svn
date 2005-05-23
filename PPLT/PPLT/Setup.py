@@ -107,7 +107,7 @@ class SetupStepLoad(SetupStep):
 		if self.__Object:
 			self.Logger.debug("Unload my Object");
 			self.__Core.MasterTreeDel(self.__Object);
-    
+		return(True);
 
 class Parameter:
 	def __init__(self, Value = None, Variable = None):

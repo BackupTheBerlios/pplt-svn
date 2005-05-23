@@ -140,11 +140,9 @@ def GetGroupList(PPLTSys, Group=None):
 def ModStr2List(mod):
 	modus = string.atoi(mod,8);
 	lst = [[0,0,0],[0,0,0],[0,0,0]];
-	print "%s => %i"%(mod,modus);
 
 	for n in range(2,-1,-1):
 		for m in range(2,-1,-1):
 			lst[n][m] = modus&0x1;
 			modus = modus>>1;
-	print "Init list: %s"%str(lst);
 	return(lst);

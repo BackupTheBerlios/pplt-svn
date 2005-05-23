@@ -52,7 +52,7 @@ class Symbol:
         return(self.__Valid);
 
     def Unregister(self):
-	return(self.__SymbolSlot.UnRegisterSymbol());
+	return(self.__SymbolSlot.UnregisterSymbol());
 	    
     def GetValue(self, SessionID):
         if not self.__Possession.CanRead(SessionID):

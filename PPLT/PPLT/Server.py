@@ -31,7 +31,7 @@ class Server:
 		return(True);
 	
 	def destroy(self):
-		for server in self.__ServerObject:
+		for server in self.__ServerObjects:
 			self.__CoreObject.ExporterDel(server);
 		return(True);
 

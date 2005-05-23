@@ -4,6 +4,8 @@ import sys;
 import string;
 from DeviceSelectionDialog import DeviceSelectionDialog;
 from DeviceParameterDialog import DeviceParameterDialog;
+import PPLT;
+import os;
 
 class DevicePanel(wx.ListCtrl):
 	def __init__(self, parent, PPLTSys):
@@ -12,6 +14,8 @@ class DevicePanel(wx.ListCtrl):
 										wx.LC_HRULES|
 										wx.BORDER_SUNKEN|
 										wx.LC_SINGLE_SEL);
+		conf = PPLT.Config();
+
 		self.__PPLTSys = PPLTSys;
 		self.__Logger = logging.getLogger("PPLT");
 		self.Fit();
@@ -19,16 +23,45 @@ class DevicePanel(wx.ListCtrl):
 		self.InsertColumn(1,"FQDN",width=150);
 		self.InsertColumn(2,"Parameter",width=200);
 
+		self.__IL = wx.ImageList(16,16);
+		bmp = wx.Bitmap(os.path.normpath(conf.GetIconPath()+"/device.xpm"));
+		if not bmp:
+			bmp = wx.NullBitmap;
+		self.__DevImg = self.__IL.Add(bmp);
+		self.SetImageList(self.__IL, wx.IMAGE_LIST_SMALL);
+
+		self.Bind(wx.EVT_RIGHT_UP, self.OnRightClick);
+
 	def OnAddDevice(self, event):
 		self.__Logger.debug("Add device...");
 		ret = LoadADevice(self, self.__PPLTSys);
 		if ret:
 			(Alias, DevName, Paras) = ret;
-			index = self.InsertStringItem(sys.maxint, Alias);
+			index = self.InsertImageStringItem(sys.maxint, Alias,self.__DevImg);
 			self.SetStringItem(index, 1, DevName);
 			self.SetStringItem(index, 2, Paras);
-
 	
+	def OnDelDevice(self,event):
+		item = self.GetFocusedItem();
+		alias = self.GetItemText(item);
+		if not self.__PPLTSys.UnLoadDevice(alias):
+			return(None);
+		self.DeleteItem(item);
+
+	def OnRightClick(self, event):
+		pt = event.GetPosition();
+		(item, flag) = self.HitTest(pt);
+		if item == -1:
+			menu = DeviceMenu(self);
+			self.PopupMenu(menu,pt);
+			menu.Destroy();
+		else:
+			self.Select(item);
+			menu = DeviceCtxMenu(self);
+			self.PopupMenu(menu,pt);
+			menu.Destroy();
+	
+
 def LoadADevice(parent, PPLTSys):
 	dlg = DeviceSelectionDialog(parent, PPLTSys);
 	ret = dlg.ShowModal();
@@ -59,3 +92,21 @@ def ParaToString(para):
 	for key in keys:
 		lst.append("%s=%s"%(key,para[key]));
 	return(string.join(lst, ", "));
+
+
+class DeviceMenu(wx.Menu):
+	def __init__(self, parent):
+		self.__ADD_ID = wx.NewId();
+		wx.Menu.__init__(self);
+		item = wx.MenuItem(self, self.__ADD_ID, "Add Device");
+		self.AppendItem(item);
+		self.Bind(wx.EVT_MENU, parent.OnAddDevice, id=self.__ADD_ID);
+
+class DeviceCtxMenu(wx.Menu):
+	def __init__(self, parent):
+		self.__DEL_ID = wx.NewId();
+		wx.Menu.__init__(self);
+		item = wx.MenuItem(self, self.__DEL_ID, "Del Device");
+		self.AppendItem(item);
+		self.Bind(wx.EVT_MENU, parent.OnDelDevice, id=self.__DEL_ID);
+

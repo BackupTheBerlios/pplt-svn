@@ -1,6 +1,6 @@
 import wx;
 import logging;
-
+import sys;
 
 class MyLogger(logging.Handler):
 	def __init__(self, LogTextCtrl):
