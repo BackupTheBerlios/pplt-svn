@@ -26,6 +26,10 @@ class Server:
 			except:
 				self.__Logger.error("Error while Load a Server");
 				return(False);
+			if not obj:
+				self.__Logger.error("Error while Load a Server");
+				self.destroy();
+				return(False);
 			self.__ServerObjects.append(obj);
 		# --- done ---
 		return(True);

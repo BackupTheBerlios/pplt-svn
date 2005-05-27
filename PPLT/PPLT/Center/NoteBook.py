@@ -12,12 +12,12 @@ class NoteBook(wx.Notebook):
 		self.__SrvPanel = ServerPanel.ServerPanel(self, self.__PPLTSys);
 		self.__DevPanel = DevicePanel.DevicePanel(self, self.__PPLTSys);
 		self.__SymPanel = SymbolTreePanel.SymbolTreePanel(self, self.__PPLTSys);
-		#self.__UDBPanel = UserDBPanel.UserDBPanel(self, self.__PPLTSys);
+		self.__UDBPanel = UserDBPanel.UserDBPanel(self, self.__PPLTSys);
 
 		self.AddPage(self.__DevPanel, "Devices");
 		self.AddPage(self.__SymPanel, "SymbolTree");
 		self.AddPage(self.__SrvPanel, "Server");
-		#self.AddPage(self.__UDBPanel, "User DataBase");
+		self.AddPage(self.__UDBPanel, "User DataBase");
 
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
 
@@ -30,10 +30,21 @@ class NoteBook(wx.Notebook):
 			menu = DevicePanel.DeviceMenu(self.__DevPanel);
 			self.PopupMenu(menu, pt);
 			menu.Destroy();
+		elif tab == 1:
+			self.__SymPanel.SelectRoot();
+			menu = SymbolTreePanel.CtxMenu(self.__SymPanel);
+			self.PopupMenu(menu,pt);
+			menu.Destroy();
 		elif tab == 2:
 			menu = ServerPanel.ServerMenu(self.__SrvPanel);
 			self.PopupMenu(menu,pt);
 			menu.Destroy();
+		elif tab == 3:
+			self.__UDBPanel.SelectRoot();
+			menu = UserDBPanel.CtxMenu(self.__UDBPanel, None);
+			self.PopupMenu(menu,pt);
+			menu.Destroy();
+
 
 	
 

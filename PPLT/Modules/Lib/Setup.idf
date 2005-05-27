@@ -1,0 +1,36 @@
+<?xml version="1.0"?>
+
+<ModuleSet>
+	<DCPUMod file="SendMail.zip" as="SendMail" in="Master.Interface"/>
+    <DCPUMod file="WGet.zip" as="WGet" in="Master.Interface"/>
+    <DCPUMod file="Socket.zip" as="Socket" in="Master.Interface"/>
+    <DCPUMod file="UniSerial.zip" as="UniSerial" in="Master.Interface"/>
+    
+    <DCPUMod file="PPI.zip" as="PPI" in="Master.Transport"/>
+    <DCPUMod file="ReadLine.zip" as="ReadLine" in="Master.Transport"/>
+    <DCPUMod file="MEWCOM-TL.zip" as="MEWCOM-TL" in="Master.Transport"/>
+    
+    <DCPUMod file="5462X.zip" as="5462X" in="Master.Device"/>
+    <DCPUMod file="GSM.zip" as="GSM" in="Master.Device"/>
+    <DCPUMod file="A200.zip" as="A200" in="Master.Device"/>
+    <DCPUMod file="S7.zip" as="S7" in="Master.Device"/>
+    <DCPUMod file="MEWCOM-CL.zip" as="MECOM-CL" in="Master.Device"/>
+        
+    <DCPUMod file="Statistic.zip" as="Statistic" in="Master.Debug"/>
+    <DCPUMod file="HexDump.zip" as="HexDump" in="Master.Debug"/>
+    <DCPUMod file="Random.zip" as="Random" in="Master.Debug"/>
+    
+    <DCPUMod file="JVisu.zip" as="JVisu" in="Export"/>
+    <DCPUMod file="SimpleExport.zip" as="SimpleExport" in="Export"/>
+	<DCPUMod file="PPLTWeb.zip" as="PPLTWeb" in="Export"/>
+
+	<PPLTMod file="AGILENT_5462X-0.2.xml"/>
+	<PPLTMod file="GSMMobilePhone-0.2.xml"/>
+	<PPLTMod file="JVisuServer-0.2.xml"/>
+	<PPLTMod file="NAiS_FPWEB-0.2.xml"/>
+	<PPLTMod file="NAiS_FPX-0.2.xml"/>
+	<PPLTMod file="PPLTWebServer-0.2.xml"/>
+	<PPLTMod file="RandomGenerator-0.2.xml"/>
+	<PPLTMod file="SIMATIC_S7_200-0.2.xml"/>
+	<PPLTMod file="SimpleExportServer-0.2.xml"/>
+</ModuleSet>

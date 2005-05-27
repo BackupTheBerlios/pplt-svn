@@ -1,9 +1,9 @@
 #!/usr/bin/python
 import wx;
 import PPLT;
-from NoteBook import NoteBook;
-from LogWindow import LogWindow;
-from LoadBitmaps import LoadBitmaps;
+from PPLT.Center.NoteBook import NoteBook;
+from PPLT.Center.LogWindow import LogWindow;
+from PPLT.Center.LoadBitmaps import LoadBitmaps;
 
 
 
@@ -30,7 +30,7 @@ class MainFrame(wx.Frame):
 		#self.__ToolBar.AddLabelTool(self.__SaveAsID, "Save As", bmplst.get("SaveAs"), shortHelp="Save this project as...");
 		#self.__ToolBar.AddSeparator();
 		self.__ToolBar.AddLabelTool(self.__PackAddID, "PackAdd", bmplst.get("PackAdd"), shortHelp="Module Install.");
-		self.__ToolBar.AddLabelTool(self.__PackDelID, "PackDel", bmplst.get("PackDel"), shortHelp="Module Uninstall");
+#		self.__ToolBar.AddLabelTool(self.__PackDelID, "PackDel", bmplst.get("PackDel"), shortHelp="Module Uninstall");
 
 		self.__ToolBar.Realize();
 
@@ -38,9 +38,21 @@ class MainFrame(wx.Frame):
 		self.__NoteBook = NoteBook(self.__VBox, -1, self.__PPLTSys);
 		self.__LogWindow = LogWindow(self.__VBox, -1, self.__PPLTSys);
 		
-		self.__VBox.SetMinimumPaneSize(20)
+		self.__VBox.SetMinimumPaneSize(35)
 		self.__VBox.SplitHorizontally(self.__NoteBook, self.__LogWindow);
 		self.__VBox.SetSashPosition(10000);
+	
+		self.Bind(wx.EVT_MENU, self.OnInstall, id = self.__PackAddID);
+
+
+	def OnInstall(self, event):
+		dlg = wx.FileDialog(self, "Select InstallFile", wildcard="Install Description File (*.idf)|*.idf");
+		if not dlg.ShowModal() == wx.ID_OK:
+			return(None);
+		path = dlg.GetPath();
+		print "Install: %s"%path;
+		dlg.Destroy();
+		self.__PPLTSys.Install(path);
 
 
 class Application(wx.App):

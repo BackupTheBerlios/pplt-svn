@@ -20,12 +20,13 @@ class MyLogger(logging.Handler):
 			self.__TxtCtrl.SetDefaultStyle(wx.TextAttr(wx.RED));
 		else:
 			self.__TxtCtrl.SetDefaultStyle(wx.TextAttr(wx.BLACK));
-		self.__TxtCtrl.AppendText("\n%s: %s"%(leveln, record.getMessage()) );
+		self.__TxtCtrl.SetInsertionPoint(0);
+		self.__TxtCtrl.WriteText("%s: %s\n"%(leveln, record.getMessage()) );
 
 
 class LogWindow(wx.TextCtrl):
 	def __init__(self, parent, ID, PPLTSys):
-		wx.TextCtrl.__init__(self, parent, ID, value="", style=wx.TE_MULTILINE);
+		wx.TextCtrl.__init__(self, parent, ID, value="", style=wx.TE_MULTILINE, size=(-1,35));
 		self.SetEditable(False);
 		self.__Logger = logging.getLogger("PPLT");
 		logger = MyLogger(self);

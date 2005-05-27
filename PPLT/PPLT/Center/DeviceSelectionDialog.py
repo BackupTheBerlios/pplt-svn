@@ -15,7 +15,7 @@ class DeviceSelectionDialog(wx.Dialog):
 
 		self.__Tree = DeviceTree(self, PPLTSys);
 
-		self.__Help = wx.TextCtrl(self, -1, style = wx.TE_MULTILINE);
+		self.__Help = wx.TextCtrl(self, -1, size=(-1,70),style = wx.TE_MULTILINE);
 		self.__Help.SetEditable(False);
 
 		sizer.Add(self.__Tree, 1, wx.ALIGN_CENTRE|wx.GROW, 3);

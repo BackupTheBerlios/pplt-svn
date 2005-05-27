@@ -11,6 +11,8 @@
             <DCPUModule>Master.Interface.UniSerial</DCPUModule>
             <DCPUModule>Master.Transport.PPI</DCPUModule>
             <DCPUModule>Master.Device.S7</DCPUModule>
+			<DCPUModule>Master.Debug.Statistic</DCPUModule>
+
 			<Variable name="Port" default="0">
 				<Description lang="de">Geben sie hier die serielle 
 				Schnittstelle an, an die die Steuerung angschlossen ist.
@@ -45,6 +47,28 @@
 					marker you want to use.</Description>
 				</SlotRange>
 			</NameSpace>
+			<NameSpace name="PPIStatistic">
+				<Slot name="read_data" type="DWord" mode="r">
+					<Description lang="de">Dieser Slot gibt die Anzahl der empfangenden Bytes wieder.</Description>
+					<Description lang="en">This slot gives the number of recived bytes.</Description>
+				</Slot>
+				<Slot name="write_data" type="DWord" mode="r">
+					<Description lang="de">Dieser Slot gibt die Anzahl der gesendeten Bytes wieder.</Description>
+					<Description lang="en">This slot gives the number of send bytes.</Description>
+				</Slot>
+				<Slot name="read_speed" type="DWord" mode="r">
+					<Description lang="de">Dieser Slot gibt die Durchschnittsgeschwindigkeit für das lesen an.</Description>
+					<Description lang="en">This slot gives the abr. speed for reading.</Description>
+				</Slot>
+				<Slot name="write_speed" type="DWord" mode="r">
+					<Description lang="de">Dieser Slot gibt die Durchschnittsgeschwindigkeit für das Schreiben an.</Description>
+					<Description lang="en">This slot gives the abr. speed for writeing.</Description>
+				</Slot>
+				<Slot name="error" type="DWord" mode="r">
+					<Description lang="de">Zähler der Übertragungsfehler.</Description>
+					<Description lang="en">Counter for transmission-errors.</Description>
+				</Slot>
+			</NameSpace>
 		</Provide>
     </Head>
 
@@ -57,8 +81,11 @@
             <Parameter name="Speed">9600</Parameter>
             <Load name="Master.Transport.PPI">
 				<Parameter name="Address"><Variable name="PCAddr"/></Parameter>
-				<Load name="Master.Device.S7" namespace="Marker">
+				<Load name="Master.Debug.Statistic" namespace="PPIStatistic">
 					<Address><Variable name="S7Addr"/></Address>
+					<Load name="Master.Device.S7" namespace="Marker">
+						<Address>tunnel</Address>
+					</Load>
 				</Load>
 			</Load>
         </Load>

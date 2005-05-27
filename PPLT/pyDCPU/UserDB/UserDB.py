@@ -291,8 +291,10 @@ class UserDB:
             This method will delete the give user from the give group.
         """
         if not self.__GroupNameList.count(GroupName):
+            print "No group named %s"%GroupName;
             return(False);
         if not self.__MemberNameList.count(MemberName):
+            print "No member named %s"%MemberName;
             return(False);
 
         if MemberName == self.__SuperUser:

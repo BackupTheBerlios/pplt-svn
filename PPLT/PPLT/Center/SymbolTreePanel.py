@@ -9,7 +9,8 @@ import logging;
 
 class SymbolTreePanel(wx.TreeCtrl):
 	def __init__(self, parent, PPLTSys):
-		wx.TreeCtrl.__init__(self, parent, -1);
+		wx.TreeCtrl.__init__(self, parent, -1, 
+								style=wx.TR_HIDE_ROOT|wx.TR_NO_LINES|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS);
 		self.__PPLTSys = PPLTSys;
 		self.__Logger = logging.getLogger("PPLT");
 
@@ -32,8 +33,8 @@ class SymbolTreePanel(wx.TreeCtrl):
 
 		self.__myRoot = self.AddRoot("SymbolTree");
 		self.SetPyData(self.__myRoot,(True,"/"));
-		self.SetItemImage(self.__myRoot,self.__FolderIcon, wx.TreeItemIcon_Normal);
-		self.SetItemImage(self.__myRoot,self.__FolderIcon2, wx.TreeItemIcon_Expanded);
+#		self.SetItemImage(self.__myRoot,self.__FolderIcon, wx.TreeItemIcon_Normal);
+#		self.SetItemImage(self.__myRoot,self.__FolderIcon2, wx.TreeItemIcon_Expanded);
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
 
 
@@ -42,12 +43,17 @@ class SymbolTreePanel(wx.TreeCtrl):
 		pt = event.GetPosition();
 		(item,flag) = self.HitTest(pt);
 		if not item:
-			return(False);
-		
+			item = self.__myRoot;
+
+		self.SelectItem(item);
+	
 		menu = CtxMenu(self, item);
 		self.PopupMenu(menu,pt);
 		menu.Destroy();
 
+
+	def SelectRoot(self):
+		self.SelectItem(self.__myRoot);
 
 	def OnAddSymbol(self, event):
 		item = self.GetSelection();
@@ -156,8 +162,12 @@ class SymbolTreePanel(wx.TreeCtrl):
 
 
 class CtxMenu(wx.Menu):
-	def __init__(self, tree, obj):
-		(ObjIsFolder, Path) = tree.GetPyData(obj);
+	def __init__(self, tree, obj=None):
+		if not obj:
+			ObjIsFolder = True;
+			Path = "/";
+		else:
+			(ObjIsFolder, Path) = tree.GetPyData(obj);
 		self.__AddSym = wx.NewId();
 		self.__AddFol = wx.NewId();
 		self.__DelFol = wx.NewId();

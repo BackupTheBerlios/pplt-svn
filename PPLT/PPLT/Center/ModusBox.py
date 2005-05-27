@@ -73,7 +73,7 @@ class ModusBox(wx.BoxSizer):
 		user = self.Owner.GetValue();
 		grp = self.__PPLTSys.GetGroupByUser(user);
 		if grp:
-			self.Group.SetValue(grp.GetName());
+			self.Group.SetValue(grp);
 
 
 	def __SetCheckBoxes(self):

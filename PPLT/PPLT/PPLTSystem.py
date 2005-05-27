@@ -131,7 +131,7 @@ Return a list of strings. """
 		else:
 			group = self.__UserDataBase.GetGroupByName(GroupName);
 		if not group:
-			return(None);
+			return([]);
 		# list subgroups:
 		return(group.ListSubGroups());
 
@@ -141,7 +141,7 @@ Return a list of strings. """
 			return([]);
 		group = self.__UserDataBase.GetGroupByName(GroupName);
 		if not group:
-			return(None);
+			return([]);
 		#list memebers:
 		return(group.ListMembers());
 
@@ -151,12 +151,12 @@ Return a list of strings. """
 		return(self.__UserDataBase.CreateMember(Group, Name, Password, Description));
 
 	def DeleteMember(self, Name):
-		""" Delete a user. Return True pn success. """
+		""" Delete a user. Return True on success. """
 		group = self.__UserDataBase.GetGroupByUserName(Name);
 		if not group:
 			self.__Logger.warning("No group found for user %s: does he/she exists?"%Name);
 			return(False);
-		return(self.__UserDataBase.DeleteMember(group, Name));
+		return(self.__UserDataBase.DeleteMember(group.GetName(), Name));
 
 	def CheckPassword(self, Name, Password):
 		""" Test Password if its match to user Name's one. Return True on 
@@ -179,7 +179,10 @@ Return a list of strings. """
 		return(self.__UserDataBase.GetSuperUserGrp());
 	def GetGroupByUser(self, UserName):
 		""" Return the group of given user """
-		return(self.__UserDataBase.GetGroupByUserName(UserName));
+		grp = self.__UserDataBase.GetGroupByUserName(UserName);
+		if not grp:
+			return(None);
+		return(grp.GetName());
     
     # ######################################################################## #
     # Manage Devices                                                           #
@@ -276,7 +279,10 @@ Return a list of strings. """
 			self.__Logger.warning("No server running named \"%s\""%Name);
 			return(False);
 		# stop it:
-		return(serverObj.destroy());
+		if not serverObj.destroy():
+			return(False);
+		del self.__ServerHash[Name];
+		return(True);
 
 	def ListRunningServers(self):
 		""" List all running or hanging servers. Return a list of strings. """

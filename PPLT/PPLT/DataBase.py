@@ -10,6 +10,7 @@ TYPE_COREMOD= 3;
 
 class DBObjBaseClass:
 	def __init__(self, FileName):
+		self.__Logger = logging.getLogger("PPLT");
 		if not self.parseFile(FileName):
 			raise Exception("Error while parse File \"%s\""%FileName);
 	
@@ -18,7 +19,11 @@ class DBObjBaseClass:
 		self.__FileName = FileName;
 
 		# parese file and get RootElement
-		doc = xml.dom.minidom.parse(FileName);
+		try:
+			doc = xml.dom.minidom.parse(FileName);
+		except:
+			self.__Logger.error("Error while parse file %s"%FileName);
+			return(False);
 		obj = doc.documentElement;
 		
 		# get name

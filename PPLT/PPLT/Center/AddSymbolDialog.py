@@ -1,5 +1,7 @@
 import wx;
 from ModusBox import ModusBox;
+import PPLT;
+import os;
 
 
 class SelectSlotDialog(wx.Dialog):
@@ -7,6 +9,26 @@ class SelectSlotDialog(wx.Dialog):
 		wx.Dialog.__init__(self, parent, -1, "Select DeviceSlot",size=(250,200));
 		
 		self.__PPLTSys = PPLTSys;
+		
+		icondir = PPLT.Config().GetIconPath();
+		self.__IL = wx.ImageList(16,16);
+		bmp = wx.Bitmap(os.path.normpath(icondir+"/device.xpm"));
+		if not bmp:
+			bmp = wx.NullBitmap;
+		self.__DeviceIcon = self.__IL.Add(bmp);
+		bmp = wx.Bitmap(os.path.normpath(icondir+"/class.xpm"));
+		if not bmp:
+			bmp = wx.NullBitmap;
+		self.__NSIcon = self.__IL.Add(bmp);
+		bmp = wx.Bitmap(os.path.normpath(icondir+"/slot.xpm"));
+		if not bmp:
+			bmp = wx.NullBitmap;
+		self.__SlotIcon = self.__IL.Add(bmp);
+		bmp = wx.Bitmap(os.path.normpath(icondir+"/slot-range.xpm"));
+		if not bmp:
+			bmp = wx.NullBitmap;
+		self.__SlotRIcon = self.__IL.Add(bmp);
+
 
 		sizer = wx.BoxSizer(wx.VERTICAL);
 		
@@ -15,6 +37,7 @@ class SelectSlotDialog(wx.Dialog):
 											wx.TR_NO_LINES|
 											wx.TR_TWIST_BUTTONS|
 											wx.TR_HAS_BUTTONS);
+		self.__Tree.SetImageList(self.__IL);
 		self.__ROOT = self.__Tree.AddRoot("");
 		sizer.Add(self.__Tree, 3, wx.EXPAND|wx.ALL,3);
 
@@ -78,6 +101,8 @@ class SelectSlotDialog(wx.Dialog):
 		devlst = self.__PPLTSys.ListDevices();
 		for dev in devlst:
 			item = self.__Tree.AppendItem(self.__ROOT,dev);
+			self.__Tree.SetItemImage(item, self.__DeviceIcon, wx.TreeItemIcon_Normal);
+			self.__Tree.SetItemImage(item, self.__DeviceIcon, wx.TreeItemIcon_Expanded);
 			fqdn = self.__PPLTSys.GetFQDeviceName(dev);
 			info = self.__PPLTSys.GetDeviceInfo(fqdn);
 			self.__Tree.SetPyData(item, (1, fqdn, info));
@@ -87,6 +112,8 @@ class SelectSlotDialog(wx.Dialog):
 		nslst = info.GetNameSpaces();
 		for ns in nslst:
 			item = self.__Tree.AppendItem(pitem, ns);
+			self.__Tree.SetItemImage(item, self.__NSIcon, wx.TreeItemIcon_Normal);
+			self.__Tree.SetItemImage(item, self.__NSIcon, wx.TreeItemIcon_Expanded);
 			self.__Tree.SetPyData(item, (2, None, info));
 			self.__AddSlots(item, fqdn, dev, ns, info);
 			self.__AddSlotRanges(item, fqdn, dev, ns, info);
@@ -95,12 +122,16 @@ class SelectSlotDialog(wx.Dialog):
 		slst = info.GetSlots(ns);
 		for s in slst:
 			item = self.__Tree.AppendItem(pitem, s);
+			self.__Tree.SetItemImage(item, self.__SlotIcon, wx.TreeItemIcon_Normal);
+			self.__Tree.SetItemImage(item, self.__SlotIcon, wx.TreeItemIcon_Expanded);
 			self.__Tree.SetPyData(item, (3,(fqdn, dev, ns, s),info));
 			
 	def __AddSlotRanges(self, pitem, fqdn, dev, ns, info):
 		slst = info.GetSlotRanges(ns);
 		for s in slst:
 			item = self.__Tree.AppendItem(pitem, s);
+			self.__Tree.SetItemImage(item, self.__SlotRIcon, wx.TreeItemIcon_Normal);
+			self.__Tree.SetItemImage(item, self.__SlotRIcon, wx.TreeItemIcon_Expanded);
 			self.__Tree.SetPyData(item, (4,(fqdn, dev, ns, s),info));
 
 
