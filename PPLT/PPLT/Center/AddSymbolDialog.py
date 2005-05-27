@@ -1,3 +1,27 @@
+# ############################################################################ #
+# This is part of the PPLT project. PPLT is a framework for industrial         # 
+# communication.                                                               # 
+# Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                # 
+#                                                                              # 
+# This library is free software; you can redistribute it and/or                # 
+# modify it under the terms of the GNU Lesser General Public                   # 
+# License as published by the Free Software Foundation; either                 # 
+# version 2.1 of the License, or (at your option) any later version.           # 
+#                                                                              # 
+# This library is distributed in the hope that it will be useful,              # 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of               # 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU             # 
+# Lesser General Public License for more details.                              # 
+#                                                                              # 
+# You should have received a copy of the GNU Lesser General Public             # 
+# License along with this library; if not, write to the Free Software          # 
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
+# ############################################################################ # 
+
+#ChangeLog:
+#	2005-05-27:
+#		Release as version 0.2.0 (alpha)
+
 import wx;
 from ModusBox import ModusBox;
 import PPLT;
@@ -32,13 +56,15 @@ class SelectSlotDialog(wx.Dialog):
 
 		sizer = wx.BoxSizer(wx.VERTICAL);
 		
-		self.__Tree = wx.TreeCtrl(self, -1,
-									style =	wx.TR_HIDE_ROOT|
-											wx.TR_NO_LINES|
-											wx.TR_TWIST_BUTTONS|
-											wx.TR_HAS_BUTTONS);
+		styleflags = wx.TR_HIDE_ROOT|wx.TR_NO_LINES|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS;
+		if wx.Platform == "__WXMSW__":
+			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
+			
+		self.__Tree = wx.TreeCtrl(self, -1, style = styleflags);
+		
 		self.__Tree.SetImageList(self.__IL);
-		self.__ROOT = self.__Tree.AddRoot("");
+		self.__ROOT = self.__Tree.AddRoot("Devices");
+		self.__Tree.SetPyData(self.__ROOT,(0, None, None));
 		sizer.Add(self.__Tree, 3, wx.EXPAND|wx.ALL,3);
 
 		self.__HelpText = wx.TextCtrl(self, -1, size=(250,-1), style=wx.TE_MULTILINE);
@@ -84,6 +110,11 @@ class SelectSlotDialog(wx.Dialog):
 			return(None);
 		
 		(iden, data, info) = self.__Tree.GetPyData(item);
+		if iden in (0,1,2):
+			if self.__Tree.IsExpanded(item):
+				self.__Tree.Collapse(item);
+			else:
+				self.__Tree.Expand(item);
 		if not iden in (3,4):
 			return(None);
 		(fqdn, dev, ns, slot) = data

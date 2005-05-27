@@ -61,6 +61,8 @@ class Application(wx.App):
 		wx.App.__init__(self);
 
 	def OnInit(self):
+		self.RestoreStdio();
+		print "Stdio restored...";
 		#self.__PPLTSys = PPLT.System();
 		frame = MainFrame(None,'PPLT Center',self.__PPLTSys);
 		self.SetTopWindow(frame);

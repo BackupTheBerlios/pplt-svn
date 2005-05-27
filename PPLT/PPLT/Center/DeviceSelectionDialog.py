@@ -1,3 +1,27 @@
+# ############################################################################ #
+# This is part of the PPLT project. PPLT is a framework for industrial         # 
+# communication.                                                               # 
+# Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                # 
+#                                                                              # 
+# This library is free software; you can redistribute it and/or                # 
+# modify it under the terms of the GNU Lesser General Public                   # 
+# License as published by the Free Software Foundation; either                 # 
+# version 2.1 of the License, or (at your option) any later version.           # 
+#                                                                              # 
+# This library is distributed in the hope that it will be useful,              # 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of               # 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU             # 
+# Lesser General Public License for more details.                              # 
+#                                                                              # 
+# You should have received a copy of the GNU Lesser General Public             # 
+# License along with this library; if not, write to the Free Software          # 
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
+# ############################################################################ # 
+
+#ChangeLog:
+#	2005-05-27:
+#		Release as version 0.2.0 (alpha)
+
 import wx;
 import logging;
 import sys;
@@ -52,7 +76,11 @@ class DeviceSelectionDialog(wx.Dialog):
 class DeviceTree(wx.TreeCtrl):
 	def __init__(self, parent, PPLTSys):
 		self.__PPLTSys = PPLTSys;
-		wx.TreeCtrl.__init__(self, parent, -1, style=wx.TR_NO_LINES|wx.TR_HIDE_ROOT|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS);
+		styleflags = wx.TR_NO_LINES|wx.TR_HIDE_ROOT|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS;
+		if wx.Platform == "__WXMSW__":
+			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
+			
+		wx.TreeCtrl.__init__(self, parent, -1, style=styleflags);
 	
 		#store icons
 		iconpath = PPLT.Config().GetIconPath();
@@ -67,7 +95,7 @@ class DeviceTree(wx.TreeCtrl):
 		self.__ClsImg = self.__IL.Add(bmp);
 		self.SetImageList(self.__IL);
 	
-		self.__Root = self.AddRoot("DDB");
+		self.__Root = self.AddRoot("Devices");
 		self.SetPyData(self.__Root, None);
 
 		self.__AddDevices(None, self.__Root);

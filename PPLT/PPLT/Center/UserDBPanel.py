@@ -1,3 +1,27 @@
+# ############################################################################ #
+# This is part of the PPLT project. PPLT is a framework for industrial         # 
+# communication.                                                               # 
+# Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                # 
+#                                                                              # 
+# This library is free software; you can redistribute it and/or                # 
+# modify it under the terms of the GNU Lesser General Public                   # 
+# License as published by the Free Software Foundation; either                 # 
+# version 2.1 of the License, or (at your option) any later version.           # 
+#                                                                              # 
+# This library is distributed in the hope that it will be useful,              # 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of               # 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU             # 
+# Lesser General Public License for more details.                              # 
+#                                                                              # 
+# You should have received a copy of the GNU Lesser General Public             # 
+# License along with this library; if not, write to the Free Software          # 
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
+# ############################################################################ # 
+
+#ChangeLog:
+#	2005-05-27:
+#		Release as version 0.2.0 (alpha)
+
 import PPLT;
 import UserDBDialogs;
 import wx;
@@ -6,8 +30,11 @@ import logging;
 
 class UserDBPanel(wx.TreeCtrl):
 	def __init__(self, Parent, PPLTSys):
-		wx.TreeCtrl.__init__(self, Parent, -1,
-								style=wx.TR_NO_LINES|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT);
+		styleflags=wx.TR_NO_LINES|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT;
+		if wx.Platform == "__WXMSW__":
+			styleflags=wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
+			
+		wx.TreeCtrl.__init__(self, Parent, -1, style=styleflags);
 		self.__PPLTSys = PPLTSys;
 		self.__SuperUserName = PPLTSys.GetSuperUser();
 		self.__Logger = logging.getLogger("PPLT");
@@ -84,6 +111,9 @@ class UserDBPanel(wx.TreeCtrl):
 		if not item:
 			return(None);
 		
+		if item == self.__RootItem:
+			self.__Logger.warning("Can't create member with no group");
+			return(None);
 		(IsGroup, IsSuperUser) = self.GetPyData(item);
 		if not IsGroup:
 			return(None);
@@ -113,6 +143,8 @@ class UserDBPanel(wx.TreeCtrl):
 		item = self.GetSelection();
 		if not item:
 			return(None);
+		if item == self.__RootItem:
+			return(None);
 		(IsGroup, IsSuperUser) = self.GetPyData(item);
 		Name = self.GetItemText(item);
 
@@ -129,7 +161,10 @@ class UserDBPanel(wx.TreeCtrl):
 		item = self.GetSelection();
 		if not item:
 			return(None);
-		(IsFolder, IsSuperUser) = self.GetPyData(item);
+		if item == self.__RootItem:
+			(IsFolder, IsSuperUser) = (True,False);
+		else:
+			(IsFolder, IsSuperUser) = self.GetPyData(item);
 		if not IsFolder:
 			return(None);
 
@@ -158,7 +193,10 @@ class UserDBPanel(wx.TreeCtrl):
 		item = self.GetSelection();
 		if not item:
 			return(None);
-		(IsGroup, IsSuperUser) = self.GetPyData(item);
+		if item == self.__RootItem:
+			(IsGroup, IsSuperUser) = (True,False);
+		else:
+			(IsGroup, IsSuperUser) = self.GetPyData(item);
 		Name = self.GetItemText(item);
 		if not IsGroup:
 			return(None);
@@ -170,6 +208,8 @@ class UserDBPanel(wx.TreeCtrl):
 	def OnSetSUser(self, Event):
 		item = self.GetSelection();
 		if not item:
+			return(None);
+		if item == self.__RootItem:
 			return(None);
 		(IsGroup, IsSuperUser) = self.GetPyData(item);
 		Name = self.GetItemText(item);
@@ -192,6 +232,8 @@ class UserDBPanel(wx.TreeCtrl):
 	def OnPasswd(self, event):
 		item = self.GetSelection();
 		if not item:
+			return(None);
+		if item == self.__RootItem:
 			return(None);
 		(IsFolder, IsSuperUser) = self.GetPyData(item);
 		if IsFolder:

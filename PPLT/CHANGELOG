@@ -1,0 +1,9 @@
+2005-05-27:
+	+ Start CHANGELOG
+	- fixed bug in pyDCPU/pyDCPUCore.py in Core.MasterTreeDel():
+		Produced inconsistent ref. counter.
+	- fixed bug in pyDCPU/pyDCPUSymbolTree.py in SymbolTree.DeleteSymbol():
+		Was unable to delete a symbol @ root.
+	- fixed problems in PPLT/Center/[AddSymbolDialog.py,DeviceSelectionDialog.py,ServerSelectionDialog.py,SymbolTreePanel.py,UserDBPanel.py]:
+		Problems with hidden root items of wx.TreeCtrl on Windows
+

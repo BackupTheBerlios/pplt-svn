@@ -18,8 +18,11 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    #
 # ############################################################################ #
 
+# ChangeLog:
+# 2005-05-27:
+#	- bug in DeleteSymbol(): was unable to delete symbol from root
+
 #FIXME:
-#   + Unable to delete Symbol from ROOT
 #
 
 
@@ -206,7 +209,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
         if len(PList)==1:
             if self.SymbolHash.has_key(Name):
-		self.SymbolHash[Name].Unregiser();
+		self.SymbolHash[Name].Unregister();
                 del self.SymbolHash[Name];
                 return(True);
             return(False);

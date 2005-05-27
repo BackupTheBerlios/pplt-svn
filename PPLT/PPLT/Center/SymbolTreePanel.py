@@ -1,3 +1,27 @@
+# ############################################################################ #
+# This is part of the PPLT project. PPLT is a framework for industrial         # 
+# communication.                                                               # 
+# Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                # 
+#                                                                              # 
+# This library is free software; you can redistribute it and/or                # 
+# modify it under the terms of the GNU Lesser General Public                   # 
+# License as published by the Free Software Foundation; either                 # 
+# version 2.1 of the License, or (at your option) any later version.           # 
+#                                                                              # 
+# This library is distributed in the hope that it will be useful,              # 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of               # 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU             # 
+# Lesser General Public License for more details.                              # 
+#                                                                              # 
+# You should have received a copy of the GNU Lesser General Public             # 
+# License along with this library; if not, write to the Free Software          # 
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
+# ############################################################################ # 
+
+#ChangeLog:
+#	2005-05-27:
+#		Release as version 0.2.0 (alpha)
+
 import wx;
 from AddFolderDialog import AddFolderDialog;
 from AddSymbolDialog import SelectSlotDialog, PropertyDialog;
@@ -9,8 +33,11 @@ import logging;
 
 class SymbolTreePanel(wx.TreeCtrl):
 	def __init__(self, parent, PPLTSys):
-		wx.TreeCtrl.__init__(self, parent, -1, 
-								style=wx.TR_HIDE_ROOT|wx.TR_NO_LINES|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS);
+		styleflags = wx.TR_NO_LINES|wx.TR_HIDE_ROOT|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS;
+		if wx.Platform == "__WXMSW__":
+			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
+			
+		wx.TreeCtrl.__init__(self, parent, -1,style = styleflags);
 		self.__PPLTSys = PPLTSys;
 		self.__Logger = logging.getLogger("PPLT");
 
@@ -31,7 +58,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		self.__SymbolIcon = self.__IL.Add(bmp);
 		self.SetImageList(self.__IL);
 
-		self.__myRoot = self.AddRoot("SymbolTree");
+		self.__myRoot = self.AddRoot("SymbolTree (/)");
 		self.SetPyData(self.__myRoot,(True,"/"));
 #		self.SetItemImage(self.__myRoot,self.__FolderIcon, wx.TreeItemIcon_Normal);
 #		self.SetItemImage(self.__myRoot,self.__FolderIcon2, wx.TreeItemIcon_Expanded);
@@ -57,7 +84,11 @@ class SymbolTreePanel(wx.TreeCtrl):
 
 	def OnAddSymbol(self, event):
 		item = self.GetSelection();
-		(ItemIsFolder, Path) = self.GetPyData(item);
+		if item == self.__myRoot:
+			ItemIsFolder = True;
+			Path = "/";
+		else:
+			(ItemIsFolder, Path) = self.GetPyData(item);
 
 		dlg = SelectSlotDialog(self, self.__PPLTSys);
 		if not dlg.ShowModal() == wx.ID_OK:
@@ -163,7 +194,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 
 class CtxMenu(wx.Menu):
 	def __init__(self, tree, obj=None):
-		if not obj:
+		if obj == None:
 			ObjIsFolder = True;
 			Path = "/";
 		else:
@@ -191,7 +222,6 @@ class CtxMenu(wx.Menu):
 		if Path!="/":
 			item = wx.MenuItem(self, self.__Prop, "Properties");
 			self.AppendItem(item);
-
 		self.Bind(wx.EVT_MENU, tree.OnAddSymbol, id = self.__AddSym);
 		self.Bind(wx.EVT_MENU, tree.OnAddFolder, id = self.__AddFol);
 		self.Bind(wx.EVT_MENU, tree.OnProperty,  id = self.__Prop);

@@ -18,6 +18,11 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
 # ############################################################################ # 
 
+
+# Changelog:
+# 2005-05-27:
+#	- bug: inconsistent refcounter in Core.MasterTreeDel();
+
 import xml.dom.minidom;
 import pyDCPUCoreLogging;
 import UserDB;
@@ -188,8 +193,11 @@ class Core:
         if not Object.destroy():
             self.Logger.error("Error while delete object %s"%str(ObjectID));
             return(False);
-        del Object;
-        del self.__ObjectRefCount[ObjectID];
+
+        del Object;								#destroy object
+        del self.__ObjectRefCount[ObjectID];	#remove from ref-count table
+        del self.__ObjectHash[ObjectID];		#remove from object hash
+
         self.Logger.debug("Object removed and destroyed");
         return(True);
 
