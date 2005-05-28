@@ -1,6 +1,15 @@
 <div class="TextBody">
 	<div class="Head">News 2005</div>
     <div class="NewsItem">
+    <b>2005-05-27 - Zweite Alpha Release (0.2.0)</b><br>
+	Ich habe eine die zweite alpha Version der PPLT freigegeben. Die
+	gr&ouml;ste Neuerung ist die grafische Applikation <i>PPLT Center</i>,
+	die die F&auml;higkeiten der Bibliothek demonstriert. Des weiteren
+	wurden einige Fehler der Vorversion behoben.</br><br>
+	<b>2005-05-10 - Erstes Alpha Release</b><br>
+   	Die PPLT Bibliothek hat nun ihren vollen Funktionsumfang
+	erreicht. Des weiteren habe ich einen Fehler in der 
+	Kernbibliothek entfernt.<br><br>
     <b>2005-04-28 - Release PPLT Version 0.1pre 3</b><br>
 	Dieses Release ist identisch mit dem Release <i>0.1pre 2</i>,
 	jedoch habe ich einige &uuml;ble Fehler entfernt.<br><br>

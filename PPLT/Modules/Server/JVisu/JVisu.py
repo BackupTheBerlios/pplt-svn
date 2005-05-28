@@ -39,8 +39,12 @@ class Object (pyDCPU.ExportObject):
 
     def start(self):
         self.__Loop = True;
+        self.__ServSock.setblocking(0);
         while self.__Loop:
-            (Client, CAddr) = self.__ServSock.accept();
+            try:
+                (Client, CAddr) = self.__ServSock.accept();
+            except:
+                continue;
             self.Logger.debug("New Client at %s"%(str(CAddr)));
             try:
                 if not thread.start_new_thread(JVisuClientHandler.HandleClient,

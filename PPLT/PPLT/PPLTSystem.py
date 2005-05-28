@@ -20,9 +20,9 @@
 
 #CHANGELOG:
 #	2005-05-27:
-#		Start changelog. (sorry i missed it)
-#		Release as Version 0.2.0 (alpha)
-
+#		+ Start changelog. (sorry i missed it)
+#		+ Release as Version 0.2.0 (alpha)
+#		- Fixed wrong Symbol<->DeviceAlias association
 
 import pyDCPU;
 import Configuration;
@@ -33,7 +33,7 @@ import Server;
 import DataBase;
 import DeviceDescription;
 import ServerDescription;
-
+import gettext;
 
 MODUS_FMT_OCTAL = 1;
 MODUS_FMT_STRING = 2;
@@ -67,9 +67,8 @@ class System:
 		self.__UserDataBase = self.__Core.GetTheUserDB();
 		self.__DeviceHash = {}												# init some tables
 		self.__ServerHash = {}												# ...
-		self.__SymbolTable = {};											# ...
-		self.__SlotDeviceTable = {};										# ...
-
+		self.__SymbolTable = {};											# Association between SymbolPath and SlotID
+		self.__SymbolDeviceTable = {};										# Ass. btw. SymbolPath and DeviceAlias
 
 	def Stop(self):
 		""" This method will stop the system. Meaning stopping all servers,
@@ -398,7 +397,7 @@ Return a list of strings. """
 
 		# fin
 		self.__SymbolTable.update( {Path:SlotID} );
-		self.__SlotDeviceTable.update( {SlotID:DevName} );
+		self.__SymbolDeviceTable.update( {Path:DevName} );
 		# CHANGE ACCESS
 		# set modus:
 		if Modus != '600':
@@ -424,7 +423,7 @@ Return a list of strings. """
 			self.__Logger.error("Unknown symbol \"%s\""%Path);
 			return(False);
 		# get deviceName by slotID
-		DevName = self.__SlotDeviceTable.get(SlotID);
+		DevName = self.__SymbolDeviceTable.get(Path);
 		if not DevName:
 			self.__Logger.fatal("no device enty for slotid in table! Mail author!");
 			return(False);

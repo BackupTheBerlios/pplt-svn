@@ -43,10 +43,10 @@ class ServerPanel(wx.ListCtrl):
 		self.__PPLTSys = PPLTSys;
 		self.__Logger = logging.getLogger("PPLT");
 		self.Fit();
-		self.InsertColumn(0,"Alias");
-		self.InsertColumn(1,"FQSN",width=100);
-		self.InsertColumn(2,"DefaultUser");
-		self.InsertColumn(3,"Parameter",width=200);
+		self.InsertColumn(0,_("Alias"));
+		self.InsertColumn(1,_("FQSN"),width=100);
+		self.InsertColumn(2,_("DefaultUser"));
+		self.InsertColumn(3,_("Parameter"),width=200);
 
 		self.__IL = wx.ImageList(16,16);
 		bmp = wx.Bitmap(os.path.normpath(conf.GetIconPath()+"/server.xpm"));
@@ -129,7 +129,7 @@ class ServerMenu(wx.Menu):
 	def __init__(self, parent):
 		self.__ADD_ID = wx.NewId();
 		wx.Menu.__init__(self);
-		item = wx.MenuItem(self, self.__ADD_ID, "Add Server");
+		item = wx.MenuItem(self, self.__ADD_ID, _("Add Server"));
 		self.AppendItem(item);
 		self.Bind(wx.EVT_MENU, parent.OnAddServer, id=self.__ADD_ID);
 
@@ -137,7 +137,7 @@ class ServerCtxMenu(wx.Menu):
 	def __init__(self, parent):
 		self.__DEL_ID = wx.NewId();
 		wx.Menu.__init__(self);
-		item = wx.MenuItem(self, self.__DEL_ID, "Stop Server");
+		item = wx.MenuItem(self, self.__DEL_ID, _("Stop Server"));
 		self.AppendItem(item);
 		self.Bind(wx.EVT_MENU, parent.OnStopServer, id=self.__DEL_ID);
 

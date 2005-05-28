@@ -1,8 +1,13 @@
 import pyDCPU;
 from PPLTWeb import Object;
 
+#CHANGELOG:
+# 2005-05-27:
+#	- fixed problem with blocking socket
+
+
 DCPUVERSION = 0x000100;
-VERSION     = 0x000001;
+VERSION     = 0x000002;
 
 
 AUTHOR = "Hannes Matuschek"

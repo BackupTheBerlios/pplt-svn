@@ -1,3 +1,3 @@
 pack:
-	zip PPI.zip *.py
+	zip -q PPI.zip *.py
 	mv PPI.zip ../

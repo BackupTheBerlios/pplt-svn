@@ -37,20 +37,20 @@ class CreateMemberDialog(wx.Dialog):
 
         box = rcs.RowColSizer();
 
-        label = wx.StaticText(self,-1,'Username: ');
+        label = wx.StaticText(self,-1,_('Username: '));
         box.Add(label, row=1, col=1, flag=wx.ALIGN_CENTER);
         text = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.SIMPLE_BORDER);
         text.Bind(wx.EVT_TEXT, self.UpdateName);
         box.Add(text, row=1, col=2);
 
 
-        label = wx.StaticText(self,-1,'Password: ');
+        label = wx.StaticText(self,-1,_('Password: '));
         box.Add(label, row=2, col=1, flag=wx.ALIGN_CENTER);
         self.text1 = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.TE_PASSWORD|wx.SIMPLE_BORDER);
         self.text1.Bind(wx.EVT_TEXT, self.UpdatePass1);
         box.Add(self.text1, row=2, col=2);
 
-        label = wx.StaticText(self,-1,'Re-Type:  ');
+        label = wx.StaticText(self,-1,_('Re-Type:  '));
         box.Add(label, row=3, col=1, flag=wx.ALIGN_CENTER);
         self.text2 = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.TE_PASSWORD|wx.SIMPLE_BORDER);
         self.text2.Bind(wx.EVT_TEXT, self.UpdatePass2);
@@ -62,9 +62,9 @@ class CreateMemberDialog(wx.Dialog):
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5)
 
         box = wx.BoxSizer(wx.HORIZONTAL);
-        self.ok = wx.Button(self, wx.ID_OK, " Ok ");
+        self.ok = wx.Button(self, wx.ID_OK, _(" Ok "));
         box.Add(self.ok, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
-        ca = wx.Button(self, wx.ID_CANCEL, ' Cancel ');
+        ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
         box.Add(ca, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
         sizer.Add(box, 0, wx.ALIGN_CENTRE|wx.ALL, 0);
 
@@ -105,7 +105,7 @@ class CreateGroupDialog(wx.Dialog):
         sizer = wx.BoxSizer(wx.VERTICAL);
 
         box = wx.BoxSizer(wx.HORIZONTAL);
-        text = wx.StaticText(self, -1, 'Group Name: ');
+        text = wx.StaticText(self, -1, _('Group Name: '));
         box.Add(text, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.LEFT, 3);
         input = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.SIMPLE_BORDER);
         input.Bind(wx.EVT_TEXT, self.UpdateName);
@@ -116,9 +116,9 @@ class CreateGroupDialog(wx.Dialog):
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 2)
 
         box = wx.BoxSizer(wx.HORIZONTAL);
-        ok = wx.Button(self, wx.ID_OK, " Ok ");
+        ok = wx.Button(self, wx.ID_OK, _(" Ok "));
         box.Add(ok, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
-        ca = wx.Button(self, wx.ID_CANCEL, ' Cancel ');
+        ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
         box.Add(ca, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
         sizer.Add(box, 0, wx.ALIGN_CENTRE|wx.ALL, 0);
 
@@ -142,13 +142,13 @@ class PasswdDialog(wx.Dialog):
 
         box = rcs.RowColSizer();
 
-        label = wx.StaticText(self,-1,'Password: ');
+        label = wx.StaticText(self,-1,_('Password: '));
         box.Add(label, row=1, col=1, flag=wx.ALIGN_CENTER);
         self.text1 = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.TE_PASSWORD|wx.SIMPLE_BORDER);
         self.text1.Bind(wx.EVT_TEXT, self.UpdatePass1);
         box.Add(self.text1, row=1, col=2);
 
-        label = wx.StaticText(self,-1,'Re-Type:  ');
+        label = wx.StaticText(self,-1,_('Re-Type:  '));
         box.Add(label, row=2, col=1, flag=wx.ALIGN_CENTER);
         self.text2 = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.TE_PASSWORD|wx.SIMPLE_BORDER);
         self.text2.Bind(wx.EVT_TEXT, self.UpdatePass2);
@@ -160,9 +160,9 @@ class PasswdDialog(wx.Dialog):
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5)
 
         box = wx.BoxSizer(wx.HORIZONTAL);
-        self.ok = wx.Button(self, wx.ID_OK, " Ok ");
+        self.ok = wx.Button(self, wx.ID_OK, _(" Ok "));
         box.Add(self.ok, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
-        ca = wx.Button(self, wx.ID_CANCEL, ' Cancel ');
+        ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
         box.Add(ca, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
         sizer.Add(box, 0, wx.ALIGN_CENTRE|wx.ALL, 0);
 

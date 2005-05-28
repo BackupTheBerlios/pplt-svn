@@ -30,7 +30,7 @@ import os;
 
 class SelectSlotDialog(wx.Dialog):
 	def __init__(self, parent, PPLTSys):
-		wx.Dialog.__init__(self, parent, -1, "Select DeviceSlot",size=(250,200));
+		wx.Dialog.__init__(self, parent, -1, _("Select DeviceSlot"),size=(250,200));
 		
 		self.__PPLTSys = PPLTSys;
 		
@@ -63,7 +63,7 @@ class SelectSlotDialog(wx.Dialog):
 		self.__Tree = wx.TreeCtrl(self, -1, style = styleflags);
 		
 		self.__Tree.SetImageList(self.__IL);
-		self.__ROOT = self.__Tree.AddRoot("Devices");
+		self.__ROOT = self.__Tree.AddRoot(_("Devices"));
 		self.__Tree.SetPyData(self.__ROOT,(0, None, None));
 		sizer.Add(self.__Tree, 3, wx.EXPAND|wx.ALL,3);
 
@@ -120,7 +120,7 @@ class SelectSlotDialog(wx.Dialog):
 		(fqdn, dev, ns, slot) = data
 
 		if iden == 4:		#if slotrange: ask for spec. slot
-			dlg = wx.TextEntryDialog(self, "Enter expl. slot name or addr.:","Slot...");
+			dlg = wx.TextEntryDialog(self, _("Enter expl. slot name or addr.:"),_("Slot"));
 			if not dlg.ShowModal()==wx.ID_OK:
 				return(None);
 			slot = dlg.GetValue();
@@ -173,13 +173,13 @@ class PropertyDialog(wx.Dialog):
 		self.__PPLTSys = PPLTSys;
 		self.__Slot = slot;
 
-		wx.Dialog.__init__(self, Parent, -1, "Properties of %s"%slot);
+		wx.Dialog.__init__(self, Parent, -1, _("Properties of ")+slot);
 
 		self.__VBox = wx.BoxSizer(wx.VERTICAL);
 		
-		tmp = wx.StaticText(self,-1,"Name: ");
+		tmp = wx.StaticText(self,-1,_("Name: "));
 		self.__Name = wx.TextCtrl(self, -1);
-		self.__Name.SetValue("Name");
+		self.__Name.SetValue(_("Name"));
 		box = wx.BoxSizer(wx.HORIZONTAL);
 		box.Add(tmp,1,wx.ALIGN_CENTER);
 		box.Add(self.__Name,2,wx.GROW|wx.ALIGN_RIGHT);
@@ -192,7 +192,7 @@ class PropertyDialog(wx.Dialog):
 		
 		self.__VBox.Add(wx.StaticLine(self,-1,style=wx.HORIZONTAL),0,wx.GROW|wx.TOP|wx.BOTTOM,2);
 
-		tmp = wx.StaticText(self, -1, "Type: ");
+		tmp = wx.StaticText(self, -1, _("Type: "));
 		self.__Type = wx.ComboBox(self, -1, choices=["Bool","Byte","Word","DWord","Float","Double","String"]);
 		if Type:
 			self.__Type.SetValue(str(Type));
@@ -201,7 +201,7 @@ class PropertyDialog(wx.Dialog):
 		box.Add(self.__Type,2,wx.ALIGN_RIGHT|wx.GROW);
 		self.__VBox.Add(box,0,wx.GROW|wx.ALL,1);
 		
-		tmp = wx.StaticText(self, -1, "Refresh: ");
+		tmp = wx.StaticText(self, -1, _("Refresh: "));
 		self.__Rate = wx.TextCtrl(self, -1, "0.5");
 		box = wx.BoxSizer(wx.HORIZONTAL);
 		box.Add(tmp,1,wx.ALIGN_CENTER);
@@ -210,12 +210,12 @@ class PropertyDialog(wx.Dialog):
 
 		self.__VBox.Add(wx.StaticLine(self,-1,style=wx.HORIZONTAL),0,wx.GROW|wx.TOP|wx.BOTTOM,2);
 
-		self.__OK = wx.Button(self,wx.ID_OK, " OK ");
-		self.__CANCEL = wx.Button(self, wx.ID_CANCEL, " Cancel ");
+		self.__OK = wx.Button(self,wx.ID_OK, _(" OK "));
+		self.__CANCEL = wx.Button(self, wx.ID_CANCEL, _(" Cancel "));
 		box = wx.BoxSizer(wx.HORIZONTAL);
-		box.Add(self.__OK);
-		box.Add(self.__CANCEL);
-		self.__VBox.Add(box,0,wx.TOP,5);
+		box.Add(self.__OK,1,wx.GROW|wx.ALL,3);
+		box.Add(self.__CANCEL,1,wx.GROW|wx.ALL,3);
+		self.__VBox.Add(box,1,wx.TOP|wx.ALIGN_CENTER|wx.GROW,5);
 
 		self.SetSizer(self.__VBox);
 		self.__VBox.Fit(self);

@@ -19,8 +19,11 @@
 # ############################################################################ # 
 
 #ChangeLog:
-#	2005-05-27:
-#		Release as version 0.2.0 (alpha)
+# 2005-05-28:
+#	- fixed missing return(None) in SymbolTreePanel.OnAddSymbol() when 
+#		aborting SymbolPropertyDialog.
+# 2005-05-27:
+#	Release as version 0.2.0 (alpha)
 
 import wx;
 from AddFolderDialog import AddFolderDialog;
@@ -58,7 +61,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		self.__SymbolIcon = self.__IL.Add(bmp);
 		self.SetImageList(self.__IL);
 
-		self.__myRoot = self.AddRoot("SymbolTree (/)");
+		self.__myRoot = self.AddRoot(_("SymbolTree (/)"));
 		self.SetPyData(self.__myRoot,(True,"/"));
 #		self.SetItemImage(self.__myRoot,self.__FolderIcon, wx.TreeItemIcon_Normal);
 #		self.SetItemImage(self.__myRoot,self.__FolderIcon2, wx.TreeItemIcon_Expanded);
@@ -100,6 +103,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		dlg = PropertyDialog(self, slot, SType, self.__PPLTSys);
 		if not dlg.ShowModal() == wx.ID_OK:
 			dlg.Destroy();
+			return(None);
 		name = dlg.GetName();
 		stype= dlg.GetType();
 		rate = dlg.GetRate();
@@ -125,7 +129,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		(ItemIsFolder, Path) = self.GetPyData(item);
 		dlg = AddFolderDialog(self, self.__PPLTSys, Path);
 		ret = dlg.ShowModal();
-		if ret != wx.ID_OK:
+		if not ret == wx.ID_OK:
 			return(False);
 		
 		mod = dlg.GetModus();
@@ -207,20 +211,20 @@ class CtxMenu(wx.Menu):
 
 		wx.Menu.__init__(self);
 		if ObjIsFolder:
-			item = wx.MenuItem(self, self.__AddSym, "Add Symbol");
+			item = wx.MenuItem(self, self.__AddSym, _("Add Symbol"));
 			self.AppendItem(item);
-			item = wx.MenuItem(self, self.__AddFol, "Add Folder");
+			item = wx.MenuItem(self, self.__AddFol, _("Add Folder"));
 			self.AppendItem(item)
 		else:
-			item = wx.MenuItem(self, self.__DelSym, "Delete Symbol");
+			item = wx.MenuItem(self, self.__DelSym, _("Delete Symbol"));
 			self.AppendItem(item);
 
 		if ObjIsFolder and Path!="/":
-			item = wx.MenuItem(self, self.__DelFol, "Delete Folder");
+			item = wx.MenuItem(self, self.__DelFol, _("Delete Folder"));
 			self.AppendItem(item);
 		
 		if Path!="/":
-			item = wx.MenuItem(self, self.__Prop, "Properties");
+			item = wx.MenuItem(self, self.__Prop, _("Properties"));
 			self.AppendItem(item);
 		self.Bind(wx.EVT_MENU, tree.OnAddSymbol, id = self.__AddSym);
 		self.Bind(wx.EVT_MENU, tree.OnAddFolder, id = self.__AddFol);

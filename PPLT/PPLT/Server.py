@@ -20,8 +20,11 @@
 
 # Changelog:
 # 2005-05-27:
-#	Release as version 0.2.0
-
+#	- fixed bug in Server.__load():
+#		missed to remove stop exsisting Core-Exporter on exception while load a new
+#	- fixed bug in Server.destroy():
+#		method is now error-sensitiv		
+#	- fixed missing exception raise in Server.__init__() if server load fails.
 import xml.dom.minidom;
 import logging;
 
@@ -35,7 +38,8 @@ class Server:
 		self.__ServerName = ServerName;
 		self.__DefaultUser = DefaultUser;
 		self.__Parameters = Parameters;
-		self.__load();
+		if not self.__load():
+			raise Exception();
 
 	def __load(self):
 		doc = xml.dom.minidom.parse(self.__FileName);
@@ -49,6 +53,7 @@ class Server:
 								self.__Parameters);
 			except:
 				self.__Logger.error("Error while Load a Server");
+				self.destroy();
 				return(False);
 			if not obj:
 				self.__Logger.error("Error while Load a Server");
@@ -60,7 +65,11 @@ class Server:
 	
 	def destroy(self):
 		for server in self.__ServerObjects:
-			self.__CoreObject.ExporterDel(server);
+			if self.__CoreObject.ExporterDel(server):
+				self.__ServerObjects.remove(server);
+			else:
+				self.__Logger.error("Error while stop server");
+				return(False);
 		return(True);
 
 	def getClassAndName(self):

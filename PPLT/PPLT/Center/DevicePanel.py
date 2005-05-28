@@ -43,9 +43,9 @@ class DevicePanel(wx.ListCtrl):
 		self.__PPLTSys = PPLTSys;
 		self.__Logger = logging.getLogger("PPLT");
 		self.Fit();
-		self.InsertColumn(0,"Alias");
-		self.InsertColumn(1,"FQDN",width=150);
-		self.InsertColumn(2,"Parameter",width=200);
+		self.InsertColumn(0,_("Alias"));
+		self.InsertColumn(1,_("FQDN"),width=150);
+		self.InsertColumn(2,_("Parameter"),width=200);
 
 		self.__IL = wx.ImageList(16,16);
 		bmp = wx.Bitmap(os.path.normpath(conf.GetIconPath()+"/device.xpm"));
@@ -57,7 +57,7 @@ class DevicePanel(wx.ListCtrl):
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
 
 	def OnAddDevice(self, event):
-		self.__Logger.debug("Add device...");
+		self.__Logger.debug(_("Add device..."));
 		ret = LoadADevice(self, self.__PPLTSys);
 		if ret:
 			(Alias, DevName, Paras) = ret;
@@ -122,7 +122,7 @@ class DeviceMenu(wx.Menu):
 	def __init__(self, parent):
 		self.__ADD_ID = wx.NewId();
 		wx.Menu.__init__(self);
-		item = wx.MenuItem(self, self.__ADD_ID, "Add Device");
+		item = wx.MenuItem(self, self.__ADD_ID, _("Add Device"));
 		self.AppendItem(item);
 		self.Bind(wx.EVT_MENU, parent.OnAddDevice, id=self.__ADD_ID);
 
@@ -130,7 +130,7 @@ class DeviceCtxMenu(wx.Menu):
 	def __init__(self, parent):
 		self.__DEL_ID = wx.NewId();
 		wx.Menu.__init__(self);
-		item = wx.MenuItem(self, self.__DEL_ID, "Del Device");
+		item = wx.MenuItem(self, self.__DEL_ID, _("Del Device"));
 		self.AppendItem(item);
 		self.Bind(wx.EVT_MENU, parent.OnDelDevice, id=self.__DEL_ID);
 

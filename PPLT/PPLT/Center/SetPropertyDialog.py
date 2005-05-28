@@ -28,19 +28,19 @@ from ModusBox import ModusBox;
 
 class SetPropertyDialog(wx.Dialog):
 	def __init__(self, parent, PPLTSys, owner, group, modus):
-		wx.Dialog.__init__(self, parent, -1, "Properties");
+		wx.Dialog.__init__(self, parent, -1, _("Properties"));
 		
 		sizer = wx.BoxSizer(wx.VERTICAL);
 		
 		self.__modbox = ModusBox(self, PPLTSys, owner, group, modus);
 		sizer.Add(self.__modbox, 0, wx.EXPAND|wx.ALL, 3);
 		
-		ok = wx.Button(self, wx.ID_OK, " Ok ");
-		ca = wx.Button(self, wx.ID_CANCEL, " Cancel ");
+		ok = wx.Button(self, wx.ID_OK, _(" Ok "));
+		ca = wx.Button(self, wx.ID_CANCEL, _(" Cancel "));
 		box = wx.BoxSizer(wx.HORIZONTAL);
-		box.Add(ok, 0, wx.ALL, 2);
-		box.Add(ca, 0, wx.ALL, 2);
-		sizer.Add(box, 0, wx.ALL, 3);
+		box.Add(ok, 1, wx.ALL|wx.ALIGN_CENTER, 3);
+		box.Add(ca, 1, wx.ALL|wx.ALIGN_CENTER, 3);
+		sizer.Add(box, 1, wx.GROW|wx.ALIGN_CENTER);
 
 		self.SetSizer(sizer);
 		sizer.Fit(self);

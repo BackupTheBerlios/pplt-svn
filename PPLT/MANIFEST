@@ -1,3 +1,4 @@
+I18N/de/PPLT.mo
 UserDB.xml
 PPLT.conf
 icons/class.xpm
@@ -12,6 +13,7 @@ icons/symbol.xpm
 icons/group.xpm
 icons/superuser.xpm
 icons/user.xpm
+icons/info.xpm
 setup.py
 PPLT/AliasTable.py
 PPLT/BugReport.py

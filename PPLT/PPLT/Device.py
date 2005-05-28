@@ -21,7 +21,9 @@
 # Changelog:
 # 2005-05-27:
 #	Release as version 0.2.0
-
+#	- Fixed bug in Device.unregister(): 
+#		Generated inconsitent Object-Ref-Conter in Core.
+	
 import logging;
 import DeviceDescription;
 import Exceptions;
@@ -90,11 +92,12 @@ class Device:
 			return(False);
 		
 		# reduce usage-counter for slot:
+		if not self.__CoreObject.MasterTreeDel(SlotID):
+			self.__Logger.error("Error while unregister Symbol");
+			return(False);
 		self.__SlotTable[SlotID] = self.__SlotTable[SlotID] - 1;
-		# if slot is unused -> remove it:
 		if self.__SlotTable[SlotID] < 1:
 			del self.__SlotTable[SlotID];
-			return(self.__CoreObject.MasterTreeDel(SlotID));
 		return(True);
 
 	def getClassAndName(self):

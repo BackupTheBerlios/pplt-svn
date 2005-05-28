@@ -38,10 +38,10 @@ class NoteBook(wx.Notebook):
 		self.__SymPanel = SymbolTreePanel.SymbolTreePanel(self, self.__PPLTSys);
 		self.__UDBPanel = UserDBPanel.UserDBPanel(self, self.__PPLTSys);
 
-		self.AddPage(self.__DevPanel, "Devices");
-		self.AddPage(self.__SymPanel, "SymbolTree");
-		self.AddPage(self.__SrvPanel, "Server");
-		self.AddPage(self.__UDBPanel, "User DataBase");
+		self.AddPage(self.__DevPanel, _("Devices"));
+		self.AddPage(self.__SymPanel, _("SymbolTree"));
+		self.AddPage(self.__SrvPanel, _("Server"));
+		self.AddPage(self.__UDBPanel, _("User DataBase"));
 
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
 

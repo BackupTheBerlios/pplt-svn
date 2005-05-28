@@ -27,7 +27,7 @@ import wx;
 class DeviceParameterDialog(wx.Dialog):
 	def __init__(self, parent, DevName, PPLTSys):
 		self.__PPLTSys = PPLTSys;
-		wx.Dialog.__init__(self, parent, -1, "Setup %s"%DevName);
+		wx.Dialog.__init__(self, parent, -1, _("Setup ")+DevName);
 		self.__DevName = DevName,
 		self.__Info = self.__PPLTSys.GetDeviceInfo(DevName);
 		self.__Parameters = {};
@@ -35,8 +35,8 @@ class DeviceParameterDialog(wx.Dialog):
 
 		self.__MySizer = wx.BoxSizer(wx.VERTICAL);
 		
-		label = wx.StaticText(self, -1, "Alias: ");
-		self.Alias =  wx.TextCtrl(self, -1, "DevName");
+		label = wx.StaticText(self, -1, _("Alias: "));
+		self.Alias =  wx.TextCtrl(self, -1, _("DevName"));
 		box   = wx.BoxSizer(wx.HORIZONTAL);
 		box.Add(label, 1, wx.ALIGN_LEFT|wx.RIGHT|wx.TOP|wx.BOTTOM,4);
 		box.Add(self.Alias, 0, wx.ALIGN_RIGHT|wx.LEFT, 3);
@@ -46,8 +46,8 @@ class DeviceParameterDialog(wx.Dialog):
 		for var in varlist:
 			self.__AddEntry(var);
 
-		ok = wx.Button(self, wx.ID_OK," OK ");
-		ca = wx.Button(self, wx.ID_CANCEL, " Cancel ");
+		ok = wx.Button(self, wx.ID_OK,_(" OK "));
+		ca = wx.Button(self, wx.ID_CANCEL, _(" Cancel "));
 		box = wx.BoxSizer(wx.HORIZONTAL);
 		box.Add(ok, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2);
 		box.Add(ca, 0, wx.ALIGN_RIGHT|wx.RIGHT|wx.LEFT,2);
@@ -83,4 +83,5 @@ class DeviceParameterDialog(wx.Dialog):
 			val = self.__Parameters[var].GetValue();
 			self.Values.update( {var:val} );
 		self.EndModal(wx.ID_OK);
+
 

@@ -1,4 +1,4 @@
 pack:
-		zip PPLTWeb.zip *.py
+		zip -q PPLTWeb.zip *.py
 		mv PPLTWeb.zip ../
 		

@@ -31,8 +31,8 @@ import os;
 
 class ServerSelectionDialog(wx.Dialog):
 	def __init__(self, parent, PPLTSys):
-		wx.Dialog.__init__(self, parent, -1, 
-							"ServerSelection",
+		wx.Dialog.__init__(self, parent, -1,
+							_("ServerSelection"),
 							size = wx.Size(300,250));
 		self.__PPLTSys = PPLTSys;
 		
@@ -96,7 +96,7 @@ class ServerTree(wx.TreeCtrl):
 		self.__ClsImg = self.__IL.Add(bmp);
 		self.SetImageList(self.__IL);
 		
-		self.__Root = self.AddRoot("SDB");
+		self.__Root = self.AddRoot(_("Servers"));
 		self.SetPyData(self.__Root, None);
 
 		self.__AddServers(None, self.__Root);

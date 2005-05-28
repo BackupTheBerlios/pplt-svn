@@ -66,7 +66,7 @@ class Object(pyDCPU.MasterObject):
         Connection = pyDCPU.MasterConnection(self,int(Address));
         return(Connection);
 	
-    def close(self,Connection):
+    def close(self):
         self.Logger.debug("closed");
         pass;
 

@@ -31,7 +31,7 @@ import os;
 class DeviceSelectionDialog(wx.Dialog):
 	def __init__(self, parent, PPLTSys):
 		wx.Dialog.__init__(self, parent, -1, 
-							"DeviceSelection",
+							_("DeviceSelection"),
 							size = wx.Size(300,250));
 		self.__PPLTSys = PPLTSys;
 		
@@ -95,7 +95,7 @@ class DeviceTree(wx.TreeCtrl):
 		self.__ClsImg = self.__IL.Add(bmp);
 		self.SetImageList(self.__IL);
 	
-		self.__Root = self.AddRoot("Devices");
+		self.__Root = self.AddRoot(_("Devices"));
 		self.SetPyData(self.__Root, None);
 
 		self.__AddDevices(None, self.__Root);

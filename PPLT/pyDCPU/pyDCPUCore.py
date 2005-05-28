@@ -131,6 +131,7 @@ class Core:
                 self.Logger.warning("Ref count is inconsisten!");
                 c = 0;
             self.__ObjectRefCount.update( {Object._GetID():c+1} );
+            self.Logger.debug("Set ref.-counter up to %i"%self.__ObjectRefCount.get(Object._GetID()));
             return(Object._GetID());
         
         # Connect new Object with Parent
@@ -183,7 +184,7 @@ class Core:
             self.__ObjectRefCount.update( {ObjectID:1} );
         if c > 1:
             self.__ObjectRefCount.update( {ObjectID:c-1} );
-            self.Logger.debug("Object ref counter redused.");
+            self.Logger.debug("Object ref counter redused to %i"%self.__ObjectRefCount.get(ObjectID));
             return(True);
 		
         if not self.__MasterObjTree.Del(ObjectID):
@@ -196,6 +197,7 @@ class Core:
 
         del Object;								#destroy object
         del self.__ObjectRefCount[ObjectID];	#remove from ref-count table
+        self.Logger.debug("Obj ref count should be None: %s"%str(self.__ObjectRefCount.get(ObjectID)));
         del self.__ObjectHash[ObjectID];		#remove from object hash
 
         self.Logger.debug("Object removed and destroyed");
@@ -213,9 +215,9 @@ class Core:
             This method will create and attach a new SymbolSlot to the
             ObjectTree...
         """
-        fingerprint = Modules.Fingerprint(Name = '[SymbolSlot]', 
-                                          Parent = ParentID, 
-                                          Address = Address, 
+        fingerprint = Modules.Fingerprint(Name = '[SymbolSlot]',
+                                          Parent = ParentID,
+                                          Address = Address,
                                           TypeName = TypeName,
                                           CacheTime = TimeOut);
         if self.__ObjectHash.has_key(fingerprint):
@@ -223,6 +225,7 @@ class Core:
             self.Logger.debug("Return cached Slot");
             c = self.__ObjectRefCount.get(Object._GetID());
             self.__ObjectRefCount.update( {Object._GetID():c+1} );
+            self.Logger.debug("Set ref counter up to %i"%self.__ObjectRefCount.get(Object._GetID()));
             return(Object._GetID());
         
         Parent = self.__ObjectHash.get(ParentID);

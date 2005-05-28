@@ -9,6 +9,9 @@ class PPLTWebServer(BaseHTTPServer.HTTPServer):
         BaseHTTPServer.HTTPServer.__init__(self, Address, Handler);
         self.ExpSymbolTree = ExpSymbolTree;
 
+    def get_request(self):
+        self.socket.setblocking(0);
+        return(self.socket.accept());
 
 class PPLTWebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -74,6 +77,10 @@ class Object(pyDCPU.ExportObject):
         self.__Loop = True;
 
     def start(self):
+        fileno = self.__Server.fileno();
+        rlist = [fileno];
+        wlist = [];
+        xlist = [];
         while self.__Loop:
             self.__Server.handle_request();
 
@@ -131,8 +138,8 @@ class Object(pyDCPU.ExportObject):
 	def start(self):
 		while self.__Loop:
 			self.__ServerObject.handle_request();
-		return(Ture);
+		return(True);
 	def stop(self):
 		self.__Loop = False;
-
+		return(True);
 

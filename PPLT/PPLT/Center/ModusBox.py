@@ -46,29 +46,29 @@ class ModusBox(wx.BoxSizer):
 
 		wx.BoxSizer.__init__(self, wx.VERTICAL);
 		
-		label = wx.StaticText(parent, -1, "User: ");
+		label = wx.StaticText(parent, -1, _("Owner: "));
 		self.Owner = wx.ComboBox(parent, -1, self.__UserName, choices=self.__UsrLST);
 		box = wx.BoxSizer(wx.HORIZONTAL);
 		box.Add(label, 1, wx.LEFT|wx.ALIGN_CENTER);
 		box.Add(self.Owner, 3, wx.EXPAND);
 		self.Add(box, 0, wx.EXPAND);
 		
-		label = wx.StaticText(parent, -1, "Group: ");
+		label = wx.StaticText(parent, -1, _("Group: "));
 		self.Group = wx.ComboBox(parent, -1, self.__GroupName, choices=self.__GrpLST);
 		box = wx.BoxSizer(wx.HORIZONTAL);
 		box.Add(label, 1, wx.LEFT|wx.ALIGN_CENTER);
 		box.Add(self.Group, 3, wx.EXPAND);
 		self.Add(box, 0, wx.EXPAND);
 
-		own  = wx.StaticText(parent, -1, "Owner:");
-		grp  = wx.StaticText(parent, -1, "Group:");
-		any  = wx.StaticText(parent, -1, "Any:");
-		self.__ownr = wx.CheckBox(parent, -1, "read");
-		self.__ownw = wx.CheckBox(parent, -1, "write");
-		self.__grpr = wx.CheckBox(parent, -1, "read");
-		self.__grpw = wx.CheckBox(parent, -1, "write");
-		self.__anyr = wx.CheckBox(parent, -1, "read");
-		self.__anyw = wx.CheckBox(parent, -1, "write");
+		own  = wx.StaticText(parent, -1, _("Owner:"));
+		grp  = wx.StaticText(parent, -1, _("Group:"));
+		any  = wx.StaticText(parent, -1, _("Any:"));
+		self.__ownr = wx.CheckBox(parent, -1, _("read"));
+		self.__ownw = wx.CheckBox(parent, -1, _("write"));
+		self.__grpr = wx.CheckBox(parent, -1, _("read"));
+		self.__grpw = wx.CheckBox(parent, -1, _("write"));
+		self.__anyr = wx.CheckBox(parent, -1, _("read"));
+		self.__anyw = wx.CheckBox(parent, -1, _("write"));
 		ownb = wx.BoxSizer(wx.VERTICAL);
 		grpb = wx.BoxSizer(wx.VERTICAL);
 		anyb = wx.BoxSizer(wx.VERTICAL);

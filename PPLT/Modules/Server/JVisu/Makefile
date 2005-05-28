@@ -1,3 +1,3 @@
 pack:
-	zip JVisu.zip *.py
+	zip -q JVisu.zip *.py
 	mv JVisu.zip ../

@@ -48,6 +48,10 @@ def LoadBitmaps(path):
 		tmp = wx.NullBitmap;
 	bmps.update( {"PackAdd":tmp} );
 	
+	tmp = wx.Bitmap(os.path.normpath(path+"/info.xpm"));
+	if not tmp:
+		tmp = wx.NullBitmap;
+	bmps.update( {"Info":tmp} );
 #	tmp = wx.Bitmap(os.path.normpath(path+"/pack_del.xpm"));
 #	if not tmp:
 #		tmp = wx.NullBitmap;

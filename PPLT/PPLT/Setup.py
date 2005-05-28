@@ -19,6 +19,10 @@
 # ############################################################################ # 
 
 # Changelog:
+# 2005-05-28:
+#	- fixed missing exception catching try/except in SetupStepLoad.Load()
+#	- fixed missing unloading all core-modules of a device if one core-mod
+#		could not be loaded
 # 2005-05-27:
 #	Release as version 0.2.0
 
@@ -34,7 +38,10 @@ class Setup:
 			self.__Logger.error("Error while load setup description");
  
 	def DoSetup(self, Core, VarHash):
-		return(self.__Steps.Load(Core, None, VarHash));
+		if not self.__Steps.Load(Core, None, VarHash):
+			self.__Steps.Unload();
+			return(False);
+		return(True);
     
 	def Unload(self):
 		return(self.__Steps.Unload());
@@ -111,9 +118,13 @@ class SetupStepLoad(SetupStep):
 		else:
 			addr = VarHash.get(self.__Address.VarName);
        
-		self.Logger.debug("Try to load \"%s\" with %s at %s"%(self.__ModuleName,str(ret),str(addr)));            
+		self.Logger.debug("Try to load \"%s\" with %s at %s"%(self.__ModuleName,str(ret),str(addr)));
         
-		self.__Object = Core.MasterTreeAdd(ParentID, self.__ModuleName, addr, ret);
+		try:
+			self.__Object = Core.MasterTreeAdd(ParentID, self.__ModuleName, addr, ret);
+		except:
+			self.Logger.error("Exception while load %s"%self.__ModuleName);
+			return(False);
 		if not self.__Object:
 			self.Logger.error("Error while load Module %s"%self.__ModuleName);
 			return(False);

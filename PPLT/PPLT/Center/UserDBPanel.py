@@ -119,7 +119,7 @@ class UserDBPanel(wx.TreeCtrl):
 			return(None);
 		Name = self.GetItemText(item);
 
-		dlg = UserDBDialogs.CreateMemberDialog(self,-1,"Create Memeber");
+		dlg = UserDBDialogs.CreateMemberDialog(self,-1,_("Create Memeber"));
 		if not dlg.ShowModal() == wx.ID_OK:
 			return(None);
 		
@@ -173,7 +173,7 @@ class UserDBPanel(wx.TreeCtrl):
 		else:
 			Name = self.GetItemText(item);
 
-		dlg = UserDBDialogs.CreateGroupDialog(self, -1, "Create Group");
+		dlg = UserDBDialogs.CreateGroupDialog(self, -1, _("Create Group"));
 		if not dlg.ShowModal() == wx.ID_OK:
 			return(None);
 		grp = dlg.Name;
@@ -240,7 +240,7 @@ class UserDBPanel(wx.TreeCtrl):
 			return(None);
 		Name = self.GetItemText(item);
 		
-		dlg = UserDBDialogs.PasswdDialog(self, -1, "Change Password of %s"%Name);
+		dlg = UserDBDialogs.PasswdDialog(self, -1, _("Change Password of ")+Name);
 		if not dlg.ShowModal() == wx.ID_OK:
 			return(None);
 		pass1 = dlg.Pass1;
@@ -297,20 +297,20 @@ class CtxMenu(wx.Menu):
 
 		if IsGroup:
 			if Name:
-				item = wx.MenuItem(self, self.__AddUsrID, "Add User");
+				item = wx.MenuItem(self, self.__AddUsrID, _("Add User"));
 				self.AppendItem(item);
-			item = wx.MenuItem(self, self.__AddGrpID, "Add Group");
+			item = wx.MenuItem(self, self.__AddGrpID, _("Add Group"));
 			self.AppendItem(item);
 			if Name:
-				item = wx.MenuItem(self, self.__DelGrpID, "Del Group");
+				item = wx.MenuItem(self, self.__DelGrpID, _("Del Group"));
 				self.AppendItem(item);
 		else:
 			if not IsSuperUser:
-				item = wx.MenuItem(self, self.__DelUsrID, "Del User");
+				item = wx.MenuItem(self, self.__DelUsrID, _("Del User"));
 				self.AppendItem(item);
-				item = wx.MenuItem(self, self.__SetSUsrID,"Set SuperUser");
+				item = wx.MenuItem(self, self.__SetSUsrID, _("Set SuperUser"));
 				self.AppendItem(item);
-			item = wx.MenuItem(self, self.__ChPassID, "Change Password");
+			item = wx.MenuItem(self, self.__ChPassID, _("Change Password"));
 			self.AppendItem(item);
 
 		self.Bind(wx.EVT_MENU, Tree.OnAddUser, id = self.__AddUsrID);
