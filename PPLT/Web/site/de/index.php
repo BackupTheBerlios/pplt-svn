@@ -3,6 +3,12 @@
 		<a href="/de/NewsHistory.html" style="font-size:0.5em;">[Archiv]</a>
 	</div>
     <div class="NewsItem">
+	<b>2005-05-28 - BugfixRelease (Version 0.2.1)</b><br>
+	Ich habe einige unangenehme Fehler in der Bibliothek
+	sowie in der Applikation entfernt. Ich empfehle ihnen
+	auf diese Version zu aktualisieren. Des weitren habe
+	ich den <i>gettext</i> Support in das PPLT Center
+	eingepflegt.<br><br>
     <b>2005-05-27 - Zweite Alpha Release (0.2.0)</b><br>
 	Ich habe eine die zweite alpha Version der PPLT freigegeben. Die
 	gr&ouml;ste Neuerung ist die grafische Applikation <i>PPLT Center</i>,
@@ -12,9 +18,6 @@
    	Die PPLT Bibliothek hat nun ihren vollen Funktionsumfang
 	erreicht. Des weiteren habe ich einen Fehler in der 
 	Kernbibliothek entfernt.<br><br>
-    <b>2005-04-28 - Release PPLT Version 0.1pre 3</b><br>
-	Dieses Release ist identisch mit dem Release <i>0.1pre 2</i>,
-	jedoch habe ich einige &uuml;ble Fehler entfernt.<br><br>
     </div>
 
     <div class="Head">Was ist PPLT</div>

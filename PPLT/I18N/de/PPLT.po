@@ -1,13 +1,12 @@
-# translation of PPLT-de.po to Deutsch
 # translation of messages.po to Deutsch
 # Copyright (C) 2005 Free Software Foundation, Inc.
 # Hannes Matuschek <hmatuschek@gmx.net>, 2005.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PPLT-de\n"
-"POT-Creation-Date: 2005-05-28 12:33+ZONE\n"
-"PO-Revision-Date: 2005-05-28 13:37+0200\n"
+"Project-Id-Version: messages\n"
+"POT-Creation-Date: 2005-05-28 21:06+ZONE\n"
+"PO-Revision-Date: 2005-05-28 21:16+0200\n"
 "Last-Translator: Hannes Matuschek <hmatuschek@gmx.net>\n"
 "Language-Team: Deutsch <pplt-dev@berlios.de>\n"
 "MIME-Version: 1.0\n"
@@ -16,242 +15,330 @@ msgstr ""
 "X-Generator: KBabel 1.3.1\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: AddFolderDialog.py:31 SymbolTreePanel.py:212
+#: AddFolderDialog.py:31 SymbolTreePanel.py:216
+#, fuzzy
 msgid "Add Folder"
 msgstr "Ordner Hinzufügen"
 
 #: AddFolderDialog.py:35 AddSymbolDialog.py:180
+#, fuzzy
 msgid "Name: "
 msgstr "Name: "
 
 #: AddFolderDialog.py:36 AddSymbolDialog.py:182
+#, fuzzy
 msgid "Name"
 msgstr "Name"
 
 #: AddFolderDialog.py:45 SetPropertyDialog.py:38 UserDBDialogs.py:65 :119 :163
+#, fuzzy
 msgid " Ok "
 msgstr " Ok "
 
 #: AddFolderDialog.py:46 AddSymbolDialog.py:214 DeviceParameterDialog.py:50
 #: ServerParameterDialog.py:58 SetPropertyDialog.py:39 UserDBDialogs.py:67 :121
 #: :165
+#, fuzzy
 msgid " Cancel "
 msgstr " Abbrechen "
 
 #: AddSymbolDialog.py:33
+#, fuzzy
 msgid "Select DeviceSlot"
 msgstr "GeräteSlot auswählen"
 
 #: AddSymbolDialog.py:66 DeviceSelectionDialog.py:98 NoteBook.py:41
+#, fuzzy
 msgid "Devices"
 msgstr "Geräte"
 
 #: AddSymbolDialog.py:123
+#, fuzzy
 msgid "Enter expl. slot name or addr.:"
 msgstr "Geben sie einen expl. Slot oder eine Addresse an"
 
 #: AddSymbolDialog.py:123
+#, fuzzy
 msgid "Slot"
 msgstr "Slot"
 
 #: AddSymbolDialog.py:176
+#, fuzzy
 msgid "Properties of "
 msgstr "Eigenschaften von "
 
 #: AddSymbolDialog.py:195
+#, fuzzy
 msgid "Type: "
 msgstr "Typ"
 
 #: AddSymbolDialog.py:204
+#, fuzzy
 msgid "Refresh: "
 msgstr "Refresh: "
 
 #: AddSymbolDialog.py:213 DeviceParameterDialog.py:49
 #: ServerParameterDialog.py:57
+#, fuzzy
 msgid " OK "
 msgstr " Ok "
 
 #: DevicePanel.py:46 ServerPanel.py:46
+#, fuzzy
 msgid "Alias"
 msgstr "Alias"
 
 #: DevicePanel.py:47
+#, fuzzy
 msgid "FQDN"
 msgstr "FQDN"
 
 #: DevicePanel.py:48 ServerPanel.py:49
+#, fuzzy
 msgid "Parameter"
 msgstr "Parameter"
 
 #: DevicePanel.py:60
+#, fuzzy
 msgid "Add device..."
 msgstr "Gerät hinzufügen"
 
 #: DevicePanel.py:125
+#, fuzzy
 msgid "Add Device"
 msgstr "Gerät hinzufügen"
 
 #: DevicePanel.py:133
+#, fuzzy
 msgid "Del Device"
 msgstr "Gerät entfernen"
 
 #: DeviceParameterDialog.py:30 ServerParameterDialog.py:30
+#, fuzzy
 msgid "Setup "
 msgstr "Setup "
 
 #: DeviceParameterDialog.py:38 ServerParameterDialog.py:38
+#, fuzzy
 msgid "Alias: "
 msgstr "Alias: "
 
 #: DeviceParameterDialog.py:39
+#, fuzzy
 msgid "DevName"
 msgstr "Gerätename"
 
 #: DeviceSelectionDialog.py:34
+#, fuzzy
 msgid "DeviceSelection"
 msgstr "Geräteauswahl"
 
+#: InfoFrame.py:5
+msgid "PPLT Info"
+msgstr "PPLT Info"
+
+#: InfoFrame.py:14
+msgid ""
+"http://pplt.berlios.de\n"
+"by Hannes Matuschek <hmatuschek@gmx.net>"
+msgstr ""
+"http://pplt.berlios.de\n"
+"von Hannes Matuschek <hmatuschek@gmx.net>"
+
+#: InfoFrame.py:18
+msgid ""
+"PPLT Center demonstrate the functionality of the PPLT library.  \n"
+"At first create some users and change the password of the \n"
+"superuser.Then load one or two devices, create symbols, that\n"
+"are attached to the devices and at least start a server.\n"
+"                   If you missing menus: try right-click.\n"
+msgstr ""
+"PPLT Center demonstriert die Fähigkeiten der PPLT-Bibliothek\n"
+"As erstes sollten sie einige Benutzer anlgen und das Passwort\n"
+"des SuperUsers ändern. Dann können sie das eine oder andere\n"
+"Gerät laden, Symbole erzeugen, die mit diesen Geräten verknüpft\n "
+"werden und zum Schluß einen Server starten um die Symbole zu\n"
+"exportieren.\n"
+"Wenn sie die Menüs vermissen, versuchen sie es einmal mit dem\n"
+"Rechts-Klick.\n"
+
 #: ModusBox.py:49
+#, fuzzy
 msgid "Owner: "
 msgstr "Besitzer: "
 
 #: ModusBox.py:56
+#, fuzzy
 msgid "Group: "
 msgstr "Gruppe: "
 
 #: ModusBox.py:63
+#, fuzzy
 msgid "Owner:"
 msgstr "Besitzer:"
 
 #: ModusBox.py:64
+#, fuzzy
 msgid "Group:"
 msgstr "Gruppe:"
 
 #: ModusBox.py:65
+#, fuzzy
 msgid "Any:"
 msgstr "Jeder:"
 
 #: ModusBox.py:66 :68 :70
+#, fuzzy
 msgid "read"
 msgstr "lesen"
 
 #: ModusBox.py:67 :69 :71
+#, fuzzy
 msgid "write"
 msgstr "schreiben"
 
 #: NoteBook.py:42
+#, fuzzy
 msgid "SymbolTree"
 msgstr "Symbolbaum"
 
 #: NoteBook.py:43
+#, fuzzy
 msgid "Server"
 msgstr "Server"
 
 #: NoteBook.py:44
+#, fuzzy
 msgid "User DataBase"
 msgstr "Benutzer Datenbank"
 
 #: ServerPanel.py:47
+#, fuzzy
 msgid "FQSN"
 msgstr "FQSN"
 
 #: ServerPanel.py:48
+#, fuzzy
 msgid "DefaultUser"
 msgstr "Std. Benutzer"
 
 #: ServerPanel.py:132
+#, fuzzy
 msgid "Add Server"
 msgstr "Server hinzufügen"
 
 #: ServerPanel.py:140
+#, fuzzy
 msgid "Stop Server"
 msgstr "Server anhalten"
 
 #: ServerParameterDialog.py:39
+#, fuzzy
 msgid "SrvName"
 msgstr "Servername"
 
 #: ServerParameterDialog.py:45
+#, fuzzy
 msgid "DefautUser: "
 msgstr "Std. Benutzter: "
 
 #: ServerSelectionDialog.py:35
+#, fuzzy
 msgid "ServerSelection"
 msgstr "Serverauswahl"
 
 #: ServerSelectionDialog.py:99
+#, fuzzy
 msgid "Servers"
 msgstr "Server"
 
-#: SetPropertyDialog.py:31 SymbolTreePanel.py:223
+#: SetPropertyDialog.py:31 SymbolTreePanel.py:227
+#, fuzzy
 msgid "Properties"
 msgstr "Eigeneschaften"
 
-#: SymbolTreePanel.py:61
+#: SymbolTreePanel.py:64
+#, fuzzy
 msgid "SymbolTree (/)"
 msgstr "SymbolBaum (/)"
 
-#: SymbolTreePanel.py:210
+#: SymbolTreePanel.py:214
+#, fuzzy
 msgid "Add Symbol"
 msgstr "Symbol hinzufügen"
 
-#: SymbolTreePanel.py:215
+#: SymbolTreePanel.py:219
+#, fuzzy
 msgid "Delete Symbol"
 msgstr "Symbol löschen"
 
-#: SymbolTreePanel.py:219
+#: SymbolTreePanel.py:223
+#, fuzzy
 msgid "Delete Folder"
 msgstr "Ordner löschen"
 
 #: UserDBDialogs.py:40
+#, fuzzy
 msgid "Username: "
 msgstr "Benutzer: "
 
 #: UserDBDialogs.py:47 :145
+#, fuzzy
 msgid "Password: "
 msgstr "Passwort: "
 
 #: UserDBDialogs.py:53 :151
+#, fuzzy
 msgid "Re-Type:  "
 msgstr "Noch einmal: "
 
 #: UserDBDialogs.py:108
+#, fuzzy
 msgid "Group Name: "
 msgstr "Guppe: "
 
 #: UserDBPanel.py:122
+#, fuzzy
 msgid "Create Memeber"
 msgstr "Benutzer anlegen"
 
 #: UserDBPanel.py:176
+#, fuzzy
 msgid "Create Group"
 msgstr "Gruppe anlegen"
 
 #: UserDBPanel.py:243
+#, fuzzy
 msgid "Change Password of "
 msgstr "Passwort ändern von "
 
 #: UserDBPanel.py:300
+#, fuzzy
 msgid "Add User"
 msgstr "Benutzer anlegen"
 
 #: UserDBPanel.py:302
+#, fuzzy
 msgid "Add Group"
 msgstr "Gruppe anlegen"
 
 #: UserDBPanel.py:305
+#, fuzzy
 msgid "Del Group"
 msgstr "Gruppe löschen"
 
 #: UserDBPanel.py:309
+#, fuzzy
 msgid "Del User"
 msgstr "Benutzer löschen"
 
 #: UserDBPanel.py:311
+#, fuzzy
 msgid "Set SuperUser"
 msgstr "Als SuperUser setzen"
 
 #: UserDBPanel.py:313
+#, fuzzy
 msgid "Change Password"
 msgstr "Passwort ändern"
 

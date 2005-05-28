@@ -7,7 +7,8 @@
 	- fixed missing unloading all core-modules of a device if one core-mod
 		could not be loaded in PPLT/Setup.py [Setup.DoSetup()]
 	+ added infoframe for PPLTC application.
-
+	--- RELEASE VERSION 0.2.1 ---
+	
 2005-05-27:
 	- fixed wrong Symbol<->DeviceAlias association in PPLT/PPLTSystem.py
 	- fixed in PPLT/Device.py

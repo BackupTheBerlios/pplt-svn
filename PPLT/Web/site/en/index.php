@@ -3,6 +3,9 @@
 		<a style="font-size:0.5em;" href="/en/NewsHistory.html">[History]</a>
 	</div>
     <div class="NewsItem">
+	<b>2005-05-28 - Bugfix Release for PPLT (Version 0.2.1)</b><br>
+	I've fixed some annoying bugs in libraries and in the application.
+	I recommend you to <u>update</u>.<br><br>
 	<b>2005-05-27 - 2nd Alpharelease of PPLT(Version 0.2.0)</b><br>
 	I've released the 2nd alpha version of PPLT. The major change is the new
 	GUI application PPLT Center (PPLTC.py) that shows the functionality of

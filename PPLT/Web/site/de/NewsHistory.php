@@ -1,6 +1,12 @@
 <div class="TextBody">
 	<div class="Head">News 2005</div>
     <div class="NewsItem">
+	<b>2005-05-28 - BugfixRelease (Version 0.2.1)</b><br>
+	Ich habe einige unangenehme Fehler in der Bibliothek
+	sowie in der Applikation entfernt. Ich empfehle ihnen
+	auf diese Version zu aktualisieren. Des weitren habe
+	ich den <i>gettext</i> Support in das PPLT Center
+	eingepflegt.<br><br>
     <b>2005-05-27 - Zweite Alpha Release (0.2.0)</b><br>
 	Ich habe eine die zweite alpha Version der PPLT freigegeben. Die
 	gr&ouml;ste Neuerung ist die grafische Applikation <i>PPLT Center</i>,
