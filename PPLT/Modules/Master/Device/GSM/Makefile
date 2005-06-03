@@ -1,3 +1,3 @@
 pack:
-	zip GSM.zip *.py
+	zip -q GSM.zip *.py
 	mv  GSM.zip ../

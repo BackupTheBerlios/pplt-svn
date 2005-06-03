@@ -1,3 +1,3 @@
 pack:
-	zip HexDump.zip *.py
+	zip -q HexDump.zip *.py
 	mv HexDump.zip ../

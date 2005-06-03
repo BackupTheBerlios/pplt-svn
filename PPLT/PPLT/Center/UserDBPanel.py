@@ -137,7 +137,7 @@ class UserDBPanel(wx.TreeCtrl):
 		nitem = self.AppendItem(item, user);
 		self.SetItemImage(nitem, self.__UserIcon, wx.TreeItemIcon_Normal);
 		self.SetPyData(nitem, (False,False));
-
+		self.Expand(item);
 
 	def OnDelUser(self, Event):
 		item = self.GetSelection();
@@ -187,7 +187,7 @@ class UserDBPanel(wx.TreeCtrl):
 		self.SetItemImage(nitem, self.__GroupIcon, wx.TreeItemIcon_Normal);
 		self.SetItemImage(nitem, self.__GroupIcon, wx.TreeItemIcon_Expanded);
 		self.SetPyData(nitem, (True, False));
-
+		self.Expand(item);
 
 	def OnDelGroup(self, Event):
 		item = self.GetSelection();

@@ -19,10 +19,19 @@
 # ############################################################################ # 
 
 #CHANGELOG:
-#	2005-05-27:
-#		+ Start changelog. (sorry i missed it)
-#		+ Release as Version 0.2.0 (alpha)
-#		- Fixed wrong Symbol<->DeviceAlias association
+# 2005-06-02:
+#	+ add StopServers() method		
+#	+ add StopDevices() method
+#	+ add ClearSymbolTree() method
+#	+ add StopAll() method
+#	+ add SaveSession() method
+#	+ add LoadSession() method
+#	+ add GetDeviceInfo() method
+# 2005-05-27:
+#	+ Start changelog. (sorry i missed it)
+#	+ Release as Version 0.2.0 (alpha)
+#	- Fixed wrong Symbol<->DeviceAlias association
+
 
 import pyDCPU;
 import Configuration;
@@ -33,7 +42,9 @@ import Server;
 import DataBase;
 import DeviceDescription;
 import ServerDescription;
+import LoadSession;
 import gettext;
+from xml.dom.minidom import getDOMImplementation
 
 MODUS_FMT_OCTAL = 1;
 MODUS_FMT_STRING = 2;
@@ -69,12 +80,207 @@ class System:
 		self.__ServerHash = {}												# ...
 		self.__SymbolTable = {};											# Association between SymbolPath and SlotID
 		self.__SymbolDeviceTable = {};										# Ass. btw. SymbolPath and DeviceAlias
+		self.__SymbolParameters = {};										# cache parameters for symbol...
 
-	def Stop(self):
+
+
+	# ######################################################################## #
+	# Stopping the whole system                                                #
+	# ######################################################################## #
+	# - stop all                                                               #
+	# - stop servers                                                           #
+	# - stop devices                                                           #
+	# - clear symboltree                                                       #
+	# ######################################################################## #
+	def StopAll(self):
 		""" This method will stop the system. Meaning stopping all servers,
- clear the whole Symboltree ans unload all devices. (no parameters needed)""" 
-		#FIXME implement!
-		pass;
+ clear the whole Symboltree and unload all devices. (no parameters needed)""" 
+		OK = True;
+		if not self.StopServers():
+			OK = False;
+		if not self.ClearSymbolTree():
+			OK = False;
+		if not self.StopDevices():
+			OK = False;
+		return(OK);
+
+	def StopServers(self):
+		""" This method will stop all servers. """
+		srvlst = self.__ServerHash.keys();
+		OK = True;
+		for srv in srvlst:
+			self.__Logger.debug("Try to stop server \"%s\"."%srv);
+			if not self.UnLoadServer(srv):
+				self.__Logger.warning("Unable to unload Server \"%s\""%srv);
+				OK = False;
+		return(OK);
+
+	def StopDevices(self):
+		""" This method will unload all devices. """
+		devlst = self.__DeviceHash.keys();
+		OK = True;
+		for dev in devlst:
+			self.__Logger.debug("Try to unload device \"%s\"."%dev);
+			if not self.UnLoadDevice(dev):
+				self.__Logger.warning("Unable to unload device \"%s\"."%dev);
+				OK = False;
+		return(OK);
+
+	def ClearSymbolTree(self, path="/"):
+		""" This method will clear the whole symbol tree or the path if given. """
+		OK = True;
+		# delete all symbols in this folder:
+		symlst = self.ListSymbols(path);
+		for sym in symlst:
+			if path[-1] == '/':
+				sym = path+sym;
+			else:
+				sym = path+"/"+sym;
+			
+			if not self.DeleteSymbol(sym):
+				self.__Logger.warning("Can't delete symbol %s"%sym);
+				OK = False;
+
+		#recursive delete all folders in this path:
+		dirlst = self.ListFolders(path);
+		for fol in dirlst:
+			if path[-1] == '/':
+				fol = path+fol;
+			else:
+				fol = path+"/"+fol;
+
+			if not self.ClearSymbolTree(fol):
+				self.__Logger.warning("Unable to delete content of folder %s"%fol);
+				OK = False;
+			else:
+				if not self.DeleteFolder(fol):
+					self.__Logger.warning("Unable to delete folder %s"%fol);
+					OK = False;
+		return(OK);
+
+
+
+	# ######################################################################## #
+	# Project/Session-management                                               #
+	# ######################################################################## #
+	# - save                                                                   #
+	# - load (have to be implemented)                                          #
+	# ######################################################################## #
+	def SaveSession(self, FileName):
+		""" Save the running system as a session description file. """
+		impl = getDOMImplementation();
+		doc = impl.createDocument(None, "PPLTSession", None);
+		top = doc.documentElement;
+
+		try:		#open file
+			fd = open(FileName, "w");
+		except:
+			self.__Logger.error("Error while save to file %s"%FileName);
+			return(False);
+
+		#save servers:
+		servers_tag = doc.createElement("Servers");
+		top.appendChild(servers_tag);
+		self.__SaveServers(doc, servers_tag);
+
+		#save devices:
+		devices_tag = doc.createElement("Devices");
+		top.appendChild(devices_tag);
+		self.__SaveDevices(doc, devices_tag);
+
+		#save symboltree:
+		symtree_tag = doc.createElement("SymbolTree");
+		top.appendChild(symtree_tag);
+		self.__SaveSymTree(doc, symtree_tag);
+
+		#save to file:	
+		txt = doc.toprettyxml()
+		fd.write(txt);
+		fd.close();
+		return(True);
+
+	def __SaveServers(self, Doc, Node):
+		srvlst = self.__ServerHash.keys();
+		for srv in srvlst:
+			srv_obj = self.__ServerHash.get(srv);
+			
+			srv_tag = Doc.createElement("Server");
+			Node.appendChild(srv_tag);
+
+			srv_tag.setAttribute("alias",srv);
+			srv_tag.setAttribute("fqsn",srv_obj.getClassAndName());
+			srv_tag.setAttribute("user",srv_obj.getDefaultUser());
+			# append paramters:
+			parmtr = srv_obj.getParameters();
+			for par in parmtr.keys():
+				prm_tag = Doc.createElement("Parameter");
+				srv_tag.appendChild(prm_tag);
+				prm_tag.setAttribute("name",par);
+				val_tag = Doc.createTextNode(parmtr.get(par));
+				prm_tag.appendChild(val_tag);
+		return(None);
+				
+	def __SaveDevices(self, Doc, Node):
+		devlst = self.__DeviceHash.keys();
+		for dev in devlst:
+			dev_obj = self.__DeviceHash.get(dev);
+			
+			dev_tag = Doc.createElement("Device");
+			Node.appendChild(dev_tag);
+
+			dev_tag.setAttribute("alias",dev);
+			dev_tag.setAttribute("fqdn",dev_obj.getClassAndName());
+			# append paramters:
+			parmtr = dev_obj.getParameters();
+			for par in parmtr.keys():
+				prm_tag = Doc.createElement("Parameter");
+				dev_tag.appendChild(prm_tag);
+				prm_tag.setAttribute("name",par);
+				val_tag = Doc.createTextNode(parmtr.get(par));
+				prm_tag.appendChild(val_tag);
+		return(None);
+	
+	def __SaveSymTree(self, Doc, Node, Path="/"):
+		symlst = self.ListSymbols(Path);
+		for sym in symlst:
+			if Path[-1] == "/":
+				sympath = Path+sym;
+			else:
+				sympath = Path+"/"+sym;
+			(Slot, Type) = self.__SymbolParameters[sympath];
+			sym_tag = Doc.createElement("Symbol");
+			Node.appendChild(sym_tag);
+			sym_tag.setAttribute("name",sym);
+			sym_tag.setAttribute("slot",Slot);
+			sym_tag.setAttribute("type",Type);
+			#sym_tag.setAttribute("timeout",???)
+			sym_tag.setAttribute("owner", self.GetOwner(sympath));
+			sym_tag.setAttribute("group", self.GetGroup(sympath));
+			sym_tag.setAttribute("modus", self.GetModus(sympath,MODUS_FMT_OCTAL));
+
+		dirlst = self.ListFolders(Path);
+		for fol in dirlst:
+			if Path[-1]=="/":
+				folpath = Path+fol;
+			else:
+				folpath = Path+"/"+fol;
+			fol_tag = Doc.createElement("Folder");
+			Node.appendChild(fol_tag);
+			fol_tag.setAttribute("name",fol);
+			fol_tag.setAttribute("owner",self.GetOwner(folpath));
+			fol_tag.setAttribute("group",self.GetGroup(folpath));
+			fol_tag.setAttribute("modus",self.GetModus(folpath,MODUS_FMT_OCTAL));
+			self.__SaveSymTree(Doc, fol_tag, folpath);
+		return(True);
+
+
+
+	def LoadSession(self, FileName):
+		""" Load session description file and setup the project. """
+		return(LoadSession.LoadSession(self, FileName));
+
+
+
 
 
     # ######################################################################## #
@@ -266,7 +472,12 @@ Return a list of strings. """
 			self.__Logger.error("No device named \"%s\" found."%Alias);
 			return(None);
 		return(dev.getClassAndName());
- 
+	def GetDeviceParameters(self, Alias):
+		dev = self.__DeviceHash.get(Alias);
+		if not dev:
+			self.__Logger.error("No device named %s found"%Alias);
+			return(None);
+		return(dev.getParameters());
             
     
     # ######################################################################## #
@@ -319,8 +530,20 @@ Return a list of strings. """
 			self.__Logger.error("No server named \"%s\" found"%Alias);
 			return(None);
 		return(srv.getClassAndName());
+	def GetServerParameters(self, Alias):
+		srv = self.__ServerHash.get(Alias);
+		if not srv:
+			self.__Logger.error("No server named \"%s\" found"%Alias);
+			return(None);
+		return(srv.getParameters());
+	def GetServerDefaultUser(self, Alias):
+		srv = self.__ServerHash.get(Alias);
+		if not srv:
+			self.__Logger.error("No server named \"%s\" found"%Alias);
+			return(None);
+		return(srv.getDefaultUser());
 
-
+	
 
     # ######################################################################## #
     # Manage SymbolTree                                                        #
@@ -412,6 +635,9 @@ Return a list of strings. """
 		if Group:
 			if not self.ChangeGroup(Path,Group):
 				self.__Logger.warning("Unable to change group to %s"%Group);
+		
+		self.__Logger.debug("Save %s for %s."%(str((Slot,Type)),Path))
+		self.__SymbolParameters.update( {Path:(Slot,Type)} );
 		return(True);
 
 
@@ -442,6 +668,7 @@ Return a list of strings. """
 			self.__Core.SymbolTreeCreateSymbol(Path, SlotID);
 			return(False);
 		del self.__SymbolTable[Path];
+		del self.__SymbolParameters[Path];
 		#FIXME check if it is ness. to del some else...
 		return(True);
 
@@ -451,6 +678,19 @@ Return a list of strings. """
 		#simple map call to core:
 		return(self.__Core.SymbolTreeListSymbols(Path));
 
+	def GetSymbolSlot(self, Path):
+		para = self.__SymbolParameters.get(Path);
+		if not para:
+			self.__Logger.error("No symbol: %s"%Path);
+			return(None);
+		return(para[0]);
+
+	def GetSymbolType(self, Path):
+		para = self.__SymbolParameters.get(Path);
+		if not para:
+			self.__Logger.error("No symbol: %s"%Path);
+			return(None);
+		return(para[1]);
 
 	def GetModus(self, Path, Format=MODUS_FMT_OCTAL):
 		""" Return the modus of a symbol or folder in Format.
@@ -485,6 +725,9 @@ Return a list of strings. """
 			except:
 				self.__Logger.warning("Invalid vormat");
 				return(None);
+		else:
+			self.__Logger.error("Invalid modus fromat");
+			return(None);
 		return(self.__Core.SymbolTreeSetAccess(Path,user,group,new_modus));
 
 	def GetOwner(self, Path):

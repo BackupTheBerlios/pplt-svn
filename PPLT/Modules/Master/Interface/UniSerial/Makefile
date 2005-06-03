@@ -1,3 +1,3 @@
 pack:
-	zip UniSerial.zip *.py
+	zip -q UniSerial.zip *.py
 	mv  UniSerial.zip ../

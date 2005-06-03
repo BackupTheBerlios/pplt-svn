@@ -12,7 +12,7 @@ class Object(pyDCPU.ExportObject):
         self.Logger.debug("Will bind to addr %s"%self.__BindAddress);
 
         try:
-	    self.__Port = int(self.Parameters['Port']);
+            self.__Port = int(self.Parameters['Port']);
         except:
             self.__Port = 8080;
 	self.Logger.debug("Will bind to port %i"%self.__Port);

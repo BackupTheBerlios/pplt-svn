@@ -1,6 +1,6 @@
 pack:
-	make -C Debug pack
-	make -C Device pack
-	make -C Interface pack
-	make -C Transport pack
+	make -s -C Debug pack
+	make -s -C Device pack
+	make -s -C Interface pack
+	make -s -C Transport pack
 	mv *.zip ../

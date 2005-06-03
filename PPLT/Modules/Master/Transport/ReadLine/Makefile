@@ -1,3 +1,3 @@
 pack:
-	zip ReadLine.zip *.py
+	zip -q ReadLine.zip *.py
 	mv  ReadLine.zip ../

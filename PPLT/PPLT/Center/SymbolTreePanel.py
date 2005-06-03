@@ -67,7 +67,38 @@ class SymbolTreePanel(wx.TreeCtrl):
 #		self.SetItemImage(self.__myRoot,self.__FolderIcon2, wx.TreeItemIcon_Expanded);
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
 
+		self.Build(self.__myRoot);
 
+
+	def Build(self, Item=None, Path="/"):
+		if Item == None:
+			Item = self.__myRoot;
+		symlst = self.__PPLTSys.ListSymbols(Path);
+		for sym in symlst:
+			if Path[-1] == "/":
+				symp = Path+sym;
+			else:
+				symp = Path+"/"+sym;
+			slot = str(self.__PPLTSys.GetSymbolSlot(symp));
+			nitem = self.AppendItem(Item, "%s  @ %s"%(sym,slot));
+			self.SetPyData(nitem, (False, symp));
+			self.SetItemImage(nitem, self.__SymbolIcon, wx.TreeItemIcon_Normal);
+		
+		follst = self.__PPLTSys.ListFolders(Path);
+		for fol in follst:
+			if Path[-1] == "/":
+				folp = Path+fol;
+			else:
+				folp = Path+"/"+fol;
+			nitem = self.AppendItem(Item, "%s"%fol);
+			self.SetPyData(nitem, (True, folp));
+			self.SetItemImage(nitem, self.__FolderIcon, wx.TreeItemIcon_Normal);
+			self.SetItemImage(nitem, self.__FolderIcon2, wx.TreeItemIcon_Expanded);
+			self.Build(nitem, folp);
+		
+
+	def Clean(self):
+		self.DeleteChildren(self.__myRoot);
 
 	def OnRightClick(self, event):
 		pt = event.GetPosition();
@@ -123,6 +154,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		nitem = self.AppendItem(item, "%s  @ %s"%(name,slot));
 		self.SetPyData(nitem, (False, npath));
 		self.SetItemImage(nitem, self.__SymbolIcon, wx.TreeItemIcon_Normal);
+		self.Expand(item);
 
 	def OnAddFolder(self, event):
 		item = self.GetSelection();
@@ -149,7 +181,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		self.SetPyData(nitem, (True, npath));
 		self.SetItemImage(nitem, self.__FolderIcon, wx.TreeItemIcon_Normal);
 		self.SetItemImage(nitem, self.__FolderIcon2, wx.TreeItemIcon_Expanded);
-
+		self.Expand(item);
 
 	def OnDelSymbol(self, event):
 		item = self.GetSelection();

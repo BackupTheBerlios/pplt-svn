@@ -1,6 +1,27 @@
-#!/usr/bin/python
+# ############################################################################ #
+# This is part of the PPLT project. PPLT is a framework for industrial         # 
+# communication.                                                               # 
+# Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                # 
+#                                                                              # 
+# This library is free software; you can redistribute it and/or                # 
+# modify it under the terms of the GNU Lesser General Public                   # 
+# License as published by the Free Software Foundation; either                 # 
+# version 2.1 of the License, or (at your option) any later version.           # 
+#                                                                              # 
+# This library is distributed in the hope that it will be useful,              # 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of               # 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU             # 
+# Lesser General Public License for more details.                              # 
+#                                                                              # 
+# You should have received a copy of the GNU Lesser General Public             # 
+# License along with this library; if not, write to the Free Software          # 
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
+# ############################################################################ # 
+
+#ChangeLog:
+# 2005-06-03:
+#	+ Initial
 import xml.dom.minidom
-import PPLT;
 import string;
 import logging;
 
@@ -10,7 +31,7 @@ def LoadSession(system, FileName):
 	try:
 		doc = xml.dom.minidom.parse(FileName);
 	except:
-		Logger.errro("Error while load Session from %s"%FileName);
+		Logger.error("Error while load Session from %s"%FileName);
 		return(False);
 
 	dev_tag = doc.getElementsByTagName("Devices")[0];
@@ -50,7 +71,7 @@ def LoadSymTree(system, Tag, PathList=[]):
 		Type	= Tag.getAttribute("type");
 		Group	= Tag.getAttribute("group");
 		Owner	= Tag.getAttribute("owner");
-		Modus	= Tag.getAttribute("modus");
+		Modus	= str(Tag.getAttribute("modus")); 
 		Path	= PathList2Str(PathList+[Name]);
 		system.CreateSymbol(Path, Slot, Type, Modus, Owner, Group);
 	if Tag.localName == "Folder":
@@ -90,8 +111,4 @@ def PathList2Str(PathLst):
 		p += "/"+item;
 	return(p);
 
-
-
-system = PPLT.System();
-LoadSession(system, "test.xml");
 

@@ -1,5 +1,5 @@
 pack:
-	make -C MEWCOM-TL pack
-	make -C PPI pack
-	make -C ReadLine pack
+	make -s -C MEWCOM-TL pack
+	make -s -C PPI pack
+	make -s -C ReadLine pack
 	mv *.zip ../

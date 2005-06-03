@@ -2,4 +2,9 @@
 * http://developer.berlios.de/project/showfiles.php?group_id=3237
 * http://www.gbsleipzig.de/start.html
 * http://www.disy.de
-* http://developer.berlios.de/sendmessage.php?touser=14093
+
+* http://developer.berlios.de/sendmessage.php?touser=14093 [CONTACT]
+* https://developer.berlios.de/bugs/?func=addbug&group_id=3237 [BUG-REPORT]
+* https://developer.berlios.de/feature/?func=addfeature&group_id=3237 [feature-request]
+* https://developer.berlios.de/forum/forum.php?forum_id=9875 [help-forum]
+* https://developer.berlios.de/forum/forum.php?forum_id=9876 [dev-forum]

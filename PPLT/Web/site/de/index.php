@@ -3,7 +3,14 @@
 		<a href="/de/NewsHistory.html" style="font-size:0.5em;">[Archiv]</a>
 	</div>
     <div class="NewsItem">
-	<b>2005-05-28 - BugfixRelease (Version 0.2.1)</b><br>
+	<b>2005-06-03 - PPLT Version 0.2.2</b><br>
+	Ich habe einige nette Kleinigkeiten erweitert.
+	So k&ouml;nnen sie jetzt eine Sitztung im PPLTC speichern
+	und sp&auml;ter fortsetzen. Desweiteren habe ich einige
+	Fehler der Vorversion behoben, vor allem in der 
+	deutschen &Uuml;bersetzung. Ich w&uuml;rde ihnen also
+	raten diese zu nutzten.</br><br>
+	<b>2005-05-28 - BugfixRelease (0.2.1)</b><br>
 	Ich habe einige unangenehme Fehler in der Bibliothek
 	sowie in der Applikation entfernt. Ich empfehle ihnen
 	auf diese Version zu aktualisieren. Des weitren habe
@@ -13,11 +20,7 @@
 	Ich habe eine die zweite alpha Version der PPLT freigegeben. Die
 	gr&ouml;ste Neuerung ist die grafische Applikation <i>PPLT Center</i>,
 	die die F&auml;higkeiten der Bibliothek demonstriert. Des weiteren
-	wurden einige Fehler der Vorversion behoben.</br><br>
-	<b>2005-05-10 - Erstes Alpha Release</b><br>
-   	Die PPLT Bibliothek hat nun ihren vollen Funktionsumfang
-	erreicht. Des weiteren habe ich einen Fehler in der 
-	Kernbibliothek entfernt.<br><br>
+	wurden einige Fehler der Vorversion behoben.
     </div>
 
     <div class="Head">Was ist PPLT</div>

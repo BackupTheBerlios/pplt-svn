@@ -74,7 +74,10 @@ class Server:
 
 	def getClassAndName(self):
 		return(self.__ServerName);
-
+	def getDefaultUser(self):
+		return(self.__DefaultUser);
+	def getParameters(self):
+		return(self.__Parameters);
 
 
 def ServerLoad(Node, Core, User, Vars):

@@ -56,6 +56,22 @@ class DevicePanel(wx.ListCtrl):
 
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
 
+		self.Build();
+
+
+	def Build(self):
+		#self.ClearAll();
+		devlst = self.__PPLTSys.ListDevices();
+		for dev in devlst:
+			fqdn = self.__PPLTSys.GetFQDeviceName(dev);
+			para = self.__PPLTSys.GetDeviceParameters(dev);
+			index = self.InsertImageStringItem(sys.maxint, dev, self.__DevImg);
+			self.SetStringItem(index, 1, fqdn);
+			self.SetStringItem(index, 2, ParaToString(para));
+
+	def Clean(self):
+		self.DeleteAllItems();
+
 	def OnAddDevice(self, event):
 		self.__Logger.debug(_("Add device..."));
 		ret = LoadADevice(self, self.__PPLTSys);

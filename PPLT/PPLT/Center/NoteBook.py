@@ -69,8 +69,14 @@ class NoteBook(wx.Notebook):
 			self.PopupMenu(menu,pt);
 			menu.Destroy();
 
-
+	def Clean(self):
+		self.__SrvPanel.Clean();
+		self.__SymPanel.Clean();
+		self.__DevPanel.Clean();
 	
-
+	def Build(self):
+		self.__DevPanel.Build();
+		self.__SymPanel.Build();
+		self.__SrvPanel.Build();
 		
 

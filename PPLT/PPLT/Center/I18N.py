@@ -11,5 +11,9 @@ def InitI18N():
 	bpath = conf.GetBasePath();
 
 	logger.debug("Try to find languages (%s,%s) in basepath %s"%(lang1,lang2,bpath));
-	tr = gettext.translation("PPLT",bpath,[lang1,lang2]);
+	try:
+		tr = gettext.translation("PPLT",bpath,[lang1,lang2]);
+	except:
+		logger.error("No translation found for %s or %s."%(lang1,lang2));
+		tr = gettext.NullTranslations();
 	tr.install(unicode=1);

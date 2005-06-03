@@ -1,3 +1,3 @@
 pack:
-	zip WGet.zip *.py
+	zip -q WGet.zip *.py
 	mv  WGet.zip ../

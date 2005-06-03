@@ -3,7 +3,7 @@
 from distutils.core import setup;
 
 setup(name = "PPLT",
-      version="0.2.1",
+      version="0.2.2",
       description="PPLT a free industrial communication framework",
       author="Hannes Matuschek",
       author_email="hmatuschek@gmx.net",
@@ -27,7 +27,11 @@ setup(name = "PPLT",
                                    'icons/slot-range.xpm',
                                    'icons/slot.xpm',
                                    'icons/symbol.xpm',
-                                   'icons/info.xpm']),
+                                   'icons/info.xpm',
+                                   'icons/new.xpm',
+                                   'icons/load.xpm',
+                                   'icons/saveas.xpm',
+                                   'icons/save.xpm']),
                     ('PPLT/de/LC_MESSAGES',['I18N/de/PPLT.mo'])],
       long_description="PPLT is an industrial communication framework.",
       classifiers = [

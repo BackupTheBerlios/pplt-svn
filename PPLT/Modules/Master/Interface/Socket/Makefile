@@ -1,3 +1,3 @@
 pack:
-	zip Socket.zip *.py
+	zip -q Socket.zip *.py
 	mv Socket.zip  ../

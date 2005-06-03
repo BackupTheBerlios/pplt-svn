@@ -38,6 +38,7 @@ class Device:
 		#save core object
 		self.__CoreObject = CoreObject;
 		self.__DeviceName = DeviceName;
+		self.__Parameters = Parameters;
 		# get logger
 		self.__Logger = logging.getLogger('PPLT');
 		self.__SlotTable = {};
@@ -102,3 +103,5 @@ class Device:
 
 	def getClassAndName(self):
 		return(self.__DeviceName);
+	def getParameters(self):
+		return(self.__Parameters);

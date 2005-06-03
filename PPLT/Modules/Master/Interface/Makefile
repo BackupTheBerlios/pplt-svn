@@ -1,6 +1,6 @@
 pack:
-	make -C SendMail pack
-	make -C Socket pack
-	make -C UniSerial pack
-	make -C WGet pack
+	make -s -C SendMail pack
+	make -s -C Socket pack
+	make -s -C UniSerial pack
+	make -s -C WGet pack
 	mv *.zip ../

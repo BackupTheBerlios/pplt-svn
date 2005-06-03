@@ -1,32 +1,70 @@
-2005-05-28:
-	+ add gettext support for PPLT-Center application (PPLT/Center/I18N.py), 
-		fixed setup.py and MANIFEST to install language support, add translation for german.
-	- fixed bug in PPLT/Center/SymbolTreePanel.py in SymbolTreePanel.OnAddSymbol():
-		ignored cancel of SymbolProperty dialog
-	- fixed missing exception catching try/except in SetupStepLoad.Load() in PPLT/Setup.py
-	- fixed missing unloading all core-modules of a device if one core-mod
-		could not be loaded in PPLT/Setup.py [Setup.DoSetup()]
-	+ added infoframe for PPLTC application.
-	--- RELEASE VERSION 0.2.1 ---
+Version 0.2.2
+	* Fix in Scripts/PPLTC.py:
+		set windowsize of PPLTC to 400/300
+	* Fix in PPLT/Center SymbolTreePanel.py and UserDBPanel.py:
+		Tree-items now expand if a sub-item is added
+	+ Add in PPLT LoadSession.py:
+		Functions to load a saved session.
+	+ Add in PPLT/PPLTSystem class System:
+		add method StopAll(), StopServers(), StopDevices() and ClearSymolTree() 
+		so you can stop the whole system or parts of them.
+	+ Add file PPLT/LoadSession.py:
+		with functions to load a saved session,
+		also fix MANIFEST
+	+ Add in PPLT/PPLTSystem in class System:
+		method SaveSession() to save the current session to a file and
+		method LoadSession() to reload a saved session.
+	+ Add in Scrips/PPLTC.py:
+		toolmenu-items for "save" and "save as"...
+		and callbacks for them
+	+ Add info-methods to:
+		PPLT/Server.py (getParameters(), getDefaultUser())
+		PPLT/Device.py (getParameters())
+	+ Add info methos to PPLT/PPLTSystem class System:
+	 	GetServerParameters(), GetServerDefaultUser(), GetDeviceParameters(),
+		GetSymbolType(), GetSymbolSlot()
+	+ Add methods:
+		 Build(), Clean() to PPLT/Center/DevicePanel.py,
+		 Build(), Clean() to PPLT/Center/SymbolTreePanel.py,
+		 Build(), Clean() to PPLT/Center/ServerPanel.py to prepare new/load sessions
+	+ Add menuitems and callbacks:
+		"new" (clean all Panels and shutdown PPLTSystem)
+		"load" (load a session (meaning clean and load))
+	* Fix in PPLT/Center/I18N.py:
+		InitI18N() cause an exception if requested lang was not found,
+		now it installs a NullTranslations
 	
-2005-05-27:
-	- fixed wrong Symbol<->DeviceAlias association in PPLT/PPLTSystem.py
-	- fixed in PPLT/Device.py
+Version 0.2.1		- 2005-05-28:
+	+ Add gettext support for PPLT-Center application (PPLT/Center/I18N.py): 
+		fixed setup.py and MANIFEST to install language support, add translation for german.
+	* Fix bug in PPLT/Center/SymbolTreePanel.py in SymbolTreePanel.OnAddSymbol():
+		ignored cancel of SymbolProperty dialog
+	* Fix in PPLT/Setup.py SetupStepLoad.Load():
+		missing exception catching try/except 
+	* Fix in PPLT/Setup.py Setup.DoSetup():
+		missing unloading all core-modules of a device if one core-mod
+		could not be loaded in PPLT/Setup.py [Setup.DoSetup()]
+	+ Add PPLT/Center/: 
+		infoframe for PPLTC application.
+	* Fix in PPLT/PPLTSystem.py:
+		wrong Symbol<->DeviceAlias association
+	* Fix in PPLT/Device.py:
 		Devce.unregister() generated inconsistent Object-Ref.-Counter in pyDCPU.Core.
-	- fixed problem with blocking sockets in Core-Module Export.PPLTWeb
-	- fixed bug in Server.__load() (PPLT/Server.py):
+	* Fix in Modules/Server/Web/PPLTWeb.py:
+		problem with blocking sockets
+	* Fix bug in Server.__load() (PPLT/Server.py):
 		missed to remove stop exsisting Core-Exporter on exception while load a new
-	- fixed bug in Server.destroy() (PPLT/Server.py):
+	* Fix bug in Server.destroy() (PPLT/Server.py):
 		method is now error-sensitiv		
-	- fixed missing exception raise in Server.__init__() if server load fails.
+	* Fix PPLT/Server.py Server.__init__():
+		missing exception raise in Server.__init__() if server load fails.
 
-2005-05-27:
+Version 0.2.0		- 2005-05-27:
 	+ Start CHANGELOG
-	- fixed bug in pyDCPU/pyDCPUCore.py in Core.MasterTreeDel():
+	* Fix bug in pyDCPU/pyDCPUCore.py in Core.MasterTreeDel():
 		Produced inconsistent ref. counter.
-	- fixed bug in pyDCPU/pyDCPUSymbolTree.py in SymbolTree.DeleteSymbol():
+	* Fix bug in pyDCPU/pyDCPUSymbolTree.py in SymbolTree.DeleteSymbol():
 		Was unable to delete a symbol @ root.
-	- fixed problems in PPLT/Center/[AddSymbolDialog.py,DeviceSelectionDialog.py,ServerSelectionDialog.py,SymbolTreePanel.py,UserDBPanel.py]:
+	* Fix problems in PPLT/Center ServerSelectionDialog.py,SymbolTreePanel.py,...:
 		Problems with hidden root items of wx.TreeCtrl on Windows
-	--- RELEASE VERSION 0.2.0 ---
 

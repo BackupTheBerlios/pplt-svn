@@ -1,3 +1,3 @@
 pack:
-	zip SimpleExport.zip *.py
+	zip -q SimpleExport.zip *.py
 	mv SimpleExport.zip ../

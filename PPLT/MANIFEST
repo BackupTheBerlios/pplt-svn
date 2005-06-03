@@ -14,6 +14,12 @@ icons/group.xpm
 icons/superuser.xpm
 icons/user.xpm
 icons/info.xpm
+icons/load.xpm
+icons/save.xpm
+icons/saveas.xpm
+icons/load.xpm
+icons/new.xpm
+ChangeLog
 setup.py
 PPLT/Configuration.py
 PPLT/DataBase.py
@@ -21,6 +27,7 @@ PPLT/Device.py
 PPLT/DeviceDescription.py
 PPLT/Exceptions.py
 PPLT/Install.py
+PPLT/LoadSession.py
 PPLT/Logging.py
 PPLT/PPLTSystem.py
 PPLT/Server.py

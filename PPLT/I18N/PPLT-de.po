@@ -1,13 +1,13 @@
-# translation of PPLT.po to Deutsch
+# translation of PPLT-de.po to Deutsch
 # translation of messages.po to Deutsch
 # Copyright (C) 2005 Free Software Foundation, Inc.
 # Hannes Matuschek <hmatuschek@gmx.net>, 2005.
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: PPLT\n"
-"POT-Creation-Date: 2005-06-03 18:12+ZONE\n"
-"PO-Revision-Date: 2005-06-03 20:00+0200\n"
+"Project-Id-Version: PPLT-de\n"
+"POT-Creation-Date: 2005-05-28 12:33+ZONE\n"
+"PO-Revision-Date: 2005-05-28 13:37+0200\n"
 "Last-Translator: Hannes Matuschek <hmatuschek@gmx.net>\n"
 "Language-Team: Deutsch <pplt-dev@berlios.de>\n"
 "MIME-Version: 1.0\n"
@@ -16,7 +16,7 @@ msgstr ""
 "X-Generator: KBabel 1.3.1\n"
 "Plural-Forms:  nplurals=2; plural=(n != 1);\n"
 
-#: AddFolderDialog.py:31 SymbolTreePanel.py:248
+#: AddFolderDialog.py:31 SymbolTreePanel.py:212
 msgid "Add Folder"
 msgstr "Ordner Hinzufügen"
 
@@ -83,15 +83,15 @@ msgstr "FQDN"
 msgid "Parameter"
 msgstr "Parameter"
 
-#: DevicePanel.py:76
+#: DevicePanel.py:60
 msgid "Add device..."
 msgstr "Gerät hinzufügen"
 
-#: DevicePanel.py:141
+#: DevicePanel.py:125
 msgid "Add Device"
 msgstr "Gerät hinzufügen"
 
-#: DevicePanel.py:149
+#: DevicePanel.py:133
 msgid "Del Device"
 msgstr "Gerät entfernen"
 
@@ -110,35 +110,6 @@ msgstr "Gerätename"
 #: DeviceSelectionDialog.py:34
 msgid "DeviceSelection"
 msgstr "Geräteauswahl"
-
-#: InfoFrame.py:5
-msgid "PPLT Info"
-msgstr "PPLT Info"
-
-#: InfoFrame.py:14
-msgid ""
-"http://pplt.berlios.de\n"
-"by Hannes Matuschek <hmatuschek@gmx.net>"
-msgstr ""
-"http://pplt.berlios.de\n"
-"von Hannes Matuschek <hmatuschek@gmx.net>"
-
-#: InfoFrame.py:18
-msgid ""
-"PPLT Center demonstrate the functionality of the PPLT library.  \n"
-"At first create some users and change the password of the \n"
-"superuser.Then load one or two devices, create symbols, that\n"
-"are attached to the devices and at least start a server.\n"
-"                   If you missing menus: try right-click.\n"
-msgstr ""
-"PPLT Center demonstriert die Fähigkeiten der PPLT-Bibliothek\n"
-"Als erstes sollten sie einige Benutzer anlegen und das Passwort\n"
-"des SuperUsers ändern. Dann können sie das eine oder andere\n"
-"Gerät laden, Symbole erzeugen, die mit diesen Geräten verknüpft\n "
-"werden und zum Schluß einen Server starten um die Symbole zu\n"
-"exportieren.\n"
-"Wenn sie die Menüs vermissen, versuchen sie es einmal mit dem\n"
-"Rechts-Klick.\n"
 
 #: ModusBox.py:49
 msgid "Owner: "
@@ -188,11 +159,11 @@ msgstr "FQSN"
 msgid "DefaultUser"
 msgstr "Std. Benutzer"
 
-#: ServerPanel.py:149
+#: ServerPanel.py:132
 msgid "Add Server"
 msgstr "Server hinzufügen"
 
-#: ServerPanel.py:157
+#: ServerPanel.py:140
 msgid "Stop Server"
 msgstr "Server anhalten"
 
@@ -212,23 +183,23 @@ msgstr "Serverauswahl"
 msgid "Servers"
 msgstr "Server"
 
-#: SetPropertyDialog.py:31 SymbolTreePanel.py:259
+#: SetPropertyDialog.py:31 SymbolTreePanel.py:223
 msgid "Properties"
 msgstr "Eigeneschaften"
 
-#: SymbolTreePanel.py:64
+#: SymbolTreePanel.py:61
 msgid "SymbolTree (/)"
 msgstr "SymbolBaum (/)"
 
-#: SymbolTreePanel.py:246
+#: SymbolTreePanel.py:210
 msgid "Add Symbol"
 msgstr "Symbol hinzufügen"
 
-#: SymbolTreePanel.py:251
+#: SymbolTreePanel.py:215
 msgid "Delete Symbol"
 msgstr "Symbol löschen"
 
-#: SymbolTreePanel.py:255
+#: SymbolTreePanel.py:219
 msgid "Delete Folder"
 msgstr "Ordner löschen"
 
@@ -283,40 +254,4 @@ msgstr "Als SuperUser setzen"
 #: UserDBPanel.py:313
 msgid "Change Password"
 msgstr "Passwort ändern"
-
-#: ../../Scripts/PPLTC.py:45
-msgid "New session"
-msgstr "Neue Sitzung"
-
-#: ../../Scripts/PPLTC.py:46
-msgid "Load a session..."
-msgstr "Sitzung laden..."
-
-#: ../../Scripts/PPLTC.py:47
-msgid "Save session..."
-msgstr "Sitzung speichern"
-
-#: ../../Scripts/PPLTC.py:48
-msgid "Save session as..."
-msgstr "Sitzung speichern unter..."
-
-#: ../../Scripts/PPLTC.py:50
-msgid "Install Module"
-msgstr "Module installieren"
-
-#: ../../Scripts/PPLTC.py:72
-msgid "Select InstallFile"
-msgstr "Installationsdatei auswählen"
-
-#: ../../Scripts/PPLTC.py:72
-msgid "Install Description File (*.idf)|*.idf"
-msgstr "Installations Berschreibungsdatei (*.idf)|*.idf"
-
-#: ../../Scripts/PPLTC.py:88
-msgid "Select a SessionFile"
-msgstr "Sitzungsdatei auswählen"
-
-#: ../../Scripts/PPLTC.py:112
-msgid "Save Session as..."
-msgstr "Sitzung speichern unter..."
 

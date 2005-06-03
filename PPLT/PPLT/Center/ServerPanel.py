@@ -57,6 +57,23 @@ class ServerPanel(wx.ListCtrl):
 
 		self.Bind(wx.EVT_RIGHT_UP, self.OnRightClick);
 
+		self.Build();
+
+
+	def Build(self):
+		srvlst = self.__PPLTSys.ListRunningServers();
+		for srv in srvlst:
+			fqsn = self.__PPLTSys.GetFQServerName(srv);
+			user = self.__PPLTSys.GetServerDefaultUser(srv);
+			para = self.__PPLTSys.GetServerParameters(srv);
+			parastr = ParaToString(para);
+			index = self.InsertImageStringItem(sys.maxint, srv,self.__SrvImg);
+			self.SetStringItem(index, 1, fqsn);
+			self.SetStringItem(index, 2, user);
+			self.SetStringItem(index, 3, parastr);
+
+	def Clean(self):
+		self.DeleteAllItems();
 
 	def OnAddServer(self, event):
 		self.__Logger.debug("Add Server...");

@@ -1,3 +1,3 @@
 pack:
-	zip Random.zip *.py
+	zip -q Random.zip *.py
 	mv Random.zip ../

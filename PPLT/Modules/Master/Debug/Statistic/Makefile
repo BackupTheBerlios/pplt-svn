@@ -1,3 +1,3 @@
 pack:
-	zip Statistic.zip *.py
+	zip -q Statistic.zip *.py
 	mv Statistic.zip ../

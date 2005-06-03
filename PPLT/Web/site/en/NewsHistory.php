@@ -1,6 +1,10 @@
 <div class="TextBody">
 	<div class="Head">News 2005</div>
     <div class="NewsItem">
+	<b>2005-06-03 - Release of PPLT Version 0.2.2</b><br>
+	I've added some features to the library and the PPLTC application.
+	You can now save a session and load it later. Also I've fixed
+	some bugs and the german translation of PPLTC.<br><br>
 	<b>2005-05-28 - Bugfix Release for PPLT (Version 0.2.1)</b><br>
 	I've fixed some annoying bugs in libraries and in the application.
 	I recommend you to <u>update</u>.<br><br>

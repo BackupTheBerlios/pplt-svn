@@ -1,3 +1,3 @@
 pack:
-	zip A200.zip *.py
+	zip -q A200.zip *.py
 	mv A200.zip ../
