@@ -46,7 +46,8 @@ class ServerPanel(wx.ListCtrl):
 		self.InsertColumn(0,_("Alias"));
 		self.InsertColumn(1,_("FQSN"),width=100);
 		self.InsertColumn(2,_("DefaultUser"));
-		self.InsertColumn(3,_("Parameter"),width=200);
+		self.InsertColumn(3,_("Root"));
+		self.InsertColumn(4,_("Parameter"),width=200);
 
 		self.__IL = wx.ImageList(16,16);
 		bmp = wx.Bitmap(os.path.normpath(conf.GetIconPath()+"/server.xpm"));
@@ -66,11 +67,13 @@ class ServerPanel(wx.ListCtrl):
 			fqsn = self.__PPLTSys.GetFQServerName(srv);
 			user = self.__PPLTSys.GetServerDefaultUser(srv);
 			para = self.__PPLTSys.GetServerParameters(srv);
+			root = self.__PPLTSys.GetServerRoot(srv);
 			parastr = ParaToString(para);
 			index = self.InsertImageStringItem(sys.maxint, srv,self.__SrvImg);
 			self.SetStringItem(index, 1, fqsn);
 			self.SetStringItem(index, 2, user);
-			self.SetStringItem(index, 3, parastr);
+			self.SetStringItem(index, 3, root);
+			self.SetStringItem(index, 4, parastr);
 
 	def Clean(self):
 		self.DeleteAllItems();
@@ -79,11 +82,12 @@ class ServerPanel(wx.ListCtrl):
 		self.__Logger.debug("Add Server...");
 		ret = LoadAServer(self, self.__PPLTSys);
 		if ret:
-			(Alias, SrvName, DefUser, Paras) = ret;
+			(Alias, SrvName, DefUser, Paras, Root) = ret;
 			index = self.InsertImageStringItem(sys.maxint, Alias,self.__SrvImg);
 			self.SetStringItem(index, 1, SrvName);
 			self.SetStringItem(index, 2, DefUser);
-			self.SetStringItem(index, 3, Paras);
+			self.SetStringItem(index, 3, Root);
+			self.SetStringItem(index, 4, Paras);
 
 	def OnStopServer(self, event):
 		item = self.GetFocusedItem();
@@ -123,11 +127,12 @@ def LoadAServer(parent, PPLTSys):
 	Alias = dlg.Alias.GetValue();
 	DefUser = dlg.DefUser.GetValue();
 	Vals  = dlg.Values;
+	Root  = dlg.Root.GetValue();
 	dlg.Destroy();
 
 	#print "%s as %s(%s) : %s"%(SrvName, Alias, DefUser,str(Vals))
-	if PPLTSys.LoadServer(SrvName, Alias, DefUser, Vals):
-		return( (Alias, SrvName, DefUser, ParaToString(Vals)) );
+	if PPLTSys.LoadServer(SrvName, Alias, DefUser, Vals, Root):
+		return( (Alias, SrvName, DefUser, ParaToString(Vals),Root) );
 	return(None);
 
 

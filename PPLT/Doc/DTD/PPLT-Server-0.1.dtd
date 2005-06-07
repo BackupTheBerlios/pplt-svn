@@ -9,9 +9,9 @@
 
 
 	<!ELEMENT Setup (Load+)>
-		<!ELEMENT Load (Parameter*)>
-			<!ELEMENT Address (#PCDATA | Variable)*>
-			<!ELEMENT Parameter (#PCDATA?)>
+		<!ELEMENT Load (Parameter)*>
+			<!ELEMENT Address (#PCDATA)*>
+			<!ELEMENT Parameter (#PCDATA)*>
 		
 
 

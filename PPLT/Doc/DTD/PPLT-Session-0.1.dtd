@@ -1,0 +1,42 @@
+<!ELEMENT PPLTSession (Servers, Devices, SymbolTree)>
+
+<!ELEMENT Servers (Server*)>
+<!ELEMENT Devices (Device*)>
+<!ELEMENT SymbolTree (Folder|Symbol)*>
+
+<!ELEMENT Server (Parameter*)>
+<!ELEMENT Device (Parameter*)>
+<!ELEMENT Parameter (#PCDATA)>
+
+<!ELEMENT Folder (Folder|Symbol)*>
+<!ELEMENT Symbol EMPTY>
+
+
+<!ATTLIST Server
+	alias	CDATA	#REQUIRED
+	fqsn	CDATA	#REQUIRED
+	user	CDATA	#REQUIRED
+	root	CDATA	#IMPLIED
+>
+<!ATTLIST Device
+	alias	CDATA	#REQUIRED
+	fqdn	CDATA	#REQUIRED
+>
+<!ATTLIST Parameter
+	name	CDATA	#REQUIRED
+>
+
+<!ATTLIST Folder
+	name	CDATA	#REQUIRED
+	owner	CDATA	#REQUIRED
+	group	CDATA	#REQUIRED
+	modus	CDATA	#REQUIRED
+>
+<!ATTLIST Symbol
+	name	CDATA	#REQUIRED
+	owner	CDATA	#REQUIRED
+	group	CDATA	#REQUIRED
+	modus	CDATA	#REQUIRED
+	slot	CDATA	#REQUIRED
+	type	CDATA	#REQUIRED
+>

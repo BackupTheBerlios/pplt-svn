@@ -58,7 +58,10 @@ def LoadServers(system, Tag):
 		Alias	= srv.getAttribute("alias");
 		FQSN	= srv.getAttribute("fqsn");
 		DefUser	= srv.getAttribute("user");
-		system.LoadServer(FQSN, Alias, DefUser, Para);
+		Root	= srv.getAttribute("root");
+		if not Root:
+			Root = "/";
+		system.LoadServer(FQSN, Alias, DefUser, Para,Root);
 
 def LoadSymTree(system, Tag, PathList=[]):
 	if not Tag:
@@ -71,7 +74,7 @@ def LoadSymTree(system, Tag, PathList=[]):
 		Type	= Tag.getAttribute("type");
 		Group	= Tag.getAttribute("group");
 		Owner	= Tag.getAttribute("owner");
-		Modus	= str(Tag.getAttribute("modus")); 
+		Modus	= str(Tag.getAttribute("modus"));
 		Path	= PathList2Str(PathList+[Name]);
 		system.CreateSymbol(Path, Slot, Type, Modus, Owner, Group);
 	if Tag.localName == "Folder":

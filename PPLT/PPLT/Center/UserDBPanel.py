@@ -19,8 +19,10 @@
 # ############################################################################ # 
 
 #ChangeLog:
-#	2005-05-27:
-#		Release as version 0.2.0 (alpha)
+# 2005-06-04:
+#	Fixed problem with hidden root item
+# 2005-05-27:
+#	Release as version 0.2.0 (alpha)
 
 import PPLT;
 import UserDBDialogs;
@@ -31,8 +33,8 @@ import logging;
 class UserDBPanel(wx.TreeCtrl):
 	def __init__(self, Parent, PPLTSys):
 		styleflags=wx.TR_NO_LINES|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT;
-		if wx.Platform == "__WXMSW__":
-			styleflags=wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
+#		if wx.Platform == "__WXMSW__":
+#			styleflags=wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
 			
 		wx.TreeCtrl.__init__(self, Parent, -1, style=styleflags);
 		self.__PPLTSys = PPLTSys;
@@ -56,15 +58,15 @@ class UserDBPanel(wx.TreeCtrl):
 		self.SetImageList(self.__IL);
 
 		self.__RootItem = self.AddRoot("UserDB");
-		self.SetPyData(self.__RootItem, (True, False));
+#		self.SetPyData(self.__RootItem, (True, False));
 		
 		self._InsertGroups();
 
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
 		
 
-	def SelectRoot(self):
-		self.SelectItem(self.__RootItem);
+#	def SelectRoot(self):
+#		self.SelectItem(self.__RootItem);
 
 
 	def _InsertGroups(self,Group=None,Item=None):
@@ -98,7 +100,8 @@ class UserDBPanel(wx.TreeCtrl):
 			self.SelectItem(item);
 		else:
 			item = None;
-			self.SelectRoot();
+			#self.SelectRoot();
+			self.Unselect();
 
 		menu = CtxMenu(self, item);
 		self.PopupMenu(menu);
@@ -108,10 +111,10 @@ class UserDBPanel(wx.TreeCtrl):
 
 	def OnAddUser(self, Event):
 		item = self.GetSelection();
-		if not item:
-			return(None);
+#		if not item:
+#			return(None);
 		
-		if item == self.__RootItem:
+		if item == None:	#if nothing is selected:
 			self.__Logger.warning("Can't create member with no group");
 			return(None);
 		(IsGroup, IsSuperUser) = self.GetPyData(item);
@@ -143,8 +146,8 @@ class UserDBPanel(wx.TreeCtrl):
 		item = self.GetSelection();
 		if not item:
 			return(None);
-		if item == self.__RootItem:
-			return(None);
+#		if item == self.__RootItem:
+#			return(None);
 		(IsGroup, IsSuperUser) = self.GetPyData(item);
 		Name = self.GetItemText(item);
 
@@ -159,19 +162,22 @@ class UserDBPanel(wx.TreeCtrl):
 
 	def OnAddGroup(self, Event):
 		item = self.GetSelection();
-		if not item:
-			return(None);
-		if item == self.__RootItem:
+		if not item:		#aka selected root
+#			return(None);
+#		if item == self.__RootItem:
+			item = self.__RootItem;
 			(IsFolder, IsSuperUser) = (True,False);
+			Name = None;
 		else:
 			(IsFolder, IsSuperUser) = self.GetPyData(item);
+			Name = self.GetItemText(item);
 		if not IsFolder:
 			return(None);
 
-		if item == self.__RootItem:
-			Name = None;
-		else:
-			Name = self.GetItemText(item);
+#		if item == self.__RootItem:
+#			Name = None;
+#		else:
+#			Name = self.GetItemText(item);
 
 		dlg = UserDBDialogs.CreateGroupDialog(self, -1, _("Create Group"));
 		if not dlg.ShowModal() == wx.ID_OK:
@@ -187,16 +193,18 @@ class UserDBPanel(wx.TreeCtrl):
 		self.SetItemImage(nitem, self.__GroupIcon, wx.TreeItemIcon_Normal);
 		self.SetItemImage(nitem, self.__GroupIcon, wx.TreeItemIcon_Expanded);
 		self.SetPyData(nitem, (True, False));
-		self.Expand(item);
+		if item != self.__RootItem:
+			self.Expand(item);
 
 	def OnDelGroup(self, Event):
 		item = self.GetSelection();
 		if not item:
 			return(None);
-		if item == self.__RootItem:
-			(IsGroup, IsSuperUser) = (True,False);
-		else:
-			(IsGroup, IsSuperUser) = self.GetPyData(item);
+#		stupid: root can't be deleted:
+#		if item == self.__RootItem:
+#			(IsGroup, IsSuperUser) = (True,False);
+#		else:
+		(IsGroup, IsSuperUser) = self.GetPyData(item);
 		Name = self.GetItemText(item);
 		if not IsGroup:
 			return(None);
@@ -209,8 +217,8 @@ class UserDBPanel(wx.TreeCtrl):
 		item = self.GetSelection();
 		if not item:
 			return(None);
-		if item == self.__RootItem:
-			return(None);
+#		if item == self.__RootItem:
+#			return(None);
 		(IsGroup, IsSuperUser) = self.GetPyData(item);
 		Name = self.GetItemText(item);
 		if IsGroup or IsSuperUser:
@@ -233,8 +241,8 @@ class UserDBPanel(wx.TreeCtrl):
 		item = self.GetSelection();
 		if not item:
 			return(None);
-		if item == self.__RootItem:
-			return(None);
+#		if item == self.__RootItem:
+#			return(None);
 		(IsFolder, IsSuperUser) = self.GetPyData(item);
 		if IsFolder:
 			return(None);
@@ -255,11 +263,11 @@ class UserDBPanel(wx.TreeCtrl):
 	
 	def __GetSuperUserItem(self,item=None):
 		if not item:
-			item = self.__RootItem;
-
-		(IsGroup, IsSuperUser) = self.GetPyData(item);
-		if IsSuperUser:
-			return(item);
+			item = self.GetFirstVisibleItem();
+		else:
+			(IsGroup, IsSuperUser) = self.GetPyData(item);
+			if IsSuperUser:
+				return(item);
 
 		if self.ItemHasChildren(item):
 			(citem,c) = self.GetFirstChild(item);

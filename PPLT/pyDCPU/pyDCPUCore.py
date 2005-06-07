@@ -270,12 +270,14 @@ class Core:
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #  
     #   +                                                                      # 
     # ######################################################################## #
-    def ExporterAdd(self, ExportModule, Parameters, DefaultUser):
+    def ExporterAdd(self, ExportModule, Parameters, DefaultUser, Root = '/'):
         """ This method load an export-module """
         
         fingerprint = Modules.Fingerprint(Name = ExportModule, 
                                           DefaultUser = DefaultUser, 
-                                          Parameter = Parameters);
+                                          Parameter = Parameters,
+                                          Root = Root);
+
         if self.__ObjectHash.has_key(fingerprint):
             self.Logger.debug("Return cached object");
             Obj = self.__ObjectHash[fingerprint];
@@ -285,7 +287,8 @@ class Core:
 
         ExpSymTree = ExportableSymbolTree.ExportableSymbolTree(self.__SymbolTree,
                                                                self.__UserDataBase,
-                                                               DefaultUser);
+                                                               DefaultUser,
+                                                               Root);
 
         Obj = self.__ModuleManager.NewExporter(ExportModule, Parameters, fingerprint, ExpSymTree);
         if not Obj:

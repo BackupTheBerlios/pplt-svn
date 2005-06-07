@@ -19,6 +19,8 @@
 # ############################################################################ # 
 
 #ChangeLog:
+# 2005-06-05:
+#	- fixed hidden root problem (under windows)
 # 2005-05-28:
 #	- fixed missing return(None) in SymbolTreePanel.OnAddSymbol() when 
 #		aborting SymbolPropertyDialog.
@@ -37,8 +39,8 @@ import logging;
 class SymbolTreePanel(wx.TreeCtrl):
 	def __init__(self, parent, PPLTSys):
 		styleflags = wx.TR_NO_LINES|wx.TR_HIDE_ROOT|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS;
-		if wx.Platform == "__WXMSW__":
-			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
+#		if wx.Platform == "__WXMSW__":
+#			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
 			
 		wx.TreeCtrl.__init__(self, parent, -1,style = styleflags);
 		self.__PPLTSys = PPLTSys;
@@ -62,7 +64,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		self.SetImageList(self.__IL);
 
 		self.__myRoot = self.AddRoot(_("SymbolTree (/)"));
-		self.SetPyData(self.__myRoot,(True,"/"));
+#		self.SetPyData(self.__myRoot,(True,"/"));
 #		self.SetItemImage(self.__myRoot,self.__FolderIcon, wx.TreeItemIcon_Normal);
 #		self.SetItemImage(self.__myRoot,self.__FolderIcon2, wx.TreeItemIcon_Expanded);
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
@@ -104,21 +106,23 @@ class SymbolTreePanel(wx.TreeCtrl):
 		pt = event.GetPosition();
 		(item,flag) = self.HitTest(pt);
 		if not item:
-			item = self.__myRoot;
-
-		self.SelectItem(item);
+			item = None;
+			self.Unselect();
+		else:
+			self.SelectItem(item);
 	
 		menu = CtxMenu(self, item);
 		self.PopupMenu(menu,pt);
 		menu.Destroy();
 
 
-	def SelectRoot(self):
-		self.SelectItem(self.__myRoot);
+#	def SelectRoot(self):
+#		self.SelectItem(self.__myRoot);
 
 	def OnAddSymbol(self, event):
 		item = self.GetSelection();
-		if item == self.__myRoot:
+		if not item:	# == self.__myRoot:
+			item = self.__myRoot;
 			ItemIsFolder = True;
 			Path = "/";
 		else:
@@ -154,11 +158,17 @@ class SymbolTreePanel(wx.TreeCtrl):
 		nitem = self.AppendItem(item, "%s  @ %s"%(name,slot));
 		self.SetPyData(nitem, (False, npath));
 		self.SetItemImage(nitem, self.__SymbolIcon, wx.TreeItemIcon_Normal);
-		self.Expand(item);
+		if item != self.__myRoot:
+			self.Expand(item);
+
 
 	def OnAddFolder(self, event):
 		item = self.GetSelection();
-		(ItemIsFolder, Path) = self.GetPyData(item);
+		if not item:
+			(ItemIsFolder, Path) = (True,"/");
+			item = self.__myRoot;
+		else:
+			(ItemIsFolder, Path) = self.GetPyData(item);
 		dlg = AddFolderDialog(self, self.__PPLTSys, Path);
 		ret = dlg.ShowModal();
 		if not ret == wx.ID_OK:
@@ -181,10 +191,15 @@ class SymbolTreePanel(wx.TreeCtrl):
 		self.SetPyData(nitem, (True, npath));
 		self.SetItemImage(nitem, self.__FolderIcon, wx.TreeItemIcon_Normal);
 		self.SetItemImage(nitem, self.__FolderIcon2, wx.TreeItemIcon_Expanded);
-		self.Expand(item);
+		if item != self.__myRoot:
+			self.Expand(item);
+
 
 	def OnDelSymbol(self, event):
 		item = self.GetSelection();
+		if not item:
+			self.__Logger.info("Can't del root");
+			return(None);
 		(ItemIsFolder, Path) = self.GetPyData(item);
 		if not self.__PPLTSys.DeleteSymbol(Path):
 			self.__Logger.error("Can't del symbol %s"%Path);
@@ -194,6 +209,9 @@ class SymbolTreePanel(wx.TreeCtrl):
 
 	def OnDelFolder(self, event):
 		item = self.GetSelection();
+		if not item:
+			self.__Logger.info("Can't del root");
+			return(None);
 		(IsFolder, path) = self.GetPyData(item);
 		if not self.__PPLTSys.DeleteFolder(path):
 			self.__Logger.warning("Can't del Folder %s (is it empty)"%path);
@@ -203,6 +221,8 @@ class SymbolTreePanel(wx.TreeCtrl):
 
 	def OnProperty(self, event):
 		item = self.GetSelection();
+		if not item:
+			return(None);
 		(IsFolder, Path) = self.GetPyData(item);
 
 		own = self.__PPLTSys.GetOwner(Path);

@@ -29,7 +29,7 @@ import xml.dom.minidom;
 import logging;
 
 class Server:
-	def __init__(self, CoreObject, FileName, ServerName, DefaultUser, Parameters):
+	def __init__(self, CoreObject, FileName, ServerName, DefaultUser, Parameters, Root="/"):
 		"""This is the class for pplt-server"""
 		self.__Logger = logging.getLogger('PPLT');
 		self.__CoreObject = CoreObject;
@@ -38,6 +38,7 @@ class Server:
 		self.__ServerName = ServerName;
 		self.__DefaultUser = DefaultUser;
 		self.__Parameters = Parameters;
+		self.__Root = Root;
 		if not self.__load():
 			raise Exception();
 
@@ -50,7 +51,8 @@ class Server:
 				obj = ServerLoad(load,
 								self.__CoreObject,
 								self.__DefaultUser,
-								self.__Parameters);
+								self.__Parameters,
+								self.__Root);
 			except:
 				self.__Logger.error("Error while Load a Server");
 				self.destroy();
@@ -78,13 +80,14 @@ class Server:
 		return(self.__DefaultUser);
 	def getParameters(self):
 		return(self.__Parameters);
+	def getRoot(self):
+		return(self.__Root);
 
-
-def ServerLoad(Node, Core, User, Vars):
+def ServerLoad(Node, Core, User, Vars, Root):
 	modname = Node.attributes['name'].value;
 	parameters = {};
 	ParameterLoad(Node.firstChild, parameters, Vars);
-	return(Core.ExporterAdd(modname,parameters,User));
+	return(Core.ExporterAdd(modname,parameters,User,Root));
 
 
 

@@ -55,7 +55,7 @@ class NoteBook(wx.Notebook):
 			self.PopupMenu(menu, pt);
 			menu.Destroy();
 		elif tab == 1:
-			self.__SymPanel.SelectRoot();
+			self.__SymPanel.Unselect();
 			menu = SymbolTreePanel.CtxMenu(self.__SymPanel);
 			self.PopupMenu(menu,pt);
 			menu.Destroy();
@@ -64,7 +64,7 @@ class NoteBook(wx.Notebook):
 			self.PopupMenu(menu,pt);
 			menu.Destroy();
 		elif tab == 3:
-			self.__UDBPanel.SelectRoot();
+			self.__UDBPanel.Unselect();
 			menu = UserDBPanel.CtxMenu(self.__UDBPanel, None);
 			self.PopupMenu(menu,pt);
 			menu.Destroy();

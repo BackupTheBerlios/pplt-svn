@@ -19,8 +19,10 @@
 # ############################################################################ # 
 
 #ChangeLog:
-#	2005-05-27:
-#		Release as version 0.2.0 (alpha)
+# 2005-06-05:
+#	- Fixed hidden root problem
+# 2005-05-27:
+#	Release as version 0.2.0 (alpha)
 
 import wx;
 import logging;
@@ -78,8 +80,8 @@ class ServerTree(wx.TreeCtrl):
 	def __init__(self, parent, PPLTSys):
 		self.__PPLTSys = PPLTSys;
 		styleflags=wx.TR_NO_LINES|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT;
-		if wx.Platform == "__WXMSW__":
-			styleflags=wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
+#		if wx.Platform == "__WXMSW__":
+#			styleflags=wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
 			
 		wx.TreeCtrl.__init__(self, parent, -1, style=styleflags);
 		
@@ -97,7 +99,7 @@ class ServerTree(wx.TreeCtrl):
 		self.SetImageList(self.__IL);
 		
 		self.__Root = self.AddRoot(_("Servers"));
-		self.SetPyData(self.__Root, None);
+#		self.SetPyData(self.__Root, None);
 
 		self.__AddServers(None, self.__Root);
 

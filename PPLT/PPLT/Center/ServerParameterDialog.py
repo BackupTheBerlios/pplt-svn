@@ -50,6 +50,13 @@ class ServerParameterDialog(wx.Dialog):
 		box.Add(self.DefUser, 0, wx.ALIGN_RIGHT|wx.LEFT,3);
 		self.__MySizer.Add(box, 0, wx.ALL|wx.GROW, 3);
 
+		label = wx.StaticText(self, -1, _("Root"));
+		self.Root = wx.TextCtrl(self, -1, "/");
+		box = wx.BoxSizer(wx.HORIZONTAL);
+		box.Add(label, 1, wx.ALIGN_LEFT|wx.RIGHT|wx.TOP|wx.BOTTOM,4);
+		box.Add(self.Root, 0, wx.ALIGN_RIGHT|wx.LEFT,3);
+		self.__MySizer.Add(box, 0, wx.ALL|wx.GROW, 3);
+
 		varlist = self.__Info.GetRequiredVariableNames();
 		for var in varlist:
 			self.__AddEntry(var);

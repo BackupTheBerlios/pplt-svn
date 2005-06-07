@@ -19,6 +19,9 @@
 # ############################################################################ # 
 
 #CHANGELOG:
+# 2005-06-04:
+#	+ fixed some methods to provide variable 
+#		server-root
 # 2005-06-02:
 #	+ add StopServers() method		
 #	+ add StopDevices() method
@@ -210,6 +213,8 @@ class System:
 			srv_tag.setAttribute("alias",srv);
 			srv_tag.setAttribute("fqsn",srv_obj.getClassAndName());
 			srv_tag.setAttribute("user",srv_obj.getDefaultUser());
+			srv_tag.setAttribute("root",srv_obj.getRoot());
+
 			# append paramters:
 			parmtr = srv_obj.getParameters();
 			for par in parmtr.keys():
@@ -484,7 +489,7 @@ Return a list of strings. """
     # Manage Server                                                            #
     # ######################################################################## #
     # ######################################################################## #
-	def LoadServer(self, ServerName, Alias, DefaultUser, Parameters):
+	def LoadServer(self, ServerName, Alias, DefaultUser, Parameters, Root = "/"):
 		""" Load the server ServerName as Alias with Parameters and with
  default rights of the given DefaultUser. Return True on success."""
 		#check alias:
@@ -497,7 +502,7 @@ Return a list of strings. """
 			self.__Logger.warning("No server found named %s"%ServerName);
 			return(False);
 		try:
-			server = Server.Server(self.__Core, serverFileName, ServerName, DefaultUser, Parameters);
+			server = Server.Server(self.__Core, serverFileName, ServerName, DefaultUser, Parameters, Root);
 		except:
 			self.__Logger.warning("Error while load server %s"%ServerName);
 			return(False);
@@ -542,7 +547,12 @@ Return a list of strings. """
 			self.__Logger.error("No server named \"%s\" found"%Alias);
 			return(None);
 		return(srv.getDefaultUser());
-
+	def GetServerRoot(self, Alias):
+		srv = self.__ServerHash.get(Alias);
+		if not srv:
+			self.__Logger.error("No server named \"%s\" found"%Alias);
+			return(None);
+		return(srv.getRoot());
 	
 
     # ######################################################################## #

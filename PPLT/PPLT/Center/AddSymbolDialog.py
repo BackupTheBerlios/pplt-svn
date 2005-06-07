@@ -19,8 +19,10 @@
 # ############################################################################ # 
 
 #ChangeLog:
-#	2005-05-27:
-#		Release as version 0.2.0 (alpha)
+# 2005-06-05:
+#	* Fixed hidden root problem
+# 2005-05-27:
+#	Release as version 0.2.0 (alpha)
 
 import wx;
 from ModusBox import ModusBox;
@@ -57,14 +59,14 @@ class SelectSlotDialog(wx.Dialog):
 		sizer = wx.BoxSizer(wx.VERTICAL);
 		
 		styleflags = wx.TR_HIDE_ROOT|wx.TR_NO_LINES|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS;
-		if wx.Platform == "__WXMSW__":
-			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
+#		if wx.Platform == "__WXMSW__":
+#			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
 			
 		self.__Tree = wx.TreeCtrl(self, -1, style = styleflags);
 		
 		self.__Tree.SetImageList(self.__IL);
 		self.__ROOT = self.__Tree.AddRoot(_("Devices"));
-		self.__Tree.SetPyData(self.__ROOT,(0, None, None));
+#		self.__Tree.SetPyData(self.__ROOT,(0, None, None));
 		sizer.Add(self.__Tree, 3, wx.EXPAND|wx.ALL,3);
 
 		self.__HelpText = wx.TextCtrl(self, -1, size=(250,-1), style=wx.TE_MULTILINE);
@@ -84,6 +86,8 @@ class SelectSlotDialog(wx.Dialog):
 
 	def OnSelect(self, event):
 		item = event.GetItem();
+		if item == self.__ROOT or not item:
+			return(None);
 		(iden, data, info) = self.__Tree.GetPyData(item);
 		if iden == 1:
 			txt = info.GetDescription();

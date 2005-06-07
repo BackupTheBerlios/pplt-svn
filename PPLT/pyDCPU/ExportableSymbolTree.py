@@ -19,47 +19,69 @@
 # ############################################################################ #
 
 
+#ChangeLog:
+# 2005-06-04:
+#	+ Add function Normpath()
+#	+ Add variable root item, means that 
+#		you can now export parts of the 
+#		symboltree
+
 import pyDCPU;
 import pyDCPU.UserDB;
 import logging;
+import string;
 
 class ExportableSymbolTree:
-    def __init__(self, SymbolTree, UserDB, DefaultUser):
-        self.__Logger = logging.getLogger('pyDCPU');
-        
-        if not isinstance(SymbolTree, pyDCPU.SymbolTree):
-            raise pyDCPU.Error;
-        if not isinstance(UserDB, pyDCPU.UserDB.UserDB):
-            raise pyDCPU.Error;
-            
-        self.__SymbolTree = SymbolTree;
-        self.__UserDB = UserDB;
-        self.__DefaultSession = UserDB.GetSession(DefaultUser);
-        
+	def __init__(self, SymbolTree, UserDB, DefaultUser, Root = '/'):
+		self.__Logger = logging.getLogger('pyDCPU');
+
+		if not isinstance(SymbolTree, pyDCPU.SymbolTree):
+			raise pyDCPU.Error;
+		if not isinstance(UserDB, pyDCPU.UserDB.UserDB):
+			raise pyDCPU.Error;
+
+		self.__SymbolTree = SymbolTree;
+		self.__UserDB = UserDB;
+		self.__DefaultSession = UserDB.GetSession(DefaultUser);
+		self.__Root = Root;
 
 
-    def Logon(self, UserName, Password):
-        return(self.__UserDB.Logon(UserName, Password));
+	def Logon(self, UserName, Password):
+		return(self.__UserDB.Logon(UserName, Password));
 
-    def Logoff(self, SessionID):
-        return(self.__UserDB.Logoff(SessionID));
+	def Logoff(self, SessionID):
+		return(self.__UserDB.Logoff(SessionID));
 
-    def GetValue(self, SymbolPath, SessionID):
-        if not SessionID:
-            SessionID = self.__DefaultSession;
-        return(self.__SymbolTree.GetValue(SymbolPath,SessionID));
+	def GetValue(self, SymbolPath, SessionID):
+		Path = Normpath(self.__Root+"/"+SymbolPath);
+		if not SessionID:
+			SessionID = self.__DefaultSession;
+		return(self.__SymbolTree.GetValue(Path,SessionID));
 
-    def SetValue(self, SymbolPath, Value, SessionID):
-        if not SessionID:
-            SessionID = self.__DefaultSession;        
-        return(self.__SymbolTree.SetValue(SymbolPath, Value, SessionID));
+	def SetValue(self, SymbolPath, Value, SessionID):
+		Path = Normpath(self.__Root+"/"+SymbolPath);
+		if not SessionID:
+			SessionID = self.__DefaultSession;
+		return(self.__SymbolTree.SetValue(SymbolPath, Value, SessionID));
 
-    def ListFolders(self, PathToFolder, SessionID):
-        if not SessionID:
-            SessionID = self.__DefaultSession;
-        return(self.__SymbolTree.ListFolders(PathToFolder, SessionID));
+	def ListFolders(self, PathToFolder, SessionID):
+		Path = Normpath(self.__Root+"/"+PathToFolder);
+		if not SessionID:
+			SessionID = self.__DefaultSession;
+		return(self.__SymbolTree.ListFolders(Path, SessionID));
 
-    def ListSymbols(self, PathToFolder, SessionID):
-        if not SessionID:
-            SessionID = self.__DefaultSession;
-        return(self.__SymbolTree.ListSymbols(PathToFolder, SessionID));
+	def ListSymbols(self, PathToFolder, SessionID):
+		Path = Normpath(self.__Root+"/"+PathToFolder);
+		if not SessionID:
+			SessionID = self.__DefaultSession;
+		return(self.__SymbolTree.ListSymbols(Path, SessionID));
+
+
+
+def Normpath(Path):
+	tmp = Path.split('/');
+	ntmp = []
+	for item in tmp:
+		if item != '':
+			ntmp.append(item);
+	return("/"+string.join(ntmp,"/"));

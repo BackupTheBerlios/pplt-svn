@@ -20,7 +20,9 @@
 
 import md5;
 
-def Fingerprint(Name, Parent = None, Address = None, TypeName = None, Parameter = None, DefaultUser = None, CacheTime = None):
+def Fingerprint(Name, Parent = None, Address = None, TypeName = None, 
+                Parameter = None, DefaultUser = None, CacheTime = None, 
+                Root = None):
     """ Calc a fingerprint from parameters, name, etc... """
     fingerprint = md5.new(Name);
     if Parent:
@@ -33,6 +35,8 @@ def Fingerprint(Name, Parent = None, Address = None, TypeName = None, Parameter 
         fingerprint.update(DefaultUser);
     if CacheTime != None:
         fingerprint.update(str(CacheTime));
+    if Root:
+		fingerprint.update(Root);
     if Parameter:
         ParaLst = Parameter.keys();
         ParaLst.sort();

@@ -19,8 +19,10 @@
 # ############################################################################ # 
 
 #ChangeLog:
-#	2005-05-27:
-#		Release as version 0.2.0 (alpha)
+# 2005-06-05:
+#	* Fixed hidden root problem
+# 2005-05-27:
+# 	Release as version 0.2.0 (alpha)
 
 import wx;
 import logging;
@@ -55,14 +57,15 @@ class DeviceSelectionDialog(wx.Dialog):
 
 	def OnSelect(self, event):
 		item = event.GetItem();
-		if item:
-			dat = self.__Tree.GetPyData(item);
-			if dat:
-				self.__Help.Clear();
-				info = self.__PPLTSys.GetDeviceInfo(dat);
-				if info:
-					txt = info.GetDescription();
-					self.__Help.AppendText(txt);
+		if not item:
+			return(None);
+		dat = self.__Tree.GetPyData(item);
+		if dat:
+			self.__Help.Clear();
+			info = self.__PPLTSys.GetDeviceInfo(dat);
+			if info:
+				txt = info.GetDescription();
+				self.__Help.AppendText(txt);
 		
 	def OnDClick(self, event):
 		item = event.GetItem();
@@ -77,8 +80,8 @@ class DeviceTree(wx.TreeCtrl):
 	def __init__(self, parent, PPLTSys):
 		self.__PPLTSys = PPLTSys;
 		styleflags = wx.TR_NO_LINES|wx.TR_HIDE_ROOT|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS;
-		if wx.Platform == "__WXMSW__":
-			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
+#		if wx.Platform == "__WXMSW__":
+#			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
 			
 		wx.TreeCtrl.__init__(self, parent, -1, style=styleflags);
 	
@@ -96,7 +99,7 @@ class DeviceTree(wx.TreeCtrl):
 		self.SetImageList(self.__IL);
 	
 		self.__Root = self.AddRoot(_("Devices"));
-		self.SetPyData(self.__Root, None);
+#		self.SetPyData(self.__Root, None);
 
 		self.__AddDevices(None, self.__Root);
 
