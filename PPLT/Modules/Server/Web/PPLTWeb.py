@@ -3,15 +3,30 @@ import pyDCPU;
 import PPLT;
 import string;
 
+#Changelog:
+# 2005-06-10:
+#	- fixed problem with non-blocking sockets unter windows.
+
 
 class PPLTWebServer(BaseHTTPServer.HTTPServer):
-    def __init__(self, Address, Handler, ExpSymbolTree):
-        BaseHTTPServer.HTTPServer.__init__(self, Address, Handler);
-        self.ExpSymbolTree = ExpSymbolTree;
+	def __init__(self, Address, Handler, ExpSymbolTree):
+		BaseHTTPServer.HTTPServer.__init__(self, Address, Handler);
+		self.ExpSymbolTree = ExpSymbolTree;
+		self.__RUNNING = True;
 
-    def get_request(self):
-        self.socket.setblocking(0);
-        return(self.socket.accept());
+	def get_request(self):
+		self.socket.setblocking(0);
+		while self.__RUNNING:
+			try:
+				(sock, addr) = self.socket.accept();
+				if sock:
+					sock.setblocking(1);
+				return( (sock,addr) );
+			except:
+				pass;
+
+	def Stop(self):
+		self.__RUNNING = False;
 
 class PPLTWebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -59,33 +74,33 @@ class PPLTWebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 
 
-class Object(pyDCPU.ExportObject):
-    def setup(self):
-        if self.Parameters.get('Address'):
-            self.__BindAddress = self.Parameters['Address'];
-        else:
-            self.__BindAddress = '127.0.0.1';
-        self.Logger.debug("Will bind to addr %s"%self.__BindAddress);
-
-        try:
-            self.__Port = int(self.Parameters['Port']);
-        except:
-            self.__Port = 8080;
-        self.Logger.debug("Will bind to port %i"%self.__Port);
-
-        self.__Server = PPLTWebServer(('',80),PPLTWebHandler, self.SymbolTree);
-        self.__Loop = True;
-
-    def start(self):
-        fileno = self.__Server.fileno();
-        rlist = [fileno];
-        wlist = [];
-        xlist = [];
-        while self.__Loop:
-            self.__Server.handle_request();
-
-    def stop(self):
-        self.__Loop = False;
+#class Object(pyDCPU.ExportObject):
+ #   def setup(self):
+#        if self.Parameters.get('Address'):
+#            self.__BindAddress = self.Parameters['Address'];
+#        else:
+#            self.__BindAddress = '127.0.0.1';
+#        self.Logger.debug("Will bind to addr %s"%self.__BindAddress);
+#
+#        try:
+#            self.__Port = int(self.Parameters['Port']);
+#        except:
+#            self.__Port = 8080;
+#        self.Logger.debug("Will bind to port %i"%self.__Port);
+#
+#        self.__Server = PPLTWebServer(('',80),PPLTWebHandler, self.SymbolTree);
+#        self.__Loop = True;
+#
+#    def start(self):
+#        fileno = self.__Server.fileno();
+#        rlist = [fileno];
+#        wlist = [];
+#        xlist = [];
+#        while self.__Loop:
+#            self.__Server.handle_request();
+#
+#    def stop(self):
+#        self.__Loop = False;
     
 
 def PathAdd(path,folder):
@@ -139,7 +154,9 @@ class Object(pyDCPU.ExportObject):
 		while self.__Loop:
 			self.__ServerObject.handle_request();
 		return(True);
+
 	def stop(self):
+		self.__ServerObject.Stop();
 		self.__Loop = False;
 		return(True);
 

@@ -1,3 +1,3 @@
 pack:
-	zip -q SimpleExport.zip *.py
+	zip -q SimpleExport.zip *.py meta.xml
 	mv SimpleExport.zip ../

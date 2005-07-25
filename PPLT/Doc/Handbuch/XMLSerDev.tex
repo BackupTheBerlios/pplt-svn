@@ -1,0 +1,73 @@
+Dieses Kapitel beschreibt den Syntax der Geräte- und Serverdateien. Sie bilden 
+den wichtigsten Teil der PPLT Abstraktionsschicht. Diese Beschreibungsdateien
+im XML Format enthalten die Informationen, wie das System vorhandene Kernmodule
+miteinander kombinieren muss, um ein Bestimmtes (reales) Gerät anzusprechen oder 
+einen bestimmten Dienst\footnote{Server} zur Verfügung stellen kann.
+
+Die Server und Gerätedateien besitzen immer den selben Aufbau. Hier am Beispiel einer
+Gerätebeschreibungsdatei.
+
+\begin{verbatim}
+<?xml version="1.0"?>
+
+<PPLTDevice name="Steuerung">
+	<Head>
+		<Description>...</Description>
+		<Require>...</Require>
+		<Provide>...</Provide>
+	</Head>
+	
+	<Setup>
+		...
+	</Setup>
+</PPLTDevice>
+\end{verbatim}
+
+Alle für das Gerät relevanten Informationen sind in den \texttt{PPLTDevice}\footnote{Beim Server
+heißen diese \texttt{PPLTServer}.} Klammern eingeschlossen. Die Informationen werden in einen
+Kopf (\texttt{Head}) und einen Setupbereich aufgeteielt. Im Kopf befinden sich alle beschreibenden 
+Informationen wie einem kurzen Text, der das Gerät und dessen Funktionen 
+erleutert\footnote{\texttt{Description}}. Einem Block, der die Voraussetzungen, die dieses Gerät 
+benötigt\footnote{\texttt{Require}} beschreibt sowie einem Block indem alle Anschlüsse\footnote{Slots},
+die das Gerät beitet\footnote{Provide} auflistet.
+
+Ich werde im folgenden den Aufbau der Beschreibungsdatei recht technisch aufschlüsseln. Es ist daher
+eine Gewisse Vorkenntnis der PPLT von Nöten um die Ausführungen verstehen zu können.
+
+\section{\texttt{PPLTDevice} \texttt{PPLTServer}}
+Innerhalb dieser Tags werden alle relevanten Informationen, die zur Beschreibung der Servers oder
+des Gerätes dienen, aufgelistet. Dieses Tag besitzt ein notwendige Attribute. Die Angabe dieser 
+Attribute ist Pflicht.
+
+\begin{tabular}{c|l}
+\texttt{name}		& Gibt den Namen des Gerätes oder des Servers an.\\
+\texttt{class}	& Gibt den Namen der Klasse an, der dieses Gerät oder Server zugeordnet werden soll.\\
+\texttt{version}&	Gibt die Versionsnummer des Gerätes an. 
+\end{tabular}
+
+
+
+\section{\texttt{Head}}
+	Im Head werden wie Anfangs schon erwähnt beschreibene Informationen zum Gerät oder 
+	Server aufgelistet. Immerhab der \texttt{Head}-Klammern dürfen lediglich Elemente
+	vom Namen \texttt{Description}, \texttt{Require} oder \texttt{Provide} stehen.
+	
+	Das Tag \texttt{Head} benötigt keinerlei Attribute.
+	
+\section{\texttt{Description}}
+	Das Tag \texttt{Description} kann innerhalb vieler Tags verwendet werden, es enthält immer
+	eine kurze Beschreibung des Kontextes, indem es steht. 
+	
+	Das \texttt{Description}-Tag kann innerhalb der Klammern \texttt{Head} und \texttt{Variable}
+	stehen. Wenn das Tag im Kontext \texttt{Head} verwendet wird, kann damit dem gesamten Gerät
+	ein beschreibender Text gegeben werden. Wird das Tag im \texttt{Variable}-Kontext verwendet
+	wird einer bestimmten Variable eine Beschreibung zugeordnet.
+	
+	Als Attribut muss dem \texttt{Description}-Tag immer \texttt{lang} übergeben werden. Damit
+	wird die Sprache des Beschreibungstextes fest gelegt. 	
+	
+\section{\texttt{Require}}
+	Innerhalb der dieser Klammern, werden alle Voraussetzungen, die das Gerät oder der Server
+	benötigt aufgelistet.	
+\section{\texttt{Setup}}
+

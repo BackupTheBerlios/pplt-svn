@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<pyDCPUModuleMeta version="0.2.0" root="True">
+	<Author>Hannes Matuschek &lt;hmatuschek@gmx.net&gt;</Author>
+	<LastUpdate>2005-06-09</LastUpdate>
+	<URL>http://pplt.berlios.de</URL>
+
+	<Description lang="de">Ein Web-Server.</Description>
+	<Description lang="en">A web-server.</Description>
+	
+	<Require>
+		<ChildAddress>False</ChildAddress>
+		<pyDCPUVersion>0.2.0</pyDCPUVersion>
+		<PythonVersion>2.3.0</PythonVersion>
+		
+		<PythonModule>BaseHTTPServer</PythonModule>
+		<Parameter name="Address" duty="False" default="127.0.0.1"/>
+		<Parameter name="Port" duty="False" default="8080"/>
+	</Require>
+</pyDCPUModuleMeta>

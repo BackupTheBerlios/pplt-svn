@@ -1,0 +1,37 @@
+\documentclass[a4paper]{article}
+
+\usepackage[ngerman]{babel}								%Sprache
+\usepackage[ansinew]{inputenc}						%Umlaute ohne Maske
+\usepackage{amsmath}											%Mathe für alle!
+\usepackage{amsfonts}											%Mathefonts
+\usepackage{pstricks}
+\usepackage{graphicx}											%Bessere Grafikunterstüzung
+\usepackage[pdfborder = 0 0 0]{hyperref}	%Nette PDFs ohne Müh...
+
+
+\title{42}
+\author{Name}
+\date{1970-01-01}
+
+
+\begin{document}
+%	\begin{titlepage}
+%		\maketitle
+%		\tableofcontents
+	%\end{titlepage}
+	%\parindent = 0em
+	%\parskip = 2ex
+
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Hier Text einfügen...
+		\newrgbcolor{orange}{.9 .71 .18}
+		\psset{linewidth=0.01}
+		\psframe*[linecolor=orange](-1.5,-1.5)(4.8,1.1)
+		\psset{linewidth=0.5}
+		\qdisk(0.0,0.4){0.6}
+		\psarc{c-c}(0.0,0.4){1.2}{190}{350}
+		\psset{linewidth=0.6}
+		\qline(0,-0.7)(0,-1.4)
+		\rput{0}(3.2,0.2){\scaleboxto(3,1){\texttt{PPLT}}}
+		\rput{0}(2.9,-1.0){\scaleboxto(3.6,0.6){\texttt{Framework}}}
+\end{document}

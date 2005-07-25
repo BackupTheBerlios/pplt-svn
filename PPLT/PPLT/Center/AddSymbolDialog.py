@@ -110,7 +110,7 @@ class SelectSlotDialog(wx.Dialog):
 	def OnDClick(self, event):
 		pt = event.GetPosition();
 		(item,flags) = self.__Tree.HitTest(pt);
-		if not item:
+		if not item or item == self.__ROOT:
 			return(None);
 		
 		(iden, data, info) = self.__Tree.GetPyData(item);

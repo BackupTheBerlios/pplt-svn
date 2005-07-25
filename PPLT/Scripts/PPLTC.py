@@ -41,7 +41,7 @@ class MainFrame(wx.Frame):
 		self.__PackDelID = wx.NewId();
 		self.__InfoID = wx.NewId();
 
-		self.__ToolBar = self.CreateToolBar(wx.VERTICAL);
+		self.__ToolBar = self.CreateToolBar(wx.VERTICAL|wx.TB_FLAT);
 		self.__ToolBar.AddLabelTool(self.__NewID, "New", bmplst.get("New"), shortHelp=_("New session"));
 		self.__ToolBar.AddLabelTool(self.__LoadID, "Load", bmplst.get("Load"), shortHelp=_("Load a session..."));
 		self.__ToolBar.AddLabelTool(self.__SaveID, "Save", bmplst.get("Save"), shortHelp=_("Save session..."));

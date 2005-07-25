@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+
+<pyDCPUModuleMeta version="0.2.0" root="True">
+	<Author>Hannes Matuschek &lt;hmatuschek@gmx.net&gt;</Author>
+	<LastUpdate>2005-06-09</LastUpdate>
+	<URL>http://pplt.berlios.de</URL>
+
+	<Description lang="de">Modul für die serielle Schnittstelle.</Description>
+	<Description lang="en">This module implements the serial interface.</Description>
+	
+	<Require>
+		<ChildAddress>False</ChildAddress>
+		<pyDCPUVersion>0.2.0</pyDCPUVersion>
+		<PythonVersion>2.3.0</PythonVersion>
+		
+		<PythonModule>serial</PythonModule>
+		<Parameter name="Port" duty="True" default="0"/>
+		<Parameter name="Speed" duty="True" default="9600"/>
+		<Parameter name="Parity" duty="False" default="None"/>
+		<Parameter name="TimeOut" duty="False" default=""/>
+	</Require>
+</pyDCPUModuleMeta>

@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<pyDCPUModuleMeta version="0.2.0" root="False">
+	<Author>Hannes Matuschek &lt;hmatuschek@gmx.net&gt;</Author>
+	<LastUpdate>2005-06-09</LastUpdate>
+	<URL>http://pplt.berlios.de</URL>
+	
+	<Description lang="de">Dieses Kern-Modul schreibt die Daten, die duch 
+	das Modul laufen als Hex-Dump in das Logging-System</Description>
+	<Description lang="en">This module writes all data, that will pass
+	throught it into the logging system</Description>
+	
+	<Require>
+		<ChildAddress>False</ChildAddress>
+		<pyDCPUVersion>0.2.0</pyDCPUVersion>
+		<PythonVersion>2.3.0</PythonVersion>
+		
+		<PythonModule>binascii</PythonModule>	
+		<PythonModule>string</PythonModule>
+	</Require>	
+</pyDCPUModuleMeta>

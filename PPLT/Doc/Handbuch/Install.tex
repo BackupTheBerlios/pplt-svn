@@ -1,2 +1,80 @@
 \section{PPLT Installieren}
-	\subsection{PPLT Center}
+	Die Installation der PPLT gestaltet sich nach Betriebssystem unterschiedlich.
+	Für Posix Systeme empfiehlt es sich die Quellen herunter zu laden. Für Windows
+	existiert ein grafische Installer. Bitte laden sie sich zunächst die aktuelle
+	Version der PPLT von der URL \href{http://pplt.berlios.de}{pplt.berlios.de}
+	herunter. Bitte vergessen sie nicht die Module\footnote{Ein ZIP Archiv mit
+	dem Name \texttt{Modules-0.2.0.zip}} der PPLT herunter zu laden. In diesem 
+	Archiv sind alle Kernmodule sowie die Server und Grätedateien enthalten.
+	
+	\subsection{Installation unter Windows}
+	Die Installation der PPLT gestaltet sich durch den Installer recht einfach.
+	Sie können alternativ auch die Quellen herunterladen und diese nach der im
+	Abschnitt "`Installation unter Posix"' gegebenen Anleitung Installieren.
+	
+	Führen sie also den Installer aus und folgen den Anweisungen im Dialog.
+	Meist können sie die Standardwerte übernehmen. Ist die Installation
+	abgeschlossen, sollten sie noch eine Verknüpfung auf das PPLT-Center
+	(PPLTC.py) herstellen, um dieses einfacher erreichen zu können. Der
+	Installer legt leider keine Verknüpfung im Startmenu an. Diese müssen
+	sie mit Hand herstellen, wenn sie das wollen. 
+	
+	Erzeugen sie zunächst eine Verknüfung auf dem Dektop imdem sie das Kontextmenü
+	mit der rechten Maustaste öffnen. Klicken sie dann auf \texttt{Neu->Verknüpfung}
+	und dann im sich öffnenden Fenster auf \texttt{Durchsuchen}. Gehen sie in das 
+	Verzeichnis, in das sie Python installiert haben. Dort findet sich ein Ordner
+	mit dem Namen \texttt{Scripts} in diesem Ordner liegt die Datei \texttt{PPLTC.py}.
+	Wenn dieser Ordner leer erscheint, prüfen sie ob sie im unteren Teil des Dialogs
+	bei \texttt{Dateityp} \texttt{Alle Dateien} ausgewählt haben. Selektieren sie 
+	\texttt{PPLTC.py} und klicken sie auf \texttt{Öffnen}. 
+	Klicken sie dann auf \texttt{Weiter} und geben sie der Verknüpfung einen
+	vernünftigen Namen (zum Beispiel PPLT-Center). 
+	
+	Damit ist die Installation der PPLT abgeschlossen. Testen sie bei dieser Gelegenheit
+	die Verknüpfung und starten sie das PPLT-Center.
+	
+	\subsection{Installation unter Posix}
+	Die Installation unter Posix läuft ähnlich wie die der pyserial Bibliothek ab. 
+	Das ist nicht verwunderlich, da die PPLT auch zum Großteil eine Pyhton-Bibliothek 
+	ist. Entpacken sie also das Archiv mit:
+	
+	\texttt{tar -x?? PPLT-0.3.0.tar.bz2}
+	
+	Nun sollte im aktuellen Verzeichnis ein Ordner mit dem Namen \texttt{PPLT-0.3.0} 
+	existieren. Wechseln sie in dieses Verzeichnis und geben sie folgendes ein:
+	
+	\texttt{python setup.py install}
+	
+	Damit wird die PPLT installiert. Im gegesatz zu Windows wäre damit die Intstallation
+	abgeschlossen, da das Installscript die Applikation \texttt{PPLTC.py} in 
+	das Verzeichnis \texttt{/usr/bin} oder \texttt{/usr/local/bin} kopiert hat.
+	Sie können somit sofort das PPLT-Center starten, indem sie auf einer
+	Konsole \texttt{PPLTC.py} eingeben. 
+	
+	\subsection{Installation der Module, Geräte und Server}
+	Was sie bisher installiert haben, was das reihne Framework. Die fähigkeiten
+	dieses Frameworks belaufen sich auf Null. Ohne die Module kann das System 
+	kein einzieges Gerät ansprechen. Es empfiehlt sich daher zunächst einmal die
+	Module, Geräte und Server zu installieren. 
+	
+	Die Installation verläuft diesmal Systemunabhängig. Entpacken sie zuerst das
+	Archiv Modules-0.2.0.zip in ein Verzeichnis. Starten sie dann das PPLT-Center.
+	
+	\begin{figure}[ht]
+		\centering
+		\includegraphics{ModuleInstall.png}
+		\caption{PPTLC - Module Installieren}
+		\label{fig:ModuleInstall}
+	\end{figure}
+	
+	Klicken sie links im ToolBar auf das Paket-Symbol (siehe Abbildung 
+	\ref{fig:ModuleInstall}). Dann öffnet sich ein Dialog, in dem sie eine Datei aus wählen
+	sollen. Wechseln sie also in der Ordner, in den sie das Modularchiv entpackt haben.
+	Dort befindet sich eine Datei mit dem Namen \texttt{Setup.idf}. In dieser Datei wird
+	beschrieben, wie die Module zu intallieren sind. Wählen sie also diese Datei aus. 
+	Danach sollten die Module. Geräte und Server automatisch installiert werden. 
+	
+	Sollte es zu Fehlern kommen, prüfen sie bitte ob sie als Administrator angemeldet sind.
+	
+	
+	

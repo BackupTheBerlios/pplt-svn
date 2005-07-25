@@ -451,12 +451,12 @@ class Core:
         return(self.__ModuleManager.IsParameterDuty(ModName,ParaName));
     def ModInfoGetParaDefVal(self, ModName, ParaName):
         return(self.__ModuleManager.GetParameterDefaultValue(ModName, ParaName));
-    def ModInfoGetParOptList(self, ModName, ParaName):
-        return(self.__ModuleManager.GetParameterOptionList(ModName, ParaName));
-    def ModInfoIsParOptStrict(self, ModName, ParaName):
-        return(self.__ModuleManager.GetParameterOptionStrict(ModName, ParaName));
-    def ModInfoAddMod(self, ModName):
-        return(self.__ModuleManager.AddModuleToDB(ModName));
+#    def ModInfoGetParOptList(self, ModName, ParaName):
+#        return(self.__ModuleManager.GetParameterOptionList(ModName, ParaName));
+#    def ModInfoIsParOptStrict(self, ModName, ParaName):
+#        return(self.__ModuleManager.GetParameterOptionStrict(ModName, ParaName));
+#    def ModInfoAddMod(self, ModName):
+#        return(self.__ModuleManager.AddModuleToDB(ModName));
             
     def ObjectToXML(self, doc, ID):
         """ This method is used by MasterObjTree to save a project """

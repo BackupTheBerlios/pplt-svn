@@ -1,0 +1,115 @@
+Version 0.3.0	- 2005-??-??:
+	+ Reimplement Server/Device/Core-Mod database. So fixed:
+		PPLT/PPLTSystem.py
+
+	+ Add version info for Devices and Servers in:
+		PPLT/PPLTSystem.py
+		PPLT/DataBase.py
+
+	* Fix hidden root-problem in:
+		PPLT/Center/UserDBPanel.py
+		PPLT/Center/SymbolTreePanel.py
+		PPLT/Center/AddSymbolDialog.py
+		PPLT/Center/DeviceSelectionDialog.py
+		PPLT/Center/ServerSelectionDialog.py
+
+	* Fix pyDCPU/pyDCPUCore.py, PPLT/PPLTSystem.py, PPLT/PPLTServer.py, PPLT/LoadSession.py:
+		changed API of PPLT.System() and pyDCPU.Core() to provide the
+		selective exporting.
+
+	+ Add variable root feature (selective export) to PPLTC:
+		changed PPLT/Center/ServerPanel.py and PPLT/Center/ServerParameterDialog.py
+		to make it possible to export parts of the SymbolTree.
+
+	* Fix in Modules/Server/Web/PPLTWeb.py:
+		Problem with nonblocking sockets under windows.
+
+	* Layout-Fix for windows in Scripts/PPLTC.py:
+		Now there is a flat ToolBar, it is not so ugly like the default.
+
+	* Fix mistake in Modules/Lib/Setup.idf:
+		Now the MEWCOM-CL module will be installed correctly.
+
+	+ Add MetaFiles to all Core-Modules:
+		fixed pyDCPU/Modules/Importer.py
+		add pyDCPU/CoreModuleInfo.py
+		fixed pyDCPU/pyDCPUCore.py
+		the requirements for loading a Core-Module, for example: Python version, Python-modules,... 
+		will be checked before loading.
+
+	+ Add managment for CoreModules to PPLT/DataBase.py
+	
+	* Fix PPLT/DataBase.py: 
+		now the requirements for loading a Device or Server will be checked.
+
+
+Version 0.2.2	- 2005-06-03:
+	* Fix in Scripts/PPLTC.py:
+		set windowsize of PPLTC to 400/300
+	* Fix in PPLT/Center SymbolTreePanel.py and UserDBPanel.py:
+		Tree-items now expand if a sub-item is added
+	+ Add in PPLT LoadSession.py:
+		Functions to load a saved session.
+	+ Add in PPLT/PPLTSystem class System:
+		add method StopAll(), StopServers(), StopDevices() and ClearSymolTree() 
+		so you can stop the whole system or parts of them.
+	+ Add file PPLT/LoadSession.py:
+		with functions to load a saved session,
+		also fix MANIFEST
+	+ Add in PPLT/PPLTSystem in class System:
+		method SaveSession() to save the current session to a file and
+		method LoadSession() to reload a saved session.
+	+ Add in Scrips/PPLTC.py:
+		toolmenu-items for "save" and "save as"...
+		and callbacks for them
+	+ Add info-methods to:
+		PPLT/Server.py (getParameters(), getDefaultUser())
+		PPLT/Device.py (getParameters())
+	+ Add info methos to PPLT/PPLTSystem class System:
+	 	GetServerParameters(), GetServerDefaultUser(), GetDeviceParameters(),
+		GetSymbolType(), GetSymbolSlot()
+	+ Add methods:
+		 Build(), Clean() to PPLT/Center/DevicePanel.py,
+		 Build(), Clean() to PPLT/Center/SymbolTreePanel.py,
+		 Build(), Clean() to PPLT/Center/ServerPanel.py to prepare new/load sessions
+	+ Add menuitems and callbacks:
+		"new" (clean all Panels and shutdown PPLTSystem)
+		"load" (load a session (meaning clean and load))
+	* Fix in PPLT/Center/I18N.py:
+		InitI18N() cause an exception if requested lang was not found,
+		now it installs a NullTranslations
+	
+Version 0.2.1	- 2005-05-28:
+	+ Add gettext support for PPLT-Center application (PPLT/Center/I18N.py): 
+		fixed setup.py and MANIFEST to install language support, add translation for german.
+	* Fix bug in PPLT/Center/SymbolTreePanel.py in SymbolTreePanel.OnAddSymbol():
+		ignored cancel of SymbolProperty dialog
+	* Fix in PPLT/Setup.py SetupStepLoad.Load():
+		missing exception catching try/except 
+	* Fix in PPLT/Setup.py Setup.DoSetup():
+		missing unloading all core-modules of a device if one core-mod
+		could not be loaded in PPLT/Setup.py [Setup.DoSetup()]
+	+ Add PPLT/Center/: 
+		infoframe for PPLTC application.
+	* Fix in PPLT/PPLTSystem.py:
+		wrong Symbol<->DeviceAlias association
+	* Fix in PPLT/Device.py:
+		Devce.unregister() generated inconsistent Object-Ref.-Counter in pyDCPU.Core.
+	* Fix in Modules/Server/Web/PPLTWeb.py:
+		problem with blocking sockets
+	* Fix bug in Server.__load() (PPLT/Server.py):
+		missed to remove stop exsisting Core-Exporter on exception while load a new
+	* Fix bug in Server.destroy() (PPLT/Server.py):
+		method is now error-sensitiv		
+	* Fix PPLT/Server.py Server.__init__():
+		missing exception raise in Server.__init__() if server load fails.
+
+Version 0.2.0	- 2005-05-27:
+	+ Start CHANGELOG
+	* Fix bug in pyDCPU/pyDCPUCore.py in Core.MasterTreeDel():
+		Produced inconsistent ref. counter.
+	* Fix bug in pyDCPU/pyDCPUSymbolTree.py in SymbolTree.DeleteSymbol():
+		Was unable to delete a symbol @ root.
+	* Fix problems in PPLT/Center ServerSelectionDialog.py,SymbolTreePanel.py,...:
+		Problems with hidden root items of wx.TreeCtrl on Windows
+

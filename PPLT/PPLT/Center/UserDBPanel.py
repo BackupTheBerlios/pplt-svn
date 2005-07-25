@@ -114,7 +114,7 @@ class UserDBPanel(wx.TreeCtrl):
 #		if not item:
 #			return(None);
 		
-		if item == None:	#if nothing is selected:
+		if item == None or item == self.__RootItem:	#if nothing is selected:
 			self.__Logger.warning("Can't create member with no group");
 			return(None);
 		(IsGroup, IsSuperUser) = self.GetPyData(item);
@@ -144,7 +144,7 @@ class UserDBPanel(wx.TreeCtrl):
 
 	def OnDelUser(self, Event):
 		item = self.GetSelection();
-		if not item:
+		if not item or item==self.__RootItem:
 			return(None);
 #		if item == self.__RootItem:
 #			return(None);
@@ -162,7 +162,7 @@ class UserDBPanel(wx.TreeCtrl):
 
 	def OnAddGroup(self, Event):
 		item = self.GetSelection();
-		if not item:		#aka selected root
+		if not item or item == self.__RootItem:		#aka selected root
 #			return(None);
 #		if item == self.__RootItem:
 			item = self.__RootItem;
@@ -198,7 +198,7 @@ class UserDBPanel(wx.TreeCtrl):
 
 	def OnDelGroup(self, Event):
 		item = self.GetSelection();
-		if not item:
+		if not item or item==self.__RootItem:
 			return(None);
 #		stupid: root can't be deleted:
 #		if item == self.__RootItem:
@@ -215,7 +215,7 @@ class UserDBPanel(wx.TreeCtrl):
 
 	def OnSetSUser(self, Event):
 		item = self.GetSelection();
-		if not item:
+		if not item or item==self.__RootItem:
 			return(None);
 #		if item == self.__RootItem:
 #			return(None);
@@ -239,7 +239,7 @@ class UserDBPanel(wx.TreeCtrl):
 
 	def OnPasswd(self, event):
 		item = self.GetSelection();
-		if not item:
+		if not item or item == self.__RootItem:
 			return(None);
 #		if item == self.__RootItem:
 #			return(None);

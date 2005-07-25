@@ -1,0 +1,20 @@
+<?xml version="1.0"?>
+
+<pyDCPUModuleMeta version="0.2.0" root="False">
+	<Author>Hannes Matuschek &lt;hmatuschek@gmx.net&gt;</Author>
+	<LastUpdate>2005-06-09</LastUpdate>
+	<URL>http://pplt.berlios.de</URL>
+
+	<Description lang="de">Implementiert das PPI Protokoll.</Description>
+	<Description lang="en">Implements the PPI protocol.</Description>
+	
+	<Require>
+		<ChildAddress>True</ChildAddress>
+		<pyDCPUVersion>0.2.0</pyDCPUVersion>
+		<PythonVersion>2.3.0</PythonVersion>
+		
+		<PythonModule>struct</PythonModule>
+		<PythonModule>string</PythonModule>
+		<Parameter name="Address" duty="True" default="0"/>
+	</Require>
+</pyDCPUModuleMeta>

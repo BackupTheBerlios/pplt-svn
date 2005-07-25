@@ -54,11 +54,11 @@ class Server:
 								self.__Parameters,
 								self.__Root);
 			except:
-				self.__Logger.error("Error while Load a Server");
+				self.__Logger.error("Error while Load a Server, maybe invalid format or not an server.");
 				self.destroy();
 				return(False);
 			if not obj:
-				self.__Logger.error("Error while Load a Server");
+				self.__Logger.error("Error while Load a Server, maybe bad parameters.");
 				self.destroy();
 				return(False);
 			self.__ServerObjects.append(obj);
@@ -101,10 +101,12 @@ def ParameterLoad(Node, Paras, Vars):
 		if Node.hasChildNodes():
 			if Node.firstChild.nodeType == Node.TEXT_NODE:
 				value = string.strip(Node.firstChild.data);
-		else:
-			value = Vars.get(Node.attributes['var'].value);
+			elif Node.firstChild.nodeType == node.ELEMENT_NODE:
+				varname = Node.firstChild.attributes['name'].value;
+				value = Vars.get(varname);
 		Paras.update( {name:value} );
 	else:
-		logger.debug("Skip %s Tag in <Load>"%Node.localName);
+		#logger.debug("Skip %s Tag in <Load>"%Node.localName);
+		pass;
 	return(ParameterLoad(Node.nextSibling, Paras, Vars));
 	

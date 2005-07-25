@@ -1,10 +1,141 @@
 \section{Was benötige ich?}
-\begin{itemize}
-	\item Python $>= 2.3.0$ (http://www.python.org)
-	\item wxPython $>= 2.5.0$ für grafische Oberfläche (http://www.wxpython.org)
-	\item pywin23 $>= 203$ (nur Windows) (http://pywin23.sourceforge.net)
-	\item ggf. Packete die von Modulen benötigt werden. (pyserial,...)
-	\item für die ersten Versuche keine besondere Hardware notwendig (sind daher auch nicht sehr
-	spektakulär)
-\end{itemize}
+	Um die PPLT benutzen zu können, müssen eine Reihe Bedingungen erfüllt sein. Sie benötigen
+	zu aller erst den Python-Interpreter, da die PPLT in dieser Scriptsprache geschrieben wurde.
+	Diesen Interpreter ist quelloffene Software und kann kostenlos von der URL
+	\href{http://www.python.org}{www.python.org} heruntergeladen werden. Sie benötigen 
+	jedoch Python ab der Version \textbf{2.3.0}.
+	
+	Wenn sie die grafische Applikation PPLT-Center (\texttt{PPLTC}) verwenden wollen, benötigen sie
+	die wxPython Bibliothek. Diese Bibliothek ermöglicht die platformübergreifende Programmierung von
+	grafischen Benutzterprogrammen. Diese ist ebenso wie Python eine Quelloffene Bibliothek, die sie
+	von der URL \href{http://www.wxpython.org}{www.wxpython.org} herunterladen. Da sich die 
+	API der Bibliothek ver\-ändert hat, benötigen sie mindestens die recht aktuelle Version 
+	\textbf{2.5.0}. Zu beachten ist, dass sie diese Bibliothek nicht benötigen, wenn sie die 
+	Applikation \texttt{PPLTC} nicht verwenden möchten.
+	
+	Wenn sie das Betriebssystem \textbf{Windows} von Microsoft verwenden, sollten sie auf jeden
+	fall die Python-Bibliothek pywin32 herunterladen. Diese ist ebenso quelloffen und ist unter
+	der URL \href{http://pywin32.sourceforge.net}{pywin32.sourceforge.net} herunterladen. 
+	Dieses Projekt verfolgt eine recht eigensinnige Versionsnummerierung. Die benötigen 
+	mindestens die Version \textbf{203}. Wenn sie jedoch	\textbf{Posix} 
+	kompatible\footnote{Linux, Unix, HP-UX, BSD, ...} Betriebssysteme verwenden,
+	benötigen sie diese Bibliothek nicht.
+	
+	Es kann durchaus vorkommen, dass ein bestimmtes Kern-Modul eine weitere, nicht in der Standard
+	Bibliothek enthaltene, Bibliothek benötigt. Dies entnehmen sie bitte der der Dokumentation des
+	einzelnen Moduls. Ich einieger Voraussicht laden sie bitte die Bibliothek
+	pyserial von der URL \href{http://pyserial.sourceforge.net}{pyserial.sourceforge.net}
+	herunter. Diese Bibliothek bietet eine Platform\-übergreifende Möglichkeit die serielle 
+	Schnitstelle zu nutzen. Diese Bibliothek wird von der Kern-Bibliothek \texttt{UniSerial} 
+	verwendet, welches selber	wieder von einer Vielzahl von Geräten verwendet wird.
+	
+	An dieser Stelle möchte ich anmerken, dass für die ersten Versuche mit der PPLT keinerlei
+	besondere Hardware von Nöten ist. Dementsprechend sind die Beispiele aber etwas 
+	unspektakulär. Sie beschränken sich auf das erzeugen von Zufallswerten.
 
+	\subsection{Installation der Software}
+	Ich kann ihnen an dieser Stelle keine vollständige Installationsanleitung
+	für diese Pakete anbieten. Dies würde den Rahmen dieses Dokumentes Sprängen.
+	
+	Dennoch will ich ihnen hier eine kurze "`Schritt für Schritt"'-Anleitung 
+	zur Installation geben. Die Installation der PPLT wird im nächsten Abschnitt 
+	besprochen.
+	
+	\subsubsection{Unter Windows}
+		Die Installation von Python, wxPython und der pywin32 Erweiterung dürfte sich 
+		unter Windows recht	Problemlos gestalten. Für all diese Pakete gibt es so
+		gennte Installer. Dies sind ausführbare Dateien\footnote{Unter Windows *.exe},
+		die den Installationsprozess automatisieren. Nach dem Starten eines solchen
+		Installers öffnet sich ein Dialog, der die für die Installation benötigten
+		Eingaben abfragt. Meißt können sie die dort stehenden Standard Werte übernehmen.
+		
+		Bei der Installation von Python wird am Anfang das Verzeichnis abgefragt, in
+		das Python installiert werden soll. (Siehe Abbildung \ref{fig:PyInstall})
+		Bitte merken oder notieren sie sich dieses Verzeichnis, es wird später 
+		benötigt um die Dateien der PPLT wieder zu finden. 
+
+		\begin{figure}[ht]
+			\centering
+			\includegraphics[scale=0.5]{PythonInstall}
+			\caption{Python Installer}
+			\label{fig:PyInstall}
+		\end{figure}
+		
+		In diesem Verzeichnis	liegt auch die ausführbare Datei des Python-Interpreters. 
+		Bitte öffnen sie jetzt eine Eingabeaufforderung und geben sie \texttt{python}
+		ein. Nun sollte sich die Python-Konsolle öffnen\footnote{Mit Strg-Z beenden die
+		die Konsole}. Ist dies nicht der Fall und sie erhalten einen Fehler, dass
+		dieser Befehl unbekannt sei, müssen sie Windows mitteilen, dass es auch in 
+		dem oben erwähnten Verzeichnis nach ausführbaren Dateien suchen soll.
+		
+		Dies können sie unter Windows95/98 mit einem Text-Editor oder dem Programm
+		\texttt{msconfig} erledigen. Editiren sie die 
+		\texttt{autoexec.bat}\footnote{Meißt dierekt auf dem Laufwerk \texttt{C:}}
+		und fügen sie die Zeile \texttt{set PATH=\%PATH\%;C:$\backslash$Python24$\backslash$} 
+		hinzu\footnote{Bitte ersetzen sie C:$\backslash$Python24$\backslash$ mit dem Verzeichnis, in das
+		sie Python installiert haben.}.
+		
+		Unter Windows 2000/XP gestaltet sich dieser Eintrag einfacher. Öffnen sie
+		bitte \texttt{Systemsteuerung->System}\footnote{Bitte beachten sie, dass sie unter
+		Windows 2000/XP als Systemadministrator angemeldet seien müssen}. Wählen sie den Reiter 
+		\texttt{Erweitert} aus und klicken sie auf \texttt{Umgebungsvariablen}.
+		Es öffnet sich ein Fenster indem sie die Umgebungsvariablen für den 
+		aktuellen Benutzer und das System setzen können. Unter den Systemvariablen
+		befindet sich auch die Variable \texttt{Path}. Wählen sie diese aus und
+		klicken sie auf \texttt{Bearbeiten}. Fügen sie bei \texttt{Wert der Variablen}
+		\texttt{;C:$\backslash$Python24$\backslash$} hinzu, oder eben das Verzeichnis, in das sie Python
+		installiert haben.
+		
+		Bitte beachten sie das Semikolon. Wird dieses vergessen, kann das das Verhalten
+		anderer Programme beeinflussen.
+		
+		Bitte beachten sie, dass sie \textbf{zuerst} Python und \textbf{dann} 
+		wxPython und pywin32 installieren.
+		
+		Die Installation von pyserial könnte sich etwas schwierieger gestalten, da
+		für dieses Packet nicht unbedingt ein Installer vorliegt. Ist dies nicht der
+		Fall, laden sie bitte das Quellarchiv herunter und entpacken es. 
+		
+		Starten sie dann eine Konsole\footnote{MS-DOS Eingabeaufforderung} und
+		wechseln sie mit \texttt{cd} in das Verzeichnis, das sie entpackt haben.
+		
+		Führen sie nun \texttt{python setup.py install} aus\footnote{Achten sie bitte auf
+		die Leerzeichen}. Nun sollte die Bibliothek installiert werden. 
+		
+	\subsubsection{Unter Posix}
+		Die Installation der Software unter Posix-Systemen wie Linux, Unix oder BSD gestaltet sich 
+		von Anbieter zu Anbieter recht unterschiedlich. Am einfachsten ist es, wenn der Distributor
+		die benötigte Software als Inastallationspakete\footnote{Zum Beispiel als RPM oder DEB Dateien} 
+		im Binärformat anbietet. Python und wxPython werden bei den großen Distributionen mitgelifert.
+		Aktuelle Distributionen dürften auch die neueren Pakete, also in der aktuellen Version, enthalten.
+		Jedoch ist in der SuSE 9.1 Distribution eine zu alte Version von wxPython enthalten, so dass diese
+		aktualisiert werden sollte.
+		
+		Am sichersten sind sie, wenn sie die Quellen von Python sowie wxPython heunterladen und
+		selber kompalieren. Dies sei aber nur erfahreren Benutzern empfohlen.
+		
+		Für die Linux Distributionen Debian und Red Head liegen auch fertige Binär-Installationspackete
+		auf dem Servern von Python und wxPython. Diese sollten sich mit dem Paketmanager der jeweiligen
+		Distribution problemlos installieren lassen.
+		
+		Zur installation den pyserial Bibliothek empfiehlt es sich die Quellen\footnote{Mit der Endung 
+		\texttt{tar.gz} oder \texttt{tar.bz2}} herunter zu laden. Dieses Archiv enthält ein 
+		Installationsscript, mit dessen Hilfe die Installation sehr einfach durchgeführt werden kann.
+		
+		Wechseln sie auf eine Konsole und gehen sie in das Verzeichnis, indas sie das Archiv gespeichert haben.
+		Entpacken sie das Archiv mit: 
+		
+		\texttt{tar -x?? pyserial-???.tar.gz} 
+		
+		Es sollte nun ein neues
+		Verzeichnis mit dem Namen \texttt{pyserial-???} im aktuellen erzeugtworden sein. Wechseln sie
+		in dieses Verzeichnis und führen sie:
+		
+		\texttt{python setup.py install} aus.
+		 
+		Nun wird die Bibliothek installiert.
+		
+		Sind alle erwähnten Softwarepakete installiert, können sie mit der Installation der PPLT
+		beginnen. Sollten bei der Installation Probleme auf treten oder wenn sie Fragen zu diesem
+		Text haben, wenden sie sich bitte per E-Mail an mich.
+		

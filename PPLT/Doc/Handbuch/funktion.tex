@@ -1,0 +1,135 @@
+\section{Funktionsweise}
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[scale=0.5]{ZieleGrenzen02}
+		\caption{schematische Funktionsweise der PPLT}
+		\label{fig:WiPPLT2}
+	\end{figure}
+	Wie in der Abbildung \ref{fig:WiPPLT1} ist auch in der 
+	Abbildung \ref{fig:WiPPLT2} die PPLT als Schnittstelle zwischen den 
+	Applikationen (Client) und den Gräten dargestellt. Hier jedoch,
+	ist der interne Aufbau der PPLT augedeutet.
+	
+	Es ist ein regulärer Ablauf einer Anfrage eines Clienten dargestellt:\\ Zunächst
+	stellt der Client eine Anfrage an den Server. Dieser verarbeitet diese und holt
+	sich aus dem \textit{Symbolbaum} die zur Beantwortung benötigten Werte. Der 
+	Symbolbaum, eine Art Mischung aus virt. Dateisystem und Wertetabelle, wiederum
+	holt sich die Daten aus den virtuellen Geräten\footnote{Virtuelle Geräte sind die 
+	Repesentation der realen Geräte innerhalb der PPLT. Man kann sich diese als
+	\textit{Treiber} vorstellen.}. Die virtuellen Geräte sind in der Lage mit den 
+	realen Geräten zu kommunizieren. Sie tauschen also mit den realen Geräten Pakete aus
+	und erhalten so die benötigten Informationen, die sie an den Symbolbaum zurückgeben.
+	Dieser wandelt die erhaltenen Daten ggf. um und übergibt diese als Wert dem Server.
+	Der Server kann nun die gestellte Anfrage des Clienten beantworten.
+	
+	Ich möchte nun ein wenig genauer auf die einzelnen Elemente der PPLT eingehen. Die 
+	Abbildung \ref{fig:WiPPLT2} zeigt schon die 3 Hauptbestandteile der PPLT. Die Server,
+	die Geräte sowie der zentrale Symbolbaum.
+	
+	\subsection{Die virtuellen Geräte}
+	Die virtuellen Geräte\footnote{Werden im folgenden nur noch \textit{Geräte} genannt},
+	sind wie schon erwähnt in der Lage mit real existierender Hardware zu kommunizieren.
+	Diese Geräte sind jedoch nicht fester Bestandteil der PPLT. Sie werden je nach bedarf
+	wärend der Laufzeit geladen. Genauer gesagt, ist nach der Installation der reinen
+	PPLT das System nicht in der lage mit irrgendeinem Gerät zu kommunizieren. Dies wird
+	erst durch das Installieren der Module\footnote{Gerätedateien} möglich. Jedes dieser 
+	Module erweitert die Fähigkeiten des Systems. 
+	
+	Ich möchte an dieser Stelle nicht verschweigen, dass ein Gerät meißt aus mehreren 
+	so genannten Kernmodulen besteht. Dies ist sinnvoll, da zum Beispiel viele Geräte die
+	serielle Schnittstelle nutzen, können durch eine seperate Implementierung der seriellen
+	Schnittstelle eine Vielzahl an Geräten dieses Kernmodul und damit die Schnittstelle 
+	nutzen. Dies ist aber für das Verstehen der Funktionsweise nicht weiter wichtig.
+
+	Die Geräte geben, einmal geladen, dem System die Möglichkeit indirekt aus der
+	realen Hardware zu lesen und/oder zu schreiben. 
+	
+	Ein einzelnes Gerät kann jedoch viele verschiedene Werte liefern. Ein gutes Beispiel
+	hierfür ist eine Industriesteuerung. Sie mehrere Ein- und Ausgänge, eine Vielzahl an
+	Registern, Zählern und Zeitgebern. Für jeden dieser einzelnen Werte besitzt ein Gerät
+	einen so genannten Slot\footnote{Buchse, Anschluss}. Verbindet man etwas mit diesem
+	Slot, so kann man auf den etsprechenden Wert zugreifen.
+	
+	\subsection{Der Symbolbaum}
+	Der Symbolbaum ist wie ein Dateisystem aufgebaut. Er kennt Verzeichnisse\footnote{Ordner},
+	in denen zwar keine Dateien aber Symbole abgelegt werden können. Ich werden an dieser
+	Stelle nicht weiter auf die Verzeichnisse eingehen sondern das Augenmerk auf das Symbol
+	legen:
+
+	\begin{itemize}
+		\item Ein Symbol representiert einen Wert. So kann ein Symbol eine gemessene Temperatur
+		oder den Fullstand eines Tanks in Prozent wiedergeben. 
+		\item Ein Symbol representiert einen bestimmten Wert eines bestimmten Grätes. So kann
+		ein Symbol die Eingänge einer Steuerung representieren. Wenn aus diesem Symbol gelesen 
+		wird, erhält man die dort anliegenden Signale.
+		\item Ein Symbol ist mit einem Gerät fest Verbunden, genauer gesagt ist es mit einem Slot 
+		eines Gerätes verbunden. Das Gerät kann nicht entladen\footnote{gelöscht/entfernt} werden, 
+		solange ein Symbol mit im	verbunden ist.
+		\item Ein Symbol hat einen Bestimmten Typ. Dieser kann Bool, Byte, Word, 
+		DWord\footnote{Doppelwort}, Float, Double oder String sein.
+	\end{itemize}
+	
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[scale=0.6]{Symbol01}
+		\caption{Verbindung zwischen Symbolen und Geräten}
+		\label{fig:funkt1}
+	\end{figure}
+	
+	In der Abbildung \ref{fig:funkt1} ist die Verknüpfung der Symbole aus dem Symbolbaum
+	mit den Slots eines Gerätes dargestellt. \texttt{Batterie}, \texttt{Modellnummer} und
+	\texttt{Signalstärke} sind Symbole im Verzeichnis \texttt{mein\_handy} des Symbolbaumes.
+	\texttt{battery}, \texttt{signal}, \texttt{model} und \texttt{manufact.} sind 
+	Anschlüsse des Gerätes \texttt{Handy}.	
+	
+	Wenn sie nun aus dem Symbol \texttt{Batterie}
+	lesen, erhalten sie den Wert, des Anschlusses \texttt{battery} des Gerätes 
+	\texttt{Handy}. Ebenso verhält es sich beim Schreiben. Wenn sie in ein Symbol schreiben,
+	schreiben sie damit in den Anschluss des dazugrörigen Gerätes.
+	
+	Ich möchte an dieser Stelle noch erwähnen, dass die Symbole und die Verzeichnisse in
+	der PPLT einem Benutzer und einer Gruppe zugeordnet sind. Des weiteren lassen sich
+	Zugriffsrechte für die Symbole und Verzeichnisse vergeben. Auf diese Weise kann 
+	der Zugriff auf die Geräte oder besser auf dessen Werte reguliert werden. 
+	
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[scale=0.5]{PPLTC7}
+		\caption{Der Symbolbaum in der PPLT-Center Applikation.}
+		\label{fig:funct2}
+	\end{figure}
+	In der Abbildung \ref{fig:funct2} ist das Fenster der PPLT-Center Applikaion, welches
+	den Symbolbaum darstellt, zu sehen.
+	
+	\subsection{Die Server}
+	Server sind wie die Geräte ladbare module. Ein Server kann also wärend der Laufzeit 
+	gestartet oder angehalten werden, ohne das Programm beenden zu müssen. Ihre Aufgabe 
+	ist es die Werte im Symbolbaum zu exportieren und so anderen Applikationen zur
+	Verarbeitung\footnote{Zum Beispiel zur Darstellung in einer Visualisierung} zur
+	Verfügung zu stellen. 
+	
+	Ein Beispiel hierfür ist ein ladbarer Webserver, der
+	den Symbolbaum für einen Webbrowser aufarbeitet. Auf diese Weise kann der 
+	Symbolbaum mit einem Browser durchsucht und die darin enthaltenen Werte
+	ausgelesen werden.
+	
+	Dabei ist zu bemerken, dass ein Server nicht unbedingt den Ganzen Symbolbaum
+	exportieren muss. Man kann das System anweisen, das ein Bestimmter Server
+	nur einen Teilbaum, zum Beispiel nur ein einzelnens Verzeichnis exportieren
+	soll.
+	
+	\begin{figure}[ht]
+		\centering
+		\includegraphics[scale=0.5]{Server01}
+		\caption{Server exportieren den Symbolbaum oder Teile davon.}
+		\label{fig:server1}
+	\end{figure}
+	
+	In Abbildung \ref{fig:server1} ist folgende Situation dargestellt. Zwei Server
+	exportieren Teile des Symbolbaums. Der erste Server, ein Web-Server, exportiert jedoch
+	nur einen Teilbaum nämlich das Verzeichnis \texttt{123}. Anders als der Web-Server
+	exportiert der JVisu-Server\footnote{Ein Server, aus den die Visualisierung \texttt{JVisu}
+	ihre Daten beziehen kann.} die Verzeichnisse \texttt{123} sowie \texttt{abc}, also
+	den gesammten Symbolbaum. Es ist also nicht möglich über den Webserver auf Symbole im
+	Verzeichnis \texttt{abc} zugreifen. Auf diese Weise können vertrauensunwürdige Dienste
+	auf unkritische Abschnitte des Symbolbaums beschränkt werden.

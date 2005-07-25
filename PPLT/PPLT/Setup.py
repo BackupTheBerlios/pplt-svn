@@ -120,11 +120,11 @@ class SetupStepLoad(SetupStep):
        
 		self.Logger.debug("Try to load \"%s\" with %s at %s"%(self.__ModuleName,str(ret),str(addr)));
         
-		try:
-			self.__Object = Core.MasterTreeAdd(ParentID, self.__ModuleName, addr, ret);
-		except:
-			self.Logger.error("Exception while load %s"%self.__ModuleName);
-			return(False);
+		#try:
+		self.__Object = Core.MasterTreeAdd(ParentID, self.__ModuleName, addr, ret);
+		#except:
+		#	self.Logger.error("Exception while load %s"%self.__ModuleName);
+	#		return(False);
 		if not self.__Object:
 			self.Logger.error("Error while load Module %s"%self.__ModuleName);
 			return(False);

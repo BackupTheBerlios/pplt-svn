@@ -1,5 +1,5 @@
 # ############################################################################ #
-# This is part of the PPLT project. PPLT is a framework for industrial         # 
+# 																			   #	
 # communication.                                                               # 
 # Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                # 
 #                                                                              # 
@@ -18,255 +18,667 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
 # ############################################################################ # 
 
-# Changelog:
-# 2005-05-27:
-#	Release as version 0.2.0
 
+# Changelog:
+# 2005-06-19:
+#	Initial.
+
+import pyDCPU.Modules;
+import ServerMeta;
+import DeviceMeta;
+import os.path;
+import fnmatch;
+import zipfile;
 import xml.dom.minidom;
-import glob;
 import logging;
 
-
-TYPE_SERVER = 1;
-TYPE_DEVICE = 2;
-TYPE_COREMOD= 3;
-
-
-class DBObjBaseClass:
-	def __init__(self, FileName):
-		self.__Logger = logging.getLogger("PPLT");
-		if not self.parseFile(FileName):
-			raise Exception("Error while parse File \"%s\""%FileName);
+class DataBase:
+	""" The Module database handles all kinds of modules, like servers, devices
+and core-modules.
+You can install and uninstall (if you have the right to do) modules. """
+	def __init__(self, CoreModPath, PPLTModPath, Lang, AltLang):
+		self.__Logger			= logging.getLogger("PPLT");
+		self.__CoreModulePath	= CoreModPath;
+		self.__PPLTModulePath	= PPLTModPath;
+		self.__Lang				= Lang;
+		self.__AltLang			= AltLang;
 	
-	def parseFile(self, FileName):
-		# save FileName
-		self.__FileName = FileName;
-
-		# parese file and get RootElement
-		try:
-			doc = xml.dom.minidom.parse(FileName);
-		except:
-			self.__Logger.error("Error while parse file %s"%FileName);
-			return(False);
-		obj = doc.documentElement;
+		self.__Servers			= BaseClass();
+		self.__Devices			= BaseClass();
+		self.__CoreMods			= BaseClass();
 		
-		# get name
-		self.__Name = obj.attributes['name'].value;
+		ZIPList = RGlob(self.__CoreModulePath,"*.zip");
+		self.__Logger.info("Try to add %i DCPU-Modules to DB"%len(ZIPList));
+		for ZIPFile in ZIPList:
+			Item = CreateItem(ZIPFile, Lang, AltLang, self);
+			if isinstance(Item, CoreModItem):
+				ClassList = ClassFromPath(ZIPFile,self.__CoreModulePath);
+				ItemName  = Item.GetName();
+				self.__CoreMods.AddItem(Item, ItemName, ClassList);
 
-		# try to find out what type the file describe
-		if obj.localName == 'PPLTDevice':
-			self.__Type = TYPE_DEVICE;
-		elif obj.localName == 'PPLTServer':
-			self.__Type = TYPE_SERVER;
+		XMLList = RGlob(self.__PPLTModulePath, "*.xml");
+		self.__Logger.info("Try to add %i PPLT-Modules to DB"%len(XMLList));
+		for XMLFile in XMLList:
+			Item = CreateItem(XMLFile, Lang, AltLang, self);
+			if isinstance(Item, ServerItem):
+				ClassList = Item.GetClass().split(".");
+				ItemName  = Item.GetName()
+				self.__Servers.AddItem(Item, ItemName, ClassList);
+			elif isinstance(Item, DeviceItem):
+				ClassList = Item.GetClass().split(".");
+				ItemName  = Item.GetName();
+				self.__Devices.AddItem(Item, ItemName, ClassList);
+
+
+	# ###################################################################### #
+	# Objects to handle server/device info easily                            #
+	# ###################################################################### #
+	def GetServerInfo(self, SerName):
+		""" Return a ServerInfo instance. To access server specivic information."""
+		if not self.HasServer(SerName):
+			return(None);
+		return(ServerInfo(SerName, self));
+	def GetDeviceInfo(self, DevName):
+		"""Return a DeviceInfo instance. To access device specific information."""
+		if not self.HasDevice(DevName):
+			return(None);
+		return(DeviceInfo(DevName, self));
+
+	# ###################################################################### #
+	# Methods to handle servers                                              #
+	# ###################################################################### #
+	def ListServerClasses(self, Class=None):
+		" List all server-classes in the given class,"
+		" if Class is obmited, all root-classes will be returned."
+		if Class:
+			ClassLst = Class.split(".");
 		else:
-			return(False);
+			ClassLst = [];
+		return(self.__Servers.ListClasses(ClassLst));
 
-		# save class names and put them into a list
-		classes = obj.attributes['class'].value;
-		tmp_lst = classes.split('.');
-		self.__ClassList = [];
-		for classname in tmp_lst:
-			if classname != '':
-				self.__ClassList.append(classname);
+	def ListServers(self, Class=None):
+		" List all servers in the given class. "
+		if not Class:
+			ClassLst = [];
+		else:
+			ClassLst = Class.split(".");
+		return(self.__Servers.ListItems(ClassLst));
 
-		doc.unlink();
-		return(True);
-	
-	def GetType(self):
-		return(self.__Type);
-	def GetClassList(self):
-		return(self.__ClassList);
-	def GetName(self):
-		return(self.__Name);
-	def GetFileName(self):
-		return(self.__FileName);
+	def __GetServer(self, Name):
+		" Internal Function!!! "
+		tmp = Name.split(".");
+		ClassLst = tmp[:-1];
+		Name = tmp[-1];
+		return(self.__Servers.FindItem(Name,ClassLst));
 
-
-
-class ObjClassContainer:
-	def __init__(self, Parent, Name):
-		self.__Parent = Parent;
-		self.__Name = Name;
-		self.__SubClassList = {};
-		self.__ObjList = {};
-
-	def CreateSubClass(self, Name):
-		# check if subclass allready exists:
-		if self.__SubClassList.has_key(Name):
-			# then return existing subclass
-			return(self.__SubClassList.get(Name));
-		# else create a new
-		sub_class = ObjClassContainer(self, Name);
-		self.__SubClassList.update( {Name:sub_class});	#add to table
-		return(sub_class);
-	
-	def GetSubClass(self, Name):
-		if self.__SubClassList.has_key(Name):
-			return(self.__SubClassList.get(Name));
-		return(None);
-	
-	def ListSubClasses(self):
-		return(self.__SubClassList.keys());
-
-	def ListItems(self):
-		return(self.__ObjList.keys());
-
-	def AddObject(self, Obj):
-		# check type
-		if not isinstance(Obj, DBObjBaseClass):
-			return(False);
-		# don't add a obj twice:
-		if self.__ObjList.has_key(Obj.GetName()):
-			return(True);
-		# else add:
-		self.__ObjList.update( {Obj.GetName(): Obj} );
-		return(True);
-
-	def GetObject(self, Name):
-		return(self.__ObjList.get(Name));
-
-	def CheckConsistence(self):
-		# search and destroy empty sub classes:
-		for name in self.__SubClassList.keys():
-			# tell this subclasse to check consistence
-			self.__SubClassList[name].CheckConsistence();
-			# if subclass is empty : remove
-			if self.__SubClassList[name].IsEmpty():
-				del self.__SubClassList[name];
-
-		# search and destroy deleted devices/servers/coremodules
-		for name in self.__ObjList.keys():
-			if not self.__ObjList[name].FileExists():
-				del self.__ObjList[name];
-		# --- done ---
-	
-	def IsEmpty(self):
-		# check if there are no 
-		if len(self.__SubClassList.keys())==0 and len(self.__ObjList.kes())==0:
-			return(True);
+	def HasServer(self, Name):
+		" This method returns true, if the given server is found "
+		if self.__GetServer(Name): return(True);
 		return(False);
 
+	def InstallServer(self, File):
+		" Install/Update the server in file. And add to DB."
+		#FIXME: Implement
+		pass;
+
+	def UnInstallServer(self, Name):
+		" Uninstall and remove given server from database. "
+		#FIXME: Implement
+		pass;
+
+	def GetServerVersion(self, Name):
+		" Returns the Version-Object of the given server. "
+		Srv = self.__GetServer(self, Name);
+		if not Srv: return(None);
+		return(Srv.GetVersion());
+
+	def GetServerPath(self, Name):
+		" Returns the file-path to the server given. "
+		Srv = self.__GetServer(Name);
+		if not Srv: return(None);
+		return(Srv.GetFilePath());
+
+	def GetServerDescription(self, Name):
+		" Returns the description of the given server, if found. In the given"
+		" Lang or AltLang. Return an empy string on error."
+		Srv = self.__GetServer(Name);
+		if not Srv: return(None);
+		return(Srv.GetDescription(self.__Lang, self.__AltLang));
+
+	def GetServerVariables(self, Name):
+		" Returns a list of variables (parameters) a server needs to setup. "
+		Srv = self.__GetServer(Name);
+		if not Srv: return(None);
+		return(Srv.GetVariables());
+
+	def GetServerVariableHelp(self, SrvName, VarName):
+		" Returns a short info about the given variable of the server. "
+		" Returns a empty string on error."
+		Srv = self.__GetServer(SrvName);
+		if not Srv: return("");
+		return(Srv.GetVariableHelp(VarName, self.__Lang, self.__AltLang));
+
+	def GetServerDefaultValue(self, SrvName, VarName):
+		" Returns the default value of the given variable of the server."
+		" Returns None on error"
+		Srv = self.__GetServer(SrvName);
+		if not Srv: return(None);
+		return(Srv.GetDefaultValue(VarName));
+
+
+
+	# ###################################################################### #
+	# Methods to handle devices                                              # 
+	# ###################################################################### #
+	def ListDeviceClasses(self, Class=None):
+		" Return a list of all device-classes in given class, if Class is obmited,"
+		" all root classes will be listed. "
+		if Class:
+			ClassLst = Class.split(".");
+		else:
+			ClassLst = [];
+		return(self.__Devices.ListClasses(ClassLst));
+
+	def ListDevices(self, Class=None):
+		" List all devices in class. "
+		if not Class:
+			ClassLst = [];
+		else:
+			ClassLst = Class.split(".");
+		return(self.__Devices.ListItems(ClassLst));
+
+	def __GetDevice(self, Name):
+		" Internal function. "
+		tmp = Name.split(".");
+		Class = tmp[:-1];
+		Name  = tmp[-1];
+		return(self.__Devices.FindItem(Name, Class));
+
+	def HasDevice(self, Name):
+		" Retuns True if device could be found. "
+		if self.__GetDevice(Name): return(True);
+		return(False);
+
+	def InstallDevice(self, File):
+		" Install/Update a device and add it to the DB." 
+		#FIXME: Implement!!!
+		pass;
+
+	def UnInstallDevice(self, Name):
+		" Uninstall a device "
+		#FIXME: Implement 
+		pass;
+
+	def GetDeviceVersion(self, Name):
+		" Returns the Version-Object of the given device. "
+		Dev = self.__GetDevice(Name);
+		if not Dev: return(None);
+		return(Dev.GetVersion());
+
+	def GetDevicePath(self, Name):
+		" Returns the whole path to the device file. "
+		Dev = self.__GetDevice(Name);
+		if not Dev: return(None);
+		return(Dev.GetFilePath());
+
+	def GetDeviceDescription(self, Name):
+		" Returns the description of the given device in the Lang or AltLang,"
+		" if found. Returns an empty string on error."
+		Dev = self.__GetDevice(Name);
+		if not Dev: return("");
+		return(Dev.GetDescription(self.__Lang, self.__AltLang));
+
+	def GetDeviceVariables(self, Name):
+		" Return a list of all variables the device need to setup. "
+		Dev = self.__GetDevice(Name);
+		if not Dev: return(None);
+		return(Dev.GetVariables());
+
+	def GetDeviceVariableHelp(self, DevName, VarName):
+		" Return a short help for the variable of the deivce."
+		Dev = self.__GetDevice(DevName);
+		if not Dev: return("");
+		return(Dev.GetVariableHelp(VarName, self.__Lang, self.__AltLang));
+
+	def GetDeviceDefaultValue(self, DevName, VarName): 
+		" Return the default value of the given variable of the device. "
+		Dev = self.__GetDevice(DevName);
+		if not Dev: return(None);
+		return(Dev.GetDefaultValue(VarName));
+
+	def GetDeviesNameSpaces(self, DevName):
+		" Return a list of all Namespaces of the device. "
+		Dev = self.__GetDevice(DevName);
+		if not Dev: return(None);
+		return(Dev.GetNameSpaces());
+
+	def GetSlots(self, DevName, NS):
+		" Return all slots of a namespace of a device. "
+		Dev = self.__GetDevice(DevName);
+		if not Dev: return(None);
+		return(Dev.GetSlots(NS));
+
+	def GetSlotDescription(self, DevName, NS, Slot):
+		" Return a short description of the slot. "
+		Dev = self.__GetDevice(DevName);
+		if not Dev: return("");
+		return(Dev.GetSlotDescription(Slot, NS, self.__Lang, self.__AltLang));
+
+	def GetSlotType(self, DevName, NS, Slot):
+		" Return the type (a string) of the slot. "
+		Dev = self.__GetDevice(DevName);
+		if not Dev: return(None);
+		return(Dev.GetSlotType(Slot, NS));
+	
+	def GetSlotMode(self, DevName, NS, Slot):
+		" Return the mode (one of: r, w, rw) of the slot. "
+		Dev = self.__GetDevice(DevName);
+		if not Dev: return(None);
+		return(Dev.GetSlotMode(Slot,NS));
+
+	def GetSlotRanges(self, DevName, NS):
+		" Return all slot-ranges a namespace of a device. "
+		Dev = self.__GetDevice(DevName);
+		if not Dev: return(None);
+		return(Dev.GetSlotRanges(NS));
+
+	def GetSlotRangeDescription(self, DevName, NS, SlotRange):
+		" Return a short description of the SlotRange. "
+		Dev = self.__GetDevice(DevName);
+		if not Dev: return("");
+		return(Dev.GetSlotRangeDescription(SlotRange, NS, self.__Lang, self.__AltLang));
+
+
+
+	# ###################################################################### #
+	# Methods to handle core-modules                                         # 
+	# ###################################################################### #
+	def ListCoreModClasses(self, Class=None):
+		" List all sub-classes in the given class. If Class is obmited, all"
+		" root classes will be returnd."
+		if Class:
+			ClassLst = Class.split(".");
+		else:
+			ClassLst = [];
+		return(self.__CoreMods.ListClasses(ClassLst));
+
+	def ListCoreMods(self, Class):
+		" List all core modules in the given class. "
+		ClassLst = Class.split(".");
+		return(self.__CoreMods.ListItems(ClassLst));
+
+	def __GetCoreMod(self, Name):
+		" Internal Function!!! "
+		tmp = Name.split(".");
+		Name = tmp[-1];
+		ClassList = tmp[:-1];
+		#print "Try to find %s in %s"%(Name,str(ClassList))
+		return(self.__CoreMods.FindItem(Name,ClassList));
+
+	def HasCoreMod(self, Name):
+		" Return True if core module is found. "
+		if self.__GetCoreMod(Name): return(True);
+		return(False);
+
+	def GetCoreModPath(self, Name):
+		" Return the full path to the core module file. "
+		Mod = self.__GetCoreMod(Name);
+		if not Mod: return(None);
+		return(Mod.GetFilePath());
+
+	def GetCoreModVersion(self, Name):
+		" Return the version object if the core module. "
+		Mod = self.__GetCoreMod(Name);
+		if not Mod: return(None);
+		return(Mod.GetVersion());
+
+	def GetCoreModDesctiption(self, Name):
+		" Return a short description about the core module. "
+		Mod = self.__GetCoreMod(Name);
+		if not Mod: return("");
+		return(Mod.GetDescription(self.__Lang, self.__AltLang));
+
+	def InstallCoreMod(self, File, AsName):
+		" Install a core module file as the give FQ core module name. "
+		#FIXME Implement!!!
+		pass;
+
+	def UnInstallCoreMod(self, Name):
+		" Uninstall a core module. "
+		#FIXME Implement!!!
+		pass;
+#
+# *** END OF CLASS:   DataBase   ***
+
+
+
+
+
+class BaseClass:
+	""" Abstract base class for module classes  Do not use! """
+
+	def __init__(self):
+		self.__SubClasses = {};
+		self.__Items={};
+	
+	def FindItem(self, ItemName, ClassList):
+		if len(ClassList) == 0:												# if class lust is empty:
+			return(self.__Items.get(ItemName));									# search in my item-list
+		SubClass = ClassList.pop(0);									# pop next class to search:
+		if self.__SubClasses.has_key(SubClass):							# do i have such a sunclass?:
+			return(self.__SubClasses[SubClass].FindItem(ItemName, ClassList));	# recursive:
+		return(None);													# subclass not found
+
+	def AddItem(self, Item, ItemName, ClassList):
+		if len(ClassList) == 0:
+			self.__Items.update( {ItemName:Item} );
+			#print "Add %s (%s)"%(ItemName,str(Item));							# update my item-table
+			return(True);
+		SubClass = ClassList.pop(0);										# pop next subclass:
+		if not self.__SubClasses.has_key(SubClass):							# create a new subclass if missing:
+			#print "Create new SubClass %s"%SubClass;
+			self.__SubClasses.update( {SubClass:BaseClass()} );						# ---
+		return(self.__SubClasses[SubClass].AddItem(Item, ItemName, ClassList));		#recursive...
+
+	def DelItem(self, Item, ClassList):
+		if len(ClassList) == 0:
+			if self.__Items.has_key(Item):
+				del self.__Items[Item];
+				return(Ture);
+			return(False);
+		SubClass = ClassList.pop(0);
+		if self.__SubClasses.has_key(SubClass):
+			return(self.__SubClasses[SubClass].DelItem(Item, ClassList));
+		return(False);
+
+	def ListItems(self, ClassList=[]):
+		if len(ClassList) == 0:
+			return(self.__Items.keys());
+		SubClass = ClassList.pop(0);
+		if self.__SubClasses.has_key(SubClass):
+			return(self.__SubClasses[SubClass].ListItems(ClassList));
+		return(None);
+	
+	def ListClasses(self, ClassList=[]):
+		if len(ClassList) == 0:
+			return(self.__SubClasses.keys());
+		SubClass = ClassList.pop(0);
+		if self.__SubClasses.has_key(SubClass):
+			return(self.__SubClasses[SubClass].ListClasses(ClassList));
+		return(None);
+
+
+class BaseItem:
+	def __init__(self, Name, MetaData):
+		self.__Name = Name;
+		self.__MetaData = MetaData;
+
 	def GetName(self):
 		return(self.__Name);
+	def GetDescription(self, Lang, AltLang):
+		pass;
+	def GetVersion(self):
+		pass;
+	def GetFilePath(self):
+		pass;
+	def GetVariables(self):
+		pass;
+	def GetVariableHelp(self, VarName, Lang, AltLang):
+		pass;
+	def GetDefaultValue(self, VarName):
+		pass;
+	# following are only nessery for devices:
+	def GetNameSpaces(self):
+		pass;
+	def GetSlots(self, NS):
+		pass;
+	def GetSlotRanges(self, NS):
+		pass;
+	def GetSlotDescription(self, Name, NS, Lang, AltLang):
+		pass;
+	def GetSlotRangeDescription(self, Name, NS, Lang, AltLang):
+		pass;
+	def GetSlotType(self, Name, NS):
+		pass;
+	def GetSlotMode(self, Name, NS):
+		pass;
 
 
-class ObjRootClass(ObjClassContainer):
-	def __init__(self):
-		ObjClassContainer.__init__(self, None, None);
-		self.__Logger = logging.getLogger("PPLT");
 
-	def AddObject(self, Obj):
-		# get attr:
-		clist = Obj.GetClassList();
 
-		# each Obj have to be a member of an class:
-		if len(clist) == 0:
-			return(False);
 
-		pclass = self;
-		# create all classes i need:
-		for cname in clist:
-			pclass = pclass.CreateSubClass(cname);
-		# --- done ---
-		return(pclass.AddObject(Obj));
+# Class: CoreModItem
+#	Database item for a core module.
+#
+class CoreModItem(BaseItem):
+	def __init__(self, FileName):
+		self.__FilePath = FileName;
+		Meta = pyDCPU.Modules.MetaData(FileName);
+		(tmp,FileName) = os.path.split(FileName);
+		tmp = FileName.split(".");
+		BaseItem.__init__(self, tmp[0], Meta);
+
+		if not Meta.CheckDCPUVersion():	
+			raise Exception("Invalid pyDCPU Version");
+		if not Meta.CheckPythonVersion():
+			raise Exception("Invalid Python Version");
+		if not Meta.CheckPythonModules():
+			raise Exception("Missing python-lib(s)");
+
+
+	def GetDescription(self, Lang, AltLang):
+		return(self.__Meta.GetDescription(self, Lang, AltLang));
+	def GetVersion(self):
+		return(self.__Meta.GetVersion());
+	def GetFilePath(self): return(self.__FilePath);
+	def _SetClass(self, Class):
+		self.__Class = Class;
+	def GetClass(self): return(self.__Class);
 	
-	def GetObject(self, Name, ClassList):
-		# a obj have to be member of (at least) one class
-		if len(ClassList) == 0:
-			return(None);
 
-		pclass = self;
-		for cname in ClassList:
-			pclass = pclass.GetSubClass(cname);
-			if not pclass:		# if class can not be found
-				return(None);
-		# --- done ---
-		return(pclass.GetObject(Name));
+
+
+# Class: ServerItem
+#	Database entry for a Server.
+#
+class ServerItem:
+	def __init__(self, FileName, Document, Lang, AltLang, DataBase):
+		self.__FileName = FileName;
+		# load meta-data from file:
+		self.__Meta = ServerMeta.MetaData(Document, Lang, AltLang);
+		#check if all needed core-mods are present:
+		req_core_mods = self.__Meta.GetRequiredModules();
+		for core_mod in req_core_mods:
+			if not DataBase.HasCoreMod(core_mod):
+				raise Exception("Missing Core-Mod: %s"%core_mod);
+		# ---done---
+
+
+	def GetName(self):
+		return(self.__Meta.GetName());
+	def GetVersion(self):
+		return(self.__Meta.GetVersion());
+	def GetFilePath(self):
+		return(self.__FileName);
+	def GetClass(self):
+		return(self.__Meta.GetClass());
+	def GetDescription(self, Lang=None, AltLang=None):
+		return(self.__Meta.GetDescription(Lang, AltLang));
+	def GetVariables(self):
+		return(self.__Meta.GetRequiredVariableNames());
+	def GetDefaultValue(self, VarName):
+		return(self.__Meta.GetVariableDefaultValue(VarName));
+	def GetVariableHelp(self, VarName, Lang=None, AltLang=None):
+		return(self.__Meta.GetVariableDescription(VarName, Lang, AltLang));
+
+
+
+
+
+# Class: DeviceItem
+#	Database entry for a Device.
+#	
+class DeviceItem:
+	def __init__(self, FileName, Document, Lang, AltLang, DataBase):
+		self.__FileName = FileName;
+		# load meta-data:
+		self.__Meta = DeviceMeta.MetaData(Document, Lang, AltLang);
+		#check for core-modules:
+		core_mods = self.__Meta.GetRequiredModules();
+		for core_mod in core_mods:
+			if not DataBase.HasCoreMod(core_mod):
+				raise Exception("Missing core module %s"%core_mod);
+		#---done---
+
+	def GetName(self):
+		return(self.__Meta.GetName());
+	def GetVersion(self):
+		return(self.__Meta.GetVersion());
+	def GetClass(self):
+		return(self.__Meta.GetClass());
+	def GetFilePath(self):
+		return(self.__FileName);
+	def GetDescription(self, Lang=None, AltLang=None):
+		return(self.__Meta.GetDescription(Lang, AltLang));
+	def GetVariables(self):
+		return(self.__Meta.GetRequiredVariables());
+	def GetDefaultValue(self, VarName):
+		return(self.__Meta.GetVariableDefaultValue(VarName));
+	def GetVariableHelp(self, VarName, Lang=None, AltLang=None):
+		return(self.__Meta.GetVariableDescription(VarName, Lang, AltLang));
+	def GetNameSpaces(self):
+		return(self.__Meta.GetNameSpaces());
+	def GetSlots(self, NS):
+		return(self.__Meta.GetSlots(NS));
+	def GetSlotRanges(self, NS):
+		return(self.__Meta.GetSlotRanges(NS));
+	def GetSlotDescription(self, NS, Name, Lang=None, AltLang=None):
+		return(self.__Meta.GetSlotDescription(NS, Name, Lang, AltLang));
+	def GetSlotRangeDescription(self, NS, Name, Lang=None, AltLang=None):
+		return(self.__Meta.GetSlotRangeDescription(NS, Name, Lang, AltLang));
+	def GetSlotType(self, NS, Name):
+		return(self.__Meta.GetSlotType(NS, Name));
+	def GetSlotMode(self, NS, Name):
+		return(self.__Meta.GetSlotMode(NS, Name));
+
+
+
+class ServerInfo:
+	"""Proxyclass for DataBase to access specific information for
+ singe server."""
 	
-	def ListClassesOf(self, ClassList):
-		pclass = self;
-		for cname in ClassList:
-			self.__Logger.debug("Try to list \"%s\""%cname);
-			pclass = pclass.GetSubClass(cname);
-			if not pclass:
-				return(None);
-		self.__Logger.debug("List classes in %s"%pclass.GetName());
-		return(pclass.ListSubClasses());
+	def __init__(self, ServerName, DataBaseObj):
+		self.__DataBase = DataBaseObj;
+		self.__ServerName = ServerName;
 
-	def ListObjectsOf(self, ClassList):
-		pclass = self;
-		for cname in ClassList:
-			pclass = pclass.GetSubClass(cname);
-			if not pclass:
-				return(None);
-		return(pclass.ListItems());
+	def GetDescription(self):
+		return(self.__DataBase.GetServerDescription(self.__ServerName));
 
-
-class DataBase:
-	def __init__(self, Path):
-		self.__Devices = ObjRootClass();
-		self.__Servers = ObjRootClass();
-		self.__CoreMods= ObjRootClass();
-		self.__Logger = logging.getLogger("PPLT");
-
-		#self.__SearchZIP(Path);
-		self.__SearchXML(Path);
-
-	def __SearchXML(self, Path):
-		self.__Logger.debug("Search %s..."%Path);
-		xml_list = glob.glob1(Path,'*.xml');
-
-		for fname in xml_list:
-			fname = Path+'/'+fname;
-			#try:
-			self.__Logger.debug("Try to process file \"%s\""%fname);
-			obj = DBObjBaseClass(fname);
-			#except:
-			#	self.__Logger.error("Can't process file \"%s\""%fname);
-			#	continue;
-			if obj.GetType()==TYPE_SERVER:
-				self.__Servers.AddObject(obj);
-			if obj.GetType()==TYPE_DEVICE:
-				self.__Devices.AddObject(obj);
+	def GetRequiredVariables(self):
+		return(self.__DataBase.GetServerVariables(self.__ServerName));
 	
-	def GetDeviceFile(self, Name):
-		lst = Name.split(".");
-		devName = lst[-1];
-		classList = lst[:-1];
-		dev = self.__Devices.GetObject(devName, classList);
-		if not dev:
-			self.__Logger.warning("Device %s not found"%devName);
-			return(None);
-		return(dev.GetFileName());
+	def GetVariableDefaultValues(self, VarName):
+		return(self.__DataBase.GetServerDefaultValue(self.__ServerName, VarName));
 
-	def GetServerFile(self, Name):
-		lst = Name.split(".");
-		serName = lst[-1];
-		classList = lst[:-1];
-		ser = self.__Servers.GetObject(serName, classList);
-		if not ser:
-			self.__Logger.warning("Server %s not"%serName);
-			return(None);
-		return(ser.GetFileName());
-	
-	def ListServersIn(self, ClassPath):
-		if not ClassPath: clist = [];
-		else: clist = ClassPath.split('.');
-		return(self.__Servers.ListObjectsOf(clist));
+	def GetVariableDescription(self, VarName):
+		return(self.__DataBase.GetServerDefaultValue(self.__ServerName, VarName));
 
-	def ListServerClassesIn(self, ClassPath):
-		if not ClassPath: clist = [];
-		else: clist = ClassPath.split('.');
-		return(self.__Servers.ListClassesOf(clist));
 
-	def ListDevicesIn(self, ClassPath):
-		if not ClassPath: clist = [];
-		else: clist = ClassPath.split('.');
-		return(self.__Devices.ListObjectsOf(clist));
 
-	def ListDeviceClassesIn(self, ClassPath):
-		if not ClassPath: clist = [];
-		else: clist = ClassPath.split('.');
-		self.__Logger.debug("List classes in \"%s\""%ClassPath);
-		return(self.__Devices.ListClassesOf(clist));
+class DeviceInfo:
+	""" Proxyclass for Database to simplify accessing infotmation for
+ a specific Device. """
+	def __init__(self, DeviceName, DataBaseObj):
+		self.__DeviceName = DeviceName;
+		self.__DataBase = DataBaseObj;
 
+	def GetDescription(self):
+		return(self.__DataBase.GetDeviceDescription(self.__DeviceName));
+
+	def GetRequiredVariableNames(self):
+		return(self.__DataBase.GetDeviceVariables(self.__DeviceName));
+
+	def GetVariableDefaultValue(self, VarName):
+		return(self.__DataBase.GetDeviceDefaultValue(self.__DeviceName, VarName));
+
+	def GetVariableDescription(self, VarName):
+		return(self.__DataBase.GetDeviceVariableHelp(self.__DeviceName, VarName));
+
+	def GetNameSpaces(self):
+		return(self.__DataBase.GetDeviceNameSpaces(self.__DeviceName));
+
+	def GetSlots(self, NS):
+		return(self.__DataBase.GetSlots(self.__DeviceName, NS));
+
+	def GetSlotType(self, NS, Name):
+		return(self.__DataBase.GetSlotType(self.__DeviceName, NS, Name));
+
+	def GetSlotMode(self, NS, Name):
+		return(self.__DataBase.GetSlotMode(self.__DeviceName, NS, Name));
+
+	def GetSlotDescription(self, NS, Name):
+		return(self.__DataBase.GetSlotDescription(self.__DeviceName, NS, Name));
+
+	def GetSlotRanges(self, NS):
+		return(self.__DataBase.GetSlotRanges(self.__DeviceName, NS));
+
+	def GetSlotRangeDescription(self, NS, Name):
+		return(self.__DataBase.GetSlotRangeDescription(self.__DeviceName, NS, Name));
+
+
+
+
+
+
+def CreateItem(FileName, Lang, AltLang, DataBase):
+	if zipfile.is_zipfile(FileName):
+		return(CoreModItem(FileName));
+
+	try:
+		doc = xml.dom.minidom.parse(FileName);
+	except:
+		return(None);
+
+	root = doc.documentElement;
+	Item = None;
+
+	#print root.localName;
+
+	if root.localName == "PPLTDevice":
+		Item = DeviceItem(FileName, doc, Lang, AltLang, DataBase);
+	elif root.localName == "PPLTServer":
+		Item = ServerItem(FileName, doc, Lang, AltLang, DataBase);
+	return(Item);
+
+
+def RGlob(Path, Pattern):
+	""" Recursive glob() function. """
+	Path = os.path.normpath(Path);
+	List = [];
+
+	for item in os.listdir(Path):
+		item_path = os.path.join(Path,item);
+		if os.path.isfile(item_path):
+			if fnmatch.fnmatch(item_path,Pattern):
+				List.append(item_path);
+		if os.path.isdir(item_path):
+			SubList = RGlob(item_path, Pattern);
+			List.extend(SubList);
+	return(List);
+
+
+def ClassFromPath(Path, RelPath):
+	""" Converters a fs-path to a class-path. """
+	Path    = os.path.normpath(Path);
+	RelPath = os.path.normpath(RelPath);
+	PathLst = os.path.dirname(Path).split(os.path.sep);
+	RelLst  = RelPath.split(os.path.sep);
+	n = len(RelLst);
+	return(PathLst[n:]);
+
+
+
+
+if __name__ == "__main__":
+	DB = DataBase("/usr/PPLT","/usr/PPLT/Mods","de","en");
+	print DB.ListCoreMods("Master.Device");

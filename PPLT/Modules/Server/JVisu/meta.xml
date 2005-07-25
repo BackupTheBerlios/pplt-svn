@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<pyDCPUModuleMeta version="0.2.0" root="True">
+	<Author>Hannes Matuschek</Author>
+	<LastUpdate>2005-06-05</LastUpdate>
+	<URL>http://pplt.berlios.de</URL>
+
+
+	<Description lang="de">
+		JVisu-Socket-Server für die Visualisierung JVisu.
+	</Description>
+	<Description lang="en">
+		JVisu socket server for JVisu.
+	</Description>
+	
+
+	<Require>
+		<ChildAddress>False</ChildAddress>
+		<pyDCPUVersion>0.2.0</pyDCPUVersion>
+		<PythonVersion>2.3.0</PythonVersion>
+		
+		<PythonModule>thread</PythonModule>
+		<PythonModule>traceback</PythonModule>
+		<PythonModule>logging</PythonModule>
+		<PythonModule>socket</PythonModule>
+		<PythonModule>struct</PythonModule>
+		<PythonModule>binascii</PythonModule>
+		<PythonModule>time</PythonModule>
+		
+		<Parameter name="Address" duty="True" default="127.0.0.1"/>
+		<Parameter name="Port" duty="False" default="2200"/>
+
+	</Require>
+	
+</pyDCPUModuleMeta>

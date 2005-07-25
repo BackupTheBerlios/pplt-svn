@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<pyDCPUModuleMeta version="0.2.0" root="True">
+	<Author>Hannes Matuschek &lt;hmatuschek@gmx.net&gt;</Author>
+	<LastUpdate>2005-06-09</LastUpdate>
+	<URL>http://pplt.berlios.de</URL>
+
+	<Description lang="de">Dieses Module erzeugt Zufallswerte in verschiedenen 
+	Typen.</Description>
+	<Description lang="en">This module creates random-numbers in different 
+	types.</Description>
+	
+	<Require>
+		<ChildAddress>True</ChildAddress>
+		<pyDCPUVersion>0.2.0</pyDCPUVersion>
+		<PythonVersion>2.3.0</PythonVersion>
+		
+		<PythonModule>struct</PythonModule>
+		<PythonModule>random</PythonModule>
+	</Require>
+</pyDCPUModuleMeta>

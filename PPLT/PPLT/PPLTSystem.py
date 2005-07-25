@@ -19,6 +19,10 @@
 # ############################################################################ # 
 
 #CHANGELOG:
+# 2005-07-23:
+#	+ implemented new Server/Device/Core-Mod management.
+# 2005-06-05:
+#	+ Add module-version info-methods
 # 2005-06-04:
 #	+ fixed some methods to provide variable 
 #		server-root
@@ -43,8 +47,8 @@ import Install;
 import Device;
 import Server;
 import DataBase;
-import DeviceDescription;
-import ServerDescription;
+#import DeviceDescription;
+#import ServerDescription;
 import LoadSession;
 import gettext;
 from xml.dom.minidom import getDOMImplementation
@@ -62,7 +66,8 @@ class System:
  There is a optional parameter for this method: "ConfigFile":
    >>> obj = PPLT.System(ConfigFile="/home/hannes/PPLT.conf")
  If you miss this parameter, the default sys.exec_prefix+"/PPLT/PPLT.conf" will
- be used. (will be installed)"""
+ be used. Will be installed, so you should simply call PPLT.System() to get an
+ instance of this class."""
 
 	def __init__(self,ConfigFile=None):
 		self.__Config = Configuration.Config(ConfigFile);					# Load Config
@@ -77,7 +82,10 @@ class System:
 										self.__Config.GetLogFile(),
 										self.__Config.GetSysLog());			# Start Logging
 
-		self.__DataBase = DataBase.DataBase(self.__Config.GetDBPath());		# Load the Module/Device database
+		self.__DataBase = DataBase.DataBase(self.__Config.GetBasePath(),
+											self.__Config.GetBasePath()+"/Mods/",
+											self.__Config.GetLang(),
+											self.__Config.GetAltLang());		# Load the Module/Device database
 		self.__UserDataBase = self.__Core.GetTheUserDB();
 		self.__DeviceHash = {}												# init some tables
 		self.__ServerHash = {}												# ...
@@ -289,7 +297,7 @@ class System:
 
 
     # ######################################################################## #
-    # Module/Device handling                                                   #
+    # Module/Device handling (DataBase)                                        #
     # ######################################################################## #
     # - install                                                                #
     # - uninstall                                                              #
@@ -301,49 +309,43 @@ class System:
     
 	def UnIstall(self, ModuleName):
 		""" This method will uninstall the given module/divice/server. 
- Return True on success. """
+ Return True on success. (not implemented yet)"""
 		#FIXME implement!
 		pass;
 
 	def ListKnownServers(self, Class=None):
 		""" List all Servers in Class. Return a list of strings. """
-		return(self.__DataBase.ListServersIn(Class));
+		return(self.__DataBase.ListServers(Class));
 
 	def ListKnownServerClasses(self, Class=None):
 		""" List all server classes in give class. if class is missed, all
  root-classes will be listed. Return a list of strings. """
-		return(self.__DataBase.ListServerClassesIn(Class));
+		return(self.__DataBase.ListServerClasses(Class));
 
 	def ListKnownDevices(self, Class=None):
 		""" List all devices in class. Return a list of strings. """
-		return(self.__DataBase.ListDevicesIn(Class));
+		return(self.__DataBase.ListDevices(Class));
 
 	def ListKnownDeviceClasses(self, Class=None):
 		""" List all device classes. like "ListKnownServerClasses()". 
 Return a list of strings. """
-		return(self.__DataBase.ListDeviceClassesIn(Class));
+		return(self.__DataBase.ListDeviceClasses(Class));
+	
+	def GetServerVersion(self, Name):
+		"""Return the Version of the given server (if found)"""
+		return(self.__DataBase.GetServerVersion(Name));
 
 	def GetServerInfo(self, Name):
 		""" Return a info object for the server Name. """
-		srvFileName = self.__DataBase.GetServerFile(Name);
-		if not srvFileName:
-			self.__Logger.error("No server named \"%s\" found!"%Name);
-			return(None);
-		return(ServerDescription.LoadDescription(srvFileName,
-													self.__Config.GetLang(),
-													self.__Config.GetAltLang()));
+		return(self.__DataBase.GetServerInfo(Name));
+
+	def GetDeviceVersion(self, Name):
+		""" Return the version of the device (if found)"""
+		return(self.__DataBase.GetDeviceVersion(Name));
 
 	def GetDeviceInfo(self, Name):
 		""" Return a info object for the device Name. """
-		devFileName = self.__DataBase.GetDeviceFile(Name);
-		if not devFileName:
-			self.__Logger.error("No Device named \"%s\" found"%Name);
-			return(None);
-		self.__Logger.debug("Load info from file \"%s\""%devFileName);
-		return(DeviceDescription.LoadDescription(devFileName,
-													self.__Config.GetLang(),
-													self.__Config.GetAltLang()));
-
+		return(self.__DataBase.GetDeviceInfo(Name));
 
     # ######################################################################## #
     # User/Group management                                                    #
@@ -425,7 +427,7 @@ Return a list of strings. """
     # ######################################################################## #
     # ######################################################################## #
 	def LoadDevice(self, DeviceName, Alias, Parameters):
-		""" Load an init device DeviceName as Alias with Parameters. Return
+		""" Load and init device DeviceName as Alias with Parameters. Return
  True on success."""
 		#check alias:
 		if self.__DeviceHash.has_key(Alias):
@@ -436,14 +438,14 @@ Return a list of strings. """
 		if not devFileName:
 			self.__Logger.error("Can't load Device %s: not known!"%DeviceName);
 		# load and init device
-		try:
-			device = Device.Device(self.__Core, devFileName, DeviceName, Parameters);
-		except:
-			self.__Logger.error("Error while load Device \"%s\""%DeviceName);
-			return(False);
+		#try:
+		device = Device.Device(self.__Core, devFileName, DeviceName, Parameters);
+		#except:
+		#	self.__Logger.error("Error while load Device \"%s\""%DeviceName);
+		#	return(False);
 		if not device:
 			self.__Logger.error("Error while load device %s"%DeviceName);
-			return(None);
+			return(False);
 
 		#add device to table
 		self.__DeviceHash.update( {Alias:device} );
@@ -472,12 +474,15 @@ Return a list of strings. """
 		return(self.__DeviceHash.keys());
 
 	def GetFQDeviceName(self, Alias):
+		"""Return the full qualified device name of device known as Alias."""
 		dev = self.__DeviceHash.get(Alias);
 		if not dev:
 			self.__Logger.error("No device named \"%s\" found."%Alias);
 			return(None);
 		return(dev.getClassAndName());
+
 	def GetDeviceParameters(self, Alias):
+		""" Return all Parameters of device known as.""" 
 		dev = self.__DeviceHash.get(Alias);
 		if not dev:
 			self.__Logger.error("No device named %s found"%Alias);
@@ -501,11 +506,11 @@ Return a list of strings. """
 		if not serverFileName:
 			self.__Logger.warning("No server found named %s"%ServerName);
 			return(False);
-		try:
-			server = Server.Server(self.__Core, serverFileName, ServerName, DefaultUser, Parameters, Root);
-		except:
-			self.__Logger.warning("Error while load server %s"%ServerName);
-			return(False);
+#		try:
+		server = Server.Server(self.__Core, serverFileName, ServerName, DefaultUser, Parameters, Root);
+#		except:
+#			self.__Logger.warning("Error while load server %s"%ServerName);
+#			return(False);
 		if not server:
 			self.__Logger.error("Error while load Server %s"%ServerName);
 			return(False);
@@ -529,24 +534,28 @@ Return a list of strings. """
 		""" List all running or hanging servers. Return a list of strings. """
 		# simply return a list of known aliases:
 		return(self.__ServerHash.keys());
+
 	def GetFQServerName(self, Alias):
 		srv = self.__ServerHash.get(Alias);
 		if not srv:
 			self.__Logger.error("No server named \"%s\" found"%Alias);
 			return(None);
 		return(srv.getClassAndName());
+
 	def GetServerParameters(self, Alias):
 		srv = self.__ServerHash.get(Alias);
 		if not srv:
 			self.__Logger.error("No server named \"%s\" found"%Alias);
 			return(None);
 		return(srv.getParameters());
+
 	def GetServerDefaultUser(self, Alias):
 		srv = self.__ServerHash.get(Alias);
 		if not srv:
 			self.__Logger.error("No server named \"%s\" found"%Alias);
 			return(None);
 		return(srv.getDefaultUser());
+
 	def GetServerRoot(self, Alias):
 		srv = self.__ServerHash.get(Alias);
 		if not srv:

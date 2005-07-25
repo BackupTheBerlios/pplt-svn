@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE PPLTServer SYSTEM "PPLT-Server-0.1.dtd">
-<PPLTServer name="JVisuServer" class="Visu">
+<PPLTServer name="JVisuServer" class="Visu" version="0.3.0">
 	<Head>
 		<Description lang="de">Mit diesem Server können sie den Symbolbaum
 		für die JVisu Visualisierung exportieren.</Description>
@@ -27,8 +27,8 @@
 	
 	<Setup>
 		<Load name="Export.JVisu">
-			<Parameter name="Address" var="Address"/>
-			<Parameter name="Port" var="Port"/>
+			<Parameter name="Address"><Variable name="Address"/></Parameter>
+			<Parameter name="Port"><Variable name="Port"/></Parameter>
 		</Load>
 	</Setup>
 </PPLTServer>

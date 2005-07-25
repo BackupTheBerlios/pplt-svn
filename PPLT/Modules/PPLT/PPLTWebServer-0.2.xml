@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE PPLTServer SYSTEM "PPLT-Server-0.1.dtd">
-<PPLTServer name="PPLTWebServer" class="Web">
+<PPLTServer name="PPLTWebServer" class="Web" verision="0.3.0">
 	<Head>
 		<Description lang="de">Mit diesem Server können sie den Symbolbaum über
 		einen Webserver exportieren und dan mit ihrem Browser darauf zu 
@@ -29,8 +29,8 @@
 
 	<Setup>
 		<Load name="Export.PPLTWeb">
-			<Parameter name="Address" var="Address"/>
-			<Parameter name="Port" var="Port"/>
+			<Parameter name="Address"><Variable name="Address"/></Parameter>
+			<Parameter name="Port"><Variable name="Port"/></Parameter>
 		</Load>
 	</Setup>
 </PPLTServer>

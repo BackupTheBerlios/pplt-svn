@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE PPLTDevice SYSTEM "PPLT-Device-0.1.dtd">
-<PPLTDevice name="FPWEB" class="PLC">
+<PPLTDevice name="FPWEB" class="PLC" version="0.3.0">
     <Head>
 		<Description lang="de">Mit diesem Gerät könenn sie auf die Merker einer
 		NAiS Steuerung zugreifen, die an einen FPWEB-Server angschlossen ist.
@@ -13,7 +13,7 @@
             <DCPUModule>Master.Interface.Socket</DCPUModule>
             <DCPUModule>Master.Transport.ReadLine</DCPUModule>
             <DCPUModule>Master.Transport.MEWCOM-TL</DCPUModule>
-			<DCPUModule>Master.Transport.MEWCOM-CL</DCPUModule>
+			<DCPUModule>Master.Device.MEWCOM-CL</DCPUModule>
 			<Variable name="NetAddr">
 				<Description lang="de">Geben sie hier die Adresse der Webservers und
 				den Port des ToolPort-Tunnels (dieser ist meißt 9094) in der Form

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<PPLTDevice>
+	<setup>
+
+		<DebugInfo>Lade Geraet ??? mit Test=<Variable name="Test"/></DebugInfo>
+
+		<Load name="module.test.test1">
+			<Parameter name="para1">Wert1</Parameter>
+			<Parameter name="para2"><Variable name="Test"/></Parameter>
+
+			<Switch variable="Test">
+				<Case value="a">
+					<Load name="module.test.a">
+						<Parameter name="para1">Wert2</Parameter>
+						<Address><Variable name="Test"/></Address>
+					</Load>
+				</Case>
+				
+				<Case value="b">
+					<Load name="module.test.b">
+						<Parameter name="para1">Wert2</Parameter>
+						<Address><Variable name="Test"/></Address>
+					</Load>
+				</Case>
+
+				<Default>
+					<RaiseError>Invalid value for var Test = <Variable name="Test"/></RaiseError>
+				</Default>
+			</Switch>
+		</Load>
+
+
+	</setup>	
+</PPLTDevice>

@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE PPLTDevice SYSTEM "PPLT-Device-0.1.dtd">
-<PPLTDevice name="S7-200" class="PLC">
+<PPLTDevice name="S7-200" class="PLC" version="0.3.0">
     <Head>
 		<Description lang="de">Dieses Gerät gibt ihnen die Möglichkeit,
 		auf die Merker einer SIMATIC S7 Steuerung zu zugreifen.</Description>

@@ -1,2 +1,3 @@
-before 0.1 release:
-	+ reference counter for objects
+- testing, testing and maybe testing!!!
+- Add version control for device- and serverdescriptionfiles
+- Add "mounting" remote symbol-trees (maybe complex)

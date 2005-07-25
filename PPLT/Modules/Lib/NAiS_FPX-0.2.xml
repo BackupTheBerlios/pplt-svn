@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE PPLTDevice SYSTEM "PPLT-Device-0.1.dtd">
-<PPLTDevice name="NAiS-FPX" class="PLC">
+<PPLTDevice name="NAiS-FPX" class="PLC" version="0.3.0">
     <Head>
 		<Description lang="de">Dieses Gerät gibt ihnen den Zugriff auf die 
 		Merker einer NAiS Steuerung und auf den Modus dieser.</Description>

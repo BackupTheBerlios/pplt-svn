@@ -1,3 +1,3 @@
 pack:
-	zip -q SendMail.zip *.py
+	zip -q SendMail.zip *.py meta.xml
 	mv  SendMail.zip ../

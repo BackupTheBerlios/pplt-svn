@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE PPLTDevice SYSTEM "PPLT-Device-0.1.dtd">
-<PPLTDevice name="AGILENT-5462X" class="Measure">
+<PPLTDevice name="AGILENT-5462X" class="Measure" version="0.3.0">
     <Head>
 		<Description lang="de">Mit diesem Gerät, können sie auf die 
 		Oszilloskope der 5462-Reihe von Agilent zugreifen und diese steuern.

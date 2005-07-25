@@ -121,7 +121,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 
 	def OnAddSymbol(self, event):
 		item = self.GetSelection();
-		if not item:	# == self.__myRoot:
+		if not item or item == self.__myRoot:	# == self.__myRoot:
 			item = self.__myRoot;
 			ItemIsFolder = True;
 			Path = "/";
@@ -164,7 +164,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 
 	def OnAddFolder(self, event):
 		item = self.GetSelection();
-		if not item:
+		if not item or item == self.__myRoot:
 			(ItemIsFolder, Path) = (True,"/");
 			item = self.__myRoot;
 		else:

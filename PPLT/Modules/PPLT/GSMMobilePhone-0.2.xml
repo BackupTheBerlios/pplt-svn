@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE PPLTDevice SYSTEM "PPLT-Device-0.1.dtd">
-<PPLTDevice name="GSMMobilePhone" class="Mobile">
+<PPLTDevice name="GSMMobilePhone" class="Mobile" version="0.3.0">
     <Head>
 		<Description lang="de">Dieses Gerät bietet den Zugriff auf ein GSM 
 		kompatibles Mobiltelefon. Dabei können Werte wie der Herstellername
