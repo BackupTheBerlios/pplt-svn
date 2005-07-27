@@ -18,226 +18,259 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
 # ############################################################################ # 
 
-# Changelog:
-# 2005-05-28:
-#	- fixed missing exception catching try/except in SetupStepLoad.Load()
-#	- fixed missing unloading all core-modules of a device if one core-mod
-#		could not be loaded
-# 2005-05-27:
-#	Release as version 0.2.0
+#CHANGELOG:
+# 2005-07-26:
+#	reimplement
 
-import string;
+
 import xml.dom.minidom;
 import logging;
 
-class Setup:
-	def __init__(self, XMLNodes):
-		self.__Steps = FetchSteps(XMLNodes);
-		self.__Logger = logging.getLogger('PPLT');
-		if not self.__Steps:
-			self.__Logger.error("Error while load setup description");
- 
-	def DoSetup(self, Core, VarHash):
-		if not self.__Steps.Load(Core, None, VarHash):
-			self.__Steps.Unload();
-			return(False);
-		return(True);
-    
-	def Unload(self):
-		return(self.__Steps.Unload());
 
-	def GetObjByNameSpace(self, NameSpace):
-		return(self.__Steps.GetObjByNameSpace(NameSpace));
-        
-class SetupStep:
-	def __init__(self):
-		self.Logger = logging.getLogger('PPLT');
-		self.Children = [];
-	def AddChild(self, Child):
-		self.Children.append(Child);
-	def IsMyNameSpace(self, NameSpace):
-		return(None);	#dummy
-	def GetObjByNameSpace(self, NameSpace):
-		objID = self.IsMyNameSpace(NameSpace);
-		if objID:
-			return(objID);
-		for child in self.Children:
-			objID = child.GetObjByNameSpace(NameSpace);
-			if objID:
-				return(objID);
-		return(None);
-                
-class SetupStepLoad(SetupStep):
-	def __init__(self, ModuleName, NameSpace):
-		SetupStep.__init__(self);
-		self.__ModuleName = ModuleName;
-		self.__ModuleNameSpace = NameSpace;
-		self.__Parameters = {};
-		self.__Static = None;
-		self.__Object = None;
-		self.__Address = None;
-		self.__NameSpace = NameSpace;
 
-	def GetModName(self):
-		return(self.__ModuleName);
-	def IsMyNameSpace(self,NameSpace):
-		if NameSpace == self.__NameSpace:
-			return(self.__Object);
-		return(None);
-	def AddParameter(self, Name, Variable=None, Value=None):
-		try:
-			para = Parameter(Value, Variable);
-		except:
-			self.Logger.error("Error while create Parameter Object");
-			return(False);
-		self.__Parameters.update( {Name:para} );
+def Setup(CTX, FileName):
+	doc = xml.dom.minidom.parse(FileName);
+	return(DocWalker(doc.documentElement, CTX, None));
 
-	def SetAddress(self, Value = None, Variable=None):
-		try:
-			self.__Address  = Parameter(Value, Variable);
-		except:
-			self.Logger.error("Error while create Parameter Object");
-			return(False);
-            
-	def Load(self, Core, ParentID, VarHash):
-		self.__Core = Core;
-		ret = {};
-		paranames = self.__Parameters.keys();
-		for name in paranames:
-			para = self.__Parameters.get(name);
-			if para.Static:
-				ret[name] = para.Value;
+
+
+class Context:
+	def __init__(self, Vars, CoreObj, DefaultUser=None, Root=None):
+		self.__Core = CoreObj;
+
+		self.__Vars = Vars;
+		self.__DefaultUser = DefaultUser;
+		self.__SrvRoot = Root;
+
+		self.__SwitchFor = None;
+		self.__IsServer = False;
+		self.__CoreModules = CoreMods(None,self.__Core, False);
+		self.__NameSpaceMap = {};
+	
+		self.__Logger = logging.getLogger("PPLT");
+
+
+
+	def GetValue(self, Of):
+		return(self.__Vars.get(Of));
+
+	def SetSwitch(self, VarName):
+		self.__SwitchFor = VarName;
+
+	def GetSwitch(self):
+		return(self.__Vars.get(self.__SwitchFor));
+
+	def Load(self, Name, Paras, Parent = None, Addr=None, NameSpace=None):
+		self.__Logger.info("Load %s"%str(Name));
+
+		if self.__IsServer:
+			# LOAD A SERVER
+			ID = self.__Core.ExporterAdd(	Name,
+											Paras,
+											self.__DefaultUser,
+											self.__SrvRoot);
+			if not ID:
+				self.__Logger.error("Error while load a core module: Abort");
+				return(None);
+			self.__CoreModules.AddChild( CoreMods(ID,self.__Core,True) );
+		else:
+			#LOAD A DEVICE:
+			ID = self.__Core.MasterTreeAdd(	Parent,
+											Name,
+											Addr,
+											Paras);
+			if not ID:
+				self.__Logger.error("Error while load a core module: Abort");
+				return(None);
+			if Parent:
+				ParMod = self.__CoreModules.Find(Parent);
 			else:
-				ret[name] = VarHash.get(para.VarName);
+				ParMod = self.__CoreModules;
+			ParMod.AddChild( CoreMods(ID, self.__Core, False) );
+			self.__Logger.debug("Add Namespace %s for %s"%(NameSpace,Name));
+			self.__NameSpaceMap.update( {NameSpace:ID} );
+		return(ID);
 
-        
-		if not self.__Address:
-			addr = None;
-		elif self.__Address.Static:
-			addr = self.__Address.Value;
-		else:
-			addr = VarHash.get(self.__Address.VarName);
-       
-		self.Logger.debug("Try to load \"%s\" with %s at %s"%(self.__ModuleName,str(ret),str(addr)));
-        
-		#try:
-		self.__Object = Core.MasterTreeAdd(ParentID, self.__ModuleName, addr, ret);
-		#except:
-		#	self.Logger.error("Exception while load %s"%self.__ModuleName);
-	#		return(False);
-		if not self.__Object:
-			self.Logger.error("Error while load Module %s"%self.__ModuleName);
-			return(False);
-        
-		for child in self.Children:
-			if not child.Load(Core, self.__Object, VarHash):
-				self.Logger.debug("One child couldnot be loaded...");
-				return(False);
-		return(True);
-    
 	def Unload(self):
-		self.Logger.debug("Unlink all chidren");
-		for child in self.Children:
-			child.Unload();
-		if self.__Object:
-			self.Logger.debug("Unload my Object");
-			self.__Core.MasterTreeDel(self.__Object);
+		return(self.__CoreModules.Destroy());
+
+	def GetObjByNameSpace(self, NS):
+		return(self.__NameSpaceMap.get(NS));
+
+	def SetServer(self):
+		self.__Logger.debug("This is a Server...");
+		self.__IsServer = True;
+
+	def SetDevice(self):
+		self.__Logger.debug("This is a Device...");
+		self.__IsServer = False;
+
+	def IsServer(self):return(self.__IsServer);
+
+	def IsDevice(self):return(not self.__IsServer);
+
+
+
+
+
+
+class CoreMods:
+	def __init__(self, ID, Core, IsServer):
+		self.__ID = ID;
+		self.__Core = Core;
+		self.__Children = [];
+		self.__IsServer = IsServer;
+
+	def HasChildren(self):
+		if len(self.__Children)>0:
+			return(True);
+		return(False);
+
+	def AddChild(self, Child):
+		self.__Children.append(Child);
+
+	def Destroy(self):
+		for child in self.__Children:
+			if not child.Destroy():
+				return(False);
+			self.__Children.remove(child);
+		if self.__ID:
+			if self.__IsServer:
+				return(self.__Core.ExporterDel(self.__ID));
+			return(self.__Core.MasterTreeDel(self.__ID));
 		return(True);
 
-class Parameter:
-	def __init__(self, Value = None, Variable = None):
-		self.__Logger = logging.getLogger('PPLT');
-		self.Value = None;
-		self.VarName = None;
-		self.Static = None;
-        
-		if Value == None and Variable == None:
-			self.__Logger.errro("Need Variablename or Value");
-			raise Exception('Need Variable or Value');
-		if Value:
-			self.Static = True;
-			self.Value = Value;
+	def GetID(self):
+		return(self.__ID);
+				
+	def Find(self, ID):
+		if self.__ID == ID:
+			return(self);
+
+		for child in self.__Children:
+			mod = child.Find(ID);
+			if mod:
+				return(mod);
+		return(None);
+
+
+
+
+
+
+
+
+
+
+
+
+
+def DocWalker(Node, CTX, ParentID=None):
+	if not Node:
+		return(None);
+
+	if Node.nodeType == Node.ELEMENT_NODE:
+		if Node.localName == "PPLTDevice":
+			CTX.SetDevice();
+			DocWalker(Node.firstChild, CTX);
+		elif Node.localName == "PPLTServer":
+			CTX.SetServer();
+			DocWalker(Node.firstChild, CTX);
+
+		elif Node.localName == "Setup":
+			DocWalker(Node.firstChild, CTX);
+
+		elif Node.localName == "Switch":
+			variable = str(Node.getAttribute("variable"));
+			CTX.SetSwitch(variable)
+			SwitchWalker(Node.firstChild, CTX, ParentID);
+
+		elif Node.localName == "Load":
+			name  = str(Node.getAttribute("name"));
+			(paras,addr) = ParameterWalker(Node.firstChild, CTX, {}, None);
+
+			if Node.hasAttribute("namespace"):
+				NS = str(Node.getAttribute("namespace"));
+			else:
+				NS = None;
+			myID = CTX.Load(name, paras, Parent=ParentID, Addr=addr, NameSpace=NS); #if load success:
+			if myID:
+				DocWalker(Node.firstChild, CTX, myID);
+
+		elif Node.localName == "DebugInfo":
+			print "DEBUG: %s"%str(TextWalker(Node.firstChild,None));
+
+		elif Node.localName == "RaiseError":
+			raise Exception(str(ErrorWalker(Node.firstChild,None)));
+
 		else:
-			self.Static = False;
-			self.Value = None;
-			self.VarName = Variable;
-
-            
-def FetchSteps(XMLNode):
-    if not XMLNode:
-        return(None);
-    if XMLNode.nodeType == XMLNode.TEXT_NODE:
-        return(FetchSteps(XMLNode.nextSibling));
-    
-    if XMLNode.localName == 'Load':
-        attr = GetAttributesFrom(XMLNode);
-        if not attr.has_key('name'):
-            return(False);
-        step = SetupStepLoad(attr.get('name'), attr.get('namespace'));
-        if XMLNode.hasChildNodes():
-            if not FetchStep(step, XMLNode.firstChild):
-                print "Error while FetchStep()";
-                return(None);
-        return(step);
-    return(None);
-    
-    
-def FetchStep(ParentStep, XMLNode):
-    logger = logging.getLogger('PPLT');
-    if XMLNode == None:
-        return(True);
-    
-    if XMLNode.localName == 'Parameter':
-        name = GetAttributesFrom(XMLNode).get('name');
-        cont = GetContentFrom(XMLNode.firstChild);
-        if isinstance(cont, (unicode,str)): #content is a string
-            logger.debug("Add static para %s = \"%s\""%(name,string.strip(cont)));
-            ParentStep.AddParameter(name, Value=string.strip(cont));        #add static parameter to Parent
-        else:
-            attr = GetAttributesFrom(cont);
-            varname = attr.get('name');
-            logger.debug("Add dyn. para %s = ValueOf(%s)"%(name,string.strip(varname)));
-            ParentStep.AddParameter(name, Variable=string.strip(varname));  #add dynamic parameter to Parent
-    
-    if XMLNode.localName == 'Address':
-        cont = GetContentFrom(XMLNode.firstChild);
-        if isinstance(cont, (unicode,str)): #content is a string
-            ParentStep.SetAddress(Value=string.strip(cont));        #add static addr
-        else:
-            attr = GetAttributesFrom(cont);
-            varname = attr.get('name');
-            ParentStep.SetAddress(Variable=string.strip(varname));  #add dynamic addr
-    
-    if XMLNode.localName == 'Load':
-        attr = GetAttributesFrom(XMLNode);
-        step = SetupStepLoad(attr.get('name'), attr.get('namespace'));
-        if not FetchStep(step, XMLNode.firstChild):
-            return(False);
-        ParentStep.AddChild(step);
-    
-    return(FetchStep(ParentStep, XMLNode.nextSibling));
+			#print "ignore element: %s"%Node.localName;
+			pass;
+	
+	return(DocWalker(Node.nextSibling, CTX, ParentID));
 
 
-def GetAttributesFrom(Node):
-    if not isinstance(Node, xml.dom.minidom.Node):
-        return(None);
-    if not Node.hasAttributes():
-        #print "Node has no attr.";
-        return(None);
+def TextWalker(Node, CTX, txt=""):
+	if not Node:
+		return(txt);
 
-    Attr = {};
+	if Node.nodeType == Node.TEXT_NODE:
+		txt += str(Node.data);
 
-    for AttrName in Node.attributes.keys():
-        Name = Node.attributes[AttrName].name;
-        Value = Node.attributes[AttrName].value;
-        Attr.update( {Name:Value} );
-    return(Attr);
+	elif Node.nodeType == Node.ELEMENT_NODE:
+		if Node.localName == "Variable":
+			txt += VarWalker(Node, CTX);
+		else:
+			print "ignore tag: %s"%Node.localName;
 
-def GetContentFrom(Node, rc=''):
-    if not Node:
-        return(rc);
-    if Node.nodeType == Node.TEXT_NODE:
-        rc += Node.data;
-    else:
-        return(Node);
-    return(GetContentFrom(Node.nextSibling,rc));    
+	return(TextWalker(Node.nextSibling, CTX, txt));
+
+
+def ErrorWalker(Node, CTX, txt=""):
+	return(TextWalker(Node, CTX, txt));
+
+
+def VarWalker(Node, CTX):
+	return( CTX.GetValue(str(Node.getAttribute("name"))) );
+
+
+def SwitchWalker(Node,CTX, ParentID):
+	if not Node:
+		return(None);
+
+	if Node.nodeType == Node.ELEMENT_NODE:
+		if Node.localName == "Case":
+			value = str(Node.getAttribute("value"));
+			if value == CTX.GetSwitch():
+				return(DocWalker(Node.firstChild, CTX, ParentID));
+		elif Node.localName == "Default":
+			DocWalker(Node.firstChild, CTX, ParentID);
+		else:
+			print "SWITCH: ignore tag \"%s\""%Node.localName;
+	
+	return(SwitchWalker(Node.nextSibling,CTX, ParentID));
+
+
+def ParameterWalker(Node, CTX, paras={}, addr=None):
+	if not Node:
+		return( (paras,addr) );
+
+	if Node.nodeType == Node.ELEMENT_NODE:
+		if Node.localName == "Parameter":
+			name = str(Node.getAttribute("name"));
+			value = TextWalker(Node.firstChild,CTX);
+			paras.update( {name:value} );
+		elif Node.localName == "Address":
+			addr = TextWalker(Node.firstChild,CTX);
+			
+	return(ParameterWalker(Node.nextSibling, CTX, paras, addr));
+
+
+
+
+
+
+
+
+
+

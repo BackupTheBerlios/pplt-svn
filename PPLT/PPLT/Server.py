@@ -25,53 +25,25 @@
 #	- fixed bug in Server.destroy():
 #		method is now error-sensitiv		
 #	- fixed missing exception raise in Server.__init__() if server load fails.
-import xml.dom.minidom;
 import logging;
+import Setup
+
 
 class Server:
 	def __init__(self, CoreObject, FileName, ServerName, DefaultUser, Parameters, Root="/"):
 		"""This is the class for pplt-server"""
 		self.__Logger = logging.getLogger('PPLT');
 		self.__CoreObject = CoreObject;
-		self.__ServerObjects = [];
-		self.__FileName = FileName;
 		self.__ServerName = ServerName;
 		self.__DefaultUser = DefaultUser;
 		self.__Parameters = Parameters;
 		self.__Root = Root;
-		if not self.__load():
-			raise Exception();
+		self.__Context = Setup.Context(Parameters, CoreObject, DefaultUser, Root);
+		Setup.Setup(self.__Context, FileName);
 
-	def __load(self):
-		doc = xml.dom.minidom.parse(self.__FileName);
-		loads = doc.getElementsByTagName('Load');
-
-		for load in loads:
-			try:
-				obj = ServerLoad(load,
-								self.__CoreObject,
-								self.__DefaultUser,
-								self.__Parameters,
-								self.__Root);
-			except:
-				self.__Logger.error("Error while Load a Server, maybe invalid format or not an server.");
-				self.destroy();
-				return(False);
-			if not obj:
-				self.__Logger.error("Error while Load a Server, maybe bad parameters.");
-				self.destroy();
-				return(False);
-			self.__ServerObjects.append(obj);
-		# --- done ---
-		return(True);
 	
 	def destroy(self):
-		for server in self.__ServerObjects:
-			if self.__CoreObject.ExporterDel(server):
-				self.__ServerObjects.remove(server);
-			else:
-				self.__Logger.error("Error while stop server");
-				return(False);
+		self.__Context.Unload();
 		return(True);
 
 	def getClassAndName(self):
@@ -82,31 +54,3 @@ class Server:
 		return(self.__Parameters);
 	def getRoot(self):
 		return(self.__Root);
-
-def ServerLoad(Node, Core, User, Vars, Root):
-	modname = Node.attributes['name'].value;
-	parameters = {};
-	ParameterLoad(Node.firstChild, parameters, Vars);
-	return(Core.ExporterAdd(modname,parameters,User,Root));
-
-
-
-def ParameterLoad(Node, Paras, Vars):
-	logger = logging.getLogger('PPLT');
-	if not Node:
-		return(True);
-	if Node.localName == 'Parameter':
-		logger.debug("Process <Parameter>");
-		name = Node.attributes['name'].value;
-		if Node.hasChildNodes():
-			if Node.firstChild.nodeType == Node.TEXT_NODE:
-				value = string.strip(Node.firstChild.data);
-			elif Node.firstChild.nodeType == node.ELEMENT_NODE:
-				varname = Node.firstChild.attributes['name'].value;
-				value = Vars.get(varname);
-		Paras.update( {name:value} );
-	else:
-		#logger.debug("Skip %s Tag in <Load>"%Node.localName);
-		pass;
-	return(ParameterLoad(Node.nextSibling, Paras, Vars));
-	

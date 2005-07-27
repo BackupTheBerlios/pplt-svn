@@ -13,11 +13,17 @@
 				<!ELEMENT SlotRange (Description*)>
 
 
-	<!ELEMENT Setup (Load+)>
-		<!ELEMENT Load (Address?, Parameter*, Load*)>
+	<!ELEMENT Setup (Load*, Switch*, DebugInfo*, RaiseError*)>
+		<!ELEMENT Switch (Case+, Default?)*>
+			<!ELEMENT Case (Load*, Switch*, DebugInfo*, RaiseError*)+>
+			<!ELEMENT Default (Load*, Switch*, DebugInfo*, RaiseError*)*>
+
+		<!ELEMENT Load (Address?, Parameter*, Load*, Switch*, DebugInfo*, RaiseError*)>
 			<!ELEMENT Address (#PCDATA | Variable)*>
 			<!ELEMENT Parameter (#PCDATA | Variable)*>
-		
+
+		<!ELEMENT DebugInfo (#PCDATA, Variable*)>
+		<!ELEMENT RaiseError (#PCDATA, Variable*)>
 
 
 

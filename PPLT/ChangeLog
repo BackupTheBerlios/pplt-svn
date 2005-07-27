@@ -1,4 +1,11 @@
 Version 0.3.0	- 2005-??-??:
+	+ Start developing OPC XML-DA server:
+		Modules/Server/OPCXML
+	+ Reimplement Server/Device setup:
+		PPLT/Setup.py	(ugly midnighthack)
+		PPLT/Device.py
+		PPLT/Server.py
+
 	+ Reimplement Server/Device/Core-Mod database. So fixed:
 		PPLT/PPLTSystem.py
 

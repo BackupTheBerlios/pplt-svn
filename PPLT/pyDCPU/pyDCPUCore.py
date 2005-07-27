@@ -119,7 +119,7 @@ class Core:
             This method cares about Object creation and connections... 
         """
         #check if this module was loaded in the sameplace with the same prams.
-        fingerprint = Modules.Fingerprint(Name = ModName, 
+        fingerprint = Modules.Fingerprint(ModName, 
                                           Parent = ParentID, 
                                           Address = Address, 
                                           Parameter = Parameter);

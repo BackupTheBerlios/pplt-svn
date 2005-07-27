@@ -1,5 +1,5 @@
 # ############################################################################ #
-# 																			   #	
+# This is part of the PPLT project. PPLT is a framework for industrial         # 
 # communication.                                                               # 
 # Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                # 
 #                                                                              # 
@@ -246,7 +246,7 @@ You can install and uninstall (if you have the right to do) modules. """
 		if not Dev: return(None);
 		return(Dev.GetDefaultValue(VarName));
 
-	def GetDeviesNameSpaces(self, DevName):
+	def GetDeviceNameSpaces(self, DevName):
 		" Return a list of all Namespaces of the device. "
 		Dev = self.__GetDevice(DevName);
 		if not Dev: return(None);
@@ -262,19 +262,19 @@ You can install and uninstall (if you have the right to do) modules. """
 		" Return a short description of the slot. "
 		Dev = self.__GetDevice(DevName);
 		if not Dev: return("");
-		return(Dev.GetSlotDescription(Slot, NS, self.__Lang, self.__AltLang));
+		return(Dev.GetSlotDescription(NS, Slot, self.__Lang, self.__AltLang));
 
 	def GetSlotType(self, DevName, NS, Slot):
 		" Return the type (a string) of the slot. "
 		Dev = self.__GetDevice(DevName);
 		if not Dev: return(None);
-		return(Dev.GetSlotType(Slot, NS));
+		return(Dev.GetSlotType(NS, Slot));
 	
 	def GetSlotMode(self, DevName, NS, Slot):
 		" Return the mode (one of: r, w, rw) of the slot. "
 		Dev = self.__GetDevice(DevName);
 		if not Dev: return(None);
-		return(Dev.GetSlotMode(Slot,NS));
+		return(Dev.GetSlotMode(NS, Slot));
 
 	def GetSlotRanges(self, DevName, NS):
 		" Return all slot-ranges a namespace of a device. "
@@ -286,7 +286,7 @@ You can install and uninstall (if you have the right to do) modules. """
 		" Return a short description of the SlotRange. "
 		Dev = self.__GetDevice(DevName);
 		if not Dev: return("");
-		return(Dev.GetSlotRangeDescription(SlotRange, NS, self.__Lang, self.__AltLang));
+		return(Dev.GetSlotRangeDescription(NS, SlotRange, self.__Lang, self.__AltLang));
 
 
 
@@ -541,7 +541,7 @@ class DeviceItem:
 	def GetDescription(self, Lang=None, AltLang=None):
 		return(self.__Meta.GetDescription(Lang, AltLang));
 	def GetVariables(self):
-		return(self.__Meta.GetRequiredVariables());
+		return(self.__Meta.GetRequiredVariableNames());
 	def GetDefaultValue(self, VarName):
 		return(self.__Meta.GetVariableDefaultValue(VarName));
 	def GetVariableHelp(self, VarName, Lang=None, AltLang=None):
@@ -574,10 +574,10 @@ class ServerInfo:
 	def GetDescription(self):
 		return(self.__DataBase.GetServerDescription(self.__ServerName));
 
-	def GetRequiredVariables(self):
+	def GetRequiredVariableNames(self):
 		return(self.__DataBase.GetServerVariables(self.__ServerName));
 	
-	def GetVariableDefaultValues(self, VarName):
+	def GetVariableDefaultValue(self, VarName):
 		return(self.__DataBase.GetServerDefaultValue(self.__ServerName, VarName));
 
 	def GetVariableDescription(self, VarName):

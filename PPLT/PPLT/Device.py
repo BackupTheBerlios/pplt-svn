@@ -25,10 +25,10 @@
 #		Generated inconsitent Object-Ref-Conter in Core.
 	
 import logging;
-import DeviceDescription;
+import DeviceMeta;
 import Exceptions;
 import pyDCPU;
-
+import Setup;
 
 class Device:
 	def __init__(self, CoreObject, FileName, DeviceName, Parameters):
@@ -44,16 +44,10 @@ class Device:
 		self.__SlotTable = {};
  
 		# load setupdescription from file...
-		self.__Setup = DeviceDescription.LoadSetup(FileName);
-		if not self.__Setup:
-			self.__Logger.error("Unable to load file \"%s\"."%FileName);
-			raise Exception('Unable to load file \"%s\"'%FileName);
-        
-		# just do it...
-		if not self.__Setup.DoSetup(self.__CoreObject, Parameters):
-			self.__Logger.error("Error while setup device of file \"%s\""%FileName);
-			self.destroy()
-			raise Exception('Error whiel setup device of file "%s"'%FileName);
+		self.__Context = Setup.Context(self.__Parameters, self.__CoreObject)
+		self.__Logger.debug("Load %s from %s"%(DeviceName, FileName));
+		Setup.Setup(self.__Context, FileName);
+		
 
 
 	def destroy(self):
@@ -61,13 +55,13 @@ class Device:
 		if len(self.__SlotTable.keys())>0:
 			self.__Logger.warning("Can't unload. Symbols are attached to this device!");
 			return(False);
-		return(self.__Setup.Unload());
+		return(self.__Context.Unload());
         
 
 	def register(self, NameSpace, Address, Type, TimeOut=0.5):
 		""" Will bind a Symbol to NameSpace::Address """
 		# get deviceID by namespace:
-		ObjID = self.__Setup.GetObjByNameSpace(NameSpace);
+		ObjID = self.__Context.GetObjByNameSpace(NameSpace);
 		if not ObjID:
 			self.__Logger.error("No Namespace \"%s\" in this device"%NameSpace);
 			return(None);

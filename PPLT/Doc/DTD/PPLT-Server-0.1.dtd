@@ -17,8 +17,9 @@
 
 
 <!ATTLIST PPLTServer
- name	CDATA	#REQUIRED
- class	CDATA	#REQUIRED
+ name		CDATA	#REQUIRED
+ class		CDATA	#REQUIRED
+ version	CDATA	#REQUIRED
 >
 
 <!ATTLIST Description
