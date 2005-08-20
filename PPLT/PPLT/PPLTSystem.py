@@ -434,15 +434,18 @@ Return a list of strings. """
 			self.__Logger.error("Alias %s already exists"%Alias);
 			return(False);
 		# try to find out file name of DeviceName
-		devFileName = self.__DataBase.GetDeviceFile(DeviceName);
+		devFileName = self.__DataBase.GetDevicePath(DeviceName);
 		if not devFileName:
 			self.__Logger.error("Can't load Device %s: not known!"%DeviceName);
+			return(False);
+
 		# load and init device
-		#try:
-		device = Device.Device(self.__Core, devFileName, DeviceName, Parameters);
-		#except:
-		#	self.__Logger.error("Error while load Device \"%s\""%DeviceName);
-		#	return(False);
+		try:
+			device = Device.Device(self.__Core, devFileName, DeviceName, Parameters);
+		except:
+			self.__Logger.error("Error while load Device \"%s\""%DeviceName);
+			return(False);
+
 		if not device:
 			self.__Logger.error("Error while load device %s"%DeviceName);
 			return(False);
@@ -502,15 +505,16 @@ Return a list of strings. """
 			self.__Logger.error("Alias %s already exists"%Alias);
 			return(False);
 
-		serverFileName = self.__DataBase.GetServerFile(ServerName);
+		serverFileName = self.__DataBase.GetServerPath(ServerName);
 		if not serverFileName:
 			self.__Logger.warning("No server found named %s"%ServerName);
 			return(False);
-#		try:
-		server = Server.Server(self.__Core, serverFileName, ServerName, DefaultUser, Parameters, Root);
-#		except:
-#			self.__Logger.warning("Error while load server %s"%ServerName);
-#			return(False);
+		try:
+			server = Server.Server(self.__Core, serverFileName, ServerName, DefaultUser, Parameters, Root);
+		except:
+			self.__Logger.warning("Error while load server %s"%ServerName);
+			return(False);
+
 		if not server:
 			self.__Logger.error("Error while load Server %s"%ServerName);
 			return(False);
@@ -649,8 +653,12 @@ Return a list of strings. """
 			if not self.ChangeOwner(Path,Owner):
 				self.__Logger.warning("Unable to change owner to %s"%Owner);
 			if not Group:
-				if not self.ChangeGroup(Path,self.__UserDataBase.GetGroupByUserName(Owner)):
+				GrpObj = self.__UserDataBase.GetGroupByUserName(Owner);
+				if not GrpObj:
 					self.__Logger.warning("Unable to set Group");
+				else:
+					if not self.ChangeGroup(Path,GrpObj.GetName()):
+						self.__Logger.warning("Unable to set Group");
 		if Group:
 			if not self.ChangeGroup(Path,Group):
 				self.__Logger.warning("Unable to change group to %s"%Group);

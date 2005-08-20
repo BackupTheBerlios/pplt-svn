@@ -19,6 +19,8 @@
 # ############################################################################ # 
 
 # Changelog:
+# 2005-08-20:
+#	Release version 0.3.0
 # 2005-05-27:
 #	Release as version 0.2.0
 
@@ -28,5 +30,5 @@ from PPLTSystem import *;
 
 __author__	= "Hannes Matuschek <hmatuschek@gmx.net>";
 __status__	= "alpha";
-__version__	= "0.2.3";
+__version__	= "0.3.0";
 #__date__	= "2005-06-05";

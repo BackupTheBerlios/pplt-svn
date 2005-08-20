@@ -3,7 +3,7 @@
 from distutils.core import setup;
 
 setup(name = "PPLT",
-      version="0.2.2",
+      version="0.3.0",
       description="PPLT a free industrial communication framework",
       author="Hannes Matuschek",
       author_email="hmatuschek@gmx.net",

@@ -3,6 +3,11 @@
 		<a style="font-size:0.5em;" href="/en/NewsHistory.html">[History]</a>
 	</div>
     <div class="NewsItem">
+	<b>2005-08-20 - Release of PPLT Version 0.3.0</b><br>
+	I've done a lot of debuging and (sometimes) rewiteing
+	wide parts of the PPLT library. Will stop now developing
+	to focus on debuging to reach the stabil state.
+	<u>Note:</u> Please also update the Modules!<br><br>
 	<b>2005-06-03 - Release of PPLT Version 0.2.2</b><br>
 	I've added some features to the library and the PPLTC application.
 	You can now save a session and load it later. Also I've fixed
@@ -10,10 +15,6 @@
 	<b>2005-05-28 - Bugfix Release for PPLT (0.2.1)</b><br>
 	I've fixed some annoying bugs in libraries and in the application.
 	I recommend you to <u>update</u>.<br><br>
-	<b>2005-05-27 - 2nd Alpharelease of PPLT (0.2.0)</b><br>
-	I've released the 2nd alpha version of PPLT. The major change is the new
-	GUI application PPLT Center (PPLTC.py) that shows the functionality of
-	the library. Also some bugs are fixed.
     </div>
 
     <div class="Head">What is PPLT</div>

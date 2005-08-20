@@ -29,8 +29,8 @@
 
 	<Setup>
 		<Load name="Export.PPLTWeb">
-			<Parameter name="Address" var="Address"/>
-			<Parameter name="Port" var="Port"/>
+			<Parameter name="Address"><Variable name="Address"/></Parameter>
+			<Parameter name="Port"><Variable name="Port"/></Parameter>
 		</Load>
 	</Setup>
 </PPLTServer>

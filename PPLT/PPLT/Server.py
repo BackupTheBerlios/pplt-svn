@@ -19,6 +19,8 @@
 # ############################################################################ # 
 
 # Changelog:
+# 2005-08-20:
+#	- fixed missin check if server load fails @ Server.__init__() 
 # 2005-05-27:
 #	- fixed bug in Server.__load():
 #		missed to remove stop exsisting Core-Exporter on exception while load a new
@@ -39,7 +41,9 @@ class Server:
 		self.__Parameters = Parameters;
 		self.__Root = Root;
 		self.__Context = Setup.Context(Parameters, CoreObject, DefaultUser, Root);
-		Setup.Setup(self.__Context, FileName);
+		if not Setup.Setup(self.__Context, FileName):
+			self.__Logger.error("Unable to load server %s."%ServerName);
+			raise Exception("Unable to load server %s."%ServerName);
 
 	
 	def destroy(self):

@@ -20,6 +20,8 @@
 
 
 # Changelog:
+# 2005-08-20:
+#	- fixed crash if no modules are preset. (in RGlob())
 # 2005-06-19:
 #	Initial.
 
@@ -656,14 +658,17 @@ def RGlob(Path, Pattern):
 	Path = os.path.normpath(Path);
 	List = [];
 
-	for item in os.listdir(Path):
-		item_path = os.path.join(Path,item);
-		if os.path.isfile(item_path):
-			if fnmatch.fnmatch(item_path,Pattern):
-				List.append(item_path);
-		if os.path.isdir(item_path):
-			SubList = RGlob(item_path, Pattern);
-			List.extend(SubList);
+	try:
+		for item in os.listdir(Path):
+			item_path = os.path.join(Path,item);
+			if os.path.isfile(item_path):
+				if fnmatch.fnmatch(item_path,Pattern):
+					List.append(item_path);
+			if os.path.isdir(item_path):
+				SubList = RGlob(item_path, Pattern);
+				List.extend(SubList);
+	except:
+		pass;
 	return(List);
 
 

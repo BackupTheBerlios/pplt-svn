@@ -3,6 +3,7 @@
 from OPCServices import *
 from ZSI.ServiceContainer import ServiceSOAPBinding
 import WSDLDoc;
+import time;
 
 class Service(ServiceSOAPBinding):
     soapAction = {
@@ -46,21 +47,33 @@ class Service(ServiceSOAPBinding):
     def soap_GetStatus(self, ps):
         # input vals in request object
         args = ps.Parse( GetStatusSoapInWrapper )
-
+        print args.Get_LocaleID();
+        print args.Get_ClientRequestHandle();
         # assign return values to response object
         response = GetStatusSoapOutWrapper()
+        result = ns1.ReplyBase_Def();
         status = ns1.ServerStatus_Def();
+        #assamble status:
         status.Set_StatusInfo("Up and running.");
-        status.Set_ProductVersion("1.0.0")
+        status.Set_VendorInfo("PPLTServer - OPC XML Data Access");
+        status.Set_ProductVersion("1.0.0");
+        status.Set_StartTime(int(time.time()));
+        #assamble response:
+        result.Set_RcvTime(int(time.time()));
+        result.Set_ReplyTime(int(time.time()));
+        result.Set_ClientRequestHandle(args.Get_ClientRequestHandle());
+        result.Set_RevisedLocaleID("de-DE");
+        result.Set_ServerState("running")
         response.Set_Status(status);
-
+        response.Set_GetStatusResult(result);
         # Return the response
         return response
 
     def soap_Read(self, ps):
         # input vals in request object
+        print "--- READ ---";
         args = ps.Parse( ReadSoapInWrapper )
-
+		
         # assign return values to response object
         response = ReadSoapOutWrapper()
 

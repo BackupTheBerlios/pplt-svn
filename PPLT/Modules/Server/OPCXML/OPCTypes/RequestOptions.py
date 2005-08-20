@@ -1,7 +1,7 @@
 import ZSI;
+from ZSIPatch import Struct;
 
-
-class RequestOptions_Def(ZSI.TCcompound.Struct):
+class RequestOptions_Def(Struct):
 	schema = 'http://opcfoundation.org/webservices/XMLDA/1.0/'
 	type = 'RequestOptions'
 
@@ -16,7 +16,9 @@ class RequestOptions_Def(ZSI.TCcompound.Struct):
 		self._ClientRequestHandle = None;
 		self._LocaleID = None;
 
-		TClist = [	ZSI.TC.Boolean(pname="ReturnErrorText", aname="_ReturnErrorText"),
+		TClist =	[]
+
+		AttrList =	[ZSI.TC.Boolean(pname="ReturnErrorText", aname="_ReturnErrorText"),
 					ZSI.TC.Boolean(pname="ReturnDiagnosticInfo", aname="_ReturnDiagnosticInfo"),
 					ZSI.TC.Boolean(pname="ReturnItemTime", aname="_ReturnItemTime"),
 					ZSI.TC.Boolean(pname="ReturnItemPath", aname="_ReturnItemPath"),
@@ -35,8 +37,8 @@ class RequestOptions_Def(ZSI.TCcompound.Struct):
 		else:
 			aname = None
 
-		ZSI.TCcompound.Struct.__init__(	self, self.__class__, TClist,
-										pname=name, inorder=0,
-										aname=aname, oname=oname,
-										**kw)
+		Struct.__init__(	self, self.__class__, TClist, AttrList,
+							pname=name, inorder=0,
+							aname=aname, oname=oname,
+							**kw)
 

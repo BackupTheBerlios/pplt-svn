@@ -19,6 +19,9 @@
 # ############################################################################ # 
 
 #CHANGELOG:
+# 2005-08-20:
+#	- fixed Setup() and DocWaker() to reakt on error while loading
+#	  the core-modules
 # 2005-07-26:
 #	reimplement
 
@@ -30,8 +33,12 @@ import logging;
 
 def Setup(CTX, FileName):
 	doc = xml.dom.minidom.parse(FileName);
-	return(DocWalker(doc.documentElement, CTX, None));
-
+	try:
+		DocWalker(doc.documentElement, CTX, None);
+	except:
+		CTX.Unload();
+		return(False);
+	return(True);
 
 
 class Context:
@@ -196,6 +203,8 @@ def DocWalker(Node, CTX, ParentID=None):
 			myID = CTX.Load(name, paras, Parent=ParentID, Addr=addr, NameSpace=NS); #if load success:
 			if myID:
 				DocWalker(Node.firstChild, CTX, myID);
+			else:	#error while loading
+				raise Exception("Error while load \"%s\""%name);
 
 		elif Node.localName == "DebugInfo":
 			print "DEBUG: %s"%str(TextWalker(Node.firstChild,None));

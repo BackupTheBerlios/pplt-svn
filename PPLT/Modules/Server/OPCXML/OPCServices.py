@@ -341,7 +341,7 @@ class GetStatusSoapInWrapper(GetStatusSoapIn):
     def __init__( self, name=None, ns=None, **kw ):
         GetStatusSoapIn.__init__( self, name=None, ns=None )
 
-class GetStatusSoapOut(ns1.GetStatusResponse_Dec): 
+class GetStatusSoapOut(ns1.GetStatusResponse_Dec):
     if not hasattr( ns1.GetStatusResponse_Dec(), "typecode" ):
         typecode = ns1.GetStatusResponse_Dec()
 
@@ -355,7 +355,7 @@ class GetStatusSoapOutWrapper(GetStatusSoapOut):
     def __init__( self, name=None, ns=None, **kw ):
         GetStatusSoapOut.__init__( self, name=None, ns=None )
 
-class ReadSoapIn(ns1.Read_Dec): 
+class ReadSoapIn(ns1.Read_Dec):
     if not hasattr( ns1.Read_Dec(), "typecode" ):
         typecode = ns1.Read_Dec()
 

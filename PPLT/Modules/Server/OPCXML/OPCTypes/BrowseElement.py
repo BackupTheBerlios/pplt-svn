@@ -38,9 +38,16 @@ class BrowseElement_Def(ZSI.TCcompound.Struct):
 										hasextras=1, **kw)
 
 
-	def Get_Properties(self):
-		return self._Properties
-
-	def Set_Properties(self,_Properties):
-		self._Properties = _Properties
+	def Get_Properties(self): return self._Properties;
+	def Set_Properties(self,_Properties): self._Properties = _Properties;
+	def Get_Name(self): return(self._Name);
+	def Set_Name(self, Name): self._Name = Name;
+	def Get_ItemPath(self): return(self._ItemPath);
+	def Set_ItemPath(self, ItemPath): self._ItemPath = ItemPath;
+	def Get_ItemName(self): return(self._ItemName);
+	def Set_ItemName(self, ItemName): self._ItemName = ItemName;
+	def Get_IsItem(self): return(self._IsItem);
+	def Set_IsItem(self, IsItem): self._IsItem = IsItem;
+	def Get_HasChildren(self): return(self._HasChildren);
+	def Set_HasChildren(self, HasChildren): self._HasChildren = HasChildren;
 

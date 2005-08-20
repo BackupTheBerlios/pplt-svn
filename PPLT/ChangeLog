@@ -1,6 +1,19 @@
-Version 0.3.0	- 2005-??-??:
+Version 0.3.0	- 2005-08-20:
+	* Fixed crash if no module, devices or servers are presend:
+		PPLT/DataBase.py
+
+	* Fixed missing exception raise if load of a core module failds:
+		PPLT/PPLTSystem.py
+		PPLT/Device.py
+		PPLT/Server.py
+		PPLT/Setup.py
+ 
+	* Fixed Bug in Module/PPLT/SimpleExport:
+		Wrong CoreModule used -> unable to load
+
 	+ Start developing OPC XML-DA server:
 		Modules/Server/OPCXML
+
 	+ Reimplement Server/Device setup:
 		PPLT/Setup.py	(ugly midnighthack)
 		PPLT/Device.py

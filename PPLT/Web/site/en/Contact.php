@@ -4,7 +4,7 @@
 		If you want to contact me, may be to ask for help, report bugs or contribute 
 		the project, please send an e-mail to <b>hmatuschek[at]gmx.net</b>. You can 
 		also use the 
-		<a href="https://developer.berlios.de/sendmessage.php?touser=14093">message-form.</a>
+		<a href="https://developer.berlios.de/sendmessage.php?touser=14093">message-form</a>
 		provided by Berlios.
 
 	<p>

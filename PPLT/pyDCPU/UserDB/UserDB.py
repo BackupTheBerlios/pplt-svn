@@ -133,7 +133,7 @@ class UserDB:
             This method will test if the password for this user.
         """
         if not self.__MemberNameList.count(UserName):
-	    self.__Logger.warning("User %s not found"%UserName);
+            self.__Logger.warning("User %s not found"%UserName);
             return(False);
 
         User = self.GetUserByName(UserName);
@@ -145,7 +145,7 @@ class UserDB:
 
     def UserExists(self, UserName):
         if not self.__MemberNameList.count(UserName):
-	    self.__Logger.warning("User %s not found"%UserName);
+            self.__Logger.warning("User %s not found"%UserName);
             return(False);
         return(True);
     def GroupExists(self, GroupName):
@@ -165,7 +165,7 @@ class UserDB:
             this method.
         """
         if not self.ValidUser(UserName, Passwd):
-	    self.__Logger.debug("%s: invalid user or passwd"%UserName);
+            self.__Logger.debug("%s: invalid user or passwd"%UserName);
             return(None);
         SessionID = Session.MakeSessionID(self.__SessionHash.keys());
         self.__SessionHash.update( {SessionID: UserName} );

@@ -42,21 +42,17 @@ class BrowseResponse_Dec(ZSI.TCcompound.Struct):
 										pname=name, inorder=0,
 										aname=aname, oname=oname,
 										hasextras=1, **kw)
-	def Get_BrowseResult(self):
-		return self._BrowseResult
 
-	def Set_BrowseResult(self,_BrowseResult):
-		self._BrowseResult = _BrowseResult
 
-	def Get_Elements(self):
-		return self._Elements
 
-	def Set_Elements(self,_Elements):
-		self._Elements = _Elements
-
-	def Get_Errors(self):
-		return self._Errors
-
-	def Set_Errors(self,_Errors):
-		self._Errors = _Errors
+	def Get_BrowseResult(self): return self._BrowseResult;
+	def Set_BrowseResult(self,_BrowseResult): self._BrowseResult = _BrowseResult;
+	def Get_Elements(self): return self._Elements;
+	def Set_Elements(self,_Elements): self._Elements = _Elements;
+	def Get_Errors(self): return self._Errors;
+	def Set_Errors(self,_Errors): self._Errors = _Errors;
+	def Get_ContinuationPoint(self): return(self._ContinuationPoint);
+	def Set_ContinattionPoint(self, Point): self._ContinuationPoint = Point;
+	def Get_MoreElements(self): return(self._MoreElements);
+	def Set_MoreElements(self, Value): self._MoreElements = Value;
 

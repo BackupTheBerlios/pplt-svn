@@ -1,6 +1,7 @@
 import ZSI;
+from ZSIPatch import Struct;
 
-class ReadRequestItem_Def(ZSI.TCcompound.Struct):
+class ReadRequestItem_Def(Struct):
 	schema = 'http://opcfoundation.org/webservices/XMLDA/1.0/'
 	type = 'ReadRequestItem'
 
@@ -12,7 +13,9 @@ class ReadRequestItem_Def(ZSI.TCcompound.Struct):
 		self._ClientItemHandle = None;
 		self._MaxAge = None;
 
-		TClist = [	ZSI.TC.String(pname="ItemPath", aname="_ItemPath"),
+		TClist =	[];
+
+		AttrList =	[ZSI.TC.String(pname="ItemPath", aname="_ItemPath"),
 					ZSI.TC.QName(pname="ReqType", aname="_ReqType"),
 					ZSI.TC.String(pname="ClientItemHandle", aname="_ClientItemHandle"),
 					ZSI.TC.Iint(pname="MaxAge", aname="_MaxAge"),	];
@@ -28,8 +31,8 @@ class ReadRequestItem_Def(ZSI.TCcompound.Struct):
 		else:
 			aname = None
 
-		ZSI.TCcompound.Struct.__init__(	self, self.__class__, TClist,
-										pname=name, inorder=0,
-										aname=aname, oname=oname,
-										**kw)
+		Struct.__init__(	self, self.__class__, TClist, AttrList,
+							pname=name, inorder=0,
+							aname=aname, oname=oname,
+							**kw)
 

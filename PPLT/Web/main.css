@@ -144,3 +144,7 @@ table{
 pre{
 	font-size: 0.8em;
 }
+
+th{
+	text-align:center;
+}

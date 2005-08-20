@@ -20,7 +20,7 @@ class Browse_Dec(ZSI.TCcompound.Struct):
 		self._BrowseFilter = "all";
 		self._ElementNameFilter = None;
 		self._VendorFilter = None;
-		self._ReturnAllPropertys = False;
+		self._ReturnAllProperties = False;
 		self._ReturnPropertyValues = False;
 		self._ReturnErrorText = False;
 
@@ -55,9 +55,30 @@ class Browse_Dec(ZSI.TCcompound.Struct):
 										aname=aname, oname=oname,
 										hasextras=1, **kw)
 
-	def Get_PropertyNames(self):
-		return self._PropertyNames
-
-	def Set_PropertyNames(self,_PropertyNames):
-		self._PropertyNames = _PropertyNames
-
+	def Get_PropertyNames(self): return self._PropertyNames;
+	def Set_PropertyNames(self,_PropertyNames): self._PropertyNames = _PropertyNames;
+	def Get_LocalID(self): return(self._LocalID);
+	def Set_LocalID(self, LocalID): self._LocalID = LocalID;
+	def Get_ClientRequestHandle(self): return(self._ClientRequestHandle);
+	def Set_ClientRetuwstHandle(self, handle): self._ClientRequestHandle = handle;
+	def Get_ItemPath(self): return(self._ItemPath);
+	def Set_ItemPath(self, Path): self._ItemPath = Path;
+	def Get_ItemName(self): return(self._ItemName);
+	def Set_ItenName(self, Name): self._ItemName = Name;
+	def Get_ContinuationPoint(self): return(self._ContinuationPoint);
+	def Set_ContiniationPoint(self, Point): self._ContinuationPoint = Point;
+	def Get_MaxElementsReturned(self): return(self._MaxElementsReturned);
+	def Set_MaxElementsReturned(self, Max): self._MaxElementsReturned = Max;
+	def Get_BrowseFilter(self): return(self._BrowseFilter);
+	def Set_BrowseFilter(self, Filter): self._BrowseFilter = Filter;
+	def Get_ElementNameFilter(self): return(self._ElementNameFilter);
+	def Set_ElementNameFilter(self, Filter): self._ElementNameFilter = Filter;
+	def Get_VendorFilter(self): return(self._VendorFilter);
+	def Set_VendorFilter(self, Filter): self._VendorFilter = Filter;
+	def Get_ReturnAllProperties(self): return(self._ReturnAllProperties);
+	def Set_ReturnAllProperties(self, Value): self._ReturnAllProperties = Value;
+	def Get_ReturnPropertyValues(self): return(self._ReturnPropertyValues);
+	def Set_ReturnPropertyValues(self, Value): self._ReturnPorpertyValues = Value;
+	def Get_ReturnErrorText(self): return(self._ReturnErrorText);
+	def Set_ReturnErrorText(self, Value): self._ReturnErrorText = Value;
+		

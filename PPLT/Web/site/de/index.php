@@ -3,6 +3,13 @@
 		<a href="/de/NewsHistory.html" style="font-size:0.5em;">[Archiv]</a>
 	</div>
     <div class="NewsItem">
+	<b>2005-08-20 - PPLT Version 0.3.0</b><br>
+	Ich habe weite Teile der PPLT bibliothek 
+	debuged und auch streckenweise neu geschrieben.
+	Ich beende nun die Entwicklung um mich auf
+	das Entfernen von Fehlern zu konzentrieren.
+	<u>Hinweis:</u> Bitte laden sie sich auch
+	die neuen Module herunter!<br><br>
 	<b>2005-06-03 - PPLT Version 0.2.2</b><br>
 	Ich habe einige nette Kleinigkeiten erweitert.
 	So k&ouml;nnen sie jetzt eine Sitztung im PPLTC speichern
@@ -16,11 +23,6 @@
 	auf diese Version zu aktualisieren. Des weitren habe
 	ich den <i>gettext</i> Support in das PPLT Center
 	eingepflegt.<br><br>
-    <b>2005-05-27 - Zweite Alpha Release (0.2.0)</b><br>
-	Ich habe eine die zweite alpha Version der PPLT freigegeben. Die
-	gr&ouml;ste Neuerung ist die grafische Applikation <i>PPLT Center</i>,
-	die die F&auml;higkeiten der Bibliothek demonstriert. Des weiteren
-	wurden einige Fehler der Vorversion behoben.
     </div>
 
     <div class="Head">Was ist PPLT</div>

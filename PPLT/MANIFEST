@@ -24,14 +24,12 @@ setup.py
 PPLT/Configuration.py
 PPLT/DataBase.py
 PPLT/Device.py
-PPLT/DeviceDescription.py
 PPLT/Exceptions.py
 PPLT/Install.py
 PPLT/LoadSession.py
 PPLT/Logging.py
 PPLT/PPLTSystem.py
 PPLT/Server.py
-PPLT/ServerDescription.py
 PPLT/Setup.py
 PPLT/__init__.py
 PPLT/Center/AddFolderDialog.py
@@ -74,7 +72,6 @@ pyDCPU/pyDCPUSymbolTools.py
 pyDCPU/pyDCPUSymbolTree.py
 pyDCPU/Modules/Fingerprint.py
 pyDCPU/Modules/Importer.py
-pyDCPU/Modules/ModuleInfo.py
 pyDCPU/Modules/__init__.py
 pyDCPU/UserDB/Group.py
 pyDCPU/UserDB/LoadDB.py

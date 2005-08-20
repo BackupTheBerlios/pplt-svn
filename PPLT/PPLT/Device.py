@@ -19,6 +19,8 @@
 # ############################################################################ # 
 
 # Changelog:
+# 2005-08-20:
+# 	- Fixed missing check for setup failure in Device.__init__()
 # 2005-05-27:
 #	Release as version 0.2.0
 #	- Fixed bug in Device.unregister(): 
@@ -46,8 +48,9 @@ class Device:
 		# load setupdescription from file...
 		self.__Context = Setup.Context(self.__Parameters, self.__CoreObject)
 		self.__Logger.debug("Load %s from %s"%(DeviceName, FileName));
-		Setup.Setup(self.__Context, FileName);
-		
+		if not Setup.Setup(self.__Context, FileName):
+			self.__Logger.error("Unable to load device %s."%DeviceName);
+			raise Exception("Unable to load device %s."%DeviceName);
 
 
 	def destroy(self):
