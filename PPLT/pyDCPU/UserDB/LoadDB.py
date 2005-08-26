@@ -19,6 +19,10 @@
 # ############################################################################ #
 
 
+# ChangeLog:
+# 2005-08-25:
+#	Add proxy-feature.
+
 import User;
 import Group;
 import UserDB;
@@ -118,7 +122,18 @@ def ProcessGroup(Node, ParentGroupName, DB):
         else:
             Logger.error("MemberTag without attrs");
 
-                    
+    elif IsProxyTag(Node):
+        ProxyAttr = GetAttributesFrom(Node);
+        if ProxyAttr:
+            if ProxyAttr.has_key("for"):
+                For = ProxyAttr.get("for");
+                if DB.CreateProxy(ParentGroupName, For, CareLess=True):
+                    Logger.debug("Create proxy for %s in %s"%(For, ParentGroupName));
+                else:
+                    Logger.error("Error while create proxy for %s"%For);
+        else:
+            Logger.error("Proxytag without attr.");
+
     elif IsGroupTag(Node):
         GroupAttr = GetAttributesFrom(Node);
         if GroupAttr:
@@ -156,14 +171,21 @@ def IsMemberTag(Node):
     if not Node.nodeType == Node.ELEMENT_NODE:
         return(False);
     if not Node.localName == "Member":
-        if not Node.localName == 'Group':
-            pass;#print "unknown Tag %s"%Node.localName;
         return(False);
     else:
         return(True);
     return(False);
 
-
+def IsProxyTag(Node):
+    if not isinstance(Node, xml.dom.minidom.Node):
+        return(False);
+    if not Node.nodeType == Node.ELEMENT_NODE:
+        return(False);
+    if not Node.localName == "Proxy":
+        return(False);
+    else:
+        return(True);
+    return(False);
 
 def GetAttributesFrom(Node):
     if not isinstance(Node, xml.dom.minidom.Node):

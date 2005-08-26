@@ -63,7 +63,7 @@ class DeviceSelectionDialog(wx.Dialog):
 		if dat:
 			self.__Help.Clear();
 			info = self.__PPLTSys.GetDeviceInfo(dat);
-			if info:
+			if info and info!="":
 				txt = info.GetDescription();
 				self.__Help.AppendText(txt);
 		

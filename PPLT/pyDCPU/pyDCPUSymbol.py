@@ -19,6 +19,12 @@
 # ############################################################################ #
 
 
+# ChangeLog:
+# 2005-08-26:
+#	add moveing symbols feature.
+# 2005-08-25:
+#	removed saving the non-existing typename in Symbol.ToXML()
+
 import pyDCPUSymbolSlot
 import pyDCPUConverter;
 import UserDB;
@@ -45,15 +51,19 @@ class Symbol:
         self.__Name = Name;
         self.__Possession = Possession;
         self.__SymbolSlot = SymbolSlot;
-	self.__SymbolSlot.RegisterSymbol();        
+        self.__SymbolSlot.RegisterSymbol();        
 
 
     def IsValid(self):
         return(self.__Valid);
 
+    def Rename(self, Name):
+        self.__Name = Name;
+        return(True);
+
     def Unregister(self):
-	return(self.__SymbolSlot.UnregisterSymbol());
-	    
+        return(self.__SymbolSlot.UnregisterSymbol());
+   
     def GetValue(self, SessionID):
         if not self.__Possession.CanRead(SessionID):
             self.__Logger.warning("Session %s: Access denied"%SessionID);
@@ -80,7 +90,7 @@ class Symbol:
         Node = Document.createElement("Symbol");
 
         Node.setAttribute("name",self.__Name);
-        Node.setAttribute("type",self.__TypeName);
+        #Node.setAttribute("type",self.__TypeName);
         Node.setAttribute("slot",str(self.__SymbolSlot._GetID()));
         Node.setAttribute("own",str(self.__Possession.GetOwner()));
         Node.setAttribute("grp",str(self.__Possession.GetGroup()));

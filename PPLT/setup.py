@@ -3,7 +3,7 @@
 from distutils.core import setup;
 
 setup(name = "PPLT",
-      version="0.3.0",
+      version="0.3.1",
       description="PPLT a free industrial communication framework",
       author="Hannes Matuschek",
       author_email="hmatuschek@gmx.net",
@@ -15,7 +15,8 @@ setup(name = "PPLT",
 				'PPLT.Center'],
       scripts =["Scripts/PPLTModInstall.py","Scripts/PPLTC.py"],
       data_files = [('PPLT',["UserDB.xml","PPLT.conf"]),
-                    ('PPLT/icons',['icons/user.xpm',
+                    ('PPLT/icons',['icons/proxy.xpm',
+                                   'icons/user.xpm',
                                    'icons/group.xpm',
                                    'icons/superuser.xpm',
                                    'icons/class.xpm',

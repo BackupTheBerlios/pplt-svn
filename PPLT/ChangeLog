@@ -1,4 +1,78 @@
-Version 0.3.0	- 2005-08-20:
+Version 0.3.1 (Rev: ??)	- 2005-??-??:
+*** (Revision: 20) 
+	* added in PPLT/Center/SymbolTreePanel.py:
+		Add renameing and moveing of symbols.
+		
+	* add in pyDCPU/pyDCPUCore.py, pyDCPUSymbolTree.py, 
+		pyDCPUSymolFolder.py and pyDCPUSymbol.py:
+		Add renameing or moveing of symbols.
+
+	* add also namecheck in pyDCPU/pyDCPUCore.py.
+		
+	* add namechek in PPLT/PPLTSystem for:
+		aliases, slots, user-, group-, device-
+		and servernames.
+
+	* fixed PPLT/Center/AddSymbolDialog.py:
+		help-window will now be cleaned if no helptext
+		is available for an item.
+ 
+	* fixed pyDCPU/pyDCPUCore.py in ExporterAdd():
+		now it isn't allowed to set the server-root
+		to a folder that doesn't exists.
+		also added methods CheckFolder() and CheckSymbol()
+		to SymbolTree class in pyDCPU/pyDCPUSymbolTree.py
+
+	* layoutfix in PPLT/Center/UserDBDialogs.py:
+		fixed layout of CreateMemberDialog, CreateGroupDialog
+		and PasswdDialog
+
+	* fixed comboboxes: 
+		The boxes for User, Goupe and Type selection
+		were editable
+	* fixed PPLT/Center/ServerPropertyDialog.py:
+		layout-fix of ServerPropertyDialog 	
+
+	* fixed in pyDCPU/pyDCPUSymbolTree.py:
+		fixed bug in SymbolTree.SetPossession();
+
+	* fixed in pyDCPU/pyDCPUSymbolFolder.py:
+		fixed ident error in Folder.DeleteSymbol()
+	* fixed in pyDCPU/pyDCPUSymbol.py:
+		error in Symbol.ToXML() method. The method tries
+		to save a attribute that doesn't exists anymore.
+
+	* fixed in pyDCPU/ExportableSymbolTree.py:
+		bad symbol-path translation in ExportableSybolTree.SetValue()
+
+	+ add proxy-feature. so changed:
+		- add CreateProxy(), DeleteProxy() methods to Group class
+			in pyDCPU/UserDB/Group.py
+		- add CreateProxy(), DeleteProxy(), DeleteAllProxy() methods
+			and fixed DeleteMember() in UserDB class in 
+			pyDCPU/UserDB/UserDB.py
+		- add IsProxyTag() and fixed ProcessGroup() in 
+			pyDCPU/UserDB/LoadDB.py
+		- add CreateProxy(), ListProxy(), DeleteProxy() to System class
+			in PPLT/PPLTSystem.py
+		- add CreateProxyDialog class in PPLT/Center/UserDBDialogs.py
+		- add _InsertProxys(), ... and changed CtxMenu class 
+			in PPLT/Center/UserDBPanel.py
+		- add proxy.xpm (icon) to /icons (changed setup.py and MANIFEST)	
+
+	* excanged print() by logging: 
+		in allmost every method of UserDB class in pyDCPU/UserDB/UserDB.py
+
+	* fixed in Srcipts/PPLTC.py (PPLT Center):
+		Under Linux the "save session as" 
+		file selection dialog was a "open only" dialog.
+		
+	+ added http-auth to the PPLTWebServer module: 
+		note: this module doesn't use the default	
+		user anymore.
+		Modules/Server/Web/PPLTWeb.py
+
+Version 0.3.0 (Rev: 19)	- 2005-08-20: 
 	* Fixed crash if no module, devices or servers are presend:
 		PPLT/DataBase.py
 

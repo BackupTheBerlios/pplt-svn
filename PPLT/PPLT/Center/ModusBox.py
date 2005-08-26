@@ -48,6 +48,7 @@ class ModusBox(wx.BoxSizer):
 		
 		label = wx.StaticText(parent, -1, _("Owner: "));
 		self.Owner = wx.ComboBox(parent, -1, self.__UserName, choices=self.__UsrLST);
+		self.Owner.SetEditable(False);
 		box = wx.BoxSizer(wx.HORIZONTAL);
 		box.Add(label, 1, wx.LEFT|wx.ALIGN_CENTER);
 		box.Add(self.Owner, 3, wx.EXPAND);
@@ -55,6 +56,7 @@ class ModusBox(wx.BoxSizer):
 		
 		label = wx.StaticText(parent, -1, _("Group: "));
 		self.Group = wx.ComboBox(parent, -1, self.__GroupName, choices=self.__GrpLST);
+		self.Group.SetEditable(False);
 		box = wx.BoxSizer(wx.HORIZONTAL);
 		box.Add(label, 1, wx.LEFT|wx.ALIGN_CENTER);
 		box.Add(self.Group, 3, wx.EXPAND);

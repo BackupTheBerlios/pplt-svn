@@ -1,3 +1,6 @@
+LICENSE
+ChangeLog
+TODO
 I18N/de/PPLT.mo
 UserDB.xml
 PPLT.conf
@@ -12,6 +15,7 @@ icons/slot.xpm
 icons/symbol.xpm
 icons/group.xpm
 icons/superuser.xpm
+icons/proxy.xpm
 icons/user.xpm
 icons/info.xpm
 icons/load.xpm

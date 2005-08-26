@@ -19,6 +19,11 @@
 # ############################################################################ #
 
 
+# ChangeLog:
+# 2005-08-25:
+#	- Add user-proxy feature.
+#	- replace print by logging
+
 import User;
 import Group;
 import LoadDB;
@@ -123,7 +128,7 @@ class UserDB:
 
         Group = self.GetGroupByName(GroupName);
         if not Group:
-            print "inconsistent grouplist... remove";
+            self.__Logger.warning("inconsistent grouplist... remove");
             self.__GroupNameList.remove(GroupName);
             return(False);
         return(Group.IsMember(MemberName));
@@ -235,13 +240,13 @@ class UserDB:
             This method will create a new user in the give Group.
         """
         if not Name or not Passwd or not GroupName:
-            print "No name | no passwd | no group"; 
+            self.__Logger.error("No name | no passwd | no group");
             return(False);
         if self.__MemberNameList.count(Name):
-            print "Member already exists";
+            self.__Logger.error("Member already exists");
             return(False);
         if not self.__GroupNameList.count(GroupName):
-            print "Group %s not found"%GroupName;
+            self.__Logger.error("Group %s not found"%GroupName);
             return(False);
 
         if Encode:
@@ -291,26 +296,29 @@ class UserDB:
             This method will delete the give user from the give group.
         """
         if not self.__GroupNameList.count(GroupName):
-            print "No group named %s"%GroupName;
+            self.__Logger.error("No group named %s"%GroupName);
             return(False);
         if not self.__MemberNameList.count(MemberName):
-            print "No member named %s"%MemberName;
+            self.__Logger.error("No member named %s"%MemberName);
             return(False);
 
         if MemberName == self.__SuperUser:
-            print "Can not del superuser";
+            self.__Logger.error("Can not del superuser");
             return(False);
 
         Group = self.GetGroupByName(GroupName);
         if not Group:
-            print "inconsistent grouplist... delete";
+            self.__Logger.error("inconsistent grouplist... delete");
             self.__GroupNameList.remove(GroupName);
             return(False);
         if not Group.DeleteMember(MemberName):
-            print "Error while remove member from Group";
+            self.__Logger.error("Error while remove member from Group");
             return(False);
 
-        print "sucess";
+        #delete all proxys for this user.
+        self.DeleteAllProxy(MemberName);
+
+        self.__Logger.debug("DeleteMember(): sucess");
         self.__MemberNameList.remove(MemberName);
 
         if self.__AutoSave:
@@ -329,6 +337,50 @@ class UserDB:
 
 
 
+
+
+    # ######################################################################## #
+    #                                                                          # 
+    # ######################################################################## #
+    def CreateProxy(self, Group, Name, CareLess = False):
+        """ Create a proxy of user (Name) in group (Group), if
+ CareLess == False (default) the method checks if user (Name)
+ exists before crateing the proxy. """
+        #check if user exists (if careless=false):
+        if not CareLess:
+            if not self.UserExists(Name):
+                return(False);
+        group = self.GetGroupByName(Group);
+        if not group:
+            return(False);
+        if not group.CreateProxy(Name):
+            return(False);
+        if self.__AutoSave:
+            self.SaveToFile();
+        return(True);
+
+    def DeleteProxy(self, Group, Name):
+        """ Delete the proxy of user (Name) in group (Group). """
+        group = self.GetGroupByName(Group);
+        if not group:
+            return(False);
+        if not group.DeleteProxy(Name):
+            return(False);
+        if self.__AutoSave:
+            self.SaveToFile();
+        return(True);
+
+    def DeleteAllProxy(self, Name):
+        """ Delete all proxys for a user. """ 
+        for GrpName in self.__GroupNameList:
+            group = self.GetGroupByName(GrpName);
+            if group:
+                group.DeleteProxy(Name);
+        if self.__AutoSave:
+            self.SaveToFile();
+        return(True);
+
+
     # ######################################################################## #
     #                                                                          # 
     # ######################################################################## #
@@ -339,10 +391,10 @@ class UserDB:
             "root" group.
         """
         if not Name:
-            print "No Name...";
+            self.__Logger.error("No Name...");
             return(False);
-        if self.__GroupNameList.count(Name):
-            print "Group already exists";
+        if Name in self.__GroupNameList:
+            self.__Logger.error("Group already exists");
             return(False);
 
         if not ParentGroup:
@@ -352,7 +404,7 @@ class UserDB:
             return(True);
 
         if not self.__GroupNameList.count(ParentGroup):
-            print "ParentGroup %s dosn't exists"%ParentGroup;
+            self.__Logger.error("ParentGroup %s dosn't exists"%ParentGroup);
             return(False);
         PGroup = self.GetGroupByName(ParentGroup);
         PGroup.CreateSubGroup(Name);
@@ -366,7 +418,7 @@ class UserDB:
         """
             Will return the group-obj. for the given name.
         """
-        if not self.__GroupNameList.count(Name):
+        if not Name in self.__GroupNameList:
             return(None);
         if self.__GroupHash.has_key(Name):
             return(self.__GroupHash.get(Name));
@@ -377,7 +429,7 @@ class UserDB:
             tmpGrp= Group.GetSubGroup(Name);
             if tmpGrp:
                 return(tmpGrp);
-        print "inconsistent grouplist... remove";
+        self.__Logger.warning("inconsistent grouplist... remove");
         self.__GroupNameList.remove(Name);
         return(None);
 
@@ -389,7 +441,7 @@ class UserDB:
             return(False);
         Group = self.GetGroupByName(GroupName);
         if not Group:
-            print "inconsistent grouplist... delete";
+            self.__Logger.warning("inconsistent grouplist... delete");
             self.__GroupNameList.remove(GroupName);
             return(False);
 
@@ -407,7 +459,7 @@ class UserDB:
     
         ParentGroup = Group.GetParent();
         if not ParentGroup:
-            print "Oh my god!!!"
+            self.__Logger.fatal("Oh my god!!! -> No parentgroup for group %s"%GroupName);
             return(False);
         
         if not ParentGroup.DeleteSubGroup(GroupName):
@@ -457,7 +509,7 @@ class UserDB:
         try:
             FilePtr = open(self.__DBFileName, "wb");
         except:
-            print "Error while Open File: %s"%self.__DBFileName;
+            self.__Logger.error("Error while Open File (for writeing): %s"%self.__DBFileName);
             Doc.unlink();
             return(False);
 
@@ -476,7 +528,7 @@ class UserDB:
             self.__DBFileName = FileName;
 
         if not LoadDB.ParseFile(self, self.__DBFileName, self.__Logger):
-            print "Oops...";
+            self.__Logger.error("Error while parse file %s."%self.__DBFileName);
             return(False);
         return(True);
 
@@ -500,6 +552,9 @@ class UserDB:
             I have no Members...
         """
         return ([]);
+
+	def ListProxys(self):
+		return([]);
 
     def ListSubGroups(self):
         """

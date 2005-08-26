@@ -19,115 +19,139 @@
 # ############################################################################ #
 
 
+# ChangeLog:
+# 2005-08-26:
+#	add moveing/renameing symbols feature.
+# 2005-08-25:
+#	fixed ident error in Folder.DeleteSymbol(Folder.DeleteSymbol())
 import pyDCPUSymbolTools;
 import pyDCPUSymbol;
 
 
 
 class Folder:
-    """
-        Hold Floders and Symbols
-    """
-    def __init__(self, Name, Possession):
-        self.Name       = Name;
-        self.Possession = Possession;
-        self.FolderHash = {};
-        self.SymbolHash = {};
+	"""
+		Hold Floders and Symbols
+	"""
+	def __init__(self, Name, Possession):
+		self.Name       = Name;
+		self.Possession = Possession;
+		self.FolderHash = {};
+		self.SymbolHash = {};
 
 
+	def Rename(self, Name):
+		self.Name = Name;
+		return(True);
 
-    def ListSymbols(self, SessionID):
-        if not self.Possession.CanRead(SessionID):
-            return(None);
-        return(self.SymbolHash.keys());
-    def ListFolders(self, SessionID):
-        if not self.Possession.CanRead(SessionID):
-            return(None);
-        return(self.FolderHash.keys());
+	def ListSymbols(self, SessionID):
+		if not self.Possession.CanRead(SessionID):
+			return(None);
+		return(self.SymbolHash.keys());
+	def ListFolders(self, SessionID):
+		if not self.Possession.CanRead(SessionID):
+			return(None);
+		return(self.FolderHash.keys());
 
-    def IsEmpty(self):
-        if len(self.SymbolHash.keys()) == 0 and len(self.FolderHash.keys()) == 0:
-            return(True);
-        return(False);
-
-    
-    def AddSymbol(self, Name, Symbol):
-        if self.FolderHash.has_key(Name) or self.SymbolHash.has_key(Name):
-            return(False);
-        if not isinstance(Symbol, pyDCPUSymbol.Symbol):
-            return(False);
-        
-        self.SymbolHash.update( {Name:Symbol} );
-        return(True);
-        
-    def DeleteSymbol(self, Name):
-        if self.SymbolHash.has_key(Name):
-	    self.SymbolHash[Name].Unregister();
-            del self.SymbolHash[Name];
-            return(True);
-
-
-
-    def AddFolder(self, Name, FolderObj):
-        if self.FolderHash.has_key(Name) or self.SymbolHash.has_key(Name):
-            return(False);
-        if not isinstance(FolderObj, Folder):
-            return(None);
-        self.FolderHash.update( {Name: FolderObj} );
-        return(True);
-
-    def DeleteFolder(self, Name):
-        if not self.FolderHash.has_key(Name):
-            return(False);
-        if not self.FolderHash[Name].IsEmpty():
-            return(False);
-        del self.FolderHash[Name];
-        return(True);
+	def IsEmpty(self):
+		if len(self.SymbolHash.keys()) == 0 and len(self.FolderHash.keys()) == 0:
+			return(True);
+		return(False);
 
     
-
-    def GetElementByPath(self, PathToElement):
-        """ Get a element from tree by Path """
-        (Item, Path) = pyDCPUSymbolTools.PopItemFromPath(PathToElement);
+	def AddSymbol(self, Name, Symbol):
+		if self.FolderHash.has_key(Name) or self.SymbolHash.has_key(Name):
+			return(False);
+		if not isinstance(Symbol, pyDCPUSymbol.Symbol):
+			return(False);
         
-        if Item and not Path:
-            if self.SymbolHash.has_key(Item):
-                return(self.SymbolHash.get(Item));
-            elif self.FolderHash.has_key(Item):
-                return(self.FolderHash.get(Item));
-            else:
-                return(None);
-        elif Item and Path:
-            if self.FolderHash.has_key(Item):
-                return(self.FolderHash[Item].GetElementByPath(Path));
-            else:
-                return(None);
-        else:
-            return(None);
-        return(None);
-
-
-
-    def SetPossession(self, Possession):
-        self.Possession = Possession;
-        return(True);
-
-    def GetPossession(self):
-        return(self.Possession);
-
-    def ToXML(self, Document):
-        Node = Document.createElement("Folder");
+		self.SymbolHash.update( {Name:Symbol} );
+		return(True);
         
-        Node.setAttribute("name",self.Name);
-        Node.setAttribute("own",str(self.Possession.GetOwner()));
-        Node.setAttribute("grp",str(self.Possession.GetGroup()));
-        Node.setAttribute("mod",str(self.Possession.GetRight()));
+	def RemoveSymbol(self, Name):
+		if self.SymbolHash.has_key(Name):
+			del self.SymbolHash[Name];
+			return(True);
+		return(False);
 
-        for folder in self.FolderHash.values():
-            subnode = folder.ToXML(Document);
-            Node.appendChild(subnode);
-        for symbol in self.SymbolHash.values():
-            subnode = symbol.ToXML(Document);
-            Node.appendChild(subnode);
+	def DeleteSymbol(self, Name):
+		if self.SymbolHash.has_key(Name):
+			self.SymbolHash[Name].Unregister();
+			del self.SymbolHash[Name];
+			return(True);
+		return(False);
 
-        return(Node);
+
+	def AddFolder(self, Name, FolderObj):
+		if self.FolderHash.has_key(Name) or self.SymbolHash.has_key(Name):
+			return(False);
+		if not isinstance(FolderObj, Folder):
+			return(None);
+		self.FolderHash.update( {Name: FolderObj} );
+		return(True);
+
+	def RenameFolder(self, Name, NewName):
+		if not self.FolderHash.has_key(Name):
+			return(False);
+		Folder = self.FolderHash.get(Name);
+		if not Folder.Rename(NewName):
+			return(False);
+		del self.FolderHash[Name];
+		self.FolderHash.update( {NewName:Folder} );
+		return(True);
+
+	def DeleteFolder(self, Name):
+		if not self.FolderHash.has_key(Name):
+			return(False);
+		if not self.FolderHash[Name].IsEmpty():
+			return(False);
+		del self.FolderHash[Name];
+		return(True);
+
+    
+
+	def GetElementByPath(self, PathToElement):
+		""" Get a element from tree by Path """
+		(Item, Path) = pyDCPUSymbolTools.PopItemFromPath(PathToElement);
+        
+		if Item and not Path:
+			if self.SymbolHash.has_key(Item):
+				return(self.SymbolHash.get(Item));
+			elif self.FolderHash.has_key(Item):
+				return(self.FolderHash.get(Item));
+			else:
+				return(None);
+		elif Item and Path:
+			if self.FolderHash.has_key(Item):
+				return(self.FolderHash[Item].GetElementByPath(Path));
+			else:
+				return(None);
+		else:
+			return(None);
+		return(None);
+
+
+
+	def SetPossession(self, Possession):
+		self.Possession = Possession;
+		return(True);
+
+	def GetPossession(self):
+		return(self.Possession);
+
+	def ToXML(self, Document):
+		Node = Document.createElement("Folder");
+        
+		Node.setAttribute("name",self.Name);
+		Node.setAttribute("own",str(self.Possession.GetOwner()));
+		Node.setAttribute("grp",str(self.Possession.GetGroup()));
+		Node.setAttribute("mod",str(self.Possession.GetRight()));
+
+		for folder in self.FolderHash.values():
+			subnode = folder.ToXML(Document);
+			Node.appendChild(subnode);
+		for symbol in self.SymbolHash.values():
+			subnode = symbol.ToXML(Document);
+			Node.appendChild(subnode);
+
+		return(Node);

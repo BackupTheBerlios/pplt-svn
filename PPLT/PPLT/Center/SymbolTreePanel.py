@@ -19,6 +19,8 @@
 # ############################################################################ # 
 
 #ChangeLog:
+# 2005-08-26
+#	added rename/move symbols feature
 # 2005-06-05:
 #	- fixed hidden root problem (under windows)
 # 2005-05-28:
@@ -31,6 +33,7 @@ import wx;
 from AddFolderDialog import AddFolderDialog;
 from AddSymbolDialog import SelectSlotDialog, PropertyDialog;
 from SetPropertyDialog import SetPropertyDialog;
+import string;
 import PPLT;
 import os;
 import logging;
@@ -38,13 +41,16 @@ import logging;
 
 class SymbolTreePanel(wx.TreeCtrl):
 	def __init__(self, parent, PPLTSys):
-		styleflags = wx.TR_NO_LINES|wx.TR_HIDE_ROOT|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS;
+		styleflags = wx.TR_NO_LINES|wx.TR_HIDE_ROOT|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS|wx.TR_FULL_ROW_HIGHLIGHT;
 #		if wx.Platform == "__WXMSW__":
 #			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
 			
 		wx.TreeCtrl.__init__(self, parent, -1,style = styleflags);
 		self.__PPLTSys = PPLTSys;
 		self.__Logger = logging.getLogger("PPLT");
+		self.__DragMode = False;
+		self.__DragItem = None;
+		self.__ExpandTimer = wx.FutureCall(1000, self.OnTimedExpand, None);
 
 		#load icons:
 		iconp = PPLT.Config().GetIconPath();
@@ -68,7 +74,13 @@ class SymbolTreePanel(wx.TreeCtrl):
 #		self.SetItemImage(self.__myRoot,self.__FolderIcon, wx.TreeItemIcon_Normal);
 #		self.SetItemImage(self.__myRoot,self.__FolderIcon2, wx.TreeItemIcon_Expanded);
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
-
+		self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown);
+		self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp);
+		self.Bind(wx.EVT_MOTION, self.OnMove);
+		self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelectionChanged);
+		self.Bind(wx.EVT_LEFT_DCLICK, self.OnDoubleClick);
+		self.Bind(wx.EVT_TREE_BEGIN_LABEL_EDIT, self.OnEditLabel);
+		self.Bind(wx.EVT_TREE_END_LABEL_EDIT, self.OnStopEditLabel);
 		self.Build(self.__myRoot);
 
 
@@ -102,6 +114,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 	def Clean(self):
 		self.DeleteChildren(self.__myRoot);
 
+
 	def OnRightClick(self, event):
 		pt = event.GetPosition();
 		(item,flag) = self.HitTest(pt);
@@ -116,8 +129,163 @@ class SymbolTreePanel(wx.TreeCtrl):
 		menu.Destroy();
 
 
-#	def SelectRoot(self):
-#		self.SelectItem(self.__myRoot);
+	def OnDoubleClick(self, event):
+		pt = event.GetPosition();
+		(item, flag) = self.HitTest(pt);
+		if not item:
+			return(None);
+		(IsFolder, OPath) = self.GetPyData(item);
+		if IsFolder:
+			if self.IsExpanded(item):
+				self.Collapse(item);
+			else:
+				self.Expand(item);
+		else:
+			self.EditLabel(item);
+
+	def OnEditLabel(self, event):
+		item = event.GetItem();
+		(IsFolder, Path) = self.GetPyData(item);
+		tmpList = Path.split("/");
+		OPList = [];
+		for tmp in tmpList:
+			if tmp and tmp != "":
+				OPList.append(tmp);
+		OName = OPList[-1];
+		self.SetItemText(item,OName);
+
+
+	def OnStopEditLabel(self, event):
+		item = event.GetItem();
+		NName = event.GetLabel();
+
+		(IsFolder, OPath) = self.GetPyData(item);
+
+		tmpList = OPath.split("/");
+		NPList = [];
+		for tmp in tmpList:
+			if tmp and tmp!="":
+				NPList.append(tmp);
+
+		OName = NPList[-1];
+		NPList[-1] = NName;
+		NPath = "/"+string.join(NPList,"/");
+		Slot = str(self.__PPLTSys.GetSymbolSlot(OPath));
+
+		if event.IsEditCancelled() or ("/" in NName) or OName == NName:
+			txt = "%s  @ %s"%(OName, Slot);
+			self.SetItemText(item, txt);
+			event.Veto();
+			return
+
+		if not self.__PPLTSys.MoveSymbol(OPath,NPath):
+			txt = "%s  @ %s"%(OName, Slot);
+			self.SetItemText(item, txt);
+			event.Veto();
+			return
+
+		txt = "%s  @ %s"%(NName, Slot);
+		self.SetPyData(item, (IsFolder, NPath));
+		self.SetItemText(item, txt);
+		event.Veto();
+		print "All ok should -> %s"%txt;
+		return
+
+
+	def OnLeftDown(self, event):
+		pt = event.GetPosition();
+		(item, flag) = self.HitTest(pt);
+
+		if not item:
+			self.Unselect();
+			return(None);
+
+		if flag&wx.TREE_HITTEST_ONITEMBUTTON:
+			if self.IsExpanded(item):
+				self.Collapse(item);
+			else:
+				self.Expand(item);
+			return(None);
+
+		self.SelectItem(item);
+		(IsItemFolder, Path) = self.GetPyData(item);
+		if not IsItemFolder:
+			self.__DragMode = True;
+			self.__DragItem = item;
+		else:
+			self.__DragMode = False;
+			self.__DragItem = None;
+
+
+	def OnLeftUp(self, event):
+		self.SetCursor(wx.STANDARD_CURSOR);
+		if not self.__DragMode or not self.__DragItem:
+			return(None);
+
+		self.__DragMode = False;
+		pt = event.GetPosition();
+		(item, flags) = self.HitTest(pt);
+		if not item:
+			IsItemFolder = True;
+			FPath = "/";
+			item = self.__myRoot;
+		else:
+			(IsItemFolder, FPath) = self.GetPyData(item);
+
+		if not IsItemFolder:
+			self.__DragItem = None;
+			return(None);
+		
+		(IsItemFolder, OPath) = self.GetPyData(self.__DragItem);
+		tmpList = OPath.split("/");
+		OPList = [];
+		for tmp in tmpList:
+			if tmp and tmp != "":
+				OPList.append(tmp);
+		SymName = OPList[-1];
+		
+		tmpList = FPath.split("/");
+		FPList = [];
+		for tmp in tmpList:
+			if tmp and tmp!="":
+				FPList.append(tmp);
+		NPList = FPList;
+		NPList.append(SymName);
+		NPath = "/"+string.join(NPList,"/");
+		if not self.__PPLTSys.MoveSymbol(OPath,NPath):
+			return(None);
+		txt = self.GetItemText(self.__DragItem);
+		self.Delete(self.__DragItem);
+		self.__DragItem = self.InsertItem(item, self.__DragItem, txt);
+		self.SetPyData(self.__DragItem, (IsItemFolder, NPath));
+		self.SetItemImage(self.__DragItem, self.__SymbolIcon, wx.TreeItemIcon_Normal);
+		self.__DragItem = None;
+
+
+	def OnMove(self, event):
+		if not self.__DragMode:
+			self.SetCursor(wx.STANDARD_CURSOR);
+			return(None);
+		self.SetCursor(wx.StockCursor(wx.CURSOR_HAND));
+		pt = event.GetPosition();
+		(item, flag) = self.HitTest(pt);
+		if not item:
+			self.Unselect();
+			return(None);
+		
+		self.SelectItem(item);
+		(IsFolder, Path) = self.GetPyData(item);
+		if IsFolder:
+			self.__ExpandTimer.Restart(1000,item);
+
+	def OnSelectionChanged(self, event):
+		if self.__ExpandTimer.IsRunning():
+			self.__ExpandTimer.Stop();
+
+	def OnTimedExpand(self, Item):
+		if not Item:
+			return(None);
+		self.Expand(Item);
 
 	def OnAddSymbol(self, event):
 		item = self.GetSelection();
@@ -194,6 +362,15 @@ class SymbolTreePanel(wx.TreeCtrl):
 		if item != self.__myRoot:
 			self.Expand(item);
 
+	def OnRenSymbol(self, event):
+		item = self.GetSelection();
+		if not item:
+			return(None);
+		(ItemIsFolder, Path) = self.GetPyData(item);
+		if ItemIsFolder:
+			return(None);
+		self.EditLabel(item);
+		
 
 	def OnDelSymbol(self, event):
 		item = self.GetSelection();
@@ -260,6 +437,7 @@ class CtxMenu(wx.Menu):
 		self.__DelFol = wx.NewId();
 		self.__DelSym = wx.NewId();
 		self.__Prop   = wx.NewId();
+		self.__RenSym = wx.NewId();
 
 		wx.Menu.__init__(self);
 		if ObjIsFolder:
@@ -268,6 +446,8 @@ class CtxMenu(wx.Menu):
 			item = wx.MenuItem(self, self.__AddFol, _("Add Folder"));
 			self.AppendItem(item)
 		else:
+			item = wx.MenuItem(self, self.__RenSym, _("Rename Symbol"));
+			self.AppendItem(item);
 			item = wx.MenuItem(self, self.__DelSym, _("Delete Symbol"));
 			self.AppendItem(item);
 
@@ -283,5 +463,5 @@ class CtxMenu(wx.Menu):
 		self.Bind(wx.EVT_MENU, tree.OnProperty,  id = self.__Prop);
 		self.Bind(wx.EVT_MENU, tree.OnDelFolder, id = self.__DelFol);
 		self.Bind(wx.EVT_MENU, tree.OnDelSymbol, id = self.__DelSym);
-
+		self.Bind(wx.EVT_MENU, tree.OnRenSymbol, id = self.__RenSym);
 

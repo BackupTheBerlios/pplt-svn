@@ -1,0 +1,39 @@
+
+Warnings...
+
+DataBase.py:373: Function returns a value and also implicitly returns None
+DataBase.py:389: No global (Ture) found
+DataBase.py:399: Modifying parameter (ClassList) with a default value may have unexpected consequences
+DataBase.py:403: Function returns a value and also implicitly returns None
+DataBase.py:407: Modifying parameter (ClassList) with a default value may have unexpected consequences
+DataBase.py:411: Function returns a value and also implicitly returns None
+DataBase.py:472: No class attribute (_CoreModItem__Meta) found
+DataBase.py:474: No class attribute (_CoreModItem__Meta) found
+DataBase.py:494: Invalid arguments to (HasCoreMod), got 1, expected 2
+DataBase.py:494: self is not first method argument
+DataBase.py:531: Invalid arguments to (HasCoreMod), got 1, expected 2
+DataBase.py:531: self is not first method argument
+
+Device.py:30: Imported module (DeviceMeta) not used
+Device.py:31: Imported module (Exceptions) not used
+Device.py:32: Imported module (pyDCPU) not used
+
+InstallSource.py:16: Local variable (Name) not used
+InstallSource.py:18: No class attribute (_InstallSource__CoreDB) found
+InstallSource.py:22: Local variable (Name) not used
+InstallSource.py:24: No class attribute (_InstallSource__SrvDB) found
+InstallSource.py:28: Local variable (Name) not used
+InstallSource.py:30: No class attribute (_InstallSource__DevDB) found
+
+Logging.py:37: No module attribute (SysLogHandler) found
+Logging.py:42: No global (NTEventLogHandler) found
+
+PPLTSystem.py:615: Parameter (Recur) not used
+PPLTSystem.py:760: Function returns a value and also implicitly returns None
+
+ServerMeta.py:99: No global (retunr) found
+
+Setup.py:162: Function returns a value and also implicitly returns None
+Setup.py:271: Modifying parameter (paras) with a default value may have unexpected consequences
+
+__init__.py:32: Variable (__status__) not used

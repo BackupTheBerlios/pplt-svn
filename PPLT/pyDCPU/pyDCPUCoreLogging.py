@@ -30,16 +30,16 @@ def SetupLogger(Level,File,SysLog):
         if SysLog:
             if sys.platform == 'linux2':
                 try:
-                    LogHndl = logging.SysLogHandler();
+                    LogHndl = logging.handlers.SysLogHandler();
                 except:
                     LogHndl = logging.StreamHandler(sys.stderr);
             else:
                 try:
-                    LogHndl = NTEventLogHandler('pyDCPU/PPLT');
+                    LogHndl = logging.handlers.NTEventLogHandler('pyDCPU/PPLT');
                 except:
                     LogHndl = logging.StreamHandler(sys.stderr);
         elif File:
-            LogHndl = logging.FileHandler(File);
+            LogHndl = logging.handlers.RotatingFileHandler(File, maxBytes=1048576);
         else:
             LogHndl = logging.StreamHandler(sys.stderr);
             

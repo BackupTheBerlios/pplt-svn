@@ -19,6 +19,10 @@
 # ############################################################################ # 
 
 #ChangeLog:
+# 2005-08-25:
+#	Fixed SelectSlotDialog.OnSelect
+#	help-window will now be cleaned if not description
+#	for a item is avaiable
 # 2005-06-05:
 #	* Fixed hidden root problem
 # 2005-05-27:
@@ -89,22 +93,20 @@ class SelectSlotDialog(wx.Dialog):
 		if item == self.__ROOT or not item:
 			return(None);
 		(iden, data, info) = self.__Tree.GetPyData(item);
+		self.__HelpText.Clear();
 		if iden == 1:
 			txt = info.GetDescription();
-			if txt:
-				self.__HelpText.Clear();
+			if txt and txt!="":
 				self.__HelpText.SetValue(txt);
 		elif iden == 4:
 			(fqdn, dev, ns, name) = data;
 			txt = info.GetSlotRangeDescription(ns,name);
-			if txt:
-				self.__HelpText.Clear();
+			if txt and txt!="":
 				self.__HelpText.SetValue(txt);
 		elif iden == 3:
 			(fqdn, dev, ns, name) = data;
 			txt = info.GetSlotDescription(ns,name);
-			if txt:
-				self.__HelpText.Clear();
+			if txt and txt!="":
 				self.__HelpText.SetValue(txt);
 			
 	def OnDClick(self, event):
@@ -200,6 +202,7 @@ class PropertyDialog(wx.Dialog):
 		self.__Type = wx.ComboBox(self, -1, choices=["Bool","Byte","Word","DWord","Float","Double","String"]);
 		if Type:
 			self.__Type.SetValue(str(Type));
+			self.__Type.SetEditable(False);
 		box = wx.BoxSizer(wx.HORIZONTAL);
 		box.Add(tmp,1,wx.ALIGN_CENTER);
 		box.Add(self.__Type,2,wx.ALIGN_RIGHT|wx.GROW);

@@ -19,6 +19,8 @@
 # ############################################################################ # 
 
 #ChangeLog:
+# 2005-08-25:
+#	Add proxy-feature.
 # 2005-06-04:
 #	Fixed problem with hidden root item
 # 2005-05-27:
@@ -33,8 +35,8 @@ import logging;
 class UserDBPanel(wx.TreeCtrl):
 	def __init__(self, Parent, PPLTSys):
 		styleflags=wx.TR_NO_LINES|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT;
-#		if wx.Platform == "__WXMSW__":
-#			styleflags=wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
+		if wx.Platform == "__WXMSW__":
+			styleflags=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT;
 			
 		wx.TreeCtrl.__init__(self, Parent, -1, style=styleflags);
 		self.__PPLTSys = PPLTSys;
@@ -51,6 +53,10 @@ class UserDBPanel(wx.TreeCtrl):
 		if not bmp:
 			bmp = wx.NullBitmap;
 		self.__UserIcon = self.__IL.Add(bmp);
+		bmp = wx.Bitmap(os.path.normpath(iconp+"/proxy.xpm"));
+		if not bmp:
+			bmp = wx.NullBitmap;
+		self.__ProxyIcon = self.__IL.Add(bmp);
 		bmp = wx.Bitmap(os.path.normpath(iconp+"/superuser.xpm"));
 		if not bmp:
 			bmp = wx.NullBitmap;
@@ -61,7 +67,7 @@ class UserDBPanel(wx.TreeCtrl):
 #		self.SetPyData(self.__RootItem, (True, False));
 		
 		self._InsertGroups();
-
+		
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
 		
 
@@ -81,7 +87,8 @@ class UserDBPanel(wx.TreeCtrl):
 			self.SetPyData(nitem,(True,False));
 			self._InsertGroups(grp,nitem);
 			self._InsertMembers(grp,nitem);
-		
+			self._InsertProxys(grp, nitem);
+
 	def _InsertMembers(self, Group, Item):
 		memlst = self.__PPLTSys.ListMembers(Group);
 		for mem in memlst:
@@ -92,6 +99,30 @@ class UserDBPanel(wx.TreeCtrl):
 			else:
 				self.SetItemImage(nitem, self.__UserIcon, wx.TreeItemIcon_Normal);
 				self.SetPyData(nitem, (False,False));
+
+	def _InsertProxys(self, Group, Item):
+		memlst = self.__PPLTSys.ListProxys(Group);
+		for mem in memlst:
+			nitem = self.AppendItem(Item,mem);
+			self.SetItemImage(nitem, self.__ProxyIcon, wx.TreeItemIcon_Normal);
+			self.SetPyData(nitem, (True,True));
+
+	def __RemoveProxys(self, Name, item=None):
+		if not item:
+			item = self.GetFirstVisibleItem();
+		else:
+			(IsGroup, IsSuperUser) = self.GetPyData(item);
+			IName = self.GetItemText(item);
+			if IsSuperUser and IsGroup and IName==Name:
+				self.Delete(item);
+
+		if self.ItemHasChildren(item):
+			(citem,c) = self.GetFirstChild(item);
+			self.__RemoveProxys(Name, citem);
+		
+		sitem = self.GetNextSibling(item);
+		if sitem:
+			self.__RemoveProxys(Name, sitem);
 
 	def OnRightClick(self, event):
 		pt = event.GetPosition();
@@ -156,10 +187,55 @@ class UserDBPanel(wx.TreeCtrl):
 			return(None);
 		if self.__PPLTSys.DeleteMember(Name):
 			self.Delete(item);
+			self.__RemoveProxys(Name);			#Remove all proxys of this user
 		else:
 			self.__Logger.warning("Error while Del User %s"%Name);
 
 
+	def OnAddProxy(self, Event):
+		item = self.GetSelection();
+		if not item or item == self.__RootItem:
+			return(None);
+		(IsGroup, IsSuperUser) = self.GetPyData(item);
+		if not IsGroup and IsSuperUser:
+			self.__Logger.warning("Selected item is not a group.");
+			return(None);
+		GrpName = self.GetItemText(item);
+
+		UserList = GetUserList(self.__PPLTSys);
+		Dlg = UserDBDialogs.CreateProxyDialog(self, -1, _("Create User-Proxy"), UserList);
+		if not Dlg.ShowModal() == wx.ID_OK:
+			return(None);
+
+		User = Dlg.Name;
+		Dlg.Destroy();
+	
+		if not self.__PPLTSys.CreateProxy(GrpName, User):
+			self.__Logger.error("Error while create a new proxy for %s"%User);
+			return(None);
+		
+		nitem = self.AppendItem(item, User);
+		self.SetItemImage(nitem, self.__ProxyIcon, wx.TreeItemIcon_Normal);
+		self.SetPyData(nitem, (True,True));
+		self.Expand(item);
+
+	def OnDelProxy(self, Event):
+		item = self.GetSelection();
+		if not item or item == self.__RootItem:
+			return(None);
+		(IsGroup, IsSuperUser) = self.GetPyData(item);
+		if not (IsGroup and IsSuperUser):
+			self.__Logger.error("Selcted item is not a userproxy.");
+			return(None);
+		pitem = self.GetItemParent(item);
+		GrpName = self.GetItemText(pitem);
+		Name = self.GetItemText(item);
+
+		if not self.__PPLTSys.DeleteProxy(GrpName, Name):
+			self.__Logger.error("Error while delete proxy for user %s"%Name);
+			return(None);
+		self.Delete(item);
+		
 	def OnAddGroup(self, Event):
 		item = self.GetSelection();
 		if not item or item == self.__RootItem:		#aka selected root
@@ -266,7 +342,7 @@ class UserDBPanel(wx.TreeCtrl):
 			item = self.GetFirstVisibleItem();
 		else:
 			(IsGroup, IsSuperUser) = self.GetPyData(item);
-			if IsSuperUser:
+			if IsSuperUser and not IsGroup:
 				return(item);
 
 		if self.ItemHasChildren(item):
@@ -301,17 +377,25 @@ class CtxMenu(wx.Menu):
 		self.__DelGrpID = wx.NewId();
 		self.__SetSUsrID= wx.NewId();
 		self.__ChPassID = wx.NewId();
-
+		self.__AddProxy = wx.NewId();
+		self.__DelProxy = wx.NewId();
 
 		if IsGroup:
-			if Name:
-				item = wx.MenuItem(self, self.__AddUsrID, _("Add User"));
+			if IsSuperUser:
+				item = wx.MenuItem(self, self.__DelProxy, _("Del User-Proxy"));
 				self.AppendItem(item);
-			item = wx.MenuItem(self, self.__AddGrpID, _("Add Group"));
-			self.AppendItem(item);
-			if Name:
-				item = wx.MenuItem(self, self.__DelGrpID, _("Del Group"));
+			else:
+				if Name:
+					item = wx.MenuItem(self, self.__AddUsrID, _("Add User"));
+					self.AppendItem(item);
+					item = wx.MenuItem(self, self.__AddProxy, _("Add User-Proxy"));
+					self.AppendItem(item);
+				item = wx.MenuItem(self, self.__AddGrpID, _("Add Group"));
 				self.AppendItem(item);
+				if Name:
+					item = wx.MenuItem(self, self.__DelGrpID, _("Del Group"));
+					self.AppendItem(item);
+				
 		else:
 			if not IsSuperUser:
 				item = wx.MenuItem(self, self.__DelUsrID, _("Del User"));
@@ -327,3 +411,21 @@ class CtxMenu(wx.Menu):
 		self.Bind(wx.EVT_MENU, Tree.OnDelGroup, id = self.__DelGrpID);
 		self.Bind(wx.EVT_MENU, Tree.OnSetSUser, id = self.__SetSUsrID);
 		self.Bind(wx.EVT_MENU, Tree.OnPasswd, id = self.__ChPassID);
+		self.Bind(wx.EVT_MENU, Tree.OnAddProxy, id = self.__AddProxy);
+		self.Bind(wx.EVT_MENU, Tree.OnDelProxy, id = self.__DelProxy);
+
+
+
+def GetUserList(PPLTSys, Group=None):
+	lst = [];
+	grplst = PPLTSys.ListGroups(Group);
+	for grp in grplst:
+		tmp = GetUserList(PPLTSys, grp);
+		if tmp:
+			lst.extend(tmp);
+
+	tmp = PPLTSys.ListMembers(Group);
+	if tmp:
+		lst.extend(tmp);
+	return(lst);
+

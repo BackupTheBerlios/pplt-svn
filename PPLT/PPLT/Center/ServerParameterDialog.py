@@ -19,8 +19,10 @@
 # ############################################################################ # 
 
 #ChangeLog:
-#	2005-05-27:
-#		Release as version 0.2.0 (alpha)
+# 2005-08-25:
+#	fixed layout and made ComboBox not editable
+# 2005-05-27:
+#	Release as version 0.2.0 (alpha)
 
 import wx;
 
@@ -38,24 +40,25 @@ class ServerParameterDialog(wx.Dialog):
 		label = wx.StaticText(self, -1, _("Alias: "));
 		self.Alias =  wx.TextCtrl(self, -1, _("SrvName"));
 		box   = wx.BoxSizer(wx.HORIZONTAL);
-		box.Add(label, 1, wx.ALIGN_LEFT|wx.RIGHT|wx.TOP|wx.BOTTOM,4);
-		box.Add(self.Alias, 0, wx.ALIGN_RIGHT|wx.LEFT, 3);
-		self.__MySizer.Add(box, 0, wx.ALL|wx.GROW, 3);
+		box.Add(label, 1, wx.ALIGN_CENTER, 0);
+		box.Add(self.Alias, 2 , wx.EXPAND, 0);
+		self.__MySizer.Add(box, 0, wx.EXPAND|wx.ALL, 3);
 	
 		label = wx.StaticText(self, -1, _("DefautUser: "));
 		usrlst = GetUserList(self.__PPLTSys);
 		self.DefUser = wx.ComboBox(self, -1, str(usrlst[0]),choices=usrlst);
+		self.DefUser.SetEditable(False);
 		box = wx.BoxSizer(wx.HORIZONTAL);
-		box.Add(label, 1, wx.ALIGN_LEFT|wx.RIGHT|wx.TOP|wx.BOTTOM,4);
-		box.Add(self.DefUser, 0, wx.ALIGN_RIGHT|wx.LEFT,3);
-		self.__MySizer.Add(box, 0, wx.ALL|wx.GROW, 3);
+		box.Add(label, 1, wx.ALIGN_CENTER, 0);
+		box.Add(self.DefUser, 2, wx.EXPAND, 0);
+		self.__MySizer.Add(box, 0, wx.EXPAND|wx.ALL, 3);
 
-		label = wx.StaticText(self, -1, _("Root"));
+		label = wx.StaticText(self, -1, _("Root: "));
 		self.Root = wx.TextCtrl(self, -1, "/");
 		box = wx.BoxSizer(wx.HORIZONTAL);
-		box.Add(label, 1, wx.ALIGN_LEFT|wx.RIGHT|wx.TOP|wx.BOTTOM,4);
-		box.Add(self.Root, 0, wx.ALIGN_RIGHT|wx.LEFT,3);
-		self.__MySizer.Add(box, 0, wx.ALL|wx.GROW, 3);
+		box.Add(label, 1, wx.ALIGN_CENTER, 0);
+		box.Add(self.Root, 2, wx.EXPAND, 0);
+		self.__MySizer.Add(box, 0, wx.EXPAND|wx.ALL, 3);
 
 		varlist = self.__Info.GetRequiredVariableNames();
 		for var in varlist:
@@ -64,9 +67,9 @@ class ServerParameterDialog(wx.Dialog):
 		ok = wx.Button(self, wx.ID_OK,_(" OK "));
 		ca = wx.Button(self, wx.ID_CANCEL, _(" Cancel "));
 		box = wx.BoxSizer(wx.HORIZONTAL);
-		box.Add(ok, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2);
-		box.Add(ca, 0, wx.ALIGN_RIGHT|wx.RIGHT|wx.LEFT,2);
-		self.__MySizer.Add(box, 0, wx.ALL|wx.GROW, 3);
+		box.Add(ok, 1, wx.ALIGN_CENTER|wx.ALL, 3);
+		box.Add(ca, 1, wx.ALIGN_CENTER|wx.ALL,3);
+		self.__MySizer.Add(box, 1, wx.ALIGN_CENTER|wx.GROW);
 
 		self.Bind(wx.EVT_BUTTON, self.OnOK, ok);
 
@@ -85,10 +88,10 @@ class ServerParameterDialog(wx.Dialog):
 		if helptxt:
 			txt.SetToolTipString(helptxt);
 		box    = wx.BoxSizer(wx.HORIZONTAL);
-		box.Add(label, 1, wx.ALIGN_LEFT|wx.RIGHT|wx.TOP|wx.BOTTOM, 4);
-		box.Add(txt, 0, wx.ALIGN_RIGHT|wx.LEFT, 3);
+		box.Add(label, 1, wx.ALIGN_CENTER, 0);
+		box.Add(txt, 2, wx.EXPAND, 0);
 
-		self.__MySizer.Add(box, 0, wx.ALL|wx.GROW, 3);
+		self.__MySizer.Add(box, 0, wx.ALL|wx.EXPAND, 3);
 		self.__Parameters.update( {var:txt} );
 
 	

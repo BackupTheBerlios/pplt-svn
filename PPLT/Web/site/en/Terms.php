@@ -123,9 +123,9 @@ system.LoadDevice("Class.DeviceName", "Alias", {"Parameter":"Value",...});
 		implements a layer of the communication with the
 		device. So you will have one module for the interface, one
 		for the transport protocol and one for the command messages
-		of the specific device. But all of these modules a hiden
-		into one device and each of this may provide
-		values you may interested in.
+		of the specific device. But all of these modules are hidden
+		into one device and each of this may provide values you may 
+		interested in.
 
 		<p>But if a device consist of may modules you can't be
 		sure that the <a href="#Slot">slotnames</a> of the modules are unique. 
@@ -324,7 +324,7 @@ system.CreateSymbol("/PathToSymbol", "ALIAS::NAMESPACE::SLOT", "Type");
 	<div class="Text">
 		The most systems for industrial communication do not have there 
 		own (or better any) user/group system. There believe that it will
-		sufficien to handle security related things at the network level
+		be sufficient to handle security related things at the network level
 		(For example VPN etc.).
 		But that means that everybody who has access to the network as 
 		full access to all. So you can't decide who can access the 

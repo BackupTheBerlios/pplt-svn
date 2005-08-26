@@ -7,7 +7,7 @@
 	I've done a lot of debuging and (sometimes) rewiteing
 	wide parts of the PPLT library. Will stop now developing
 	to focus on debuging to reach the stabil state.
-	<u>Note:</u> Please also update the Modules!<br><br>
+	<u>Note:</u> Please also update the modules!<br><br>
 	<b>2005-06-03 - Release of PPLT Version 0.2.2</b><br>
 	I've added some features to the library and the PPLTC application.
 	You can now save a session and load it later. Also I've fixed

@@ -119,7 +119,7 @@ class MasterSlot(SymbolSlot):
 		except:
 			self.__Logger.error("Error while convert to value: maybe wrong data format");
 			return(None);
-
+		return(None);
         
 
 	def SetValue(self, Value):

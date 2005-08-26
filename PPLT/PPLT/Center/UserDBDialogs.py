@@ -19,8 +19,11 @@
 # ############################################################################ # 
 
 #ChangeLog:
-#	2005-05-27:
-#		Release as version 0.2.0 (alpha)
+# 2005-08-25:
+#	Add proxy feature.
+#	Layoutfix (CreateMemberDialog)
+# 2005-05-27:
+#	Release as version 0.2.0 (alpha)
 
 import wx;
 import wx.lib.rcsizer as rcs;
@@ -35,38 +38,39 @@ class CreateMemberDialog(wx.Dialog):
         
         sizer = wx.BoxSizer(wx.VERTICAL);
 
-        box = rcs.RowColSizer();
-
+        box = wx.BoxSizer(wx.HORIZONTAL);
         label = wx.StaticText(self,-1,_('Username: '));
-        box.Add(label, row=1, col=1, flag=wx.ALIGN_CENTER);
         text = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.SIMPLE_BORDER);
         text.Bind(wx.EVT_TEXT, self.UpdateName);
-        box.Add(text, row=1, col=2);
+        box.Add(label, 1, wx.ALIGN_CENTER);
+        box.Add(text, 2, wx.EXPAND);
+        sizer.Add(box, 0, wx.EXPAND|wx.ALL,2);
 
-
+        box = wx.BoxSizer(wx.HORIZONTAL);
         label = wx.StaticText(self,-1,_('Password: '));
-        box.Add(label, row=2, col=1, flag=wx.ALIGN_CENTER);
         self.text1 = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.TE_PASSWORD|wx.SIMPLE_BORDER);
         self.text1.Bind(wx.EVT_TEXT, self.UpdatePass1);
-        box.Add(self.text1, row=2, col=2);
+        box.Add(label, 1, wx.ALIGN_CENTER);
+        box.Add(self.text1, 2, wx.EXPAND);
+        sizer.Add(box, 0, wx.EXPAND|wx.ALL,2);
 
+        box = wx.BoxSizer(wx.HORIZONTAL);
         label = wx.StaticText(self,-1,_('Re-Type:  '));
-        box.Add(label, row=3, col=1, flag=wx.ALIGN_CENTER);
         self.text2 = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.TE_PASSWORD|wx.SIMPLE_BORDER);
         self.text2.Bind(wx.EVT_TEXT, self.UpdatePass2);
-        box.Add(self.text2, row=3, col=2);
-
-        sizer.Add(box, 1, wx.RIGHT, 10);
+        box.Add(label, 1, wx.ALIGN_CENTER);
+        box.Add(self.text2, 2, wx.EXPAND);
+        sizer.Add(box, 0, wx.EXPAND|wx.ALL,2);
 
         line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5)
 
         box = wx.BoxSizer(wx.HORIZONTAL);
         self.ok = wx.Button(self, wx.ID_OK, _(" Ok "));
-        box.Add(self.ok, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
         ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
-        box.Add(ca, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
-        sizer.Add(box, 0, wx.ALIGN_CENTRE|wx.ALL, 0);
+        box.Add(self.ok, 0, wx.ALIGN_CENTRE|wx.ALL, 3);
+        box.Add(ca, 0, wx.ALIGN_CENTRE|wx.ALL, 3);
+        sizer.Add(box, 0, wx.ALIGN_CENTRE|wx.GROW);
 
         self.SetSizer(sizer);
         self.SetAutoLayout(True);
@@ -106,21 +110,21 @@ class CreateGroupDialog(wx.Dialog):
 
         box = wx.BoxSizer(wx.HORIZONTAL);
         text = wx.StaticText(self, -1, _('Group Name: '));
-        box.Add(text, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.LEFT, 3);
         input = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.SIMPLE_BORDER);
         input.Bind(wx.EVT_TEXT, self.UpdateName);
-        box.Add(input, 0, wx.ALIGN_CENTER|wx.RIGHT|wx.LEFT, 3);
-        sizer.Add(box, 0, wx.ALIGN_CENTER|wx.TOP|wx.BOTTOM, 5);
+        box.Add(text, 1, wx.ALIGN_CENTER);
+        box.Add(input, 2, wx.EXPAND);
+        sizer.Add(box, 0, wx.EXPAND|wx.ALL, 3);
 
         line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 2)
 
         box = wx.BoxSizer(wx.HORIZONTAL);
         ok = wx.Button(self, wx.ID_OK, _(" Ok "));
-        box.Add(ok, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
+        box.Add(ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
         ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
-        box.Add(ca, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
-        sizer.Add(box, 0, wx.ALIGN_CENTRE|wx.ALL, 0);
+        box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+        sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
 
         self.SetSizer(sizer);
         self.SetAutoLayout(True);
@@ -129,6 +133,39 @@ class CreateGroupDialog(wx.Dialog):
     def UpdateName(self, event):
         self.Name = event.GetString();
 
+
+class CreateProxyDialog(wx.Dialog):
+	def __init__(self, parent, id, title, UserList):
+		wx.Dialog.__init__(self, parent, id, title);
+		self.Name = UserList[0];
+
+		sizer = wx.BoxSizer(wx.VERTICAL);
+		
+		box = wx.BoxSizer(wx.HORIZONTAL);
+		text = wx.StaticText(self, -1, _('User Name: '));
+		Input = wx.ComboBox(self, -1, UserList[0], choices=UserList);
+		Input.SetEditable(False);
+		Input.Bind(wx.EVT_TEXT, self.UpdateName);
+		box.Add(text, 1, wx.ALIGN_CENTER, 0);
+		box.Add(Input, 2, wx.EXPAND, 0);
+		sizer.Add(box, 0, wx.EXPAND|wx.ALL, 3);
+
+		line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL);
+		sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 2)
+
+		box = wx.BoxSizer(wx.HORIZONTAL);
+		ok = wx.Button(self, wx.ID_OK, _(" Ok "));
+		box.Add(ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+		ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
+		box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+		sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
+
+		self.SetSizer(sizer);
+		self.SetAutoLayout(True);
+		sizer.Fit(self);
+
+	def UpdateName(self, event):
+		self.Name = event.GetString();
 
 
 
@@ -140,31 +177,31 @@ class PasswdDialog(wx.Dialog):
         
         sizer = wx.BoxSizer(wx.VERTICAL);
 
-        box = rcs.RowColSizer();
-
+        box = wx.BoxSizer(wx.HORIZONTAL);
         label = wx.StaticText(self,-1,_('Password: '));
-        box.Add(label, row=1, col=1, flag=wx.ALIGN_CENTER);
         self.text1 = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.TE_PASSWORD|wx.SIMPLE_BORDER);
         self.text1.Bind(wx.EVT_TEXT, self.UpdatePass1);
-        box.Add(self.text1, row=1, col=2);
+        box.Add(label, 1, wx.ALIGN_CENTER);
+        box.Add(self.text1, 2, wx.EXPAND);
+        sizer.Add(box, 0, wx.EXPAND|wx.ALL, 2);
 
+        box = wx.BoxSizer(wx.HORIZONTAL);
         label = wx.StaticText(self,-1,_('Re-Type:  '));
-        box.Add(label, row=2, col=1, flag=wx.ALIGN_CENTER);
         self.text2 = wx.TextCtrl(self, -1, "", size=(120,-1), style=wx.TE_PASSWORD|wx.SIMPLE_BORDER);
         self.text2.Bind(wx.EVT_TEXT, self.UpdatePass2);
-        box.Add(self.text2, row=2, col=2);
-
-        sizer.Add(box, 1, wx.RIGHT, 10);
+        box.Add(label, 1, wx.ALIGN_CENTER);
+        box.Add(self.text2, 2, wx.EXPAND);
+        sizer.Add(box, 0, wx.EXPAND|wx.ALL, 2);
 
         line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL)
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5)
 
         box = wx.BoxSizer(wx.HORIZONTAL);
         self.ok = wx.Button(self, wx.ID_OK, _(" Ok "));
-        box.Add(self.ok, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
         ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
-        box.Add(ca, 0, wx.ALIGN_CENTRE|wx.ALL, 5);
-        sizer.Add(box, 0, wx.ALIGN_CENTRE|wx.ALL, 0);
+        box.Add(self.ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+        box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+        sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
 
         self.SetSizer(sizer);
         self.SetAutoLayout(True);
@@ -189,4 +226,9 @@ class PasswdDialog(wx.Dialog):
             self.text1.Refresh();
             self.text2.Refresh();
             self.ok.Enable(True);
+
+
+
+
+
 

@@ -1,4 +1,10 @@
 <div class="TextBody">
+	<p>In this document I will describe how to install the PPLT and how to
+	do the first steps. If you have any questions to this document
+	feel free to send me an <a href="/en/Contact.html">e-mail</a>.
+	I used a lot of PPLT specific terms in this text, so you may want to 
+	look at the <a href="/en/Terms.html">explanation of terms</a>.</p>
+
 	<div class="Head">Requirements</div>
 	<div class="Text">
 	To install the PPLT you need to have done some preparation. You need to 
@@ -79,8 +85,72 @@
 	the device you want to load with a double-click.</p>
 
 	<p>At the beginning it will be a little bit starange handleing. But later it is quiet fast.</p>
-	
 	</div>
+
+
+	<div class="Head">PPLT Center working circle</div>
+	<div class="Text">
+		A normal woking circle will be to load at first the devices you want to access. Then you
+		create the symbols and connect them to the devices. The last step should be to load 
+		the servers.  
+
+		<p>To load a device you right-click at the tab <i>Devices</i> or at an empty space
+		inside the device-list. Select <i>Load device</i> at the context-menu. Now you see
+		the device selection dialog. There are all devices listed, ordered by there class.
+		Select now the device you want to load with a double-click. A single click at a
+		device will show a short help text at the buttom of the dialog. Now you should 
+		see the setup-dialog for the device you selected. Fill up the form an click 
+		<i>OK</i>. If you need help for the parameters you have to set, keep with the
+		mouse over the entry-feeld of the parameter an a tool-tip will be shown or
+		take a look at the <a href="/en/Devices.html">device-reference</a>. 
+		<b>Note:</b> you allways have to set an alias. This alias will be used to
+		identify the the device later. If all parameters were right, the device 
+		will be shown now at the device-list.</p>
+
+		<p>Now, if you loaded all devices you need, you can start to fill up the
+		symbol tree. To create a symbol or folder at the root of the symbol-tree,
+		please right-click at a empty space inside the symbol-tree or at the
+		tab <i>SymbolTree</i>. To create a symbol inside a existing folder, please
+		right click the folder where the new symbol or folder should be created.<br>
+		If you selected <i>Create symbol</i> at the context-menu, where all loaded 
+		devices are listed. If you double click the device you'll see all
+		namespaces that the device provide. If you double-click a namespace
+		you'll see all slot that are in this namespace. At this moment, please
+		don't care about the namespaces and what there are, you do not need to know
+		what there are and what they do. You should need to care about the slots or
+		slotranges. A simple slot has the singe plug as icon the slot range the 
+		double-plug. <br>
+		Now you setup the connection between the symbol and the device.
+		A simple symbol represents a single value, while the slotranges represents
+		a wide range of values. If you select a slot almost every thing is done you 
+		will now see the symbol-property-dialog where you can set the owner, group,
+		rights, etc. Else if you select a slot range the system will ask you for 
+		a specific address or name before continueing the setup of the symbol.<br>
+		For example: You want to access the markers of a PLC. Of course not all 
+		markers can be shown at the dialog. So a placeholder (slotrange) will
+		be used and the system will ask for the marker-address you want to use.
+		The system also can't determ what type the marker is. So you'll need to set
+		it at the symbol-property-dialog at the combo-box <i>Type</i>.</p>
+
+		<p>Starting a server is quiet similar to loading a devic. You right-click
+		at a empty space in the serverlist or at the tab <i>Servers</i> then
+		you select the server you want to start with a double click. Like 
+		loding a device you'll see now the setup-dialog for the server. Fill
+		up the form and click <i>OK</i>. You'll allways have to set an alias,
+		a default user and a server-root. The alias will be used to identify
+		the server later (like the alias for devices). The default user is 
+		necessary for servers, that do not know something like authentification
+		so every client that connects the server will have the rights of this
+		user. Servers that use authentification will ignore it or use it like
+		a fallback. So please use only users with less rights for the default
+		user. Server-root means that the server will only export the given
+		folder and all it's subfolders. To leave here the slash means to 
+		export the whole symboltree. Also like at the setup-dialog of devices
+		you'll get tool-tips if you stay with you mous over an entry. If all
+		parameters where ok, the server will be started and shown at the 
+		list.</p>
+	<div>
+
 
 	<p><b>If you want to know more, or if you have problems; Feel free to <a href="/en/Contact.html">contact</a>
 	me.</b></p>

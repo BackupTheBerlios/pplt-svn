@@ -20,6 +20,9 @@
 
 
 #ChangeLog:
+# 2005-06-25:
+#	- fixed bad symbol-path translation in
+#		ExportableSybolTree.SetValue():62
 # 2005-06-04:
 #	+ Add function Normpath()
 #	+ Add variable root item, means that 
@@ -62,7 +65,7 @@ class ExportableSymbolTree:
 		Path = Normpath(self.__Root+"/"+SymbolPath);
 		if not SessionID:
 			SessionID = self.__DefaultSession;
-		return(self.__SymbolTree.SetValue(SymbolPath, Value, SessionID));
+		return(self.__SymbolTree.SetValue(Path, Value, SessionID));
 
 	def ListFolders(self, PathToFolder, SessionID):
 		Path = Normpath(self.__Root+"/"+PathToFolder);

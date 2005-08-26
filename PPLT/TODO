@@ -8,17 +8,12 @@
 	(maybe very complex -> a task for 
 	release 1.1.0)
 
-[pyDCPU]
-	Implement user-proxy into the user/group
-	system to proxy a user into an other 
-	group.
-
 
 
 +++ BUGs BUGs BUGs +++
 [ALL]
 	Check all try/except brackets for a usefull debug or error 
-	output. (i know that i was lasy)
+	output. (i know, that i was lasy)
 
 [CoreModule] 
 	PPLTWeb and JVisu eat all free CPU load. (SimpleExport doesn't, may be 
@@ -28,10 +23,12 @@
 	If stoping the PPLTWebServer an exception will be raised 
 	(maybe JVisuServer has the same problem)
 
-[PPLTCenter]
-	If there is no description for a device or slot the description-window
-	should be cleaned.
-
 [pyDCPU]
 	It would be better if the call of setup() of a module will be inside 
 	a try/except pair.
+
+[PPLTCenter]
+	All dialoges should associate ENTER with OK-click.
+
+[pyDCPU]
+	Symbols/Folders should be raname-able.

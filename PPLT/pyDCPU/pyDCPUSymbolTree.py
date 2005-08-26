@@ -19,6 +19,10 @@
 # ############################################################################ #
 
 # ChangeLog:
+# 2005-08-26:
+#	add moveing/renaming symbols feature.
+# 2005-08-25:
+#	- fixed bug in SymbolTree.SetPossesion() 
 # 2005-05-27:
 #	- bug in DeleteSymbol(): was unable to delete symbol from root
 
@@ -71,7 +75,21 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
             return(False);
         return(Element.SetValue(Value, SessionID));
 
+    def CheckFolder(self, PathToFolder):
+        """ Check if folder exists. """
+        PathList = pyDCPUSymbolTools.SplitPath(PathToFolder);
+        Element = self.__GetElementByPath(PathList);
+        if not isinstance(Element, pyDCPUSymbolFolder.Folder):
+            return(False);
+        return(True);
 
+    def CheckSymbol(self, PathToSymbol):
+        """ Check if symbol exists. """
+        PathList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
+        Element = self.__GetElementByPath(PathList);
+        if not isinstance(Element, pyDCPUSymbol.Symbol):
+            return(False);
+        return(True);
 
     def ListFolders(self, PathToFolder, SessionID):
         """ List all folders in folder addressed by PathToFolder """
@@ -129,7 +147,6 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
                 return(False);
 
         return(True);
-
 
 
     def DeleteFolder(self, PathToFolder):
@@ -198,6 +215,67 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         return(True);
 
 
+    def MoveSymbol(self, OldPath, NewPath):
+        """ Move a symbol. """
+        OPList = pyDCPUSymbolTools.SplitPath(OldPath);
+        NPList = pyDCPUSymbolTools.SplitPath(NewPath);
+
+        if len(OPList)<1 or len(NPList)<1:
+            return(False);
+        self.Logger.debug("Try to move symbol %s to %s"%(OldPath,NewPath));
+        #check if source-symbol and destination-folder exists.
+        if not self.CheckSymbol(OldPath):
+            self.Logger.error("Movesymbol: Source doesn't exists.");
+            return(False);
+        if len(NPList)>1:
+            NParent = self.__GetElementByPath(NPList[:-1]);
+            if not isinstance(NParent, pyDCPUSymbolFolder.Folder):
+                return(None);
+            self.Logger.debug("Movesymbol: Destinationfolder is a folder.");
+        #check if destinatino already exists
+        if self.CheckSymbol(NewPath):
+            self.Logger.error("Can't move symbol: Destination already exists (Symbol)");
+            return(False);
+        if self.CheckFolder(NewPath):
+            self.Logger.error("Can't move symbol: Destination already exists (Folder)");
+            return(False);
+
+        #self.Logger.debug("Seems all ok for moving symbol.");
+
+        OName = OPList[-1];
+        NName = NPList[-1];
+        
+        #remove symbol from source folder
+        if len(OPList) == 1:
+            Symbol = self.SymbolHash.get(OName);
+            if not Symbol:
+                self.Logger.error("Symbol %s not found in my list."%OName);
+                return(False);
+            del self.SymbolHash[OName];
+        else:
+            Symbol = self.__GetElementByPath(OPList);
+            if not isinstance(Symbol, pyDCPUSymbol.Symbol):
+                self.Logger.error("Symbol %s not found."%OldPath);
+                return(False);
+            OParent = self.__GetElementByPath(OPList[:-1]);
+            OParent.RemoveSymbol(OName);
+        
+        #add symbol to destination
+        Symbol.Rename(NName);
+        if len(NPList)==1:
+            self.SymbolHash.update( {NName:Symbol} );
+            return(True);
+        if not NParent.AddSymbol(NName, Symbol):
+            #if symbol could not added to new folder 
+            #    ->move it back where it comes from.
+            Symbol.Rename(OName);
+            if len(OPList)==1:
+                self.SymbolHash.update( {OName:Symbol} );
+                return(False);
+            OParent.AddSymbol(OName,Symbol);
+            return(False);
+        return(True);
+
 
     def DeleteSymbol(self, PathToSymbol):
         """ Delete a Symbol """
@@ -209,7 +287,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
         if len(PList)==1:
             if self.SymbolHash.has_key(Name):
-		self.SymbolHash[Name].Unregister();
+                self.SymbolHash[Name].Unregister();
                 del self.SymbolHash[Name];
                 return(True);
             return(False);
@@ -231,9 +309,9 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         if not Element:
             return(False);
 
-        Possession = UserDB.Possession(self.__User,
-                                      self.__Group,
-                                      self.__permissions,
+        Possession = UserDB.Possession(User,
+                                       Group,
+                                       Permissions,
                                       self.__UserDB);
         if not Element.SetPossession(Possession):
             return(False);
@@ -296,7 +374,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
                 return(self.FolderHash[PathList[0]]);
             elif self.SymbolHash.has_key(PathList[0]):
                 return(self.SymbolHash[PathList[0]]);
-            self.Logger.warning("Element \"%s\" not found."%PathList[0]);
+            self.Logger.debug("Element \"%s\" not found."%PathList[0]);
             return(None);
 
         FList = PathList[:-1];
@@ -322,9 +400,9 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
     def ToXML(self, Document):
         Node = Document.createElement("SymbolTree");
         
-        Node.setAttribute("own",str(self.__Possession.GetOwner()));
-        Node.setAttribute("grp",str(self.__Possession.GetGroup()));
-        Node.setAttribute("mod",str(self.__Possession.GetRight()));
+        #Node.setAttribute("own",str(self.__Possession.GetOwner()));
+        #Node.setAttribute("grp",str(self.__Possession.GetGroup()));
+        #Node.setAttribute("mod",str(self.__Possession.GetRight()));
 
         for folder in self.FolderHash.values():
             subnode = folder.ToXML(Document);

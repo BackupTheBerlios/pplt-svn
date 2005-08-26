@@ -20,6 +20,10 @@
 
 
 # Changelog:
+# 2005-08-26:
+#	+ add removeing/renameing symbols feature.
+# 2005-08-25:
+#	+ added check for master/export names, ...
 # 2005-05-27:
 #	- bug: inconsistent refcounter in Core.MasterTreeDel();
 
@@ -31,7 +35,7 @@ import pyDCPUSymbolSlot;
 import pyDCPUSymbolTree;
 import pyDCPUObjectTree;
 import ExportableSymbolTree;
-
+import NameCheck;
 
 
 
@@ -118,6 +122,12 @@ class Core:
         """
             This method cares about Object creation and connections... 
         """
+        # check ModName:
+        ModName = NameCheck.CheckDevice(ModName);
+        if not ModName:
+            self.Logger.error("Invalid mastername-format.");
+            return(None);
+
         #check if this module was loaded in the sameplace with the same prams.
         fingerprint = Modules.Fingerprint(ModName, 
                                           Parent = ParentID, 
@@ -272,7 +282,29 @@ class Core:
     # ######################################################################## #
     def ExporterAdd(self, ExportModule, Parameters, DefaultUser, Root = '/'):
         """ This method load an export-module """
-        
+
+        # check export-module-name:
+        ExportModule = NameCheck.CheckServer(ExportModule);
+        if not ExportModule:
+            self.Logger.error("Invalid format for ExportModuleName.");
+            return(None);
+
+        # check DefaultUserName:
+        DefaultUser = NameCheck.CheckUser(DefaultUser);
+        if not DefaultUser:
+            self.Logger.error("Invalid format for user-name.");
+            return(None);
+
+        # check server-root:
+        Root = NameCheck.CheckPath(Root);
+        if not Root:
+            self.Logger.error("Invalid format for a server-root.");
+            return(None);
+
+        if (not self.__SymbolTree.CheckFolder(Root)) and (Root!="/"):
+            self.Logger.error("Serverroot (%s) doesn't exists."%Root);
+            return(None);
+
         fingerprint = Modules.Fingerprint(Name = ExportModule, 
                                           DefaultUser = DefaultUser, 
                                           Parameter = Parameters,
@@ -332,7 +364,7 @@ class Core:
     
     def ExporterToXML(self, doc):
         self.Logger.error("Not implemented yet");
-        return(None);    
+        return(None);
 
 
     # ######################################################################## #
@@ -346,6 +378,12 @@ class Core:
             NOTE:
                 All folders on the path to 'Path' must exist!
         """
+        #check folder-path:
+        Path = NameCheck.CheckPath(Path);
+        if not Path:
+            self.Logger.error("Invalid format for a folder-path.");
+            return(None);
+
         if not self.__SymbolTree.CreateFolder(Path):
             self.Logger.error("Error while create Folder(check path)");
             return(False);
@@ -365,12 +403,29 @@ class Core:
             This method create a new symbol in the symbol-tree with the slot
             of symbol-slot-ID.
         """
+        #check symbol-path:
+        Path = NameCheck.CheckPath(Path);
+        if not Path:
+            self.Logger.error("Invalid path for a symbol-path.");
+            return(False);
+
         Slot = self.__ObjectHash.get(SymbolSlotID);
         if not Slot:
             self.Logger.error("No Slot with this ID Found");
             return(False);
         if not self.__SymbolTree.CreateSymbol(Path, Slot):
             self.Logger.error("Error while create Symbol in SymbolTree");
+            return(False);
+        return(True);
+
+    def SymbolTreeMoveSymbol(self, From, To):
+        """ This method moves a symbol From -> To. """
+        To = NameCheck.CheckPath(To);
+        if not To:
+            self.Logger.error("Destination is not a valid symbol-path.");
+            return(False);
+        if not self.__SymbolTree.MoveSymbol(From,To):
+            self.Logger.error("Error while move symbol %s to %s."%(From,To));
             return(False);
         return(True);
 

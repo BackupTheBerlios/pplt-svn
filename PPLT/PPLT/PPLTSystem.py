@@ -19,6 +19,10 @@
 # ############################################################################ # 
 
 #CHANGELOG:
+# 2005-08-26:
+#	+ add moveing/renaming symbols feature.
+# 2005-08-25:
+#	+ add Alias-, user-, ... namecheck.
 # 2005-07-23:
 #	+ implemented new Server/Device/Core-Mod management.
 # 2005-06-05:
@@ -47,10 +51,9 @@ import Install;
 import Device;
 import Server;
 import DataBase;
-#import DeviceDescription;
-#import ServerDescription;
 import LoadSession;
-import gettext;
+#import gettext;
+import NameCheck;
 from xml.dom.minidom import getDOMImplementation
 
 MODUS_FMT_OCTAL = 1;
@@ -347,6 +350,8 @@ Return a list of strings. """
 		""" Return a info object for the device Name. """
 		return(self.__DataBase.GetDeviceInfo(Name));
 
+
+
     # ######################################################################## #
     # User/Group management                                                    #
     # ######################################################################## #
@@ -354,6 +359,10 @@ Return a list of strings. """
 	def CreateGroup(self, ParentGroup, Name):
 		""" Create a group within ParentGroup with Name. If ParentGroup is None,
  a new root group will be generated. Return True on success. """ 
+		Name = NameCheck.CheckGroup(Name);
+		if not Name:
+			self.__Logger.error("Invalid format for groupname. Should only contain: a-z,A-Z,0-9,_,-");
+			return(False);
 		return(self.__UserDataBase.CreateGroup(ParentGroup,Name));
 
 	def DeleteGroup(self, Name):
@@ -386,6 +395,10 @@ Return a list of strings. """
 	def CreateMember(self, Group, Name, Password, Description):
 		""" Create a new group member for the give Group with Name, Password 
  and Description. Return True on success. """
+		Name = NameCheck.CheckUser(Name);
+		if not Name:
+			self.__Logger.error("Invalid format for username. Should only contain: a-z,A-Z,0-9,_,-");
+			return(False);
 		return(self.__UserDataBase.CreateMember(Group, Name, Password, Description));
 
 	def DeleteMember(self, Name):
@@ -395,6 +408,23 @@ Return a list of strings. """
 			self.__Logger.warning("No group found for user %s: does he/she exists?"%Name);
 			return(False);
 		return(self.__UserDataBase.DeleteMember(group.GetName(), Name));
+
+	def CreateProxy(self, Group, Name):
+		""" Create a user-proxy for user (Name) in group (Group). """
+		return(self.__UserDataBase.CreateProxy(Group, Name));
+
+	def ListProxys(self, Group):
+		"""List all proxys in group (Group). """
+		group = self.__UserDataBase.GetGroupByName(Group);
+		if not group:
+			self.__Logger.error("Group %s not found."%Group);
+			return(None);
+		self.__Logger.debug("List proxys of group %s"%group.GetName());
+		return(group.ListProxys());
+
+	def DeleteProxy(self, Group, User):
+		""" Delete proxy for user (User) in group (Group) """
+		return(self.__UserDataBase.DeleteProxy(Group, User));
 
 	def CheckPassword(self, Name, Password):
 		""" Test Password if its match to user Name's one. Return True on 
@@ -412,9 +442,11 @@ Return a list of strings. """
 	def GetSuperUser(self):
 		""" Return the name of the SuperUser """
 		return(self.__UserDataBase.GetSuperUser());
+
 	def GetSuperUserGrp(self):
 		""" Return the group of the SuperUser """
 		return(self.__UserDataBase.GetSuperUserGrp());
+
 	def GetGroupByUser(self, UserName):
 		""" Return the group of given user """
 		grp = self.__UserDataBase.GetGroupByUserName(UserName);
@@ -429,10 +461,24 @@ Return a list of strings. """
 	def LoadDevice(self, DeviceName, Alias, Parameters):
 		""" Load and init device DeviceName as Alias with Parameters. Return
  True on success."""
+		#check DeviceName:
+		print DeviceName
+		DeviceName = NameCheck.CheckDevice(DeviceName);
+		if not DeviceName:
+			self.__Logger.error("Invalid format for a FQ deivcename.");
+			return(False);
+
+		#check Alias:
+		Alias = NameCheck.CheckAlias(Alias);
+		if not Alias:
+			self.__Logger.error("Invalid format for an alias. Aliasnames should only contain (a-z,A-Z,0-9,-,_)");
+			return(False);
+
 		#check alias:
 		if self.__DeviceHash.has_key(Alias):
 			self.__Logger.error("Alias %s already exists"%Alias);
 			return(False);
+
 		# try to find out file name of DeviceName
 		devFileName = self.__DataBase.GetDevicePath(DeviceName);
 		if not devFileName:
@@ -455,6 +501,7 @@ Return a list of strings. """
 		return(True);
 
 
+
 	def UnLoadDevice(self, Alias):
 		""" Unload and destroy the given device. Return True on success. """
 		#get device from table
@@ -462,10 +509,12 @@ Return a list of strings. """
 		if not device:
 			self.__Logger.warning("No device found named %s"%Alias);
 			return(False);
+
 		#try to destroy
 		if not device.destroy():
 			self.__Logger.warning("Can't destroy device %s"%Alias);
 			return(False);
+
 		#remove from table
 		del self.__DeviceHash[Alias];
 		return(True);
@@ -500,6 +549,24 @@ Return a list of strings. """
 	def LoadServer(self, ServerName, Alias, DefaultUser, Parameters, Root = "/"):
 		""" Load the server ServerName as Alias with Parameters and with
  default rights of the given DefaultUser. Return True on success."""
+		#check server-root:
+		Root = NameCheck.CheckPath(Root);
+		if not Root:
+			self.__Logger.error("Invalid path-format for server-root.");
+			return(False);
+
+		#check alias:
+		Alias = NameCheck.CheckAlias(Alias);
+		if not Alias:
+			self.__Logger.error("Invalid format for an alias.");
+			return(False);
+
+		#check servername:
+		ServerName = NameCheck.CheckServer(ServerName);
+		if not ServerName:
+			self.__Logger.error("Invalid format for a servername.");
+			return(False);
+
 		#check alias:
 		if self.__ServerHash.has_key(Alias):
 			self.__Logger.error("Alias %s already exists"%Alias);
@@ -577,6 +644,12 @@ Return a list of strings. """
  Modus, Owner, Group can be obmitted, then the SuperUser and the 
  SuperUserGroup will be used for Owner and Group and 600 will be used as
  the modus. Return True on success."""
+		#check path:
+		Path = NameCheck.CheckPath(Path);
+		if not Path:
+			self.__Logger.error("Invalid path-format for folder-path.");
+			return(False);
+
 		# map call to core-object:
 		if not self.__Core.SymbolTreeCreateFolder(Path):
 			return(False);
@@ -610,19 +683,34 @@ Return a list of strings. """
 		""" Create a Symbol with Type in Path and attach it to Slot. Modus, Owner, Group
  can be obmitted. Then SuperUser, SuperUserGroup and 600 will be used. Return True on
  success. """
+		# check slot-path:
+		Path = NameCheck.CheckPath(Path);
+		if not Path:
+			self.__Logger.error("Invalid path-format for symbol-path.");
+			return(False);
+
+		# check slot:
+		Slot = NameCheck.CheckSlot(Slot);
+		if not Slot:
+			self.__Logger.error("\"%s\": Invalid format for a Slot name."%Slot);
+			return(False);
+
 		# check if symbol allready exists:
 		# split slot:
 		tmp = Slot.split('::');
 		if len(tmp) < 2 or len(tmp) > 3:
 			self.__Logger.error("Slot address format: DEVICE::NAMESPACE::ADDRESS");
 			return(False);
+
 		# get device name:
 		DevName = tmp[0];
+
 		# get namespace
 		if len(tmp) == 2:
 			NameSpace = None;
 		else:
 			NameSpace = tmp[1];
+
 		# get address:
 		Address = tmp[-1];
 		
@@ -665,6 +753,32 @@ Return a list of strings. """
 		
 		self.__Logger.debug("Save %s for %s."%(str((Slot,Type)),Path))
 		self.__SymbolParameters.update( {Path:(Slot,Type)} );
+		return(True);
+
+
+	def MoveSymbol(self, From, To):
+		To = NameCheck.CheckPath(To);
+		if not To:
+			self.__Logger.error("Invalid symbolpath-format for destiantion.");
+			return(False);
+		if not self.__Core.SymbolTreeMoveSymbol(From,To):
+			self.__Logger.error("Error while move symbol from %s to %s"%(From,To))
+			return(False);
+
+		#update symbol-parameters:
+		paras = self.__SymbolParameters.get(From);
+		del self.__SymbolParameters[From];
+		self.__SymbolParameters.update( {To:paras} );
+		
+		#update symbol<->device table:
+		device = self.__SymbolDeviceTable.get(From);
+		del self.__SymbolDeviceTable[From];
+		self.__SymbolDeviceTable.update( {To:device} );
+
+		#update symbol<->slot table:
+		slot = self.__SymbolTable.get(From);
+		del self.__SymbolTable[From];
+		self.__SymbolTable.update( {To:slot} );
 		return(True);
 
 
@@ -765,6 +879,10 @@ Return a list of strings. """
 	def ChangeOwner(self, Path, Owner):
 		""" Set the owner of a symbol or folder. Return True
  on success. """
+		Owner = NameCheck.CheckUser(Owner);
+		if not Owner:
+			self.__Logger.error("Invalid user name. Usernames should only contain (a-z,A-Z,0-9,-,_).");
+			return(False);
 		(old_user, group, modus) = self.__Core.SymbolTreeGetAccess(Path);
 		return(self.__Core.SymbolTreeSetAccess(Path, Owner, group, modus));
 
@@ -777,6 +895,10 @@ Return a list of strings. """
 
 	def ChangeGroup(self, Path, Group):
 		""" Set the group of a symbol or folder. Return True on success."""
+		Group = NameCheck.CheckGroup(Group);
+		if not Group:
+			self.__Logger.error("Invalid group name. Groupnames should only contain (a-z,A-Z,0-9,-,_).");
+			return(None);
 		(owner, old_group, modus) = self.__Core.SymbolTreeGetAccess(Path);
 		return(self.__Core.SymbolTreeSetAccess(Path, owner, Group, modus));
 
