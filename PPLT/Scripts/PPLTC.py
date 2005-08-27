@@ -38,6 +38,8 @@ class MainFrame(wx.Frame):
 
 		bmplst = LoadBitmaps(PPLT.Config().GetIconPath());
 
+		self.SetIcon(bmplst.get("Logo"));
+
 		self.__NewID = wx.NewId();
 		self.__LoadID = wx.NewId();
 		self.__SaveID = wx.NewId();
@@ -90,7 +92,7 @@ class MainFrame(wx.Frame):
 
 
 	def OnLoad(self, event):
-		dlg = wx.FileDialog(self, _("Select a SessionFile"), style=wx.OPEN);
+		dlg = wx.FileDialog(self, _("Select a SessionFile"), style=wx.OPEN, wildcard=_("PPLT Session File (*.psf)|*.psf"));
 		if not dlg.ShowModal() == wx.ID_OK:
 			return(None);
 		path = dlg.GetPath();
@@ -114,7 +116,7 @@ class MainFrame(wx.Frame):
 		self.__Logger.info("Session Saved");
 
 	def OnSaveAs(self, event):
-		dlg = wx.FileDialog(self, _("Save Session as..."), style=wx.SAVE);
+		dlg = wx.FileDialog(self, _("Save Session as..."), style=wx.SAVE, wildcard=_("PPLT Session File (*.psf)|*.psf"));
 		if not dlg.ShowModal() == wx.ID_OK:
 			return(None);
 		path = dlg.GetPath();

@@ -1,0 +1,23 @@
+<?xml version="1.0" ?>
+<PPLTSession>
+	<Servers>
+		<Server alias="web" fqsn="Web.PPLTWebServer" root="/" user="admin">
+			<Parameter name="Port">
+				8080
+			</Parameter>
+			<Parameter name="Address">
+				127.0.0.1
+			</Parameter>
+		</Server>
+	</Servers>
+	<Devices>
+		<Device alias="random" fqdn="Debug.RandomGenerator"/>
+	</Devices>
+	<SymbolTree>
+		<Folder group="Admin" modus="640" name="rand" owner="admin">
+			<Symbol group="Admin" modus="640" name="r_double" owner="admin" slot="random::Generator::Double" type="Double"/>
+			<Symbol group="Admin" modus="640" name="r_bool" owner="admin" slot="random::Generator::Bool" type="Bool"/>
+			<Symbol group="Admin" modus="640" name="r_byte" owner="admin" slot="random::Generator::Byte" type="Byte"/>
+		</Folder>
+	</SymbolTree>
+</PPLTSession>

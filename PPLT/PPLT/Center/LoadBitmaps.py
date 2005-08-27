@@ -57,10 +57,11 @@ def LoadBitmaps(path):
 	if not tmp:
 		tmp = wx.NullBitmap;
 	bmps.update( {"Info":tmp} );
-#	tmp = wx.Bitmap(os.path.normpath(path+"/pack_del.xpm"));
-#	if not tmp:
-#		tmp = wx.NullBitmap;
-#	bmps.update( {"PackDel":tmp} );
+
+	tmp = wx.Icon(os.path.normpath(path+"/PPLT.ico"), wx.BITMAP_TYPE_ICO);
+	if not tmp:
+		tmp = wx.NullIcon;
+	bmps.update( {"Logo":tmp} );
 
 	return(bmps);
 	

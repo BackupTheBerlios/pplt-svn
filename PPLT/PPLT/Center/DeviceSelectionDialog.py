@@ -30,6 +30,7 @@ import sys;
 import PPLT;
 import os;
 
+
 class DeviceSelectionDialog(wx.Dialog):
 	def __init__(self, parent, PPLTSys):
 		wx.Dialog.__init__(self, parent, -1, 
@@ -41,8 +42,15 @@ class DeviceSelectionDialog(wx.Dialog):
 
 		self.__Tree = DeviceTree(self, PPLTSys);
 
+		InitialHelpText = _("""Select a Device:
+Above are all known devices are listed. Grouped by there class.
+To see the content of a class please double-click the class.
+To select a device, please double-click the device.
+To see a short help-text for a device, single-click it.""")
+
 		self.__Help = wx.TextCtrl(self, -1, size=(-1,70),style = wx.TE_MULTILINE);
 		self.__Help.SetEditable(False);
+		self.__Help.SetValue(InitialHelpText);
 
 		sizer.Add(self.__Tree, 1, wx.ALIGN_CENTRE|wx.GROW, 3);
 		sizer.Add(self.__Help, 0, wx.ALIGN_CENTRE|wx.GROW|wx.TOP, 3);

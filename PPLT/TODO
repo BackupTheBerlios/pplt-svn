@@ -16,14 +16,9 @@
 	output. (i know, that i was lasy)
 
 [CoreModule] 
-	PPLTWeb and JVisu eat all free CPU load. (SimpleExport doesn't, may be 
+	JVisu eat all free CPU load. (SimpleExport doesn't, may be 
 	a problem with the non-blocking sockets.)
-
-[CoreModule]	
-	If stoping the PPLTWebServer an exception will be raised 
-	(maybe JVisuServer has the same problem)
 
 [pyDCPU]
 	It would be better if the call of setup() of a module will be inside 
 	a try/except pair.
-

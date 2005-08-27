@@ -1,10 +1,20 @@
 Version 0.3.1 (Rev: ??)	- 2005-??-??:
+	(Release 22)
+	* fixed MANIFEST.in
+	* fixed in PPLT/DataBase.py:
+		fixed crash if module-requrement it not meet
+	* add short help text to DeviceSelectionDialog.
+	* add wildcard for load/save PPLTCenter session (*.psf)
 	* add post-install-scpript for the win32 installer:
 		Now there are some items created in your start-menu.
+		And the *.psf is associated with the PPLTCenter.
 	* add setup.cfg
 	* in Script/PPLTC.py:
 		- fixed wrong getopt call
 		- add "verbose" option (-v)
+
+	(Revision 21)
+
 	* fixed in PPLT/Center/SymbolTreePanel.py, PPLT/Center/UserDBPanel.py:
 		- items sort
 	* fixed in PPLT/Center/SymbolTreePanel.py:

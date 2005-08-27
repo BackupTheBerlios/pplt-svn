@@ -20,6 +20,8 @@
 
 
 # Changelog:
+# 2005-08-28:
+#	- fixed crash if a module-requirement is not meet.
 # 2005-08-20:
 #	- fixed crash if no modules are preset. (in RGlob())
 # 2005-06-19:
@@ -52,7 +54,10 @@ You can install and uninstall (if you have the right to do) modules. """
 		ZIPList = RGlob(self.__CoreModulePath,"*.zip");
 		self.__Logger.info("Try to add %i DCPU-Modules to DB"%len(ZIPList));
 		for ZIPFile in ZIPList:
-			Item = CreateItem(ZIPFile, Lang, AltLang, self);
+			try:
+				Item = CreateItem(ZIPFile, Lang, AltLang, self);
+			except:
+				Item = None;
 			if isinstance(Item, CoreModItem):
 				ClassList = ClassFromPath(ZIPFile,self.__CoreModulePath);
 				ItemName  = Item.GetName();
@@ -61,7 +66,10 @@ You can install and uninstall (if you have the right to do) modules. """
 		XMLList = RGlob(self.__PPLTModulePath, "*.xml");
 		self.__Logger.info("Try to add %i PPLT-Modules to DB"%len(XMLList));
 		for XMLFile in XMLList:
-			Item = CreateItem(XMLFile, Lang, AltLang, self);
+			try:
+				Item = CreateItem(XMLFile, Lang, AltLang, self);
+			except:
+				Item = None;
 			if isinstance(Item, ServerItem):
 				ClassList = Item.GetClass().split(".");
 				ItemName  = Item.GetName()
@@ -460,12 +468,12 @@ class CoreModItem(BaseItem):
 		tmp = FileName.split(".");
 		BaseItem.__init__(self, tmp[0], Meta);
 
-		if not Meta.CheckDCPUVersion():	
-			raise Exception("Invalid pyDCPU Version");
+		if not Meta.CheckDCPUVersion():
+			raise Exception("Can't load CoreMod %s: Invalid pyDCPU Version."%FileName);
 		if not Meta.CheckPythonVersion():
-			raise Exception("Invalid Python Version");
+			raise Exception("Can't load CoreMod %s: Invalid Python Version."%FileName);
 		if not Meta.CheckPythonModules():
-			raise Exception("Missing python-lib(s)");
+			raise Exception("Can't load CoreMod %s: Missing python-lib(s)"%FileName);
 
 
 	def GetDescription(self, Lang, AltLang):
@@ -492,7 +500,7 @@ class ServerItem:
 		req_core_mods = self.__Meta.GetRequiredModules();
 		for core_mod in req_core_mods:
 			if not DataBase.HasCoreMod(core_mod):
-				raise Exception("Missing Core-Mod: %s"%core_mod);
+				raise Exception("Can't load PPLT Module %s: Missing Core-Mod: %s"%(self.__Meta.GetName(),core_mod));
 		# ---done---
 
 
