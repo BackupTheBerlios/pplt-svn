@@ -72,16 +72,21 @@ class System:
  be used. Will be installed, so you should simply call PPLT.System() to get an
  instance of this class."""
 
-	def __init__(self,ConfigFile=None):
+	def __init__(self,ConfigFile=None, CoreLogLevel=None, PPLTLogLevel=None):
 		self.__Config = Configuration.Config(ConfigFile);					# Load Config
+
+		CoreLL = self.__Config.GetCoreLogLevel();
+		PPLTLL = self.__Config.GetPPLTLogLevel();
+		if CoreLogLevel: CoreLL = CoreLogLevel;
+		if PPLTLogLevel: PPLTLL = PPLTLogLevel;
 
 		self.__Core = pyDCPU.Core(ModulePath = self.__Config.GetBasePath(),
                                   UserDBFile = self.__Config.GetUserDB(),	# Start Core
-                                  LogLevel = self.__Config.GetCoreLogLevel(),
+                                  LogLevel = CoreLL,
                                   LogFile = self.__Config.GetLogFile(),
                                   SysLog = self.__Config.GetSysLog());
 
-		self.__Logger = Logging.Logger(self.__Config.GetPPLTLogLevel(),
+		self.__Logger = Logging.Logger( PPLTLL,
 										self.__Config.GetLogFile(),
 										self.__Config.GetSysLog());			# Start Logging
 
@@ -399,7 +404,7 @@ Return a list of strings. """
 		if not Name:
 			self.__Logger.error("Invalid format for username. Should only contain: a-z,A-Z,0-9,_,-");
 			return(False);
-		return(self.__UserDataBase.CreateMember(Group, Name, Password, Description));
+		return(self.__UserDataBase.CreateMember(Group, Name, Password, Description, Encode=True));
 
 	def DeleteMember(self, Name):
 		""" Delete a user. Return True on success. """
@@ -433,7 +438,7 @@ Return a list of strings. """
 
 	def ChangePassword(self, Name, Password):
 		""" Change the passwd for a the user Name. """
-		return(self.__UserDataBase.ChangePassword(Name,Password));
+		return(self.__UserDataBase.ChangePassword(Name,Password,Encode=True));
 
 	def SetSuperUser(self, Name):
 		""" Make user Name become the SuperUser. """

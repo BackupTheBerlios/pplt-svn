@@ -3,8 +3,14 @@ import pyDCPU;
 import PPLT;
 import string;
 import base64;
+import sys;
+import socket;
 
 #Changelog:
+# 2005-08-25:
+#	- fixed heavy cpu-load problem 
+#		(causes Win8x to crash)
+#	- fixed problem with python version < 2.4
 # 2005-08-20:
 #	- add http-auth 
 #	- server will not use the default user anymore.
@@ -18,19 +24,18 @@ class PPLTWebServer(BaseHTTPServer.HTTPServer):
 		self.ExpSymbolTree = ExpSymbolTree;
 		self.__RUNNING = True;
 
-	def get_request(self):
-		self.socket.setblocking(0);
+	def serve_forever(self):
 		while self.__RUNNING:
-			try:
-				(sock, addr) = self.socket.accept();
-				if sock:
-					sock.setblocking(1);
-				return( (sock,addr) );
-			except:
-				pass;
+			self.handle_request();
 
-	def Stop(self):
+	def Stop(self, Addr, Port):
 		self.__RUNNING = False;
+		self.socket.setblocking(0);
+		self.socket.close();
+		tmpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
+		try: tmpSock.connect( (Addr, Port) );
+		except: pass;
+
 
 class PPLTWebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
     def do_GET(self):
@@ -44,7 +49,10 @@ class PPLTWebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
             return(None);
 
         (TYPE, CODE)= auth.split(" ",1);
-        CODE		= base64.b64decode(CODE);
+        if sys.version < "2.4":
+            CODE = base64.decodestring(CODE)
+        else:
+            CODE = base64.b64decode(CODE);
         (USER, PASS)= CODE.split(":",1);
 
         symbtree = self.server.ExpSymbolTree;
@@ -97,34 +105,6 @@ class PPLTWebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 
 
-#class Object(pyDCPU.ExportObject):
- #   def setup(self):
-#        if self.Parameters.get('Address'):
-#            self.__BindAddress = self.Parameters['Address'];
-#        else:
-#            self.__BindAddress = '127.0.0.1';
-#        self.Logger.debug("Will bind to addr %s"%self.__BindAddress);
-#
-#        try:
-#            self.__Port = int(self.Parameters['Port']);
-#        except:
-#            self.__Port = 8080;
-#        self.Logger.debug("Will bind to port %i"%self.__Port);
-#
-#        self.__Server = PPLTWebServer(('',80),PPLTWebHandler, self.SymbolTree);
-#        self.__Loop = True;
-#
-#    def start(self):
-#        fileno = self.__Server.fileno();
-#        rlist = [fileno];
-#        wlist = [];
-#        xlist = [];
-#        while self.__Loop:
-#            self.__Server.handle_request();
-#
-#    def stop(self):
-#        self.__Loop = False;
-    
 
 def PathAdd(path,folder):
     pl = path.split('/');
@@ -170,16 +150,13 @@ class Object(pyDCPU.ExportObject):
 		if not self.__ServerObject:
 			self.Logger.error("No server object");
 			return(False);
-		self.__Loop = True;
 		return(True);
 
 	def start(self):
-		while self.__Loop:
-			self.__ServerObject.handle_request();
+		self.__ServerObject.serve_forever();
 		return(True);
 
 	def stop(self):
-		self.__ServerObject.Stop();
-		self.__Loop = False;
+		self.__ServerObject.Stop(self.__BindAddress, self.__Port);
 		return(True);
 

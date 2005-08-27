@@ -53,10 +53,10 @@ class Possession:
         if not sesUser:
             self.__Logger.debug("No Username for session %s"%SessionID);
             return(False);
-        self.__Logger.debug("Session of %s"%sesUser);
+        #self.__Logger.debug("Session of %s"%sesUser);
 
         if self.__UserDB.IsSuperUser(sesUser):
-            self.__Logger.debug("SuperUserSession: Access OK");
+        #    self.__Logger.debug("SuperUserSession: Access OK");
             return(True);
 
         if sesUser == self.__OwnerName and self.__OwnerRight.read():

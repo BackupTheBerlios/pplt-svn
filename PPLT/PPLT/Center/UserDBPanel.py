@@ -85,6 +85,7 @@ class UserDBPanel(wx.TreeCtrl):
 			self.SetItemImage(nitem,self.__GroupIcon, wx.TreeItemIcon_Normal);
 			self.SetItemImage(nitem,self.__GroupIcon, wx.TreeItemIcon_Expanded);
 			self.SetPyData(nitem,(True,False));
+			self.SortChildren(Item);
 			self._InsertGroups(grp,nitem);
 			self._InsertMembers(grp,nitem);
 			self._InsertProxys(grp, nitem);
@@ -99,6 +100,7 @@ class UserDBPanel(wx.TreeCtrl):
 			else:
 				self.SetItemImage(nitem, self.__UserIcon, wx.TreeItemIcon_Normal);
 				self.SetPyData(nitem, (False,False));
+			self.SortChildren(Item);
 
 	def _InsertProxys(self, Group, Item):
 		memlst = self.__PPLTSys.ListProxys(Group);
@@ -106,6 +108,7 @@ class UserDBPanel(wx.TreeCtrl):
 			nitem = self.AppendItem(Item,mem);
 			self.SetItemImage(nitem, self.__ProxyIcon, wx.TreeItemIcon_Normal);
 			self.SetPyData(nitem, (True,True));
+			self.SortChildren(Item);
 
 	def __RemoveProxys(self, Name, item=None):
 		if not item:
@@ -123,6 +126,21 @@ class UserDBPanel(wx.TreeCtrl):
 		sitem = self.GetNextSibling(item);
 		if sitem:
 			self.__RemoveProxys(Name, sitem);
+
+	def OnCompareItems(self, item1, item2):
+		Label1 = self.GetItemText(item1);
+		Label2 = self.GetItemText(item2);
+		(IsGrp1, IsSU1) = self.GetPyData(item1);
+		(IsGrp2, IsSU2) = self.GetPyData(item2);
+		if IsGrp1 and not IsGrp2:
+			return -1;
+		elif IsGrp2 and not IsGrp1:
+			return 1;
+		if Label1 > Label2:
+			return 1;
+		elif Label1 == Label2:
+			return 0;
+		return -1;
 
 	def OnRightClick(self, event):
 		pt = event.GetPosition();
@@ -171,6 +189,7 @@ class UserDBPanel(wx.TreeCtrl):
 		nitem = self.AppendItem(item, user);
 		self.SetItemImage(nitem, self.__UserIcon, wx.TreeItemIcon_Normal);
 		self.SetPyData(nitem, (False,False));
+		self.SortChildren(item);
 		self.Expand(item);
 
 	def OnDelUser(self, Event):
@@ -217,6 +236,7 @@ class UserDBPanel(wx.TreeCtrl):
 		nitem = self.AppendItem(item, User);
 		self.SetItemImage(nitem, self.__ProxyIcon, wx.TreeItemIcon_Normal);
 		self.SetPyData(nitem, (True,True));
+		self.SortChildren(item);
 		self.Expand(item);
 
 	def OnDelProxy(self, Event):
@@ -271,6 +291,7 @@ class UserDBPanel(wx.TreeCtrl):
 		self.SetPyData(nitem, (True, False));
 		if item != self.__RootItem:
 			self.Expand(item);
+		self.SortChildren(item);
 
 	def OnDelGroup(self, Event):
 		item = self.GetSelection();

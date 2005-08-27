@@ -54,10 +54,17 @@ class DeviceParameterDialog(wx.Dialog):
 		self.__MySizer.Add(box, 0, wx.ALL|wx.GROW, 3);
 
 		self.Bind(wx.EVT_BUTTON, self.OnOK, ok);
+		self.Bind(wx.EVT_KEY_UP, self.OnKey);
 
 		self.SetSizer(self.__MySizer);
 		self.__MySizer.Fit(self);
 
+	
+	def OnKey(self, event):
+		if event.GetKeyCode() == wx.WXK_RETURN:
+			self.EndModal(wx.ID_OK);
+		elif event.GetKeyCode() == wx.WXK_ESCAPE:
+			self.EndModal(wx.ID_CANCEL);
 
 	def __AddEntry(self, var):
 		defval = self.__Info.GetVariableDefaultValue(var);

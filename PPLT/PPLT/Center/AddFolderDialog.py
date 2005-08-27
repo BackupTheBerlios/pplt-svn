@@ -49,11 +49,19 @@ class AddFolderDialog(wx.Dialog):
 		box.Add(ca,1,wx.ALIGN_CENTER|wx.ALL,3);
 		sizer.Add(box,1,wx.ALIGN_CENTER|wx.GROW);
 
+		self.Bind(wx.EVT_KEY_UP, self.OnKey);
+
 		self.SetSizer(sizer);
 		sizer.Fit(self);
 
 	def OnOK(self, event):
 		self.EndModal(wx.ID_OK);
+
+	def OnKey(self, event):
+		if event.GetKeyCode() == wx.WXK_RETURN:
+			self.EndModal(wx.ID_OK);
+		elif event.GetKeyCode() == wx.WXK_ESCAPE:
+			self.EndModal(wx.ID_CANCEL);
 
 	def GetModus(self):
 		return(self.__modbox.GetModus());

@@ -41,7 +41,7 @@ import logging;
 
 class SymbolTreePanel(wx.TreeCtrl):
 	def __init__(self, parent, PPLTSys):
-		styleflags = wx.TR_NO_LINES|wx.TR_HIDE_ROOT|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS|wx.TR_FULL_ROW_HIGHLIGHT;
+		styleflags =wx.TR_NO_LINES|wx.TR_HIDE_ROOT|wx.TR_TWIST_BUTTONS|wx.TR_HAS_BUTTONS|wx.TR_FULL_ROW_HIGHLIGHT|wx.TR_EDIT_LABELS;
 #		if wx.Platform == "__WXMSW__":
 #			styleflags = wx.TR_NO_LINES|wx.TR_HAS_BUTTONS;
 			
@@ -70,9 +70,6 @@ class SymbolTreePanel(wx.TreeCtrl):
 		self.SetImageList(self.__IL);
 
 		self.__myRoot = self.AddRoot(_("SymbolTree (/)"));
-#		self.SetPyData(self.__myRoot,(True,"/"));
-#		self.SetItemImage(self.__myRoot,self.__FolderIcon, wx.TreeItemIcon_Normal);
-#		self.SetItemImage(self.__myRoot,self.__FolderIcon2, wx.TreeItemIcon_Expanded);
 		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
 		self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown);
 		self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp);
@@ -97,23 +94,38 @@ class SymbolTreePanel(wx.TreeCtrl):
 			nitem = self.AppendItem(Item, "%s  @ %s"%(sym,slot));
 			self.SetPyData(nitem, (False, symp));
 			self.SetItemImage(nitem, self.__SymbolIcon, wx.TreeItemIcon_Normal);
-		
+			self.SortChildren(Item);
+
 		follst = self.__PPLTSys.ListFolders(Path);
 		for fol in follst:
 			if Path[-1] == "/":
 				folp = Path+fol;
 			else:
 				folp = Path+"/"+fol;
-			nitem = self.AppendItem(Item, "%s"%fol);
+			nitem = self.AppendItem(Item, fol);
 			self.SetPyData(nitem, (True, folp));
 			self.SetItemImage(nitem, self.__FolderIcon, wx.TreeItemIcon_Normal);
 			self.SetItemImage(nitem, self.__FolderIcon2, wx.TreeItemIcon_Expanded);
 			self.Build(nitem, folp);
-		
+			self.SortChildren(Item);
 
 	def Clean(self):
 		self.DeleteChildren(self.__myRoot);
 
+	def OnCompareItems(self, item1, item2):
+		Label1 = self.GetItemText(item1);
+		Label2 = self.GetItemText(item2);
+		(IsFolder1, Path1) = self.GetPyData(item1);
+		(IsFolder2, Path2) = self.GetPyData(item2);
+		if IsFolder1 and not IsFolder2:
+			return -1;
+		elif IsFolder2 and not IsFolder1:
+			return 1;
+		if Label1 > Label2:
+			return 1;
+		if Label1 == Label2:
+			return 0;
+		return -1;
 
 	def OnRightClick(self, event):
 		pt = event.GetPosition();
@@ -142,6 +154,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 				self.Expand(item);
 		else:
 			self.EditLabel(item);
+
 
 	def OnEditLabel(self, event):
 		item = event.GetItem();
@@ -188,7 +201,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		self.SetPyData(item, (IsFolder, NPath));
 		self.SetItemText(item, txt);
 		event.Veto();
-		print "All ok should -> %s"%txt;
+		self.SortChildren(self.GetItemParent(item));
 		return
 
 
@@ -260,7 +273,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		self.SetPyData(self.__DragItem, (IsItemFolder, NPath));
 		self.SetItemImage(self.__DragItem, self.__SymbolIcon, wx.TreeItemIcon_Normal);
 		self.__DragItem = None;
-
+		self.SortChildren(item);
 
 	def OnMove(self, event):
 		if not self.__DragMode:
@@ -328,7 +341,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		self.SetItemImage(nitem, self.__SymbolIcon, wx.TreeItemIcon_Normal);
 		if item != self.__myRoot:
 			self.Expand(item);
-
+		self.SortChildren(item);
 
 	def OnAddFolder(self, event):
 		item = self.GetSelection();
@@ -361,6 +374,7 @@ class SymbolTreePanel(wx.TreeCtrl):
 		self.SetItemImage(nitem, self.__FolderIcon2, wx.TreeItemIcon_Expanded);
 		if item != self.__myRoot:
 			self.Expand(item);
+		self.SortChildren(item);
 
 	def OnRenSymbol(self, event):
 		item = self.GetSelection();

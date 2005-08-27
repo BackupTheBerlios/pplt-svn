@@ -223,10 +223,17 @@ class PropertyDialog(wx.Dialog):
 		box.Add(self.__OK,1,wx.GROW|wx.ALL,3);
 		box.Add(self.__CANCEL,1,wx.GROW|wx.ALL,3);
 		self.__VBox.Add(box,1,wx.TOP|wx.ALIGN_CENTER|wx.GROW,5);
+		
+		self.Bind(wx.EVT_KEY_UP, self.OnKey);
 
 		self.SetSizer(self.__VBox);
 		self.__VBox.Fit(self);
 
+	def OnKey(self, event):
+		if event.GetKeyCode() == wx.WXK_RETURN:
+			self.EndModal(wx.ID_OK);
+		elif event.GetKeyCode() == wx.WXK_ESCAPE:
+			self.EndModal(wx.ID_CANCEL);
 
 	def GetName(self):
 		return(self.__Name.GetValue());

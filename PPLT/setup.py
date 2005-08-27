@@ -1,5 +1,4 @@
 #!/usr/bin/python
-
 from distutils.core import setup;
 
 setup(name = "PPLT",
@@ -13,7 +12,7 @@ setup(name = "PPLT",
                 'pyDCPU.Modules',
                 'PPLT',
 				'PPLT.Center'],
-      scripts =["Scripts/PPLTModInstall.py","Scripts/PPLTC.py"],
+      scripts =["Scripts/PPLTModInstall.py","Scripts/PPLTC.py","PPLT_PostInstall.py"],
       data_files = [('PPLT',["UserDB.xml","PPLT.conf"]),
                     ('PPLT/icons',['icons/proxy.xpm',
                                    'icons/user.xpm',
@@ -44,6 +43,6 @@ setup(name = "PPLT",
         'Operating System :: POSIX',
         'Operating System :: Microsoft :: Windows',
         'Programming Language :: Python',
-	'Topic :: Communications',
+        'Topic :: Communications',
         'Topic :: Software Development :: Libraries',
     ]);

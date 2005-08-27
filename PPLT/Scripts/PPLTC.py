@@ -1,6 +1,11 @@
 #!/usr/bin/python
 
 #ChangeLog:
+# 2005-08-27:
+#	- fixed wrong getopt call
+#	- added "verbose" option
+# 2005-08-20:
+#	- fixed problem with fileselction dialog.
 # 2005-06-03:
 #	+ Add save and saveas tools
 
@@ -85,7 +90,7 @@ class MainFrame(wx.Frame):
 
 
 	def OnLoad(self, event):
-		dlg = wx.FileDialog(self, _("Select a SessionFile"));
+		dlg = wx.FileDialog(self, _("Select a SessionFile"), style=wx.OPEN);
 		if not dlg.ShowModal() == wx.ID_OK:
 			return(None);
 		path = dlg.GetPath();
@@ -109,7 +114,7 @@ class MainFrame(wx.Frame):
 		self.__Logger.info("Session Saved");
 
 	def OnSaveAs(self, event):
-		dlg = wx.FileDialog(self, _("Save Session as..."));
+		dlg = wx.FileDialog(self, _("Save Session as..."), style=wx.SAVE);
 		if not dlg.ShowModal() == wx.ID_OK:
 			return(None);
 		path = dlg.GetPath();
@@ -141,13 +146,23 @@ class Application(wx.App):
 		return(True);
 
 def PrintUseage():
-	print "Useage: PPLTC.py [-c CONFIGFILE] [SESSIONFILE]";
+	print "Useage: PPLTC.py [-v] [SESSIONFILE]";
 
 
 if __name__ == '__main__':
-	(ops, args) = getopt.getopt(sys.argv, "c:");
+	(ops, args) = getopt.getopt(sys.argv[1:], "v");
 
-	ps = PPLT.System();
+	CoreLL = None;
+	PPLTLL = None;
+
+	for opt in ops:
+		(arg, value) = opt;
+		print "process %s"%arg
+		if arg == "-v":
+			CoreLL = "debug";
+			PPLTLL = "debug";
+	
+	ps = PPLT.System(CoreLogLevel=CoreLL, PPLTLogLevel=PPLTLL);
 	SessionFile = None;
 
 	if len(args) >2:

@@ -42,11 +42,19 @@ class SetPropertyDialog(wx.Dialog):
 		box.Add(ca, 1, wx.ALL|wx.ALIGN_CENTER, 3);
 		sizer.Add(box, 1, wx.GROW|wx.ALIGN_CENTER);
 
+		self.Bind(wx.EVT_KEY_UP, self.OnKey);
+
 		self.SetSizer(sizer);
 		sizer.Fit(self);
 
 	def OnOK(self, event):
 		self.EndModal(wx.ID_OK);
+
+	def OnKey(self, event):
+		if event.GetKeyCode() == wx.WXK_RETURN:
+			self.EndModal(wx.ID_OK);
+		elif event.GetKeyCode() == wx.WXK_ESCAPE:
+			self.EndModal(wx.ID_CANCEL);
 
 	def GetModus(self):
 		return("%o"%self.__modbox.GetModus());

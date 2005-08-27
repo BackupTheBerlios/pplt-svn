@@ -19,6 +19,9 @@
 # ############################################################################ #
 
 
+# ChangeLog:
+# 2005-08-26:
+#	- solved problems with not and double encoded passwords
 
 import xml.dom.minidom;
 import md5;
@@ -49,7 +52,7 @@ class User:
         return(self.__Password);
 
     def SetPasswd(self, Passwd):
-        self.__Password = md5.new(Passwd).hexdigest();
+        self.__Password = Passwd;
         return(True);
 
     def CheckPasswd(self, Passwd):

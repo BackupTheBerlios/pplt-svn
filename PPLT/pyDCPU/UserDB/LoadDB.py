@@ -115,7 +115,7 @@ def ProcessGroup(Node, ParentGroupName, DB):
                 Name = MemberAttr.get('name');
                 Desc = MemberAttr.get('desc');
                 Pass = MemberAttr.get('passwd');
-                if DB.CreateMember(ParentGroupName, Name, Pass, Desc):
+                if DB.CreateMember(ParentGroupName, Name, Pass, Desc, Encode=False):
                     Logger.debug("Add member %s to %s"%(Name,ParentGroupName));
                 else:
                     Logger.error("Error while create user, maybe user \"%s\" already exists"%Name);

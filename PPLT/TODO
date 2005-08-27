@@ -27,8 +27,3 @@
 	It would be better if the call of setup() of a module will be inside 
 	a try/except pair.
 
-[PPLTCenter]
-	All dialoges should associate ENTER with OK-click.
-
-[pyDCPU]
-	Symbols/Folders should be raname-able.

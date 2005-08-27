@@ -1,8 +1,8 @@
 <?xml version="1.0"?>
 
-<pyDCPUModuleMeta version="0.3.0" root="True">
+<pyDCPUModuleMeta version="0.3.1" root="True">
 	<Author>Hannes Matuschek &lt;hmatuschek@gmx.net&gt;</Author>
-	<LastUpdate>2005-08-20</LastUpdate>
+	<LastUpdate>2005-08-26</LastUpdate>
 	<URL>http://pplt.berlios.de</URL>
 
 	<Description lang="de">Ein Web-Server.</Description>

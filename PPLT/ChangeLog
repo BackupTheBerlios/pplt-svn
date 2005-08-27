@@ -1,5 +1,32 @@
 Version 0.3.1 (Rev: ??)	- 2005-??-??:
-*** (Revision: 20) 
+	* add post-install-scpript for the win32 installer:
+		Now there are some items created in your start-menu.
+	* add setup.cfg
+	* in Script/PPLTC.py:
+		- fixed wrong getopt call
+		- add "verbose" option (-v)
+	* fixed in PPLT/Center/SymbolTreePanel.py, PPLT/Center/UserDBPanel.py:
+		- items sort
+	* fixed in PPLT/Center/SymbolTreePanel.py:
+		- fixed edit-label problem (under Win32)
+	* fixed in PPLT-Center:
+		- add association between press return 
+	  	  and cklick OK at all dialogs
+	* fixed in Modules/Server/Web/PPLTWeb.py:
+		- Problem with base64 module and python 
+		  versions < 2.4
+		- problem with heavy cpu-load 
+		  (non-blocking sockets)
+	* fixed in pyDCPU/UserDB/UserDB.py:
+		- changed passwords will now be saved.
+	* fixed in pyDCPU/UserDB/User.py:
+		- password of new generated user will
+		  now be saved encoded.
+		- changed password will not be encoded 
+		  twice anymore.
+		
+	(Revision: 20) 
+	
 	* added in PPLT/Center/SymbolTreePanel.py:
 		Add renameing and moveing of symbols.
 		

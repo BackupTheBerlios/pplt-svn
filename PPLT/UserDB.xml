@@ -1,6 +1,9 @@
 <?xml version="1.0" ?>
 <UserDB superuser="admin">
    <Group name="Admin">
-      <Member desc="Admin" name="admin" passwd="3eff47c99feda46466939099e7ae7132"/>
+      <Member desc="Admin" name="admin" passwd="098f6bcd4621d373cade4e832627b4f6"/>
+      <Group name="Users">
+         <Member desc="None" name="Hannes" passwd="05a671c66aefea124cc08b76ea6d30bb"/>
+      </Group>
    </Group>
 </UserDB>

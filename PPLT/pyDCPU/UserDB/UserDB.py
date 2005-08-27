@@ -20,6 +20,8 @@
 
 
 # ChangeLog:
+# 2005-08-26:
+#	- changed passwords will now be saved
 # 2005-08-25:
 #	- Add user-proxy feature.
 #	- replace print by logging
@@ -218,10 +220,12 @@ class UserDB:
             return(self.__SystemSession);
         self.__SystemSession = Session.MakeSessionID(self.__SessionHash.keys());
         return(self.__SystemSession);
+
     def CloseSystemSession(self):
         """ """
         self.__SystemSession = None;
         return(True);
+
     def IsSystemSession(self, SessionID):
         """
             Check if it is a SystemSession...
@@ -249,8 +253,7 @@ class UserDB:
             self.__Logger.error("Group %s not found"%GroupName);
             return(False);
 
-        if Encode:
-            Passwd = md5.new(Passwd).hexdigest();
+        if Encode: Passwd = md5.new(Passwd).hexdigest();
 
         Group = self.GetGroupByName(GroupName);
         Group.CreateMember(Name, Passwd, Desc);
@@ -267,7 +270,7 @@ class UserDB:
             return(None);
 
         GrpNmLst = self.__GroupNameList;
-        self.__Logger.debug("search %s in %s"%(Name,str(GrpNmLst)));
+        #self.__Logger.debug("search %s in %s"%(Name,str(GrpNmLst)));
         for GrpNm in GrpNmLst:
             #Group = self.__GroupHash.get(GrpNm);
             Group = self.GetGroupByName(GrpNm);
@@ -325,15 +328,17 @@ class UserDB:
             self.SaveToFile();
         return(True);
 
-    def ChangePassword(self, MemberName, Passwd):
+    def ChangePassword(self, MemberName, Passwd, Encode=True):
         """ This method will change the passwd of the given user. Return True
  on success and False else. """
         if not self.__MemberNameList.count(MemberName):
             return(False);
         user = self.GetUserByName(MemberName);
+        if Encode: Passwd = md5.new(Passwd).hexdigest();
+        user.SetPasswd(Passwd);
         if self.__AutoSave:
             self.SaveToFile();
-        return(user.SetPasswd(Passwd));
+        return(True);
 
 
 
@@ -515,6 +520,7 @@ class UserDB:
 
         FilePtr.write(Doc.toprettyxml('   '));
         FilePtr.close();
+        Doc.unlink();
         return(True);
 
 

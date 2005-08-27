@@ -72,9 +72,17 @@ class CreateMemberDialog(wx.Dialog):
         box.Add(ca, 0, wx.ALIGN_CENTRE|wx.ALL, 3);
         sizer.Add(box, 0, wx.ALIGN_CENTRE|wx.GROW);
 
+        self.Bind(wx.EVT_KEY_UP, self.OnKey);
+
         self.SetSizer(sizer);
         self.SetAutoLayout(True);
         sizer.Fit(self);
+
+    def OnKey(self, event):
+        if event.GetKeyCode() == wx.WXK_RETURN:
+            self.EndModal(wx.ID_OK);
+        elif event.GetKeyCode() == wx.WXK_ESCAPE:
+            self.EndModal(wx.ID_CANCEL);
 
     def UpdateName(self, event):
         self.Name = event.GetString();
@@ -126,12 +134,20 @@ class CreateGroupDialog(wx.Dialog):
         box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
         sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
 
+        self.Bind(wx.EVT_KEY_UP, self.OnKey);
+
         self.SetSizer(sizer);
         self.SetAutoLayout(True);
         sizer.Fit(self);
 
     def UpdateName(self, event):
         self.Name = event.GetString();
+
+    def OnKey(self, event):
+        if event.GetKeyCode() == wx.WXK_RETURN:
+            self.EndModal(wx.ID_OK);
+        elif event.GetKeyCode() == wx.WXK_ESCAPE:
+            self.EndModal(wx.ID_CANCEL);
 
 
 class CreateProxyDialog(wx.Dialog):
@@ -160,12 +176,20 @@ class CreateProxyDialog(wx.Dialog):
 		box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
 		sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
 
+		self.Bind(wx.EVT_KEY_UP, self.OnKey);
+
 		self.SetSizer(sizer);
 		self.SetAutoLayout(True);
 		sizer.Fit(self);
 
 	def UpdateName(self, event):
 		self.Name = event.GetString();
+
+	def OnKey(self, event):
+		if event.GetKeyCode() == wx.WXK_RETURN:
+			self.EndModal(wx.ID_OK);
+		elif event.GetKeyCode() == wx.WXK_ESCAPE:
+			self.EndModal(wx.ID_CANCEL);
 
 
 
@@ -203,10 +227,17 @@ class PasswdDialog(wx.Dialog):
         box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
         sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
 
+        self.Bind(wx.EVT_KEY_UP, self.OnKey);
+
         self.SetSizer(sizer);
         self.SetAutoLayout(True);
         sizer.Fit(self);
 
+    def OnKey(self, event):
+        if event.GetKeyCode() == wx.WXK_RETURN:
+            self.EndModal(wx.ID_OK);
+        elif event.GetKeyCode() == wx.WXK_ESCAPE:
+            self.EndModal(wx.ID_CANCEL);
     def UpdatePass1(self, event):
         self.Pass1 = event.GetString();
         self.UpdateColors();
