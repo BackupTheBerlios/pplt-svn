@@ -1,82 +1,82 @@
-# translation of PPLT.po to deutsch
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
 # Hannes Matuschek <hmatuschek@gmx.net>, 2005.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PPLT\n"
+"Project-Id-Version: 0.3.1\n"
 "Report-Msgid-Bugs-To: Hannes Matuschek <hmatuschek@gmx.net>\n"
 "POT-Creation-Date: 2005-08-28 15:54+0200\n"
-"PO-Revision-Date: 2005-08-28 16:59+0200\n"
+"PO-Revision-Date: 2005-08-28 15:54+0200\n"
 "Last-Translator: Hannes Matuschek <hmatuschek@gmx.net>\n"
-"Language-Team: deutsch <de@li.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
-"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Type: text/plain; charset=CHARSET\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.10\n"
 
 #: PPLT/Scripts/PPLTC.py:52
 msgid "New session"
-msgstr "Neue Stizung"
+msgstr ""
 
 #: PPLT/Scripts/PPLTC.py:53
 msgid "Load a session..."
-msgstr "Sitzung laden"
+msgstr ""
 
 #: PPLT/Scripts/PPLTC.py:54
 msgid "Save session..."
-msgstr "Sitzung speichern..."
+msgstr ""
 
 #: PPLT/Scripts/PPLTC.py:55
 msgid "Save session as..."
-msgstr "Sitzung speichern unter..."
+msgstr ""
 
 #: PPLT/Scripts/PPLTC.py:57
 msgid "Install Module"
-msgstr "Module installieren"
+msgstr ""
 
 #: PPLT/Scripts/PPLTC.py:79
 msgid "Select InstallFile"
-msgstr "Installationsdatei auswählen"
+msgstr ""
 
 #: PPLT/Scripts/PPLTC.py:79
 msgid "Install Description File (*.idf)|*.idf"
-msgstr "Installationsbereibungsdatei (*.idf)|*.idf"
+msgstr ""
 
 #: PPLT/Scripts/PPLTC.py:95
 msgid "Select a SessionFile"
-msgstr "Sitzungsdatei auswählen"
+msgstr ""
 
 #: PPLT/Scripts/PPLTC.py:95 PPLT/Scripts/PPLTC.py:119
 msgid "PPLT Session File (*.psf)|*.psf"
-msgstr "PPLT Sitzungsdatei (*.psf)|*.psf"
+msgstr ""
 
 #: PPLT/Scripts/PPLTC.py:119
 msgid "Save Session as..."
-msgstr "Sitzung speichern unter..."
+msgstr ""
 
 #: PPLT/PPLT/Center/AddFolderDialog.py:31
 #: PPLT/PPLT/Center/SymbolTreePanel.py:491
 msgid "Add Folder"
-msgstr "Ordner hinzufügen"
+msgstr ""
 
 #: PPLT/PPLT/Center/AddFolderDialog.py:35
 #: PPLT/PPLT/Center/AddSymbolDialog.py:186
 msgid "Name: "
-msgstr "Name: "
+msgstr ""
 
 #: PPLT/PPLT/Center/AddFolderDialog.py:36
 #: PPLT/PPLT/Center/AddSymbolDialog.py:188
 msgid "Name"
-msgstr "Name"
+msgstr ""
 
 #: PPLT/PPLT/Center/AddFolderDialog.py:45
 #: PPLT/PPLT/Center/SetPropertyDialog.py:38
 #: PPLT/PPLT/Center/UserDBDialogs.py:69 PPLT/PPLT/Center/UserDBDialogs.py:131
 #: PPLT/PPLT/Center/UserDBDialogs.py:173 PPLT/PPLT/Center/UserDBDialogs.py:224
 msgid " Ok "
-msgstr " Ok "
+msgstr ""
 
 #: PPLT/PPLT/Center/AddFolderDialog.py:46
 #: PPLT/PPLT/Center/AddSymbolDialog.py:221
@@ -86,85 +86,85 @@ msgstr " Ok "
 #: PPLT/PPLT/Center/UserDBDialogs.py:70 PPLT/PPLT/Center/UserDBDialogs.py:133
 #: PPLT/PPLT/Center/UserDBDialogs.py:175 PPLT/PPLT/Center/UserDBDialogs.py:225
 msgid " Cancel "
-msgstr " Abbrechen "
+msgstr ""
 
 #: PPLT/PPLT/Center/AddSymbolDialog.py:39
 msgid "Select DeviceSlot"
-msgstr "Geräte-Slot auswählen"
+msgstr ""
 
 #: PPLT/PPLT/Center/AddSymbolDialog.py:72
 #: PPLT/PPLT/Center/DeviceSelectionDialog.py:109
 #: PPLT/PPLT/Center/NoteBook.py:41
 msgid "Devices"
-msgstr "Geräte"
+msgstr ""
 
 #: PPLT/PPLT/Center/AddSymbolDialog.py:129
 msgid "Enter expl. slot name or addr.:"
-msgstr "Geben sie bitte einen explizieten Namen oder eine Adresse an:"
+msgstr ""
 
 #: PPLT/PPLT/Center/AddSymbolDialog.py:129
 msgid "Slot"
-msgstr "Slot"
+msgstr ""
 
 #: PPLT/PPLT/Center/AddSymbolDialog.py:182
 msgid "Properties of "
-msgstr "Eigenschafften von "
+msgstr ""
 
 #: PPLT/PPLT/Center/AddSymbolDialog.py:201
 msgid "Type: "
-msgstr "Typ: "
+msgstr ""
 
 #: PPLT/PPLT/Center/AddSymbolDialog.py:211
 msgid "Refresh: "
-msgstr "Refresh: "
+msgstr ""
 
 #: PPLT/PPLT/Center/AddSymbolDialog.py:220
 #: PPLT/PPLT/Center/DeviceParameterDialog.py:49
 #: PPLT/PPLT/Center/ServerParameterDialog.py:67
 msgid " OK "
-msgstr " Ok "
+msgstr ""
 
 #: PPLT/PPLT/Center/DevicePanel.py:46 PPLT/PPLT/Center/ServerPanel.py:46
 msgid "Alias"
-msgstr "Alias"
+msgstr ""
 
 #: PPLT/PPLT/Center/DevicePanel.py:47
 msgid "FQDN"
-msgstr "FQDN"
+msgstr ""
 
 #: PPLT/PPLT/Center/DevicePanel.py:48 PPLT/PPLT/Center/ServerPanel.py:50
 msgid "Parameter"
-msgstr "Parameter"
+msgstr ""
 
 #: PPLT/PPLT/Center/DevicePanel.py:76
 msgid "Add device..."
-msgstr "Gerät hinzufügen..."
+msgstr ""
 
 #: PPLT/PPLT/Center/DevicePanel.py:141
 msgid "Add Device"
-msgstr "Gerät hinzufügen"
+msgstr ""
 
 #: PPLT/PPLT/Center/DevicePanel.py:149
 msgid "Del Device"
-msgstr "Gerät entfernen"
+msgstr ""
 
 #: PPLT/PPLT/Center/DeviceParameterDialog.py:30
 #: PPLT/PPLT/Center/ServerParameterDialog.py:32
 msgid "Setup "
-msgstr "Setup "
+msgstr ""
 
 #: PPLT/PPLT/Center/DeviceParameterDialog.py:38
 #: PPLT/PPLT/Center/ServerParameterDialog.py:40
 msgid "Alias: "
-msgstr "Alias: "
+msgstr ""
 
 #: PPLT/PPLT/Center/DeviceParameterDialog.py:39
 msgid "DevName"
-msgstr "Alias"
+msgstr ""
 
 #: PPLT/PPLT/Center/DeviceSelectionDialog.py:37
 msgid "DeviceSelection"
-msgstr "Geräteauswahl"
+msgstr ""
 
 #: PPLT/PPLT/Center/DeviceSelectionDialog.py:45
 msgid ""
@@ -174,26 +174,16 @@ msgid ""
 "To select a device, please double-click the device.\n"
 "To see a short help-text for a device, single-click it."
 msgstr ""
-"Geräteauswahl:\n"
-"Oben sind alle bekannten geräte nach ihren Klassen gruppiert aufgelistet.\n"
-"Um eine Klasse zu öffnen, klicken sie bitte "
-"doppelt auf die Klasse.\n"
-"Um ein Gerät auszuwählen klicken sie bitte"
-"doppelt auf das Gerät.\n"
-"Sie erhalten einen kurzen Hilfe-Text zu einem Gerät wenn sie das Gerät mit einem einfachen "
-"Klick auswählen."
 
 #: PPLT/PPLT/Center/InfoFrame.py:6
 msgid "PPLT Info"
-msgstr "PPLT Info"
+msgstr ""
 
 #: PPLT/PPLT/Center/InfoFrame.py:17
 msgid ""
 "http://pplt.berlios.de\n"
 "by Hannes Matuschek <hmatuschek@gmx.net>"
 msgstr ""
-"http://pplt.berlios.de\n"
-"von Hannes Matuschek <hmatuschek@gmx.net>"
 
 #: PPLT/PPLT/Center/InfoFrame.py:21
 msgid ""
@@ -202,180 +192,179 @@ msgid ""
 "superuser.Then load one or two devices, create symbols, that\n"
 "are attached to the devices and at least start a server.\n"
 "                   If you missing menus: try right-click.\n"
-msgstr "Das PPLT Center demonstriert die Funktionalität der PPLT Bibliothek.\nAls erstes sollten sie einige neue Benutzer anlegen und das \nPasswort des Superusers ändern. Dann können sie einige Geräte \nladen, Symbole erzeugen, die mit den Geräten verbunden werden \nund zum Schluss die Server starten.\n"
+msgstr ""
 
 #: PPLT/PPLT/Center/ModusBox.py:49
 msgid "Owner: "
-msgstr "Besitzer: "
+msgstr ""
 
 #: PPLT/PPLT/Center/ModusBox.py:57
 msgid "Group: "
-msgstr "Gruppe: "
+msgstr ""
 
 #: PPLT/PPLT/Center/ModusBox.py:65
 msgid "Owner:"
-msgstr "Besitzer:"
+msgstr ""
 
 #: PPLT/PPLT/Center/ModusBox.py:66
 msgid "Group:"
-msgstr "Gruppe:"
+msgstr ""
 
 #: PPLT/PPLT/Center/ModusBox.py:67
 msgid "Any:"
-msgstr "Jeder:"
+msgstr ""
 
 #: PPLT/PPLT/Center/ModusBox.py:68 PPLT/PPLT/Center/ModusBox.py:70
 #: PPLT/PPLT/Center/ModusBox.py:72
 msgid "read"
-msgstr "lesen"
+msgstr ""
 
 #: PPLT/PPLT/Center/ModusBox.py:69 PPLT/PPLT/Center/ModusBox.py:71
 #: PPLT/PPLT/Center/ModusBox.py:73
 msgid "write"
-msgstr "schreiben"
+msgstr ""
 
 #: PPLT/PPLT/Center/NoteBook.py:42
 msgid "SymbolTree"
-msgstr "Symbolbaum"
+msgstr ""
 
 #: PPLT/PPLT/Center/NoteBook.py:43
 msgid "Server"
-msgstr "Server"
+msgstr ""
 
 #: PPLT/PPLT/Center/NoteBook.py:44
 msgid "User DataBase"
-msgstr "Benutzer Datenbank"
+msgstr ""
 
 #: PPLT/PPLT/Center/ServerPanel.py:47
 msgid "FQSN"
-msgstr "FQSN"
+msgstr ""
 
 #: PPLT/PPLT/Center/ServerPanel.py:48
 msgid "DefaultUser"
-msgstr "Standard Benutzer"
+msgstr ""
 
 #: PPLT/PPLT/Center/ServerPanel.py:49
 msgid "Root"
-msgstr "Server Root"
+msgstr ""
 
 #: PPLT/PPLT/Center/ServerPanel.py:154
 msgid "Add Server"
-msgstr "Server hinzufügen"
+msgstr ""
 
 #: PPLT/PPLT/Center/ServerPanel.py:162
 msgid "Stop Server"
-msgstr "Server anhalten"
+msgstr ""
 
 #: PPLT/PPLT/Center/ServerParameterDialog.py:41
 msgid "SrvName"
-msgstr "Alias"
+msgstr ""
 
 #: PPLT/PPLT/Center/ServerParameterDialog.py:47
 msgid "DefautUser: "
-msgstr "Standard Benutzer: "
+msgstr ""
 
 #: PPLT/PPLT/Center/ServerParameterDialog.py:56
 msgid "Root: "
-msgstr "Root: "
+msgstr ""
 
 #: PPLT/PPLT/Center/ServerSelectionDialog.py:37
 msgid "ServerSelection"
-msgstr "Serverauswahl"
+msgstr ""
 
 #: PPLT/PPLT/Center/ServerSelectionDialog.py:101
 msgid "Servers"
-msgstr "Server"
+msgstr ""
 
 #: PPLT/PPLT/Center/SetPropertyDialog.py:31
 #: PPLT/PPLT/Center/SymbolTreePanel.py:502
 msgid "Properties"
-msgstr "Eigenschaften"
+msgstr ""
 
 #: PPLT/PPLT/Center/SymbolTreePanel.py:74
 msgid "SymbolTree (/)"
-msgstr "Symbolbaum (/)"
+msgstr ""
 
 #: PPLT/PPLT/Center/SymbolTreePanel.py:485
 msgid "Rename"
-msgstr "Umbenennen"
+msgstr ""
 
 #: PPLT/PPLT/Center/SymbolTreePanel.py:489
 msgid "Add Symbol"
-msgstr "Symbol hinzufügen"
+msgstr ""
 
 #: PPLT/PPLT/Center/SymbolTreePanel.py:494
 msgid "Delete Symbol"
-msgstr "Symbol löschen"
+msgstr ""
 
 #: PPLT/PPLT/Center/SymbolTreePanel.py:498
 msgid "Delete Folder"
-msgstr "Ordner löschen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBDialogs.py:42
 msgid "Username: "
-msgstr "Benutzername: "
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBDialogs.py:50 PPLT/PPLT/Center/UserDBDialogs.py:205
 msgid "Password: "
-msgstr "Passwort: "
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBDialogs.py:58 PPLT/PPLT/Center/UserDBDialogs.py:213
 msgid "Re-Type:  "
-msgstr "Nocheinmal: "
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBDialogs.py:120
 msgid "Group Name: "
-msgstr "Gruppenname: "
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBDialogs.py:161
 msgid "User Name: "
-msgstr "Benutzername: "
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:174
 msgid "Create Memeber"
-msgstr "Benutzer anlegen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:225
 msgid "Create User-Proxy"
-msgstr "Vertreter anlegen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:278
 msgid "Create Group"
-msgstr "Gruppe anlegen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:348
 msgid "Change Password of "
-msgstr "Passwort ändern von "
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:406
 msgid "Del User-Proxy"
-msgstr "Vertreter entfernen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:410
 msgid "Add User"
-msgstr "Benutzer anlegen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:412
 msgid "Add User-Proxy"
-msgstr "Vertreter anlegen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:414
 msgid "Add Group"
-msgstr "Guppe anlegen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:417
 msgid "Del Group"
-msgstr "Gruppe entfernen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:422
 msgid "Del User"
-msgstr "Benutzer entfernen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:424
 msgid "Set SuperUser"
-msgstr "Als Superuser setzen"
+msgstr ""
 
 #: PPLT/PPLT/Center/UserDBPanel.py:426
 msgid "Change Password"
-msgstr "Passwort ändern"
-
+msgstr ""

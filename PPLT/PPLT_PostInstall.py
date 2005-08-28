@@ -52,7 +52,7 @@ def Install():
 	file_created(SHORTCUT);
 
 	BAT_FILE  = os.path.normpath(SCRIPTDIR+'\PPLTCDEBUG.BAT');
-	BATCHCODE = "@echo off \n%s %s -v %%1\n"%(PYTHONEXE,PPLTCPY);
+	BATCHCODE = "@echo off \n%s %s -v %%1\nPAUSE\n"%(PYTHONEXE,PPLTCPY);
 	fp = file(BAT_FILE, 'w');
 	fp.write(BATCHCODE);
 	fp.flush();
@@ -61,7 +61,21 @@ def Install():
 	SHORTCUT  = os.path.normpath(FOLDER+"\PPLTCenter-debug.lnk");
 	create_shortcut(BAT_FILE, "PPLT Center (debug-mode)", SHORTCUT, "", ".", ICONPATH);
 	file_created(SHORTCUT);
+
+	FOLDER2 = FOLDER+"\Examples";
+	try:
+		os.mkdir(FOLDER2);
+		directory_created(FOLDER2);
+	except:
+		print "Error while create folder %s"%FOLDER2;
+		FOLDER2 = None;
 	
+	if FOLDER2:
+		create_shortcut(PYTHONDIR+"\PPLT\examples\Random-JVisuServer.psf", "PPLT Center example", FOLDER2+"\Random-JVisuServer.lnk", "", ".", ICONPATH2);
+		file_created(FOLDER2+"\examples\Random-JVisuServer.lnk");
+		create_shortcut(PYTHONDIR+"\PPLT\examples\Random-WebServer.psf", "PPLT Center example", FOLDER2+"\Random-WebServer.lnk", "", ".", ICONPATH2);
+		file_created(FOLDER2+"\examples\Random-WebServer.lnk");
+		
 	print "Create registry keys...";
 	try: ModifyRegistry(PPLTCENTER, ICONPATH2); 
 	except: print "Error while create registry keys.";

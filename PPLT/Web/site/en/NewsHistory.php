@@ -1,6 +1,11 @@
 <div class="TextBody">
 	<div class="Head">News 2005</div>
     <div class="NewsItem">
+	<b>2005-08-20 - Bugfix Release of PPLT Version 0.3.1</b><br>
+	I've done a lot of testing and debugging. Also i've wrote
+	a post-install script for the windows-installer, that creates
+	a folder in the start menu.<br>
+	<u>Please update!</u><br><br> 
 	<b>2005-08-20 - Release of PPLT Version 0.3.0</b><br>
 	I've done a lot of debuging and (sometimes) rewiteing
 	wide parts of the PPLT library. Will stop now developing

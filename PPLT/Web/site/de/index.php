@@ -3,9 +3,17 @@
 		<a href="/de/NewsHistory.html" style="font-size:0.5em;">[Archiv]</a>
 	</div>
     <div class="NewsItem">
+	<b>2005-08-28 - Bugfixrelease 0.3.1</b><br>
+	Ich habe die Software weiter getestet und 
+	debuged. Des weiteren erzeugt der 
+	Windows-Installer jetzt ein Verzeichnis
+	im Start-Men&uuml; mit Verkn&uuml;pfungen
+	auf die PPLT Center Applikation.<br>
+	<u>Bitte laden sie sich die neue Version
+	herunter!</u>.<br><br> 
 	<b>2005-08-20 - PPLT Version 0.3.0</b><br>
 	Ich habe weite Teile der PPLT bibliothek 
-	debuged und auch streckenweise neu geschrieben.
+	debugged und auch streckenweise neu geschrieben.
 	Ich beende nun die Entwicklung um mich auf
 	das Entfernen von Fehlern zu konzentrieren.
 	<u>Hinweis:</u> Bitte laden sie sich auch
@@ -17,15 +25,21 @@
 	Fehler der Vorversion behoben, vor allem in der 
 	deutschen &Uuml;bersetzung. Ich w&uuml;rde ihnen also
 	raten diese zu nutzten.</br><br>
-	<b>2005-05-28 - BugfixRelease (0.2.1)</b><br>
-	Ich habe einige unangenehme Fehler in der Bibliothek
-	sowie in der Applikation entfernt. Ich empfehle ihnen
-	auf diese Version zu aktualisieren. Des weitren habe
-	ich den <i>gettext</i> Support in das PPLT Center
-	eingepflegt.<br><br>
     </div>
 
-    <div class="Head">Was ist PPLT</div>
+    
+	<div class="Head">Hilfe gesucht.</div>
+	<div class="Text">Ich such Leute, die mich bei meiner Arbeit 
+	an der PPLT unterst&uuml;tzen. Das betrifft vor allem das Testen
+	und Debuggen der PPLT. Es w&auml;re nett, wenn sie die PPLT
+	auf iher Platform testen und mir alle Fehler, die auftreten 
+	<a href="/de/Contact.html">melden</a>.
+	
+	<p>Ebenso k&ouml;nnen sie mir alle Probleme mitteilen, die sie
+	im Umgang mit der grafischen Oberl&auml;che haben, damit ich diese 
+	verbessern kann.</p>
+	</div>
+	<div class="Head">Was ist PPLT</div>
     <div class="Text">
     PPLT ist ein quell-offenes Framework f&uuml;r die industrielle Kommunikation.
     Es wurde in Python geschrieben und ist unter der GNU LGPL lizensiert.

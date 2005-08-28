@@ -7,12 +7,15 @@ setup(name = "PPLT",
       author="Hannes Matuschek",
       author_email="hmatuschek@gmx.net",
       url='http://pplt.berlios.de',
+
       packages=['pyDCPU',
                 'pyDCPU.UserDB',
                 'pyDCPU.Modules',
                 'PPLT',
 				'PPLT.Center'],
+
       scripts =["Scripts/PPLTModInstall.py","Scripts/PPLTC.py","PPLT_PostInstall.py"],
+
       data_files = [('PPLT',["UserDB.xml","PPLT.conf"]),
                     ('PPLT/icons',['icons/PPLTSessionFile.ico',
                                    'icons/PPLT.ico',
@@ -34,8 +37,15 @@ setup(name = "PPLT",
                                    'icons/load.xpm',
                                    'icons/saveas.xpm',
                                    'icons/save.xpm']),
-                    ('PPLT/de/LC_MESSAGES',['I18N/de/PPLT.mo'])],
-      long_description="PPLT is an industrial communication framework.",
+                    ('PPLT/de/LC_MESSAGES',['I18N/de/PPLT.mo']),
+                    ('PPLT/examples',['examples/Random-JVisuServer.psf','examples/Random-WebServer.psf'])],
+
+      long_description="""PPLT is an industrial communication framework.
+
+Until now there are plugins (modules) for the Siemens SIAMTIC S7-200 over PPI, 
+Panasonic/NAiS FP0 and FP2, Siemens (maybe other GSM compatible) mobile phone
+and Agilent oscilloscope of the 5462x series.""",
+
       classifiers = [
         'Intended Audience :: Developers',
         'License :: OSI Approved :: GNU Library or Lesser General Public License (LGPL)',

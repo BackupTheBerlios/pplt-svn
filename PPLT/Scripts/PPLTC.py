@@ -167,15 +167,15 @@ if __name__ == '__main__':
 	ps = PPLT.System(CoreLogLevel=CoreLL, PPLTLogLevel=PPLTLL);
 	SessionFile = None;
 
-	if len(args) >2:
+	if len(args) >1:
 		PrintUseage();
 		sys.exit();
-	elif len(args) == 2:
-		if not os.path.isfile(args[1]):
-			print "Can't open file %s"%args[1];
+	elif len(args) == 1:
+		if not os.path.isfile(args[0]):
+			print "Can't open file %s"%args[0];
 			sys.exit();
-		if ps.LoadSession(args[1]):
-			SessionFile = args[1];
+		if ps.LoadSession(args[0]):
+			SessionFile = args[0];
 
 	app = Application(ps, SessionFile);
 	app.MainLoop();

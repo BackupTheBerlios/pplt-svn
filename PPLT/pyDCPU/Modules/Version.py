@@ -1,5 +1,9 @@
 import logging;
 
+# Changelog:
+# 2005-08-28:
+#	Fixed bug in __int__(): got to huge version numbers
+
 class Version:
 	def __init__(self, VerStr):
 		self.__Logger = logging.getLogger("PPLT");
@@ -23,7 +27,7 @@ class Version:
 	def __int__(self):
 		v = self.__Version[0];
 		v = (v<<8)|self.__Version[1];
-		v = (v<<16)|self.__Version[0];
+		v = (v<<8)|self.__Version[2];
 		return(v);
 	def __hex__(self): return(hex(self.__int__()));
 	def __str__(self): return(self.__VersionString);

@@ -20,10 +20,10 @@
 
 __author__  = 'Hannes Matuschek <hmatuschek@gmx.net>'
 __status__  = 'beta'
-__version__ = '0.2.1'
-__date__    = '2005-08-20'
+__version__ = '0.3.0'
+__date__    = '2005-08-28'
 
-VERSION = 0x000201;              # this version-number is used internal to check
+VERSION = 0x000300;              # this version-number is used internal to check
                                  # if a module fit in this system.
 
 from Exceptions import *;

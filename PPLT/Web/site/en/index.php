@@ -3,6 +3,11 @@
 		<a style="font-size:0.5em;" href="/en/NewsHistory.html">[History]</a>
 	</div>
     <div class="NewsItem">
+	<b>2005-08-20 - Bugfix Release of PPLT Version 0.3.1</b><br>
+	I've done a lot of testing and debugging. Also i've wrote
+	a post-install script for the windows-installer, that creates
+	a folder in the start menu.<br>
+	<u>Please update!</u><br><br> 
 	<b>2005-08-20 - Release of PPLT Version 0.3.0</b><br>
 	I've done a lot of debuging and (sometimes) rewiteing
 	wide parts of the PPLT library. Will stop now developing
@@ -12,10 +17,19 @@
 	I've added some features to the library and the PPLTC application.
 	You can now save a session and load it later. Also I've fixed
 	some bugs and the german translation of PPLTC.<br><br>
-	<b>2005-05-28 - Bugfix Release for PPLT (0.2.1)</b><br>
-	I've fixed some annoying bugs in libraries and in the application.
-	I recommend you to <u>update</u>.<br><br>
     </div>
+
+
+
+	<div class="Head">Help Wanted</div>
+	<div class="Text">I need some people who help me testing and debuging the
+	software. I want to reach as fast as possible the stabile state. So
+	it would be nice if you test the PPLT at your platform and 
+	<a href="/en/Contact.html">report me</a> any appearing error.
+	
+	<p>Also you can contact me, if you have problems with the handleing
+	of the GUI application. So i can improve the GUI.</p>
+	</div>
 
     <div class="Head">What is PPLT</div>
     <div class="Text">

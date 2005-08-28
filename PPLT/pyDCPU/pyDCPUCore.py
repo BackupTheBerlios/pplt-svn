@@ -20,6 +20,8 @@
 
 
 # Changelog:
+# 2005-08-28:
+#	+ add move/rename folders
 # 2005-08-26:
 #	+ add removeing/renameing symbols feature.
 # 2005-08-25:
@@ -388,6 +390,18 @@ class Core:
             self.Logger.error("Error while create Folder(check path)");
             return(False);
         self.Logger.debug("Folder created");
+        return(True);
+
+    def SymbolTreeMoveFolder(self, From, To):
+        """ This method moves a folder from (From) to (To)."""
+        #check path of destination:
+        To = NameCheck.CheckPath(To);
+        if not To:
+            self.Logger.error("Invalid path format for destination.");
+            return(False);
+        if not self.__SymbolTree.MoveFolder(From, To):
+            self.Logger.error("Error while move folder %s to %s"%(From, To));
+            return(False);
         return(True);
 
     def SymbolTreeDeleteFolder(self,  Path):

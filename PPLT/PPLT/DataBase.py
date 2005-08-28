@@ -57,18 +57,22 @@ You can install and uninstall (if you have the right to do) modules. """
 			try:
 				Item = CreateItem(ZIPFile, Lang, AltLang, self);
 			except:
+				self.__Logger.error("Error while add Core mod %s to DB"%(ZIPFile))
 				Item = None;
 			if isinstance(Item, CoreModItem):
 				ClassList = ClassFromPath(ZIPFile,self.__CoreModulePath);
 				ItemName  = Item.GetName();
 				self.__CoreMods.AddItem(Item, ItemName, ClassList);
-
+			else:
+				self.__Logger.fatal("DB-Item is not a CoreModItem! (%s)"%ZIPFile);
+				
 		XMLList = RGlob(self.__PPLTModulePath, "*.xml");
 		self.__Logger.info("Try to add %i PPLT-Modules to DB"%len(XMLList));
 		for XMLFile in XMLList:
 			try:
 				Item = CreateItem(XMLFile, Lang, AltLang, self);
 			except:
+				self.__Logger.error("Error while load PPLT mod %s to DataBase"%XMLFile);
 				Item = None;
 			if isinstance(Item, ServerItem):
 				ClassList = Item.GetClass().split(".");
@@ -467,12 +471,16 @@ class CoreModItem(BaseItem):
 		(tmp,FileName) = os.path.split(FileName);
 		tmp = FileName.split(".");
 		BaseItem.__init__(self, tmp[0], Meta);
-
+		self.__Logger = logging.getLogger("PPLT");
+		
 		if not Meta.CheckDCPUVersion():
+			self.__Logger.error("Error while load %s: Invalid pyDCPU Version."%FileName);
 			raise Exception("Can't load CoreMod %s: Invalid pyDCPU Version."%FileName);
 		if not Meta.CheckPythonVersion():
+			self.__Logger.error("Error while load %s: Invalid Python Version."%FileName);
 			raise Exception("Can't load CoreMod %s: Invalid Python Version."%FileName);
 		if not Meta.CheckPythonModules():
+			self.__Logger.error("Error while load %s: Missing Python libs."%FileName);
 			raise Exception("Can't load CoreMod %s: Missing python-lib(s)"%FileName);
 
 
@@ -641,12 +649,14 @@ class DeviceInfo:
 
 
 def CreateItem(FileName, Lang, AltLang, DataBase):
+	Logger = logging.getLogger("PPLT");
 	if zipfile.is_zipfile(FileName):
 		return(CoreModItem(FileName));
 
 	try:
 		doc = xml.dom.minidom.parse(FileName);
 	except:
+		Logger.error("Error while parese file %s"%FileName);	
 		return(None);
 
 	root = doc.documentElement;

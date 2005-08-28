@@ -1,6 +1,14 @@
 <div class="TextBody">
 	<div class="Head">News 2005</div>
     <div class="NewsItem">
+	<b>2005-08-28 - Bugfixrelease 0.3.1</b><br>
+	Ich habe die Software weiter getestet und 
+	debuged. Des weiteren erzeugt der 
+	Windows-Installer jetzt ein Verzeichnis
+	im Start-Men&uuml; mit Verkn&uuml;pfungen
+	auf die PPLT Center Applikation.<br>
+	<u>Bitte laden sie sich die neue Version
+	herunter!</u>.<br><br> 
 	<b>2005-08-20 - PPLT Version 0.3.0</b><br>
 	Ich habe weite Teile der PPLT bibliothek 
 	debuged und auch streckenweise neu geschrieben.

@@ -1,4 +1,13 @@
-Version 0.3.1 (Rev: ??)	- 2005-??-??:
+Version 0.3.1 (Rev: 23)	- 2005-08-28:
+	* fixed bug in PPLT/Version.py and pyDCPU/Version.py
+	* added examples for the PPLT Center
+	* fixed PPLT_PostInstall.py:
+		- BATCH file code: the window will be keeped open
+		  afer PPLTC stopped.
+	* fixed PPLT/PPLTSystem.py ChangeModus():
+		- unicode strings are now accepted as string
+	* updated project description in setup.py
+	* add move/renameing folders
 	(Release 22)
 	* fixed MANIFEST.in
 	* fixed in PPLT/DataBase.py:

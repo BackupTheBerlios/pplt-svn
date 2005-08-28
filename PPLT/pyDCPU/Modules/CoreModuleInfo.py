@@ -169,6 +169,8 @@ class MetaData:
 			return(True);
 		ver = Version.Version(DCPUVersion);
 		if abs(int(ver)-int(self.__pyDCPUVersion)) >= 0x10000:
+			self.__Logger.error("Need pyDCPU version %s got %s: diff %i"%(ver,self.__pyDCPUVersion, 
+					abs(int(ver)-int(self.__pyDCPUVersion))))
 			return(False);
 		return(True);
 
@@ -177,7 +179,9 @@ class MetaData:
 			return(True);
 		(major,minor,bug,name,patch) = sys.version_info;
 		ver = (major<<16)|(minor<<8)|bug;
-		if abs(ver-int(self.__pyDCPUVersion)) >= 0x10000:
+		if abs(ver-int(self.__PythonVersion)) >= 0x10000:
+			self.__Logger.error("Need Python version %i got %s: diff %i"%(ver,self.__PythonVersion, 
+					abs(ver-int(self.__pyDCPUVersion))))
 			return(False);
 		return(True);
 

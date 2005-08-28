@@ -18,31 +18,6 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
 # ############################################################################ # 
 
-#CHANGELOG:
-# 2005-08-26:
-#	+ add moveing/renaming symbols feature.
-# 2005-08-25:
-#	+ add Alias-, user-, ... namecheck.
-# 2005-07-23:
-#	+ implemented new Server/Device/Core-Mod management.
-# 2005-06-05:
-#	+ Add module-version info-methods
-# 2005-06-04:
-#	+ fixed some methods to provide variable 
-#		server-root
-# 2005-06-02:
-#	+ add StopServers() method		
-#	+ add StopDevices() method
-#	+ add ClearSymbolTree() method
-#	+ add StopAll() method
-#	+ add SaveSession() method
-#	+ add LoadSession() method
-#	+ add GetDeviceInfo() method
-# 2005-05-27:
-#	+ Start changelog. (sorry i missed it)
-#	+ Release as Version 0.2.0 (alpha)
-#	- Fixed wrong Symbol<->DeviceAlias association
-
 
 import pyDCPU;
 import Configuration;
@@ -55,6 +30,7 @@ import LoadSession;
 #import gettext;
 import NameCheck;
 from xml.dom.minidom import getDOMImplementation
+import string;
 
 MODUS_FMT_OCTAL = 1;
 MODUS_FMT_STRING = 2;
@@ -671,6 +647,49 @@ Return a list of strings. """
 			self.ChangeModus(Path,Modus);
 		return(True);
 
+	def MoveFolder(self, From, To):
+		""" Move a folder from (From) to (To). """
+		#check path:
+		To = NameCheck.CheckPath(To);
+		if not To:
+			self.__Logger.error("Invalid path-format for destination.");
+			return(False);
+
+		# get pathes of all symbols under folder (From):
+		OSymList = RecursiveSymbolList(self, From);
+
+		#map call to core object:
+		if not self.__Core.SymbolTreeMoveFolder(From, To):
+			self.__Logger.error("Error while move folder from %s to %s"%(From, To));
+			return(False);
+
+		# get pathes of all symbol under (new) folder (To) 
+		# 	(are in the sameorder):
+		NSymList = RecursiveSymbolList(self, To);
+
+		if len(OSymList) != len(NSymList):
+			self.__Logger.fatal("Fatal error while move folder: Lost symbols.");
+
+		for Idx in range(len(OSymList)):
+			From = OSymList[Idx];
+			To   = NSymList[Idx];
+			#update symbol-parameters:
+			paras = self.__SymbolParameters.get(From);
+			del self.__SymbolParameters[From];
+			self.__SymbolParameters.update( {To:paras} );
+		
+			#update symbol<->device table:
+			device = self.__SymbolDeviceTable.get(From);
+			del self.__SymbolDeviceTable[From];
+			self.__SymbolDeviceTable.update( {To:device} );
+
+			#update symbol<->slot table:
+			slot = self.__SymbolTable.get(From);
+			del self.__SymbolTable[From];
+			self.__SymbolTable.update( {To:slot} );
+		return(True);
+
+
 	def DeleteFolder(self, Path, Recur=False):
 		""" Simply delete a (empty) Folder. Return True on success. """
 		#simply map call to core:
@@ -865,14 +884,14 @@ Return a list of strings. """
 		(user, group, old_modus) = self.__Core.SymbolTreeGetAccess(Path);
 		if isinstance(Modus,int):
 			new_modus = Modus;
-		elif isinstance(Modus,str):
+		elif isinstance(Modus,(str,unicode)):
 			try:
 				new_modus = int(Modus,8);
 			except:
-				self.__Logger.warning("Invalid vormat");
+				self.__Logger.warning("Can't convert modus format.");
 				return(None);
 		else:
-			self.__Logger.error("Invalid modus fromat");
+			self.__Logger.error("Invalid modus fromat. Expacted str or int got %s"%str(type(Modus)));
 			return(None);
 		return(self.__Core.SymbolTreeSetAccess(Path,user,group,new_modus));
 
@@ -952,3 +971,69 @@ def ModusToString(modus):
 		rstr += tmp;
 		tmp = "";
 	return(rstr);
+
+
+def RecursiveSymbolList(Sys, Path, List=None):
+	if not List:
+		List = [];
+	FList = Sys.ListFolders(Path);
+	for Folder in FList:
+		nPath = NormPath(Path+"/"+Folder);
+		nList = RecursiveSymbolList(Sys, nPath, List);
+		List.extend(nList);
+	SList = Sys.ListSymbols(Path);
+	for Symbol in SList:
+		Symbol = NormPath(Path+"/"+Symbol);
+		List.append(Symbol)
+	return(List);
+
+
+def NormPath(Path):
+	tmpList = Path.split("/");
+	PList = [];
+	for tmp in tmpList:
+		if tmp and tmp != "":
+			PList.append(tmp);
+	Path = "/"+string.join(PList,"/");
+	return(Path);
+
+
+
+
+
+
+
+
+
+
+
+
+
+#CHANGELOG:
+# 2005-08-28:
+#	+ add move/rename folders.
+# 2005-08-26:
+#	+ add moveing/renaming symbols feature.
+# 2005-08-25:
+#	+ add Alias-, user-, ... namecheck.
+# 2005-07-23:
+#	+ implemented new Server/Device/Core-Mod management.
+# 2005-06-05:
+#	+ Add module-version info-methods
+# 2005-06-04:
+#	+ fixed some methods to provide variable 
+#		server-root
+# 2005-06-02:
+#	+ add StopServers() method		
+#	+ add StopDevices() method
+#	+ add ClearSymbolTree() method
+#	+ add StopAll() method
+#	+ add SaveSession() method
+#	+ add LoadSession() method
+#	+ add GetDeviceInfo() method
+# 2005-05-27:
+#	+ Start changelog. (sorry i missed it)
+#	+ Release as Version 0.2.0 (alpha)
+#	- Fixed wrong Symbol<->DeviceAlias association
+
+

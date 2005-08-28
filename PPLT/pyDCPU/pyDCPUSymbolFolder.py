@@ -20,6 +20,8 @@
 
 
 # ChangeLog:
+# 2005-08-28:
+#	add move/rename folders.
 # 2005-08-26:
 #	add moveing/renameing symbols feature.
 # 2005-08-25:
@@ -90,15 +92,11 @@ class Folder:
 		self.FolderHash.update( {Name: FolderObj} );
 		return(True);
 
-	def RenameFolder(self, Name, NewName):
-		if not self.FolderHash.has_key(Name):
-			return(False);
-		Folder = self.FolderHash.get(Name);
-		if not Folder.Rename(NewName):
-			return(False);
-		del self.FolderHash[Name];
-		self.FolderHash.update( {NewName:Folder} );
-		return(True);
+	def RemoveFolder(self, Name):
+		if self.FolderHash.has_key(Name):
+			del self.FolderHash[Name];
+			return(True);
+		return(False);
 
 	def DeleteFolder(self, Name):
 		if not self.FolderHash.has_key(Name):
@@ -108,7 +106,6 @@ class Folder:
 		del self.FolderHash[Name];
 		return(True);
 
-    
 
 	def GetElementByPath(self, PathToElement):
 		""" Get a element from tree by Path """
