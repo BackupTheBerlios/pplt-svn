@@ -111,7 +111,7 @@ class MasterConnection:
         """ This method is used internal. It create a fingerprint of this connection """
         ParentID = str(self.Parent._GetID());
         AddrStr  = str(self._GetAddrStr());
-        return(md5.new(ParentID+AddrStr).hexdigest());	#uhh...
+        return(md5.new(ParentID+AddrStr).hexdigest());  #uhh...
 
 
         

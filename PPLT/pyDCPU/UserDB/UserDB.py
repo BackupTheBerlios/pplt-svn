@@ -21,10 +21,10 @@
 
 # ChangeLog:
 # 2005-08-26:
-#	- changed passwords will now be saved
+#   - changed passwords will now be saved
 # 2005-08-25:
-#	- Add user-proxy feature.
-#	- replace print by logging
+#   - Add user-proxy feature.
+#   - replace print by logging
 
 import User;
 import Group;
@@ -103,7 +103,7 @@ class UserDB:
         return(self.__SuperUser);
 
     def IsSuperUser(self, Name):
-		return(self.__SuperUser == Name);
+        return(self.__SuperUser == Name);
 
     def GetSuperUserGrp(self):
         """ This method returns the grp-name of the grp where superuser is member of """
@@ -559,8 +559,8 @@ class UserDB:
         """
         return ([]);
 
-	def ListProxys(self):
-		return([]);
+    def ListProxys(self):
+        return([]);
 
     def ListSubGroups(self):
         """

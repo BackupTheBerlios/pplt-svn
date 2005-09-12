@@ -48,11 +48,15 @@
 
 	<div class="Head">Starting the PPLT Center</div>
 	<div class="Text">
-	If you use Windows you need first to find the place where Python installs
-	all scripts that come along the the extentions. Normaly it would be 
-	something like <b>C:\Python23\scripts</b>. In this folder you find
-	a script called <b>PPLTC.py</b>. This is the PPLT Center. If you double-click
-	it, it will be executed. If the install was right you should see now something
+	With the version 0.3.1 you find the folder <i>PPLT</i> inside you 
+	<i>Programs</i> submenu of the start-menu, where you should find
+	two shortcuts to the PPLT Center. The <i>PPLTCenter-debug</i> 
+	shortcut starts the PPLTCenter in debug-mode. If something was wrong
+	with the installation of PPLT you could find the PPLT Center in the
+	folder where python installs all scripts. This should be something
+	like <b>C:\Python23\Scripts</b>. There you find the files PPLTC.bat and
+	PPLTC.py. The PPLTC.bat starts the PPLT Center application.
+	If all is right you should see now something
 	like this:
 	<div style="text-align:center">
 		<a href="/img/PPLTC01.png">

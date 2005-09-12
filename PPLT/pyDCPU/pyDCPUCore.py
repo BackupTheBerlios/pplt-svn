@@ -21,13 +21,13 @@
 
 # Changelog:
 # 2005-08-28:
-#	+ add move/rename folders
+#   + add move/rename folders
 # 2005-08-26:
-#	+ add removeing/renameing symbols feature.
+#   + add removeing/renameing symbols feature.
 # 2005-08-25:
-#	+ added check for master/export names, ...
+#   + added check for master/export names, ...
 # 2005-05-27:
-#	- bug: inconsistent refcounter in Core.MasterTreeDel();
+#   - bug: inconsistent refcounter in Core.MasterTreeDel();
 
 import xml.dom.minidom;
 import pyDCPUCoreLogging;
@@ -102,7 +102,7 @@ class Core:
 
         self.__SymbolTree    = pyDCPUSymbolTree.SymbolTree(self.__UserDataBase.GetSuperUser(),  
                                                            self.__UserDataBase.GetSuperUserGrp(),
-                                                           384,		#meaning 600 in OCT
+                                                           384,     #meaning 600 in OCT
                                                            self.__UserDataBase,
                                                            self.Logger);
         self.__ExporterList  = [];
@@ -131,9 +131,9 @@ class Core:
             return(None);
 
         #check if this module was loaded in the sameplace with the same prams.
-        fingerprint = Modules.Fingerprint(ModName, 
-                                          Parent = ParentID, 
-                                          Address = Address, 
+        fingerprint = Modules.Fingerprint(ModName,
+                                          Parent = ParentID,
+                                          Address = Address,
                                           Parameter = Parameter);
         if self.__ObjectHash.has_key(fingerprint):
             Object = self.__ObjectHash[fingerprint];
@@ -198,7 +198,7 @@ class Core:
             self.__ObjectRefCount.update( {ObjectID:c-1} );
             self.Logger.debug("Object ref counter redused to %i"%self.__ObjectRefCount.get(ObjectID));
             return(True);
-		
+        
         if not self.__MasterObjTree.Del(ObjectID):
             self.Logger.error("Error while del Object from tree");
             return(False);
@@ -207,10 +207,10 @@ class Core:
             self.Logger.error("Error while delete object %s"%str(ObjectID));
             return(False);
 
-        del Object;								#destroy object
-        del self.__ObjectRefCount[ObjectID];	#remove from ref-count table
+        del Object;                             #destroy object
+        del self.__ObjectRefCount[ObjectID];    #remove from ref-count table
         self.Logger.debug("Obj ref count should be None: %s"%str(self.__ObjectRefCount.get(ObjectID)));
-        del self.__ObjectHash[ObjectID];		#remove from object hash
+        del self.__ObjectHash[ObjectID];        #remove from object hash
 
         self.Logger.debug("Object removed and destroyed");
         return(True);
@@ -545,7 +545,7 @@ class Core:
     # ######################################################################## #
     # Methods for object access                                                #
     # ######################################################################## #
-	# will may be removed
+    # will may be removed
     def GetAConnection(self, ObjectID, Address):
         """
             This method will return a connection object.
@@ -558,7 +558,7 @@ class Core:
             return(None);
         return(Obj.connect(Address));
 
-	# will be removed
+    # will be removed
     def GetObjectClass(self, ObjectID):
         Obj = self.__GetObjectByID(ObjectID);
         if not Obj:
@@ -566,12 +566,12 @@ class Core:
         return(Obj._GetClass());
 
 
-	# will be removed
+    # will be removed
     def GetExportableSymbolTree(self, DefaultUser):
         return(ExportableSymbolTree.ExportableSymbolTree(self.__SymbolTree,
                                                          self.__UserDataBase,
                                                          DefaultUser));
-	# will be removed
+    # will be removed
     def GetTheUserDB(self):
         """ Please don't use this method!"""
         return(self.__UserDataBase);

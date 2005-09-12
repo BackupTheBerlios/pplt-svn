@@ -1,0 +1,60 @@
+= ========================================================================== =
+= Postdamer Prozess-LeitTechnik --- a framework of industrial communication. =
+= ========================================================================== =
+
+The PPLT is a framework for industrial communication. An interface between 
+devices (like PLCs) and applications like visualisations. 
+
+INSTALL:
+========
+At first you need the Python interpreter version >= 2.3.0. You can get it
+from http://www.python.org.
+
+Also you need some python-libraries. You need wxPython version >= 2.5.0 if you 
+want to use the GUI application "PPLT Center". You can get wxPaython from
+http://www.wxpython.org. If you want to run the PPLT under Windows you'll
+need the pywin32 extention (build 208). You can download pywin32 from
+http://pywin32.sourceforge.net. Please check if the version of pywin32 fits to
+your Python version. But if you use a Posix OS you'll don't need this 
+extention.
+
+Note: Some plugins (here called: modules) need additional libraries. So you
+should get and install the pyserial library from 
+http://pyserial.sourceforge.net to get all modules useing the serial 
+interface running.
+
+Now you should install the modules/software in following order:
+	1.) Python
+	2.) wxPython
+	3.) pywin32-extention
+	4.) pyserial
+	5.) PPLT
+
+To install a module you should unpack it and call:
+	> python setup.py install
+For more information please look at the "Installing Python Modules" section
+of the Python documentation or at the README/INSTALL files of the specific
+library.
+
+
+INSTALL PLUGINS(Modules):
+=========================
+The best (simple) way to install the PPLT modules is to use the PPLT Center
+GUI application. Now, get the Modules-?.?.?.zip arcive from 
+http://pplt.berlios.de and unpack it. There are a lot of zip and xml files.
+Do not unpack the zip files!. 
+Now start the PPLT Center and click at the "Install modules" button on the left
+tool-bar. Now select the "Setup.idf" file you extracted from the modules arcive.
+Now all modules should be installed. 
+To use the modules you need to restart the PPLT Center.
+
+
+HELP WANTED:
+============
+Please, contact me if you have a quetions related to the PPLT. Also, please report
+any bug you find.
+
+So: Have a lot of fun...
+                                             Hannes Matuschek <hamtuschek@gmx.net>
+
+

@@ -29,52 +29,52 @@ import re;
 
 
 
-RE_DEV_SRV	= "^[a-z|A-Z|0-9|_|\-]+\.([a-z|A-Z|0-9|_|\-]+\.)*[a-z|A-Z|0-9|_|\-]+$"
-RE_USR_GRP	= "^[a-z|A-Z|0-9|_|\-]+$";
-RE_PATH		= "^/[a-z|A-Z|0-9|_|\-]*(/[a-z|A-Z|0-9|_|\-]+)*$";
+RE_DEV_SRV  = "^[a-z|A-Z|0-9|_|\-]+\.([a-z|A-Z|0-9|_|\-]+\.)*[a-z|A-Z|0-9|_|\-]+$"
+RE_USR_GRP  = "^[a-z|A-Z|0-9|_|\-]+$";
+RE_PATH     = "^/[a-z|A-Z|0-9|_|\-]*(/[a-z|A-Z|0-9|_|\-]+)*$";
 
 
 """ Internal used functions to check alias-, device- , server-, ..., -names. """ 
 
 def CheckDevice(Name):
-	exp = re.compile(RE_DEV_SRV);
-	Name = Name.strip();
-	if not re.match(exp, Name):
-		return(None);
-	return(Name);
+    exp = re.compile(RE_DEV_SRV);
+    Name = Name.strip();
+    if not re.match(exp, Name):
+        return(None);
+    return(Name);
 
 def CheckServer(Name):
-	return(CheckDevice(Name));
+    return(CheckDevice(Name));
 
 def CheckUser(Name):
-	exp = re.compile(RE_USR_GRP);
-	Name = Name.strip();
-	if not re.match(exp, Name):
-		return(None);
-	return(Name);
+    exp = re.compile(RE_USR_GRP);
+    Name = Name.strip();
+    if not re.match(exp, Name):
+        return(None);
+    return(Name);
 
 def CheckGroup(Name):
-	return(CheckUser(Name));
+    return(CheckUser(Name));
 
 def CheckAlias(Name):
-	return(CheckUser(Name));
+    return(CheckUser(Name));
 
 def CheckPath(Name):
-	exp = re.compile(RE_PATH);
-	Name = Name.strip();				#remove whitespaces
-	if len(Name)>1 and Name[-1]=='/':	#remove tailing slash
-		Name = Name[:-1];
-	if not re.match(exp, Name):
-		return(None);
-	return(Name);
+    exp = re.compile(RE_PATH);
+    Name = Name.strip();                #remove whitespaces
+    if len(Name)>1 and Name[-1]=='/':   #remove tailing slash
+        Name = Name[:-1];
+    if not re.match(exp, Name):
+        return(None);
+    return(Name);
 
 
 
 
 if __name__ == "__main__":
-	name = "/folder/";
-	name = CheckPath(name);
-	if not name:
-		print "Invalid format.";
-	else:
-		print "Ok"
+    name = "/folder/";
+    name = CheckPath(name);
+    if not name:
+        print "Invalid format.";
+    else:
+        print "Ok"

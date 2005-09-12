@@ -36,7 +36,7 @@ def Fingerprint(Name, Parent = None, Address = None, TypeName = None,
     if CacheTime != None:
         fingerprint.update(str(CacheTime));
     if Root:
-		fingerprint.update(Root);
+        fingerprint.update(Root);
     if Parameter:
         ParaLst = Parameter.keys();
         ParaLst.sort();

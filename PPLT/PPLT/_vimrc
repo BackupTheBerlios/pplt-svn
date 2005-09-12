@@ -1,0 +1,4 @@
+:set expandtabs
+:set ts=4
+:set autoindent
+:set backspace=1

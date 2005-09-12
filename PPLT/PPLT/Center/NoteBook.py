@@ -19,8 +19,8 @@
 # ############################################################################ # 
 
 #ChangeLog:
-#	2005-05-27:
-#		Release as version 0.2.0 (alpha)
+#   2005-05-27:
+#       Release as version 0.2.0 (alpha)
 
 import wx;
 import ServerPanel;
@@ -29,54 +29,54 @@ import SymbolTreePanel;
 import UserDBPanel;
 
 class NoteBook(wx.Notebook):
-	def __init__(self, parent, ID, PPLTSys):
-		wx.Notebook.__init__(self, parent, ID);
-		self.__PPLTSys = PPLTSys;
-		
-		self.__SrvPanel = ServerPanel.ServerPanel(self, self.__PPLTSys);
-		self.__DevPanel = DevicePanel.DevicePanel(self, self.__PPLTSys);
-		self.__SymPanel = SymbolTreePanel.SymbolTreePanel(self, self.__PPLTSys);
-		self.__UDBPanel = UserDBPanel.UserDBPanel(self, self.__PPLTSys);
+    def __init__(self, parent, ID, PPLTSys):
+        wx.Notebook.__init__(self, parent, ID);
+        self.__PPLTSys = PPLTSys;
+        
+        self.__SrvPanel = ServerPanel.ServerPanel(self, self.__PPLTSys);
+        self.__DevPanel = DevicePanel.DevicePanel(self, self.__PPLTSys);
+        self.__SymPanel = SymbolTreePanel.SymbolTreePanel(self, self.__PPLTSys);
+        self.__UDBPanel = UserDBPanel.UserDBPanel(self, self.__PPLTSys);
 
-		self.AddPage(self.__DevPanel, _("Devices"));
-		self.AddPage(self.__SymPanel, _("SymbolTree"));
-		self.AddPage(self.__SrvPanel, _("Server"));
-		self.AddPage(self.__UDBPanel, _("User DataBase"));
+        self.AddPage(self.__DevPanel, _("Devices"));
+        self.AddPage(self.__SymPanel, _("SymbolTree"));
+        self.AddPage(self.__SrvPanel, _("Server"));
+        self.AddPage(self.__UDBPanel, _("User DataBase"));
 
-		self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
+        self.Bind(wx.EVT_RIGHT_DOWN, self.OnRightClick);
 
-	def OnRightClick(self,event):
-		pt = event.GetPosition();
-		(tab, flag) = self.HitTest(pt);
-		if tab >= 0:
-			self.SetSelection(tab);
-		if tab == 0:
-			menu = DevicePanel.DeviceMenu(self.__DevPanel);
-			self.PopupMenu(menu, pt);
-			menu.Destroy();
-		elif tab == 1:
-			self.__SymPanel.Unselect();
-			menu = SymbolTreePanel.CtxMenu(self.__SymPanel);
-			self.PopupMenu(menu,pt);
-			menu.Destroy();
-		elif tab == 2:
-			menu = ServerPanel.ServerMenu(self.__SrvPanel);
-			self.PopupMenu(menu,pt);
-			menu.Destroy();
-		elif tab == 3:
-			self.__UDBPanel.Unselect();
-			menu = UserDBPanel.CtxMenu(self.__UDBPanel, None);
-			self.PopupMenu(menu,pt);
-			menu.Destroy();
+    def OnRightClick(self,event):
+        pt = event.GetPosition();
+        (tab, flag) = self.HitTest(pt);
+        if tab >= 0:
+            self.SetSelection(tab);
+        if tab == 0:
+            menu = DevicePanel.DeviceMenu(self.__DevPanel);
+            self.PopupMenu(menu, pt);
+            menu.Destroy();
+        elif tab == 1:
+            self.__SymPanel.Unselect();
+            menu = SymbolTreePanel.CtxMenu(self.__SymPanel);
+            self.PopupMenu(menu,pt);
+            menu.Destroy();
+        elif tab == 2:
+            menu = ServerPanel.ServerMenu(self.__SrvPanel);
+            self.PopupMenu(menu,pt);
+            menu.Destroy();
+        elif tab == 3:
+            self.__UDBPanel.Unselect();
+            menu = UserDBPanel.CtxMenu(self.__UDBPanel, None);
+            self.PopupMenu(menu,pt);
+            menu.Destroy();
 
-	def Clean(self):
-		self.__SrvPanel.Clean();
-		self.__SymPanel.Clean();
-		self.__DevPanel.Clean();
-	
-	def Build(self):
-		self.__DevPanel.Build();
-		self.__SymPanel.Build();
-		self.__SrvPanel.Build();
-		
+    def Clean(self):
+        self.__SrvPanel.Clean();
+        self.__SymPanel.Clean();
+        self.__DevPanel.Clean();
+    
+    def Build(self):
+        self.__DevPanel.Build();
+        self.__SymPanel.Build();
+        self.__SrvPanel.Build();
+        
 

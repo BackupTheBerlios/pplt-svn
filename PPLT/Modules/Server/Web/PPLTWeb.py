@@ -8,33 +8,33 @@ import socket;
 
 #Changelog:
 # 2005-08-25:
-#	- fixed heavy cpu-load problem 
-#		(causes Win8x to crash)
-#	- fixed problem with python version < 2.4
+#   - fixed heavy cpu-load problem 
+#       (causes Win8x to crash)
+#   - fixed problem with python version < 2.4
 # 2005-08-20:
-#	- add http-auth 
-#	- server will not use the default user anymore.
+#   - add http-auth 
+#   - server will not use the default user anymore.
 # 2005-06-10:
-#	- fixed problem with non-blocking sockets unter windows.
+#   - fixed problem with non-blocking sockets unter windows.
 
 
 class PPLTWebServer(BaseHTTPServer.HTTPServer):
-	def __init__(self, Address, Handler, ExpSymbolTree):
-		BaseHTTPServer.HTTPServer.__init__(self, Address, Handler);
-		self.ExpSymbolTree = ExpSymbolTree;
-		self.__RUNNING = True;
+    def __init__(self, Address, Handler, ExpSymbolTree):
+        BaseHTTPServer.HTTPServer.__init__(self, Address, Handler);
+        self.ExpSymbolTree = ExpSymbolTree;
+        self.__RUNNING = True;
 
-	def serve_forever(self):
-		while self.__RUNNING:
-			self.handle_request();
+    def serve_forever(self):
+        while self.__RUNNING:
+            self.handle_request();
 
-	def Stop(self, Addr, Port):
-		self.__RUNNING = False;
-		self.socket.setblocking(0);
-		self.socket.close();
-		tmpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
-		try: tmpSock.connect( (Addr, Port) );
-		except: pass;
+    def Stop(self, Addr, Port):
+        self.__RUNNING = False;
+        self.socket.setblocking(0);
+        self.socket.close();
+        tmpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
+        try: tmpSock.connect( (Addr, Port) );
+        except: pass;
 
 
 class PPLTWebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
@@ -127,36 +127,36 @@ def PathUp(path):
 
 
 class Object(pyDCPU.ExportObject):
-	def setup(self):
-		self.__BindAddress = self.Parameters.get('Address');
-		if not self.__BindAddress:
-			self.Logger.error("No Address given...");
-			return(False);
-		
-		self.__Port = None;
-		try:
-			self.__Port = int(self.Parameters.get("Port"));
-		except:
-			self.Logger.error("Invalid Port format: have to be a Number as String");
-			return(False);
-		if self.__Port == None:
-			self.Logger.error("No Port given");
-			return(False);
-		try:
-			self.__ServerObject = PPLTWebServer((self.__BindAddress,self.__Port), PPLTWebHandler, self.SymbolTree);
-		except:
-			self.Logger.error("Error while setup create object");
-			return(False);
-		if not self.__ServerObject:
-			self.Logger.error("No server object");
-			return(False);
-		return(True);
+    def setup(self):
+        self.__BindAddress = self.Parameters.get('Address');
+        if not self.__BindAddress:
+            self.Logger.error("No Address given...");
+            return(False);
+        
+        self.__Port = None;
+        try:
+            self.__Port = int(self.Parameters.get("Port"));
+        except:
+            self.Logger.error("Invalid Port format: have to be a Number as String");
+            return(False);
+        if self.__Port == None:
+            self.Logger.error("No Port given");
+            return(False);
+        try:
+            self.__ServerObject = PPLTWebServer((self.__BindAddress,self.__Port), PPLTWebHandler, self.SymbolTree);
+        except:
+            self.Logger.error("Error while setup create object");
+            return(False);
+        if not self.__ServerObject:
+            self.Logger.error("No server object");
+            return(False);
+        return(True);
 
-	def start(self):
-		self.__ServerObject.serve_forever();
-		return(True);
+    def start(self):
+        self.__ServerObject.serve_forever();
+        return(True);
 
-	def stop(self):
-		self.__ServerObject.Stop(self.__BindAddress, self.__Port);
-		return(True);
+    def stop(self):
+        self.__ServerObject.Stop(self.__BindAddress, self.__Port);
+        return(True);
 

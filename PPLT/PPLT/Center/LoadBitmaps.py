@@ -19,49 +19,49 @@
 # ############################################################################ # 
 
 #ChangeLog:
-#	2005-05-27:
-#		Release as version 0.2.0 (alpha)
+#   2005-05-27:
+#       Release as version 0.2.0 (alpha)
 
 import wx;
 import os;
 
 def LoadBitmaps(path):
-	bmps = {};
+    bmps = {};
 
-	tmp = wx.Bitmap(os.path.normpath(path+"/new.xpm"));
-	if not tmp:
-		tmp = wx.NullBitmap;
-	bmps.update( {"New":tmp} );
+    tmp = wx.Bitmap(os.path.normpath(path+"/new.xpm"));
+    if not tmp:
+        tmp = wx.NullBitmap;
+    bmps.update( {"New":tmp} );
 
-	tmp = wx.Bitmap(os.path.normpath(path+"/load.xpm"));
-	if not tmp:
-		tmp = wx.NullBitmap;
-	bmps.update( {"Load":tmp} );
+    tmp = wx.Bitmap(os.path.normpath(path+"/load.xpm"));
+    if not tmp:
+        tmp = wx.NullBitmap;
+    bmps.update( {"Load":tmp} );
 
-	tmp = wx.Bitmap(os.path.normpath(path+"/save.xpm"));
-	if not tmp:
-		tmp = wx.NullBitmap;
-	bmps.update( {"Save":tmp} );
-	
-	tmp = wx.Bitmap(os.path.normpath(path+"/saveas.xpm"));
-	if not tmp:
-		tmp = wx.NullBitmap;
-	bmps.update( {"SaveAs":tmp} );
-	
-	tmp = wx.Bitmap(os.path.normpath(path+"/pack_add.xpm"));
-	if not tmp:
-		tmp = wx.NullBitmap;
-	bmps.update( {"PackAdd":tmp} );
-	
-	tmp = wx.Bitmap(os.path.normpath(path+"/info.xpm"));
-	if not tmp:
-		tmp = wx.NullBitmap;
-	bmps.update( {"Info":tmp} );
+    tmp = wx.Bitmap(os.path.normpath(path+"/save.xpm"));
+    if not tmp:
+        tmp = wx.NullBitmap;
+    bmps.update( {"Save":tmp} );
+    
+    tmp = wx.Bitmap(os.path.normpath(path+"/saveas.xpm"));
+    if not tmp:
+        tmp = wx.NullBitmap;
+    bmps.update( {"SaveAs":tmp} );
+    
+    tmp = wx.Bitmap(os.path.normpath(path+"/pack_add.xpm"));
+    if not tmp:
+        tmp = wx.NullBitmap;
+    bmps.update( {"PackAdd":tmp} );
+    
+    tmp = wx.Bitmap(os.path.normpath(path+"/info.xpm"));
+    if not tmp:
+        tmp = wx.NullBitmap;
+    bmps.update( {"Info":tmp} );
 
-	tmp = wx.Icon(os.path.normpath(path+"/PPLT.ico"), wx.BITMAP_TYPE_ICO);
-	if not tmp:
-		tmp = wx.NullIcon;
-	bmps.update( {"Logo":tmp} );
+    tmp = wx.Icon(os.path.normpath(path+"/PPLT.ico"), wx.BITMAP_TYPE_ICO);
+    if not tmp:
+        tmp = wx.NullIcon;
+    bmps.update( {"Logo":tmp} );
 
-	return(bmps);
-	
+    return(bmps);
+    

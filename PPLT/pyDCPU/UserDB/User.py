@@ -21,7 +21,7 @@
 
 # ChangeLog:
 # 2005-08-26:
-#	- solved problems with not and double encoded passwords
+#   - solved problems with not and double encoded passwords
 
 import xml.dom.minidom;
 import md5;

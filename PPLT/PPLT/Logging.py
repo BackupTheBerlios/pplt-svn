@@ -20,7 +20,7 @@
 
 # Changelog:
 # 2005-05-27:
-#	Release as version 0.2.0
+#   Release as version 0.2.0
 
 
 import logging;

@@ -20,7 +20,7 @@
 
 # Changelog:
 # 2005-05-27:
-#	Release as version 0.2.0
+#   Release as version 0.2.0
 
 import xml.dom.minidom;
 import os.path;
@@ -32,80 +32,80 @@ import logging;
 """ This module install PPLT-Modules """
 
 def InstallDCPUMod(FileName,Name,InGroup,ModulePath):
-	logger = logging.getLogger("PPLT");
-	if not os.path.exists(FileName):
-		logger.error("Error %s not found"%FileName);
-		return(False);
+    logger = logging.getLogger("PPLT");
+    if not os.path.exists(FileName):
+        logger.error("Error %s not found"%FileName);
+        return(False);
 
-	if not zipfile.is_zipfile(FileName):
-		logger.error("Invalid or damaged ZIP");
-		return(False);
+    if not zipfile.is_zipfile(FileName):
+        logger.error("Invalid or damaged ZIP");
+        return(False);
 
-	grplst = InGroup.split('.');
-	pathlst = [ModulePath];
-	for item in grplst:
-		if item != '':
-			pathlst.append(item);
+    grplst = InGroup.split('.');
+    pathlst = [ModulePath];
+    for item in grplst:
+        if item != '':
+            pathlst.append(item);
 
-	dirname =  os.path.normpath(string.join(pathlst,'/'));
-	logger.info("Install %s to %s"%(FileName,dirname));
-	if not os.path.isdir(dirname):
-		try:
-			os.makedirs(dirname,0755);
-		except:
-			logger.error("Error while create dir %s"%dirname);
-			return(False);
-	try:
-		shutil.copy(FileName, dirname+'/'+Name+'.zip');
-	except:
-		logger.error("Error while copy file %s"%FileName);
-		return(False);
-	return(True);
+    dirname =  os.path.normpath(string.join(pathlst,'/'));
+    logger.info("Install %s to %s"%(FileName,dirname));
+    if not os.path.isdir(dirname):
+        try:
+            os.makedirs(dirname,0755);
+        except:
+            logger.error("Error while create dir %s"%dirname);
+            return(False);
+    try:
+        shutil.copy(FileName, dirname+'/'+Name+'.zip');
+    except:
+        logger.error("Error while copy file %s"%FileName);
+        return(False);
+    return(True);
 
 
 
 def InstallPPLTMod(FileName, ModulePath):
-	#construct new filepath
-	logger = logging.getLogger("PPLT");
-	dest = os.path.normpath(os.path.join(ModulePath,'Mods'));
-	filename = os.path.normpath(os.path.join(dest, os.path.basename(FileName)));
+    #construct new filepath
+    logger = logging.getLogger("PPLT");
+    dest = os.path.normpath(os.path.join(ModulePath,'Mods'));
+    filename = os.path.normpath(os.path.join(dest, os.path.basename(FileName)));
 
-	logger.info("Install %s"%FileName);
+    logger.info("Install %s"%FileName);
 
-	if not os.path.isdir(dest):
-		try:
-			os.makedirs(dest,0755);
-		except:
-			logger.error("Error while create dir %s"%dest);
-			return(False);
-	try:
-		shutil.copy(FileName, filename);
-	except:
-		logger.error("Error while copy file %s"%FileName);
-		return(False);
-	return(True);
+    if not os.path.isdir(dest):
+        try:
+            os.makedirs(dest,0755);
+        except:
+            logger.error("Error while create dir %s"%dest);
+            return(False);
+    try:
+        shutil.copy(FileName, filename);
+    except:
+        logger.error("Error while copy file %s"%FileName);
+        return(False);
+    return(True);
 
 
 
 def InstallSet(FileName, ModulePath):
-	logger = logging.getLogger("PPLT");
-	doc = xml.dom.minidom.parse(FileName);
-	coremodlist = doc.getElementsByTagName('DCPUMod');
-	ppltmodlist = doc.getElementsByTagName('PPLTMod');
+    logger = logging.getLogger("PPLT");
+    doc = xml.dom.minidom.parse(FileName);
+    coremodlist = doc.getElementsByTagName('DCPUMod');
+    ppltmodlist = doc.getElementsByTagName('PPLTMod');
 
-	zipdir = os.path.dirname(os.path.abspath(FileName));
+    zipdir = os.path.dirname(os.path.abspath(FileName));
    
-	for mod in coremodlist:
-		fname = os.path.join(zipdir,mod.getAttribute('file'));
-		name = mod.getAttribute('as');
-		group = mod.getAttribute('in');
-		if not InstallDCPUMod(fname, name, group, ModulePath):
-			logger.error("Error while install %s"%name);
-				
-	for mod in ppltmodlist:
-		fname = os.path.join(zipdir,mod.getAttribute('file'));
-		if not InstallPPLTMod(fname, ModulePath):
-			logger.error("Error while install %s"%fname);
+    for mod in coremodlist:
+        fname = os.path.join(zipdir,mod.getAttribute('file'));
+        name = mod.getAttribute('as');
+        group = mod.getAttribute('in');
+        if not InstallDCPUMod(fname, name, group, ModulePath):
+            logger.error("Error while install %s"%name);
+                
+    for mod in ppltmodlist:
+        fname = os.path.join(zipdir,mod.getAttribute('file'));
+        if not InstallPPLTMod(fname, ModulePath):
+            logger.error("Error while install %s"%fname);
 
-	return(True);
+    return(True);
         

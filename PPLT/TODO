@@ -1,24 +1,40 @@
 +++ general Tasks +++
 [ALL]
-	Do testing and testing and testing
+    Do testing and testing and testing
 
 [pyDCPU]
-	Implement mounting of a remote symbol tree 
-	maybe by using simple export (XML-RPC)
-	(maybe very complex -> a task for 
-	release 1.1.0)
+    Implement mounting of a remote symbol tree 
+    maybe by using simple export (XML-RPC)
+    (maybe very complex -> a task for 
+    release 1.1.0)
 
 
 
 +++ BUGs BUGs BUGs +++
 [ALL]
-	Check all try/except brackets for a usefull debug or error 
-	output. (i know, that i was lasy)
+    Check all try/except brackets for a usefull debug or error 
+    output. (i know, that i was lasy)
 
 [CoreModule] 
-	JVisu eat all free CPU load. (SimpleExport doesn't, may be 
-	a problem with the non-blocking sockets.)
+    JVisu eat all free CPU load. (SimpleExport doesn't, may be 
+    a problem with the non-blocking sockets.)
 
 [pyDCPU]
-	It would be better if the call of setup() of a module will be inside 
-	a try/except pair.
+    It would be better if the call of setup() of a module will be inside 
+    a try/except pair.
+
+[CoreModule]
+    Prevent PPLTWebServer to write error messages to stderr/stdout.
+
+[PPLTCenter]
+    SymbolTreePanel: Make all visible item visible after rebuild tree.
+
+[PPLTCenter]
+    SymbolTreePanel: Edit symbol or server-name is not cancelable under 
+    Win2000 but under Win98
+
+[pyDCPU]
+    Symbolslots should keep there cached values if a error appears
+
+[PPLT]
+    Install/Uninstall of modules.

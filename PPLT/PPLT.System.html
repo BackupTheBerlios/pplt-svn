@@ -1,0 +1,200 @@
+
+<!doctype html PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<html><head><title>Python: class System</title>
+</head><body bgcolor="#f0f0f8">
+<p>
+<table width="100%" cellspacing=0 cellpadding=2 border=0 summary="section">
+<tr bgcolor="#ffc8d8">
+<td colspan=3 valign=bottom>&nbsp;<br>
+<font color="#000000" face="helvetica, arial"><strong>PPLT.System</strong> = <a name="PPLT.System">class System</a></font></td></tr>
+    
+<tr bgcolor="#ffc8d8"><td rowspan=2><tt>&nbsp;&nbsp;&nbsp;</tt></td>
+<td colspan=2><tt>This&nbsp;is&nbsp;the&nbsp;PPLTSystem&nbsp;class&nbsp;all&nbsp;work&nbsp;can&nbsp;be&nbsp;done&nbsp;over&nbsp;a&nbsp;instance&nbsp;if&nbsp;this&nbsp;<br>
+class.&nbsp;To&nbsp;get&nbsp;a&nbsp;instance&nbsp;of&nbsp;this&nbsp;class&nbsp;simply&nbsp;call:<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;obj&nbsp;=&nbsp;PPLT.System().&nbsp;<br>
+&nbsp;<br>
+There&nbsp;is&nbsp;a&nbsp;optional&nbsp;parameter&nbsp;for&nbsp;this&nbsp;method:&nbsp;"ConfigFile":<br>
+&nbsp;&nbsp;&gt;&gt;&gt;&nbsp;obj&nbsp;=&nbsp;PPLT.System(ConfigFile="/home/hannes/PPLT.conf")<br>
+If&nbsp;you&nbsp;miss&nbsp;this&nbsp;parameter,&nbsp;the&nbsp;default&nbsp;sys.exec_prefix+"/PPLT/PPLT.conf"&nbsp;will<br>
+be&nbsp;used.&nbsp;Will&nbsp;be&nbsp;installed,&nbsp;so&nbsp;you&nbsp;should&nbsp;simply&nbsp;call&nbsp;PPLT.System()&nbsp;to&nbsp;get&nbsp;an<br>
+instance&nbsp;of&nbsp;this&nbsp;class.<br>
+&nbsp;<br>
+A&nbsp;typical&nbsp;session&nbsp;could&nbsp;be:<br>
+&gt;&gt;&gt;&nbsp;import&nbsp;PPLT<br>
+&gt;&gt;&gt;&nbsp;#Start&nbsp;the&nbsp;pplt-system:<br>
+&gt;&gt;&gt;&nbsp;system&nbsp;=&nbsp;PPLT.System()<br>
+&gt;&gt;&gt;&nbsp;<br>
+&gt;&gt;&gt;&nbsp;#Load&nbsp;device&nbsp;RandomGenerator:<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;The&nbsp;first&nbsp;parameter&nbsp;is&nbsp;the&nbsp;full-qualified&nbsp;devicename,&nbsp;the&nbsp;next&nbsp;parameter&nbsp;is&nbsp;the<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;alias&nbsp;you&nbsp;give&nbsp;to&nbsp;the&nbsp;loaded&nbsp;device&nbsp;to&nbsp;identify&nbsp;it&nbsp;later&nbsp;(to&nbsp;create&nbsp;symbols).<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;The&nbsp;last&nbsp;parameter&nbsp;is&nbsp;a&nbsp;dict&nbsp;with&nbsp;all&nbsp;parameters&nbsp;for&nbsp;the&nbsp;device&nbsp;(RandomGenerator&nbsp;<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;needs&nbsp;no&nbsp;parameters)<br>
+&gt;&gt;&gt;&nbsp;system.<a href="#PPLT.System-LoadDevice">LoadDevice</a>("Debug.RandomGenerator",&nbsp;"rand",&nbsp;{})<br>
+&gt;&gt;&gt;<br>
+&gt;&gt;&gt;&nbsp;#Create&nbsp;a&nbsp;symbol:<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;The&nbsp;first&nbsp;parameter&nbsp;is&nbsp;the&nbsp;full&nbsp;path&nbsp;to&nbsp;the&nbsp;sysmbol&nbsp;you&nbsp;want&nbsp;to&nbsp;create.<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;NOTE:&nbsp;All&nbsp;folders&nbsp;on&nbsp;the&nbsp;path&nbsp;to&nbsp;the&nbsp;symbol&nbsp;must&nbsp;exsists.<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;The&nbsp;second&nbsp;parameter&nbsp;is&nbsp;the&nbsp;full&nbsp;name&nbsp;of&nbsp;the&nbsp;symbol-slot&nbsp;the&nbsp;symbol&nbsp;will&nbsp;be<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;attached&nbsp;to.&nbsp;The&nbsp;format&nbsp;for&nbsp;the&nbsp;symbol-slot&nbsp;name&nbsp;is&nbsp;ALIAS::NAMESPACE::SLOT.<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;The&nbsp;last&nbsp;3rd&nbsp;parameter&nbsp;is&nbsp;the&nbsp;type-name&nbsp;of&nbsp;the&nbsp;symbol&nbsp;(depends&nbsp;on&nbsp;the&nbsp;slot<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;you&nbsp;use:&nbsp;pleas&nbsp;see&nbsp;at&nbsp;the&nbsp;device&nbsp;reference).&nbsp;Also&nbsp;there&nbsp;are&nbsp;some&nbsp;optional<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;parameters,&nbsp;please&nbsp;see&nbsp;at&nbsp;the&nbsp;reference&nbsp;of&nbsp;the&nbsp;<a href="#PPLT.System-CreateSymbol">CreateSymbol</a>()&nbsp;method.<br>
+&gt;&gt;&gt;&nbsp;system.<a href="#PPLT.System-CreateSymbol">CreateSymbol</a>("/r_bool",&nbsp;"rand::Generator::Bool",&nbsp;"Bool")<br>
+&gt;&gt;&gt;&nbsp;<br>
+&gt;&gt;&gt;&nbsp;#Now&nbsp;start&nbsp;a&nbsp;server:<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;The&nbsp;call&nbsp;of&nbsp;LoadServer&nbsp;is&nbsp;quied&nbsp;simular&nbsp;to&nbsp;the&nbsp;call&nbsp;of&nbsp;LoadDevice,&nbsp;but<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;the&nbsp;additional&nbsp;3rd&nbsp;parameter&nbsp;gives&nbsp;the&nbsp;default&nbsp;user.&nbsp;The&nbsp;server&nbsp;will&nbsp;run<br>
+&gt;&gt;&gt;&nbsp;#&nbsp;with&nbsp;this&nbsp;rights&nbsp;if&nbsp;it's&nbsp;protocol&nbsp;knows&nbsp;no&nbsp;authentication.<br>
+&gt;&gt;&gt;&nbsp;system.<a href="#PPLT.System-LoadServer">LoadServer</a>("Web.PPLTWebServer",&nbsp;"web",&nbsp;"",&nbsp;{"Address":"127.0.0.1",&nbsp;"Port":"8080"})<br>&nbsp;</tt></td></tr>
+<tr><td>&nbsp;</td>
+<td width="100%">Methods defined here:<br>
+<dl><dt><a name="System-ChangeGroup"><strong>ChangeGroup</strong></a>(self, Path, Group)</dt><dd><tt>Set&nbsp;the&nbsp;group&nbsp;of&nbsp;a&nbsp;symbol&nbsp;or&nbsp;folder.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-ChangeModus"><strong>ChangeModus</strong></a>(self, Path, Modus)</dt><dd><tt>Change&nbsp;the&nbsp;modus&nbsp;of&nbsp;the&nbsp;symbol&nbsp;or&nbsp;folder&nbsp;pointed&nbsp;by&nbsp;path.<br>
+Only&nbsp;the&nbsp;OCTAL&nbsp;string&nbsp;format&nbsp;is&nbsp;accepted.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-ChangeOwner"><strong>ChangeOwner</strong></a>(self, Path, Owner)</dt><dd><tt>Set&nbsp;the&nbsp;owner&nbsp;of&nbsp;a&nbsp;symbol&nbsp;or&nbsp;folder.&nbsp;Return&nbsp;True<br>
+on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-ChangePassword"><strong>ChangePassword</strong></a>(self, Name, Password)</dt><dd><tt>Change&nbsp;the&nbsp;passwd&nbsp;for&nbsp;a&nbsp;the&nbsp;user&nbsp;Name.</tt></dd></dl>
+
+<dl><dt><a name="System-CheckPassword"><strong>CheckPassword</strong></a>(self, Name, Password)</dt><dd><tt>Test&nbsp;Password&nbsp;if&nbsp;its&nbsp;match&nbsp;to&nbsp;user&nbsp;Name's&nbsp;one.&nbsp;Return&nbsp;True&nbsp;on&nbsp;<br>
+success.</tt></dd></dl>
+
+<dl><dt><a name="System-ClearSymbolTree"><strong>ClearSymbolTree</strong></a>(self, path<font color="#909090">='/'</font>)</dt><dd><tt>This&nbsp;method&nbsp;will&nbsp;clear&nbsp;the&nbsp;whole&nbsp;symbol&nbsp;tree&nbsp;or&nbsp;the&nbsp;path&nbsp;if&nbsp;given.</tt></dd></dl>
+
+<dl><dt><a name="System-CreateFolder"><strong>CreateFolder</strong></a>(self, Path, Modus<font color="#909090">='600'</font>, Owner<font color="#909090">=None</font>, Group<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;Folder&nbsp;in&nbsp;Folder&nbsp;"Path"&nbsp;with&nbsp;Modus,&nbsp;Owner,&nbsp;Group.<br>
+Modus,&nbsp;Owner,&nbsp;Group&nbsp;can&nbsp;be&nbsp;obmitted,&nbsp;then&nbsp;the&nbsp;SuperUser&nbsp;and&nbsp;the&nbsp;<br>
+SuperUserGroup&nbsp;will&nbsp;be&nbsp;used&nbsp;for&nbsp;Owner&nbsp;and&nbsp;Group&nbsp;and&nbsp;600&nbsp;will&nbsp;be&nbsp;used&nbsp;as<br>
+the&nbsp;modus.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-CreateGroup"><strong>CreateGroup</strong></a>(self, ParentGroup, Name)</dt><dd><tt>Create&nbsp;a&nbsp;group&nbsp;within&nbsp;ParentGroup&nbsp;with&nbsp;Name.&nbsp;If&nbsp;ParentGroup&nbsp;is&nbsp;None,<br>
+a&nbsp;new&nbsp;root&nbsp;group&nbsp;will&nbsp;be&nbsp;generated.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-CreateMember"><strong>CreateMember</strong></a>(self, Group, Name, Password, Description)</dt><dd><tt>Create&nbsp;a&nbsp;new&nbsp;group&nbsp;member&nbsp;for&nbsp;the&nbsp;give&nbsp;Group&nbsp;with&nbsp;Name,&nbsp;Password&nbsp;<br>
+and&nbsp;Description.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-CreateProxy"><strong>CreateProxy</strong></a>(self, Group, Name)</dt><dd><tt>Create&nbsp;a&nbsp;user-proxy&nbsp;for&nbsp;user&nbsp;(Name)&nbsp;in&nbsp;group&nbsp;(Group).</tt></dd></dl>
+
+<dl><dt><a name="System-CreateSymbol"><strong>CreateSymbol</strong></a>(self, Path, Slot, Type, Modus<font color="#909090">='600'</font>, Owner<font color="#909090">=None</font>, Group<font color="#909090">=None</font>)</dt><dd><tt>Create&nbsp;a&nbsp;Symbol&nbsp;with&nbsp;Type&nbsp;in&nbsp;Path&nbsp;and&nbsp;attach&nbsp;it&nbsp;to&nbsp;Slot.&nbsp;Modus,&nbsp;Owner,&nbsp;Group<br>
+can&nbsp;be&nbsp;obmitted.&nbsp;Then&nbsp;SuperUser,&nbsp;SuperUserGroup&nbsp;and&nbsp;600&nbsp;will&nbsp;be&nbsp;used.&nbsp;Return&nbsp;True&nbsp;on<br>
+success.</tt></dd></dl>
+
+<dl><dt><a name="System-DeleteFolder"><strong>DeleteFolder</strong></a>(self, Path, Recur<font color="#909090">=False</font>)</dt><dd><tt>Simply&nbsp;delete&nbsp;a&nbsp;(empty)&nbsp;Folder.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-DeleteGroup"><strong>DeleteGroup</strong></a>(self, Name)</dt><dd><tt>Delete&nbsp;a&nbsp;group.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-DeleteMember"><strong>DeleteMember</strong></a>(self, Name)</dt><dd><tt>Delete&nbsp;a&nbsp;user.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-DeleteProxy"><strong>DeleteProxy</strong></a>(self, Group, User)</dt><dd><tt>Delete&nbsp;proxy&nbsp;for&nbsp;user&nbsp;(User)&nbsp;in&nbsp;group&nbsp;(Group)</tt></dd></dl>
+
+<dl><dt><a name="System-DeleteSymbol"><strong>DeleteSymbol</strong></a>(self, Path)</dt><dd><tt>Simply&nbsp;delete&nbsp;the&nbsp;symbol&nbsp;in&nbsp;Path.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-GetDeviceInfo"><strong>GetDeviceInfo</strong></a>(self, Name)</dt><dd><tt>Return&nbsp;a&nbsp;info&nbsp;object&nbsp;for&nbsp;the&nbsp;device&nbsp;Name.</tt></dd></dl>
+
+<dl><dt><a name="System-GetDeviceParameters"><strong>GetDeviceParameters</strong></a>(self, Alias)</dt><dd><tt>Return&nbsp;all&nbsp;Parameters&nbsp;of&nbsp;device&nbsp;known&nbsp;as.</tt></dd></dl>
+
+<dl><dt><a name="System-GetDeviceVersion"><strong>GetDeviceVersion</strong></a>(self, Name)</dt><dd><tt>Return&nbsp;the&nbsp;version&nbsp;of&nbsp;the&nbsp;device&nbsp;(if&nbsp;found)</tt></dd></dl>
+
+<dl><dt><a name="System-GetFQDeviceName"><strong>GetFQDeviceName</strong></a>(self, Alias)</dt><dd><tt>Return&nbsp;the&nbsp;full&nbsp;qualified&nbsp;device&nbsp;name&nbsp;of&nbsp;device&nbsp;known&nbsp;as&nbsp;Alias.</tt></dd></dl>
+
+<dl><dt><a name="System-GetFQServerName"><strong>GetFQServerName</strong></a>(self, Alias)</dt><dd><tt>This&nbsp;method&nbsp;returns&nbsp;the&nbsp;full&nbsp;qualified&nbsp;servername&nbsp;for&nbsp;the&nbsp;given<br>
+alias&nbsp;of&nbsp;a&nbsp;loaded&nbsp;server.</tt></dd></dl>
+
+<dl><dt><a name="System-GetGroup"><strong>GetGroup</strong></a>(self, Path)</dt><dd><tt>Return&nbsp;the&nbsp;groupname&nbsp;of&nbsp;a&nbsp;symbol&nbsp;or&nbsp;folder.</tt></dd></dl>
+
+<dl><dt><a name="System-GetGroupByUser"><strong>GetGroupByUser</strong></a>(self, UserName)</dt><dd><tt>Return&nbsp;the&nbsp;group&nbsp;of&nbsp;given&nbsp;user</tt></dd></dl>
+
+<dl><dt><a name="System-GetModus"><strong>GetModus</strong></a>(self, Path, Format<font color="#909090">=1</font>)</dt><dd><tt>Return&nbsp;the&nbsp;modus&nbsp;of&nbsp;a&nbsp;symbol&nbsp;or&nbsp;folder&nbsp;in&nbsp;Format.<br>
+If&nbsp;Format&nbsp;is&nbsp;OCTAL,&nbsp;a&nbsp;string&nbsp;with&nbsp;the&nbsp;octal&nbsp;representation&nbsp;of&nbsp;the<br>
+modus&nbsp;will&nbsp;be&nbsp;returnd.&nbsp;If&nbsp;Format&nbsp;is&nbsp;STRING,&nbsp;a&nbsp;string&nbsp;formated&nbsp;like<br>
+the&nbsp;modus&nbsp;in&nbsp;ls&nbsp;-l&nbsp;command&nbsp;will&nbsp;be&nbsp;returned.&nbsp;If&nbsp;Format&nbsp;is&nbsp;INTEGER<br>
+the&nbsp;integer&nbsp;representation&nbsp;of&nbsp;the&nbsp;modus&nbsp;will&nbsp;be&nbsp;returned&nbsp;(base=10!!!).</tt></dd></dl>
+
+<dl><dt><a name="System-GetOwner"><strong>GetOwner</strong></a>(self, Path)</dt><dd><tt>Return&nbsp;the&nbsp;owner&nbsp;name.</tt></dd></dl>
+
+<dl><dt><a name="System-GetServerDefaultUser"><strong>GetServerDefaultUser</strong></a>(self, Alias)</dt><dd><tt>Return&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;default&nbsp;user&nbsp;the&nbsp;server&nbsp;useses&nbsp;if&nbsp;it<br>
+doesn't&nbsp;know&nbsp;a&nbsp;authentification.</tt></dd></dl>
+
+<dl><dt><a name="System-GetServerInfo"><strong>GetServerInfo</strong></a>(self, Name)</dt><dd><tt>Return&nbsp;a&nbsp;info&nbsp;object&nbsp;for&nbsp;the&nbsp;server&nbsp;Name.</tt></dd></dl>
+
+<dl><dt><a name="System-GetServerParameters"><strong>GetServerParameters</strong></a>(self, Alias)</dt><dd><tt>Return&nbsp;all&nbsp;parameters&nbsp;of&nbsp;the&nbsp;given&nbsp;server&nbsp;in&nbsp;a&nbsp;dict.</tt></dd></dl>
+
+<dl><dt><a name="System-GetServerRoot"><strong>GetServerRoot</strong></a>(self, Alias)</dt><dd><tt>Return&nbsp;the&nbsp;server-root&nbsp;of&nbsp;a&nbsp;server.</tt></dd></dl>
+
+<dl><dt><a name="System-GetServerVersion"><strong>GetServerVersion</strong></a>(self, Name)</dt><dd><tt>Return&nbsp;the&nbsp;Version&nbsp;of&nbsp;the&nbsp;given&nbsp;server&nbsp;(if&nbsp;found)</tt></dd></dl>
+
+<dl><dt><a name="System-GetSuperUser"><strong>GetSuperUser</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;name&nbsp;of&nbsp;the&nbsp;SuperUser</tt></dd></dl>
+
+<dl><dt><a name="System-GetSuperUserGrp"><strong>GetSuperUserGrp</strong></a>(self)</dt><dd><tt>Return&nbsp;the&nbsp;group&nbsp;of&nbsp;the&nbsp;SuperUser</tt></dd></dl>
+
+<dl><dt><a name="System-GetSymbolSlot"><strong>GetSymbolSlot</strong></a>(self, Path)</dt><dd><tt>Return&nbsp;the&nbsp;slot&nbsp;the&nbsp;symbol&nbsp;at&nbsp;Path&nbsp;is&nbsp;attached&nbsp;to.</tt></dd></dl>
+
+<dl><dt><a name="System-GetSymbolType"><strong>GetSymbolType</strong></a>(self, Path)</dt><dd><tt>Return&nbsp;the&nbsp;type&nbsp;(name)&nbsp;of&nbsp;the&nbsp;given&nbsp;symbol.</tt></dd></dl>
+
+<dl><dt><a name="System-GetValue"><strong>GetValue</strong></a>(self, Path)</dt><dd><tt>Return&nbsp;the&nbsp;actual&nbsp;value&nbsp;of&nbsp;the&nbsp;symbol&nbsp;pointed&nbsp;by&nbsp;Path.</tt></dd></dl>
+
+<dl><dt><a name="System-Install"><strong>Install</strong></a>(self, InstallFile)</dt><dd><tt>This&nbsp;method&nbsp;will&nbsp;install&nbsp;all&nbsp;core-modules&nbsp;and&nbsp;pplt-devices&nbsp;listed&nbsp;in<br>
+the&nbsp;InstallFile.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-ListDevices"><strong>ListDevices</strong></a>(self)</dt><dd><tt>List&nbsp;all&nbsp;loaded&nbsp;devices.&nbsp;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;strings.</tt></dd></dl>
+
+<dl><dt><a name="System-ListFolders"><strong>ListFolders</strong></a>(self, Path)</dt><dd><tt>List&nbsp;all&nbsp;folder&nbsp;in&nbsp;Path.</tt></dd></dl>
+
+<dl><dt><a name="System-ListGroups"><strong>ListGroups</strong></a>(self, GroupName<font color="#909090">=None</font>)</dt><dd><tt>List&nbsp;all&nbsp;subgroups&nbsp;of&nbsp;given&nbsp;GroupName.&nbsp;If&nbsp;GroupName&nbsp;=&nbsp;None&nbsp;or&nbsp;<br>
+missed,&nbsp;all&nbsp;root&nbsp;groups&nbsp;will&nbsp;be&nbsp;listed.&nbsp;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;string.</tt></dd></dl>
+
+<dl><dt><a name="System-ListKnownDeviceClasses"><strong>ListKnownDeviceClasses</strong></a>(self, Class<font color="#909090">=None</font>)</dt><dd><tt>List&nbsp;all&nbsp;device&nbsp;classes.&nbsp;like&nbsp;"<a href="#PPLT.System-ListKnownServerClasses">ListKnownServerClasses</a>()".&nbsp;<br>
+Return&nbsp;a&nbsp;list&nbsp;of&nbsp;strings.</tt></dd></dl>
+
+<dl><dt><a name="System-ListKnownDevices"><strong>ListKnownDevices</strong></a>(self, Class<font color="#909090">=None</font>)</dt><dd><tt>List&nbsp;all&nbsp;devices&nbsp;in&nbsp;class.&nbsp;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;strings.</tt></dd></dl>
+
+<dl><dt><a name="System-ListKnownServerClasses"><strong>ListKnownServerClasses</strong></a>(self, Class<font color="#909090">=None</font>)</dt><dd><tt>List&nbsp;all&nbsp;server&nbsp;classes&nbsp;in&nbsp;give&nbsp;class.&nbsp;if&nbsp;class&nbsp;is&nbsp;missed,&nbsp;all<br>
+root-classes&nbsp;will&nbsp;be&nbsp;listed.&nbsp;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;strings.</tt></dd></dl>
+
+<dl><dt><a name="System-ListKnownServers"><strong>ListKnownServers</strong></a>(self, Class<font color="#909090">=None</font>)</dt><dd><tt>List&nbsp;all&nbsp;Servers&nbsp;in&nbsp;Class.&nbsp;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;strings.</tt></dd></dl>
+
+<dl><dt><a name="System-ListMembers"><strong>ListMembers</strong></a>(self, GroupName<font color="#909090">=None</font>)</dt><dd><tt>List&nbsp;all&nbsp;members&nbsp;of&nbsp;a&nbsp;give&nbsp;group.&nbsp;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;strings.</tt></dd></dl>
+
+<dl><dt><a name="System-ListProxys"><strong>ListProxys</strong></a>(self, Group)</dt><dd><tt>List&nbsp;all&nbsp;proxys&nbsp;in&nbsp;group&nbsp;(Group).</tt></dd></dl>
+
+<dl><dt><a name="System-ListRunningServers"><strong>ListRunningServers</strong></a>(self)</dt><dd><tt>List&nbsp;all&nbsp;running&nbsp;or&nbsp;hanging&nbsp;servers.&nbsp;Return&nbsp;a&nbsp;list&nbsp;of&nbsp;strings.</tt></dd></dl>
+
+<dl><dt><a name="System-ListSymbols"><strong>ListSymbols</strong></a>(self, Path)</dt><dd><tt>List&nbsp;all&nbsp;Symbols&nbsp;in&nbsp;Path.&nbsp;Return&nbsp;a&nbsp;lsit&nbsp;of&nbsp;strings.</tt></dd></dl>
+
+<dl><dt><a name="System-LoadDevice"><strong>LoadDevice</strong></a>(self, DeviceName, Alias, Parameters)</dt><dd><tt>Load&nbsp;and&nbsp;init&nbsp;device&nbsp;DeviceName&nbsp;as&nbsp;Alias&nbsp;with&nbsp;Parameters.&nbsp;Return<br>
+True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-LoadServer"><strong>LoadServer</strong></a>(self, ServerName, Alias, DefaultUser, Parameters, Root<font color="#909090">='/'</font>)</dt><dd><tt>Load&nbsp;the&nbsp;server&nbsp;ServerName&nbsp;as&nbsp;Alias&nbsp;with&nbsp;Parameters&nbsp;and&nbsp;with<br>
+default&nbsp;rights&nbsp;of&nbsp;the&nbsp;given&nbsp;DefaultUser.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-LoadSession"><strong>LoadSession</strong></a>(self, FileName)</dt><dd><tt>Load&nbsp;session&nbsp;description&nbsp;file&nbsp;and&nbsp;setup&nbsp;the&nbsp;project.</tt></dd></dl>
+
+<dl><dt><a name="System-MoveFolder"><strong>MoveFolder</strong></a>(self, From, To)</dt><dd><tt>Move&nbsp;a&nbsp;folder&nbsp;from&nbsp;(From)&nbsp;to&nbsp;(To).</tt></dd></dl>
+
+<dl><dt><a name="System-MoveSymbol"><strong>MoveSymbol</strong></a>(self, From, To)</dt><dd><tt>Move&nbsp;a&nbsp;symbol&nbsp;from&nbsp;(From)&nbsp;to&nbsp;(To).&nbsp;Please&nbsp;use&nbsp;only&nbsp;full&nbsp;pathes.</tt></dd></dl>
+
+<dl><dt><a name="System-SaveSession"><strong>SaveSession</strong></a>(self, FileName)</dt><dd><tt>Save&nbsp;the&nbsp;running&nbsp;system&nbsp;as&nbsp;a&nbsp;session&nbsp;description&nbsp;file.</tt></dd></dl>
+
+<dl><dt><a name="System-SetSuperUser"><strong>SetSuperUser</strong></a>(self, Name)</dt><dd><tt>Make&nbsp;user&nbsp;Name&nbsp;become&nbsp;the&nbsp;SuperUser.</tt></dd></dl>
+
+<dl><dt><a name="System-SetValue"><strong>SetValue</strong></a>(self, Path, Value)</dt><dd><tt>Set&nbsp;the&nbsp;Value&nbsp;of&nbsp;a&nbsp;symbol&nbsp;pointed&nbsp;by&nbsp;path.</tt></dd></dl>
+
+<dl><dt><a name="System-StopAll"><strong>StopAll</strong></a>(self)</dt><dd><tt>This&nbsp;method&nbsp;will&nbsp;stop&nbsp;the&nbsp;system.&nbsp;Meaning&nbsp;stopping&nbsp;all&nbsp;servers,<br>
+clear&nbsp;the&nbsp;whole&nbsp;Symboltree&nbsp;and&nbsp;unload&nbsp;all&nbsp;devices.&nbsp;(no&nbsp;parameters&nbsp;needed)</tt></dd></dl>
+
+<dl><dt><a name="System-StopDevices"><strong>StopDevices</strong></a>(self)</dt><dd><tt>This&nbsp;method&nbsp;will&nbsp;unload&nbsp;all&nbsp;devices.</tt></dd></dl>
+
+<dl><dt><a name="System-StopServers"><strong>StopServers</strong></a>(self)</dt><dd><tt>This&nbsp;method&nbsp;will&nbsp;stop&nbsp;all&nbsp;servers.</tt></dd></dl>
+
+<dl><dt><a name="System-UnIstall"><strong>UnIstall</strong></a>(self, ModuleName)</dt><dd><tt>This&nbsp;method&nbsp;will&nbsp;uninstall&nbsp;the&nbsp;given&nbsp;module/divice/server.&nbsp;<br>
+Return&nbsp;True&nbsp;on&nbsp;success.&nbsp;(not&nbsp;implemented&nbsp;yet)</tt></dd></dl>
+
+<dl><dt><a name="System-UnLoadDevice"><strong>UnLoadDevice</strong></a>(self, Alias)</dt><dd><tt>Unload&nbsp;and&nbsp;destroy&nbsp;the&nbsp;given&nbsp;device.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-UnLoadServer"><strong>UnLoadServer</strong></a>(self, Name)</dt><dd><tt>Unload&nbsp;a&nbsp;desatroy&nbsp;the&nbsp;give&nbsp;Server.&nbsp;Return&nbsp;True&nbsp;on&nbsp;success.</tt></dd></dl>
+
+<dl><dt><a name="System-__init__"><strong>__init__</strong></a>(self, ConfigFile<font color="#909090">=None</font>, CoreLogLevel<font color="#909090">=None</font>, PPLTLogLevel<font color="#909090">=None</font>)</dt></dl>
+
+</td></tr></table>
+</body></html>

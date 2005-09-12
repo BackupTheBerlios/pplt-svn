@@ -19,51 +19,51 @@
 # ############################################################################ # 
 
 #ChangeLog:
-#	2005-05-27:
-#		Release as version 0.2.0 (alpha)
+#   2005-05-27:
+#       Release as version 0.2.0 (alpha)
 
 import wx;
 from ModusBox import ModusBox;
 
 
 class SetPropertyDialog(wx.Dialog):
-	def __init__(self, parent, PPLTSys, owner, group, modus):
-		wx.Dialog.__init__(self, parent, -1, _("Properties"));
-		
-		sizer = wx.BoxSizer(wx.VERTICAL);
-		
-		self.__modbox = ModusBox(self, PPLTSys, owner, group, modus);
-		sizer.Add(self.__modbox, 0, wx.EXPAND|wx.ALL, 3);
-		
-		ok = wx.Button(self, wx.ID_OK, _(" Ok "));
-		ca = wx.Button(self, wx.ID_CANCEL, _(" Cancel "));
-		box = wx.BoxSizer(wx.HORIZONTAL);
-		box.Add(ok, 1, wx.ALL|wx.ALIGN_CENTER, 3);
-		box.Add(ca, 1, wx.ALL|wx.ALIGN_CENTER, 3);
-		sizer.Add(box, 1, wx.GROW|wx.ALIGN_CENTER);
+    def __init__(self, parent, PPLTSys, owner, group, modus):
+        wx.Dialog.__init__(self, parent, -1, _("Properties"));
+        
+        sizer = wx.BoxSizer(wx.VERTICAL);
+        
+        self.__modbox = ModusBox(self, PPLTSys, owner, group, modus);
+        sizer.Add(self.__modbox, 0, wx.EXPAND|wx.ALL, 3);
+        
+        ok = wx.Button(self, wx.ID_OK, _(" Ok "));
+        ca = wx.Button(self, wx.ID_CANCEL, _(" Cancel "));
+        box = wx.BoxSizer(wx.HORIZONTAL);
+        box.Add(ok, 1, wx.ALL|wx.ALIGN_CENTER, 3);
+        box.Add(ca, 1, wx.ALL|wx.ALIGN_CENTER, 3);
+        sizer.Add(box, 1, wx.GROW|wx.ALIGN_CENTER);
 
-		self.Bind(wx.EVT_KEY_UP, self.OnKey);
+        self.Bind(wx.EVT_KEY_UP, self.OnKey);
 
-		self.SetSizer(sizer);
-		sizer.Fit(self);
+        self.SetSizer(sizer);
+        sizer.Fit(self);
 
-	def OnOK(self, event):
-		self.EndModal(wx.ID_OK);
+    def OnOK(self, event):
+        self.EndModal(wx.ID_OK);
 
-	def OnKey(self, event):
-		if event.GetKeyCode() == wx.WXK_RETURN:
-			self.EndModal(wx.ID_OK);
-		elif event.GetKeyCode() == wx.WXK_ESCAPE:
-			self.EndModal(wx.ID_CANCEL);
+    def OnKey(self, event):
+        if event.GetKeyCode() == wx.WXK_RETURN:
+            self.EndModal(wx.ID_OK);
+        elif event.GetKeyCode() == wx.WXK_ESCAPE:
+            self.EndModal(wx.ID_CANCEL);
 
-	def GetModus(self):
-		return("%o"%self.__modbox.GetModus());
-	def GetName(self):
-		return(self.Name.GetValue());
-	def GetOwner(self):
-		return(self.__modbox.Owner.GetValue());
-	def GetGroup(self):
-		return(self.__modbox.Group.GetValue());
+    def GetModus(self):
+        return("%o"%self.__modbox.GetModus());
+    def GetName(self):
+        return(self.Name.GetValue());
+    def GetOwner(self):
+        return(self.__modbox.Owner.GetValue());
+    def GetGroup(self):
+        return(self.__modbox.Group.GetValue());
 
 
 

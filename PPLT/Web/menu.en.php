@@ -12,8 +12,8 @@
 					<li><a href="/<?=$lang?>/pyDCPU.html">pyDCPU Reference</a></li>
 					<li id="last"><a href="/<?=$lang?>/SimpleExport.html">Simple Export Tutorial</a></li>
 				</ul></li>
-			<li><a href="http://developer.berlios.de/project/showfiles.php?group_id=3237">Download</a></li>
-			<li><a href="/en/Contact.html">Contact</a></li>
+			<li><a href="/<?=$lang?>/Download.html">Download</a></li>
+			<li><a href="/<?=$lang?>/Contact.html">Contact</a></li>
 		</ul>
 	<?
 	}

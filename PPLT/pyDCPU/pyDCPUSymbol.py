@@ -21,9 +21,9 @@
 
 # ChangeLog:
 # 2005-08-26:
-#	add moveing symbols feature.
+#   add moveing symbols feature.
 # 2005-08-25:
-#	removed saving the non-existing typename in Symbol.ToXML()
+#   removed saving the non-existing typename in Symbol.ToXML()
 
 import pyDCPUSymbolSlot
 import pyDCPUConverter;

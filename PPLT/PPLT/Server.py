@@ -20,41 +20,41 @@
 
 # Changelog:
 # 2005-08-20:
-#	- fixed missin check if server load fails @ Server.__init__() 
+#   - fixed missin check if server load fails @ Server.__init__() 
 # 2005-05-27:
-#	- fixed bug in Server.__load():
-#		missed to remove stop exsisting Core-Exporter on exception while load a new
-#	- fixed bug in Server.destroy():
-#		method is now error-sensitiv		
-#	- fixed missing exception raise in Server.__init__() if server load fails.
+#   - fixed bug in Server.__load():
+#       missed to remove stop exsisting Core-Exporter on exception while load a new
+#   - fixed bug in Server.destroy():
+#       method is now error-sensitiv        
+#   - fixed missing exception raise in Server.__init__() if server load fails.
 import logging;
 import Setup
 
 
 class Server:
-	def __init__(self, CoreObject, FileName, ServerName, DefaultUser, Parameters, Root="/"):
-		"""This is the class for pplt-server"""
-		self.__Logger = logging.getLogger('PPLT');
-		self.__CoreObject = CoreObject;
-		self.__ServerName = ServerName;
-		self.__DefaultUser = DefaultUser;
-		self.__Parameters = Parameters;
-		self.__Root = Root;
-		self.__Context = Setup.Context(Parameters, CoreObject, DefaultUser, Root);
-		if not Setup.Setup(self.__Context, FileName):
-			self.__Logger.error("Unable to load server %s."%ServerName);
-			raise Exception("Unable to load server %s."%ServerName);
+    def __init__(self, CoreObject, FileName, ServerName, DefaultUser, Parameters, Root="/"):
+        """This is the class for pplt-server"""
+        self.__Logger = logging.getLogger('PPLT');
+        self.__CoreObject = CoreObject;
+        self.__ServerName = ServerName;
+        self.__DefaultUser = DefaultUser;
+        self.__Parameters = Parameters;
+        self.__Root = Root;
+        self.__Context = Setup.Context(Parameters, CoreObject, DefaultUser, Root);
+        if not Setup.Setup(self.__Context, FileName):
+            self.__Logger.error("Unable to load server %s."%ServerName);
+            raise Exception("Unable to load server %s."%ServerName);
 
-	
-	def destroy(self):
-		self.__Context.Unload();
-		return(True);
+    
+    def destroy(self):
+        self.__Context.Unload();
+        return(True);
 
-	def getClassAndName(self):
-		return(self.__ServerName);
-	def getDefaultUser(self):
-		return(self.__DefaultUser);
-	def getParameters(self):
-		return(self.__Parameters);
-	def getRoot(self):
-		return(self.__Root);
+    def getClassAndName(self):
+        return(self.__ServerName);
+    def getDefaultUser(self):
+        return(self.__DefaultUser);
+    def getParameters(self):
+        return(self.__Parameters);
+    def getRoot(self):
+        return(self.__Root);

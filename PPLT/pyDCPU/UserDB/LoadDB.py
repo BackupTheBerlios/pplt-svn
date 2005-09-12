@@ -21,7 +21,7 @@
 
 # ChangeLog:
 # 2005-08-25:
-#	Add proxy-feature.
+#   Add proxy-feature.
 
 import User;
 import Group;

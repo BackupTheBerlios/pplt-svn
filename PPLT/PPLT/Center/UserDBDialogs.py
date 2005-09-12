@@ -20,10 +20,10 @@
 
 #ChangeLog:
 # 2005-08-25:
-#	Add proxy feature.
-#	Layoutfix (CreateMemberDialog)
+#   Add proxy feature.
+#   Layoutfix (CreateMemberDialog)
 # 2005-05-27:
-#	Release as version 0.2.0 (alpha)
+#   Release as version 0.2.0 (alpha)
 
 import wx;
 import wx.lib.rcsizer as rcs;
@@ -151,45 +151,45 @@ class CreateGroupDialog(wx.Dialog):
 
 
 class CreateProxyDialog(wx.Dialog):
-	def __init__(self, parent, id, title, UserList):
-		wx.Dialog.__init__(self, parent, id, title);
-		self.Name = UserList[0];
+    def __init__(self, parent, id, title, UserList):
+        wx.Dialog.__init__(self, parent, id, title);
+        self.Name = UserList[0];
 
-		sizer = wx.BoxSizer(wx.VERTICAL);
-		
-		box = wx.BoxSizer(wx.HORIZONTAL);
-		text = wx.StaticText(self, -1, _('User Name: '));
-		Input = wx.ComboBox(self, -1, UserList[0], choices=UserList);
-		Input.SetEditable(False);
-		Input.Bind(wx.EVT_TEXT, self.UpdateName);
-		box.Add(text, 1, wx.ALIGN_CENTER, 0);
-		box.Add(Input, 2, wx.EXPAND, 0);
-		sizer.Add(box, 0, wx.EXPAND|wx.ALL, 3);
+        sizer = wx.BoxSizer(wx.VERTICAL);
+        
+        box = wx.BoxSizer(wx.HORIZONTAL);
+        text = wx.StaticText(self, -1, _('User Name: '));
+        Input = wx.ComboBox(self, -1, UserList[0], choices=UserList);
+        Input.SetEditable(False);
+        Input.Bind(wx.EVT_TEXT, self.UpdateName);
+        box.Add(text, 1, wx.ALIGN_CENTER, 0);
+        box.Add(Input, 2, wx.EXPAND, 0);
+        sizer.Add(box, 0, wx.EXPAND|wx.ALL, 3);
 
-		line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL);
-		sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 2)
+        line = wx.StaticLine(self, -1, size=(20,-1), style=wx.LI_HORIZONTAL);
+        sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 2)
 
-		box = wx.BoxSizer(wx.HORIZONTAL);
-		ok = wx.Button(self, wx.ID_OK, _(" Ok "));
-		box.Add(ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
-		ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
-		box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
-		sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
+        box = wx.BoxSizer(wx.HORIZONTAL);
+        ok = wx.Button(self, wx.ID_OK, _(" Ok "));
+        box.Add(ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+        ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
+        box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+        sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
 
-		self.Bind(wx.EVT_KEY_UP, self.OnKey);
+        self.Bind(wx.EVT_KEY_UP, self.OnKey);
 
-		self.SetSizer(sizer);
-		self.SetAutoLayout(True);
-		sizer.Fit(self);
+        self.SetSizer(sizer);
+        self.SetAutoLayout(True);
+        sizer.Fit(self);
 
-	def UpdateName(self, event):
-		self.Name = event.GetString();
+    def UpdateName(self, event):
+        self.Name = event.GetString();
 
-	def OnKey(self, event):
-		if event.GetKeyCode() == wx.WXK_RETURN:
-			self.EndModal(wx.ID_OK);
-		elif event.GetKeyCode() == wx.WXK_ESCAPE:
-			self.EndModal(wx.ID_CANCEL);
+    def OnKey(self, event):
+        if event.GetKeyCode() == wx.WXK_RETURN:
+            self.EndModal(wx.ID_OK);
+        elif event.GetKeyCode() == wx.WXK_ESCAPE:
+            self.EndModal(wx.ID_CANCEL);
 
 
 

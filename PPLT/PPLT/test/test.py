@@ -8,15 +8,22 @@ if not system.LoadDevice("Debug.RandomGenerator", "rand", {}):
 	print "Error while load device \"random\".";
 	sys.exit();
 
-if not system.CreateSymbol("/r_bool","rand::Generator::Bool","Bool"):
-	print "Error while create symbol."
-	sys.exit();
-if not system.LoadServer(	"Web.PPLTWebServer", "web", "admin",
-							{"Address":"10.1.1.4", "Port":"8080"}):
-	print "Error while load server.";
+if not system.CreateFolder("/test"):
+	print "Error while create folder";
 	sys.exit();
 
-print "Start...";
-while 1:
-	pass;
-							
+if not system.CreateFolder("/test/test2"):
+	print "Error while create folder (2)";
+	sys.exit();
+
+if not system.CreateSymbol("/test/test2/r_bool","rand::Generator::Bool","Bool"):
+	print "Error while create symbol."
+	sys.exit();
+
+if not system.MoveFolder("/test/test2","/test/test"):
+	print "Error whil move folder";
+	sys.exit();
+
+print "ls /: %s"%str(system.ListFolders("/"));
+print "ls /test: %s"%str(system.ListFolders("/test"));
+print "ls /test/test: %s"%str(system.ListSymbols("/test/test"))
