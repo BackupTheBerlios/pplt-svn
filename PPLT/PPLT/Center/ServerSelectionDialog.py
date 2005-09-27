@@ -48,24 +48,37 @@ class ServerSelectionDialog(wx.Dialog):
         sizer.Add(self.__Tree, 1, wx.ALIGN_CENTRE|wx.GROW, 3);
         sizer.Add(self.__Help, 0, wx.ALIGN_CENTRE|wx.GROW|wx.TOP, 3);
 
+        box = wx.BoxSizer(wx.HORIZONTAL);
+        ok = wx.Button(self, wx.ID_OK, "OK");
+        ca = wx.Button(self, wx.ID_CANCEL, "Cancel");
+        box.Add(ca, 1, wx.ALL|wx.ALIGN_LEFT, 3);
+        box.Add(ok, 1, wx.ALL|wx.ALIGN_RIGHT, 3);
+        sizer.Add(box, 0, wx.ALIGN_CENTER|wx.TOP|wx.GROW,5);
+ 
+
         self.SetSizer(sizer);
         self.SetAutoLayout(True);
         sizer.Fit(self.__Tree);
 
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelect, self.__Tree);
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnDClick, self.__Tree);
-
+        self.Bind(wx.EVT_BUTTON, self.OnOK, id=wx.ID_OK);
+        self.SelectedServer = None;
+        
 
     def OnSelect(self, event):
         item = event.GetItem();
         if item:
             dat = self.__Tree.GetPyData(item);
             if dat:
+                self.SelectedServer = dat;
                 self.__Help.Clear();
                 info = self.__PPLTSys.GetServerInfo(dat);
                 if info and info!="":
                     txt = info.GetDescription();
                     self.__Help.AppendText(txt);
+            else: self.SelectedServer = None;
+        else: self.SelectedServer = None;
         
     def OnDClick(self, event):
         item = event.GetItem();
@@ -74,6 +87,10 @@ class ServerSelectionDialog(wx.Dialog):
             if dat:
                 self.SelectedServer = dat;
                 self.EndModal(wx.ID_OK);
+
+    def OnOK(self, event):
+        if self.SelectedServer: self.EndModal(wx.ID_OK);
+
 
 
 class ServerTree(wx.TreeCtrl):

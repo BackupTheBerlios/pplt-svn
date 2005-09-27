@@ -126,11 +126,11 @@ def LoadAServer(parent, PPLTSys):
         return(None);
     Alias = dlg.Alias.GetValue();
     DefUser = dlg.DefUser.GetValue();
-    Vals  = dlg.Values;
+    Vals  = dict(dlg.Values);
     Root  = dlg.Root.GetValue();
     dlg.Destroy();
 
-    #print "%s as %s(%s) : %s"%(SrvName, Alias, DefUser,str(Vals))
+    print "%s as %s(%s) : %s"%(SrvName, Alias, DefUser,str(Vals))
     if PPLTSys.LoadServer(SrvName, Alias, DefUser, Vals, Root):
         return( (Alias, SrvName, DefUser, ParaToString(Vals),Root) );
     return(None);

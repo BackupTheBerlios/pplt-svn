@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+<!DOCTYPE PPLTServer SYSTEM "PPLT-Server-0.1.dtd">
+<PPLTServer name="SimpleExport" class="RPC" version="0.3.0">
+	<Head>
+		<Description lang="de">Exportiert den Symbolbaum mittels eines XML-RPC
+		Servers. Welche Methoden ihnen zur Verfügung stehen, lesen sie bitte
+		in der Dukumentation.</Description>
+		<Description lang="en">Expots the symboltree via a XML-RPC serves.
+		For what methods are aviable, read the documentation.</Description>
+
+		<Require>
+			<DCPUModule>Export.SimpleExport</DCPUModule>
+			<Variable name="Address" default="127.0.0.1">
+				<Description lang="de">Geben sie hier die Adresse der 
+				Schnitstelle an, auf dem der Server auf neue Verbindungen 
+				warten soll.</Description>
+				<Description lang="en">Put here the address to bind to.
+				</Description>
+			</Variable>
+			<Variable name="Port" default="4711">
+				<Description lang="de">Geben sie hier den Port an, auf dem der
+				Server auf neue Verbindungen warten soll.</Description>
+				<Description lang="en">Put here the port to bind to.
+				</Description>
+			</Variable>
+		</Require>
+	</Head>
+
+	<Setup>
+		<Load name="Export.SimpleExport">
+			<Parameter name="Address"><Variable name="Address"/></Parameter>
+			<Parameter name="Port"><Variable name="Port"/></Parameter>
+		</Load>
+	</Setup>
+</PPLTServer>

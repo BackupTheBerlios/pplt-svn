@@ -374,6 +374,10 @@ class Core:
     # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #  
     #   +                                                                      # 
     # ######################################################################## #
+    def SymbolTreeCheckPath(self, Path):
+        """ Checks if the path exists """
+        return self.__SymbolTree.CheckFolder(Path) or self.__SymbolTree.CheckSymbol(Path);
+
     def SymbolTreeCreateFolder(self, Path):
         """
             This method creates a new Folder with the Path 'Path'
@@ -459,6 +463,9 @@ class Core:
         return(self.__SymbolTree.ListSymbols(Path, self.__GetSystemSession()));
     def SymbolTreeListFolders(self, Path):
         return(self.__SymbolTree.ListFolders(Path, self.__GetSystemSession()));
+
+    def SymbolTreeGetTimeStamp(self, Path):
+        return self.__SymbolTree.GetLastUpdate(Path, self.__GetSystemSession());
 
     def SymbolTreeGetAccess(self, Path):
         owner = self.__SymbolTree.GetOwnerName(Path);

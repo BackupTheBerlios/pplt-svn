@@ -33,9 +33,11 @@ import logging;
 
 def Setup(CTX, FileName):
     doc = xml.dom.minidom.parse(FileName);
+    logger = logging.getLogger("PPLT");
     try:
         DocWalker(doc.documentElement, CTX, None);
-    except:
+    except Exception, e:
+        logger.error("Unable to setup %s: %s"%(FileName, str(e)));
         CTX.Unload();
         return(False);
     return(True);
@@ -68,7 +70,7 @@ class Context:
         return(self.__Vars.get(self.__SwitchFor));
 
     def Load(self, Name, Paras, Parent = None, Addr=None, NameSpace=None):
-        self.__Logger.info("Load %s"%str(Name));
+        self.__Logger.info("Load %s with %s"%(str(Name),str(Paras)));
 
         if self.__IsServer:
             # LOAD A SERVER

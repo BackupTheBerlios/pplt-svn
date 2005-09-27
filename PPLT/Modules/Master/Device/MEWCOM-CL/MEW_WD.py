@@ -27,8 +27,8 @@ def WD(Connection, Address, Data):
     else:
         Logger.error("Bad Format of Data");
         return(None);
-    
-    txtValue = MEWConvert.Pack(Data, Address.GetSize());            
+    Value = MEWConvert.UIntUnpack(Data);
+    txtValue = MEWConvert.HexPack(Value, Address.GetSize());
     if not txtValue:
         Logger.error("Data in wrong format");
         return(None);

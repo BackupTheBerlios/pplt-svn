@@ -61,11 +61,11 @@ class Object(pyDCPU.MasterObject):
             if tmp == None:
                 self.__LastValues= None;
                 self.Logger.debug("A200 returned Error");
-                return(struct.pack("B",0));
+                return(RetrunBool(False));
             else:
                 self.__LastValues = tmp;
                 self.Logger.debug("Got %i Values"%len(tmp));
-                return(struct.pack("B",1));
+                return(ReturnBool(True));
         elif Connection.Address.GetType() == A200_VALUE:
             if not self.__LastValues:
                 self.Logger.error("Read from 'check' before!!!");
@@ -78,8 +78,8 @@ class Object(pyDCPU.MasterObject):
             val = self.__LastValues[Connection.Address.GetNumber()];
             if val == 'e':
                 self.Logger.warning("Calculation error");
-                return(struct.pack("I",0));
-            return(struct.pack("I",int(val)));
+                return(ReturnInteger(-1));
+            return RetrunInteger(int(val));
 
         self.Logger.error("Bat Address");
         raise pyDCPU.ModError;
@@ -89,4 +89,17 @@ class Object(pyDCPU.MasterObject):
         raise pyDCPU.ReadOnlyModError;
 
 
-            
+           
+
+def ReturnBool(value):
+    packer = xdrlib.Packer();
+    packer.pack_bool(value);
+    return packer.get_buffer();
+
+def ReturnInteger(value):
+    packer = xdrlib.Packer();
+    packer.pack_int(value);
+    return packer.get_buffer();
+
+    
+    

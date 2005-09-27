@@ -19,144 +19,124 @@
 # ############################################################################ #
 
 
+# CHANGELOG:
+# 2005-09-23:
+#   + Typecode based on XDR (RFC1832)
 
 import struct;
 import logging;
+import xdrlib;
 
 
 class Converter:
     def __init__(self, Type):
         self.__TypeName = Type;
         self.__Logger = logging.getLogger('pyDCPU');
-        
-        if Type == 'Bool':
-            self.__D2VConverter = D2VBool;
-            self.__V2DConverter = V2DBool;
-            self.__Size = 1;
-            self.__State = True;
-        elif Type == 'Byte':
-            self.__D2VConverter = D2VByte;
-            self.__V2DConverter = V2DByte;
-            self.__Size = 1;
-            self.__State = True;
-        elif Type == 'Word':
-            self.__D2VConverter = D2VWord;
-            self.__V2DConverter = V2DWord;
-            self.__Size = 2;
-            self.__State = True;
-        elif Type == 'DWord':
-            self.__D2VConverter = D2VDWord;
-            self.__V2DConverter = V2DDWord;
-            self.__Size = 4;
-            self.__State = True;
-        elif Type == 'Float':
-            self.__D2VConverter = D2VFloat;
-            self.__V2DConverter = V2DFloat;
-            self.__Size = 4; #FIXME: Size = ????
-            self.__State = True;
-        elif Type == 'Double':
-            self.__D2VConverter = D2VDouble;
-            self.__V2DConverter = V2DDouble;
-            self.__Size = 8; #FIXME: Size=????
-            self.__State = True;
-        elif Type == 'String':
-            self.__D2VConverter = D2VString;
-            self.__V2DConverter = V2DString;
-            self.__Size = 1024;
-            self.__State = True;
+
+        if Type == "Bool":
+            self.__Pack = "pack_bool";
+            self.__Unpack = "unpack_bool";
+            self.__TypeCode = "pack_bool";
+        elif Type == "Integer":
+            self.__Pack = "pack_int";
+            self.__Unpack = "unpack_int";
+            self.__TypeCode = "pack_int";
+        elif Type == "uInteger":
+            self.__Pack = "pack_uint";
+            self.__Unpack = "unpack_uint";
+            self.__TypeCode = "pack_uint";
+        elif Type == "Long":
+            self.__Pack = "pack_hyper";
+            self.__Unpack = "unpack_hyper";
+            self.__TypeCode = "pack_hyper";
+        elif Type == "uLong":
+            self.__Pack = "pack_uhyper";
+            self.__Unpack = "unpack_uhyper";
+            self.__TypeCode = "pack_uhyper";
+        elif Type == "Float":
+            self.__Pack = "pack_float";
+            self.__Unpack = "unpack_float";
+            self.__TypeCode = "pack_float";
+        elif Type == "Double":
+            self.__Pack = "pack_double";
+            self.__Unpack = "unpack_double";
+            self.__TypeCode = "pack_double";
+        elif Type == "String":
+            self.__Pack = "pack_string";
+            self.__Unpack = "unpack_string";
+            self.__TypeCode = "pack_string";
+        elif Type == "ArrayBool":
+            self.__Pack = "pack_array";
+            self.__Unpack = "unpack_array";
+            self.__TypeCode = "pack_bool";
+        elif Type == "ArrayInteger":
+            self.__Pack = "pack_array";
+            self.__Unpack = "unpack_array";
+            self.__TypeCode = "pack_int";
+        elif Type == "ArrayuInteger":
+            self.__Pack = "pack_array";
+            self.__Unpack = "unpack_array";
+            self.__TypeCode = "pack_uint";
+        elif Type == "ArrayLong":
+            self.__Pack = "pack_array";
+            self.__Unpack = "unpack_array";
+            self.__TypeCode = "pack_hyper";
+        elif Type == "ArrayuLong":
+            self.__Pack = "pack_array";
+            self.__Unpack = "unpack_array";
+            self.__TypeCode = "pack_uhyper";
+        elif Type == "ArrayFloat":
+            self.__Pack = "pack_array";
+            self.__Unpack = "unpack_array";
+            self.__TypeCode = "pack_float";
+        elif Type == "ArrayDouble":
+            self.__Pack = "pack_array";
+            self.__Unpack = "unpack_array";
+            self.__TypeCode = "pack_double";
+        elif Type == "ArrayString":
+            self.__Pack = "pack_array";
+            self.__Unpack = "unpack_array";
+            self.__TypeCode = "pack_string";
         else:
-            self.__D2VConverter = None;
-            self.__V2dConverter = None;
-            self.__Size = 1024;
-            self.__State = False;
-            self.__TypeName = None;
+            self.__Logger.error("Unknown Datafromt: %s"%Type)
+            raise Exception("Unknown data format: %s"%Type);
+            
 
+    def GetTypeName(self): return self.__TypeName;
 
-
-    def GetState(self):
-        return(self.__State);
-    def GetSize(self):
-        return(self.__Size);
-
-    
     def ConvertToData(self, Value):
-        return(self.__V2DConverter(Value));
+        packer = xdrlib.Packer();
+        pack_funct = getattr(packer,self.__Pack);
+        if self.__TypeName in ("ArrayBool", "ArrayInteger","ArrayuInteger","ArrayLong","ArrayuLong","ArrayFloat","ArrayDouble","ArrayString"):
+            #handle array:
+            item_funct = getattr(packer, self.__TypeCode);
+            pack_funct(Value, item_funct);
+        else:
+            pack_funct(Value);
+        Data = packer.get_buffer();
+        packer.reset();
+        return Data;
+
     def ConvertToValue(self, Data):
-        if not Data:
-            return(None);
-        #ignore size if type = string
-        if not self.__TypeName == 'String':
-            if not len(Data) == self.__Size:
-                return(None);
-        return(self.__D2VConverter(Data));
-    
+        packer = xdrlib.Unpacker(Data);
+        unpack_funct = getattr(packer, self.__Unpack);
+        value = unpack_funct();
+        packer.done();
+        return value;
+ 
 
 
 
 
-def D2VBool(Data):
-    if not Data:
-        return(None);
-    if not len(Data) == 1:
-        return(None);
-    (Value,) = struct.unpack('B',Data);
-    if Value:
-        return(True);
-    return(False);
-def V2DBool(Value):
-    if Value:
-        return(struct.pack('B',1));
-    else:
-        return(struct.pack('B',0));
 
 
-def D2VByte(Data):
-    (Value,) = struct.unpack('B',Data);
-    return(Value);
-def V2DByte(Value):
-    if Value == None:
-        return(None);
-    Value = int(Value) % 256;
-    return(struct.pack('B',Value));
 
 
-def D2VWord(Data):
-    (Value,) = struct.unpack('H',Data);
-    return(Value);
-def V2DWord(Value):
-    if Value == None:
-        return(None);
-    Value = int(Value) %256;
-    return(struct.pack('H',Value));
 
 
-def D2VDWord(Data):
-    (Value,) = struct.unpack('I',Data);
-    return(Value);
-def V2DDWord(Value):
-    if Value == None:
-        return(None);
-    return(struct.pack('I',int(Value)));
 
 
-def D2VFloat(Data):
-    (Value,) = struct.unpack('f',Data);
-    return(Value);
-def V2DFloat(Value):
-    if Value == None:
-        return(None);
-    return(struct.pack('f',float(Value)));
 
 
-def D2VDouble(Data):
-    (Value,) = struct.unpack('d',Data);
-    return(Value);
-def V2DDouble(Value):
-    if Value == None:
-        return(None);
-    return(struct.pack('d',float(Value)));
 
-def D2VString(Data):
-    return(Data);
-def V2DString(Value):
-    return(str(Value));
+

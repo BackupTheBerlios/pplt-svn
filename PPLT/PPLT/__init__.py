@@ -27,10 +27,32 @@
 #	Release as version 0.2.0
 
 from Configuration import *;
-from Install import *;
+#from Install import *;
 from PPLTSystem import *;
 
 __author__	= "Hannes Matuschek <hmatuschek@gmx.net>";
 __status__	= "alpha";
-__version__	= "0.3.1";
+__version__	= "0.4.0";
 #__date__	= "2005-06-05";
+
+
+#
+# Definition of types:
+#
+TBool = "Bool";
+TInteger = "Integer";
+TUnsignedInteger = "uInteger";
+TLong = "Long";
+TUnsignedLong = "uLong";
+TFloat = "Float";
+TDouble = "Double";
+TString = "String";
+TArrayOfBool = "ArrayBool";
+TArrayOfInteger = "ArrayInteger";
+TArrayOfUnsignedInteger = "ArrayuInteger";
+TArrayOfLong = "ArrayLong";
+TArrayOfUnsignedLong = "ArrayuLong";
+TArrayOfFloat = "ArrayFloat";
+TArrayOfDouble = "ArrayDouble";
+TArrayOfString = "ArrayString";
+

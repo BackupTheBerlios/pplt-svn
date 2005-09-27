@@ -69,6 +69,22 @@ class NoteBook(wx.Notebook):
             self.PopupMenu(menu,pt);
             menu.Destroy();
 
+    def LoadDevice(self):
+        self.SelectDevicePanel();
+        self.__DevPanel.OnAddDevice(None);
+    def LoadServer(self):
+        self.SelectServerPanel();
+        self.__SrvPanel.OnAddServer(None);
+
+    def SelectDevicePanel(self):
+        self.SetSelection(0);
+    def SelectSymbolPanel(self):
+        self.SetSelection(1);
+    def SelectServerPanel(self):
+        self.SetSelection(2);
+    def SelectUserDBPanel(self):
+        self.SetSelection(3);
+        
     def Clean(self):
         self.__SrvPanel.Clean();
         self.__SymPanel.Clean();

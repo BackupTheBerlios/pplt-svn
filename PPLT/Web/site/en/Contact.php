@@ -8,7 +8,7 @@
 		provided by Berlios.
 
 	<p>
-		Because this project is hosted by 
+		Because of this project is hosted by 
 		<a href="http://developer.berlios.de/projects/pplt">Berlios</a>, 
 		I've got some infrastucture like a bug-traceing system, forums or mailinglists. So
  		if you want do report a bug, please fill up the 
@@ -19,7 +19,8 @@
 		<a href="https://developer.berlios.de/forum/forum.php?forum_id=9875">help</a> and the
 		<a href="https://developer.berlios.de/forum/forum.php?forum_id=9876">developer</a> forums.
 		There you can discuss or simply ask for topics concerning PPLT and it's applications.
-		Note: You have to be registred developer at Berlios to use this feature.
+		Note: You have to be registred developer at Berlios to use this feature except the help
+		forum.
 	</p>
 	</div>
 

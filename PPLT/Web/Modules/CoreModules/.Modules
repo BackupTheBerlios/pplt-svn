@@ -1,0 +1,209 @@
+<?xml version="1.0"?>
+
+<ModuleListing name="--- PPLT Module Repository ---">
+	<CoreModules>
+		<Module name="5462X" class="Master.Device" version="0.2.0" file="5462X.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>re</PythonModule>
+				<PythonModule>string</PythonModule>
+				<PythonModule>struct</PythonModule>
+			</Require>
+			<Description lang="de">Implementiert den Zugriff auf ein Oszilloskop der Firma Agilent Datenverkehr.</Description>
+			<Description lang="en">Implements the access to a Agilent oscilloscope.</Description>
+		</Module>
+
+		<Module name="A200" class="Master.Device" version="0.2.0" file="A200.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>string</PythonModule>
+				<PythonModule>struct</PythonModule>
+			</Require>
+			<Description lang="de">Zugriff auf den Imagechecker NAiS A200.</Description>
+			<Description lang="en">Access to the imagecheker NAiS A200.</Description>
+		</Module>
+
+		<Module name="GSM" class="Master.Device" version="0.2.0" file="GSM.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>string</PythonModule>
+				<PythonModule>struct</PythonModule>
+			</Require>
+			<Description lang="de">Zugriff auf ein GSM kompatibles Mobiltelefon.</Description>
+			<Description lang="en">Access to a GSM mobile-phone.</Description>
+		</Module>
+
+        <Module name="HexDump" class="Master.Debug" version="0.2.0" file="HexDump.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>binascii</PythonModule>
+				<PythonModule>string</PythonModule>
+				<PythonModule>struct</PythonModule>
+			</Require>
+			<Description lang="de">Schreibt den Datenverkehr durch dieses Modul 
+			in das Logginsystem.</Description>
+			<Description lang="en">Log the trafic through this module.</Description> 
+		</Module>
+
+   		<Module name="JVisu" class="Export" version="0.2.0" file="JVisu.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>thread</PythonModule>
+				<PythonModule>traceback</PythonModule>
+				<PythonModule>logging</PythonModule>
+				<PythonModule>socket</PythonModule>
+				<PythonModule>struct</PythonModule>
+				<PythonModule>binascii</PythonModule>
+				<PythonModule>time</PythonModule>
+			</Require>
+			<Description lang="de">Ein JVisu Socket-Server.</Description>
+			<Description lang="en">A JVisu socket server.</Description>
+		</Module>
+        
+   		<Module name="MEWCOM-CL" class="Master.Device" version="0.2.0" file="MEWCOM-CL.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>string</PythonModule>
+				<PythonModule>re</PythonModule>
+				<PythonModule>struct</PythonModule>
+			</Require>
+			<Description lang="de">Kommando-Nachrichten der NAiS FP0/FP2.</Description>
+			<Description lang="en">Commandmessages of the NAiS FP0/FP2.</Description>
+		</Module>
+
+   		<Module name="MEWCOM-TL" class="Master.Transport" version="0.2.0" file="MEWCOM-TL.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>string</PythonModule>
+				<PythonModule>struct</PythonModule>
+			</Require>
+			<Description lang="de">Telegrammformat der NAiS FP0/FP2.</Description>
+			<Description lang="en">Messageformat of the NAiS FP0/FP2.</Description>
+		</Module>
+
+   		<Module name="PPI" class="Master.Transport" version="0.2.0" file="PPI.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>string</PythonModule>
+				<PythonModule>struct</PythonModule>
+			</Require>
+			<Description lang="de">Das PPI Protokoll.</Description>
+			<Description lang="en">The PPI protocol.</Description>
+		</Module>
+
+   		<Module name="PPLTWeb" class="Export" version="0.2.0" file="PPLTWeb.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>BaseHTTPServer</PythonModule>
+			</Require>
+			<Description lang="de">Ein Webserver.</Description>
+			<Description lang="en">A web-server.</Description>
+		</Module>
+
+        <Module name="Random" class="Master.Debug" version="0.2.0" file="Random.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>struct</PythonModule>
+				<PythonModule>random</PythonModule>
+			</Require>	
+			<Description lang="de">Einfacher Zufallsgenerator.</Description>
+			<Description lang="en">Simple random-generator.</Description>
+		</Module>
+
+   		<Module name="ReadLine" class="Master.Transport" version="0.2.0" file="ReadLine.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>string</PythonModule>
+				<PythonModule>binascii</PythonModule>
+			</Require>
+			<Description lang="de">Ließt eine Quelle zeilenweise aus.</Description>
+			<Description lang="en">Reads a source line by line.</Description>
+		</Module>
+        
+   		<Module name="S7" class="Master.Device" version="0.2.0" file="S7.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>string</PythonModule>
+				<PythonModule>re</PythonModule>
+			</Require>
+			<Description lang="de">Siemens SIMATIC S7.</Description>
+			<Description lang="en">Siemens SIMATIC S7.</Description>
+		</Module>
+
+   		<Module name="SendMail" class="Master.Interface" version="0.2.0" file="SendMail.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>smtplib</PythonModule>
+			</Require>
+			<Description lang="de">Sendet E-Mails.</Description>
+			<Description lang="en">Sends e-mails.</Description>
+		</Module>
+
+        <Module name="SimpleExport" class="Export" version="0.2.0" file="SimpleExport.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>SimpleXMLRPCServer</PythonModule>
+			</Require>
+			<Description lang="de">Ein XMLRPC-Server.</Description>
+			<Description lang="en">A xmlrpc-server.</Description>
+		</Module>
+
+   		<Module name="Socket" class="Master.Interface" version="0.2.0" file="Socket.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>socket</PythonModule>
+			</Require>
+			<Description lang="de">TCP-Sockets.</Description>
+			<Description lang="en">TCP sockets.</Description>
+		</Module>
+
+        <Module name="Statistic" class="Master.Debug" version="0.2.0" file="Statistic.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>time</PythonModule>
+				<PythonModule>struct</PythonModule>
+			</Require>
+			<Description lang="de">Erzeugt statistische Infromationen über den 
+			Datenverkehr.</Description>
+			<Description lang="en">Collects statistical information about the trafic.</Description>
+		</Module>
+
+   		<Module name="UniSerial" class="Master.Interface" version="0.2.0" file="UniSerial.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>serial</PythonModule>
+			</Require>
+			<Description lang="de">Die serielle Schnittstelle.</Description>
+			<Description lang="en">The serial interface.</Description>
+		</Module>
+
+   		<Module name="WGet" class="Master.Interface" version="0.2.0" file="WGet.zip">
+			<Require>
+				<pyDCPUVersion>0.2.0</pyDCPUVersion>
+				<PythonVersion>2.3.0</PythonVersion>
+				<PythonModule>httplib</PythonModule>
+			</Require>
+			<Description lang="de">Webseiten als Datenquelle.</Description>
+			<Description lang="en">Websites as data-sources.</Description>
+		</Module>
+	</CoreModules>
+
+
+</ModuleListing>

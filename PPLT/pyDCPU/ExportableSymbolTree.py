@@ -79,7 +79,15 @@ class ExportableSymbolTree:
             SessionID = self.__DefaultSession;
         return(self.__SymbolTree.ListSymbols(Path, SessionID));
 
+    def GetLastUpdate(self, PathToSymbol, SessionID):
+        Path = Normpath(self.__Root+"/"+PathToSymbol);
+        if not SessionID: SessionID = self.__DefaultSession;
+        return self.__SymbolTree.ListSymbols(Path, SessionID);
 
+    def GetTypeName(self, PathToSymbol, SessionID):
+        Path = Normpath(self.__Root+"/"+PathToSymbol);
+        if not SessionID: SessionID = self.__DefaultSession;
+        return self.__SymbolTree.GetTypeName(Path, SessionID);
 
 def Normpath(Path):
     tmp = Path.split('/');

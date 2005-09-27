@@ -36,37 +36,55 @@ class Config:
 
     
     def GetBasePath(self):
-        tmp = self.__Conf.get("path","BasePath");
+        tmp = self.__Conf.get("Path","BasePath");
         if tmp == "AUTOMATIC":
             return(os.path.normpath(sys.exec_prefix+"/PPLT/"));
         return(os.path.normpath(tmp));
     
     def GetLang(self):
-        return(self.__Conf.get("lang","language"));
+        return(self.__Conf.get("Lang","language"));
 
     def GetAltLang(self):
-        return(self.__Conf.get("lang","alt-lang"));
+        return(self.__Conf.get("Lang","alt-lang"));
 
     def GetCoreLogLevel(self):
-        tmp = self.__Conf.get("logging","CoreLevel");
+        tmp = self.__Conf.get("Logging","CoreLevel");
         if tmp == "No":
             return(None);
         return(tmp);
     
     def GetPPLTLogLevel(self):
-        tmp = self.__Conf.get("logging","PPLTLevel");
+        tmp = self.__Conf.get("Logging","PPLTLevel");
         if tmp == "No":
             return(None);
         return(tmp);
 
     def GetLogFile(self):
-        tmp = self.__Conf.get("logging","File");
+        tmp = self.__Conf.get("Logging","File");
         if tmp == "No":
             return(None);
         return(tmp);
 
     def GetSysLog(self):
-        tmp = self.__Conf.get("logging","SysLog");
+        tmp = self.__Conf.get("Logging","SysLog");
         if tmp == "Yes":
             return(True);
         return(False);
+
+    def GetHTTPProxy(self):
+        try:
+            http = self.__Conf.get("Proxy","HTTP");
+            if http == "" or http.lower()=="none": http=None;
+        except: http = None;
+        return http;
+
+    def GetFTPProxy(self):
+        try:
+            ftp = self.__Conf.get("Proxy","FTP");
+            if ftp == "" or ftp.lower()=="none": ftp=None;
+        except: ftp = None;
+        return ftp;
+
+    def GetModuleRepos(self):
+        pass;
+        

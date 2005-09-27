@@ -2,7 +2,7 @@
 		<div class="Head">Create a new <acronym>CoreInstance</acronym>.</div>
 		<div class="Text">
 			This call will create a new CoreInstance (CoreObject). This is the core
-			of the pyDCPU(PPLT) system. All work will be done by calling mehtods of
+			of the pyDCPU(PPLT) system. All work will be done by calling methods of
 			this object. Let's say it is important.
 <pre>
 import pyDCPU
@@ -21,7 +21,7 @@ Core = pyDCPU.Core(UserDBFile,
 				<tr><td><b>LogLevel</b></td>
 					<td>The logging level. One of 'debug','info','error','fatal','off'. (default: 'info')</td></tr>
 				<tr><td><b>SysLog</b></td>
-					<td>If <i>True</i> all logging messages will be send to the local SysLog daemon, even
+					<td>If <i>True</i> all logging messages will be sent to the local SysLog daemon, even
 						if a LogFile was specified.</td></tr>
 				<tr><td><b>RETURN</b></td>
 					<td>Return a Core instance. </td></tr>
@@ -46,12 +46,12 @@ ID = Core.MasterTreeAdd(ParentID,
 				<tr><td><b>ModName</b></td>
 					<td>Name of the Module to be loaded.</td></tr>
 				<tr><td><b>Address</b></td>
-					<td>Some modules need a address if a child is attached to it. Set to None if not
+					<td>Some modules need an address if a child is attached to it. Set to None if not
 					needed.</td></tr>
 				<tr><td><b>Parameter</b></td>
 					<td>A <i>dict</i> of name,value pairs. Used to control the behavior of the module</td></tr>
 				<tr><td><b>RETURN</b></td>
-					<td>Return a new ObjectID. This id is used to attache other modules to it, to destroy it, etc.</td></tr>
+					<td>Return a new ObjectID. This ID is used to attache other modules to it, to destroy it, etc.</td></tr>
 			</table>
 		</div>
 
@@ -90,11 +90,11 @@ ObjectID = Core.MasterTreeAttachSymbolSlot(ParentID,
 				<tr><td><b>Address</b></td>
 					<td>Like Address in <i>MasterTreeAdd()</i>.</td></tr>
 				<tr><td><b>TypeName</b></td>
-					<td>Interpret the data of the parent module a this type.</td></tr>
+					<td>Interpret the data of the parent module a this type.</td></tr>  <!--statt 'a', 'as'?//-->
 				<tr><td><b>TimeOut</b></td>
 					<td>Cache the value for this time. (default: 0.5s)</td></tr>
 				<tr><td><b>RETURN</b></td>
-					<td>Return the ObjectID for the Slot. The slot whill now be handled like a
+					<td>Return the ObjectID for the Slot. The slot will now be handled like a
 						normal module.</td></tr>
 			</table>
 		</div>
@@ -125,11 +125,11 @@ ObjectID = Core.ExporterAdd(ExportModule,
 				<tr><td><b>ExportModule</b></td>
 					<td>Name of the export module.</td></tr>
 				<tr><td><b>Parameters</b></td>
-					<td>Like <i>MasterTreeAdd()</i> this are the name, value pairs (dict)
+					<td>Like <i>MasterTreeAdd()</i> these are the name, value pairs (dict)
 						parameters to control the behavior of the module.</td></tr>
 				<tr><td><b>DefaultUser</b></td>
 					<td>Some Export/Server protocols have no auth. so this user will always be used.
-					Note: Choose a user with less rights, else it would be a security problem.</td></tr>
+					Note: Choose an user with less rights, else it would be a security problem.</td></tr>
 				<tr><td><b>RETURN</b></td>
 					<td>Return the new ObjectID of this loaded module</td></tr>
 			</table>
@@ -251,11 +251,11 @@ Core.SymbolTreeCreateSymbol(Path,
 				<tr><td>Path</td>
 					<td>The complete path to the symbol or folder</td></tr>
 				<tr><td><b>Owner</b></td>
-					<td>Username of the user who own this symbol or folder</td></tr>
+					<td>Username of the user who owns this symbol or folder</td></tr>
 				<tr><td><b>Group</b></td>
-					<td>Name of the group whitch the sysmbol or folder is attachted to.</td></tr>
+					<td>Name of the group which the symbol or folder is attached to.</td></tr>
 				<tr><td><b>Modus</b></td>
-					<td>Interger like the Un*x file modus. Note: This integer has the base 10!</td></tr>
+					<td>Integer like the Un*x file modus. Note: This integer has the base 10!</td></tr>
 				<tr><td><b>RETURN</b></td>
 					<td>Returns a tupel of (Owner, Group, Modus)</td></tr>
 			</table>
@@ -270,11 +270,11 @@ Core.SymbolTreeCreateSymbol(Path,
 				<tr><td>Path</td>
 					<td>The complete path to the symbol or folder</td></tr>
 				<tr><td><b>Owner</b></td>
-					<td>Username of the user who own this symbol or folder</td></tr>
+					<td>Username of the user who owns this symbol or folder</td></tr>
 				<tr><td><b>Group</b></td>
-					<td>Name of the group whitch the sysmbol or folder is attachted to.</td></tr>
+					<td>Name of the group which the symbol or folder is attached to.</td></tr>
 				<tr><td><b>Modus</b></td>
-					<td>Interger like the Un*x file modus. Note: This integer has the base 10!</td></tr>
+					<td>Integer like the Un*x file modus. Note: This integer has the base 10!</td></tr>
 				<tr><td><b>RETURN</b></td>
 					<td>Returns a tupel of (Owner, Group, Modus)</td></tr>
 			</table>

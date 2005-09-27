@@ -44,8 +44,8 @@ class DevicePanel(wx.ListCtrl):
         self.__Logger = logging.getLogger("PPLT");
         self.Fit();
         self.InsertColumn(0,_("Alias"));
-        self.InsertColumn(1,_("FQDN"),width=150);
-        self.InsertColumn(2,_("Parameter"),width=200);
+        self.InsertColumn(1,_("FQDN"),width=200);
+        self.InsertColumn(2,_("Parameter"),width=300);
 
         self.__IL = wx.ImageList(16,16);
         bmp = wx.Bitmap(os.path.normpath(conf.GetBasePath()+"/icons/device.xpm"));

@@ -48,11 +48,6 @@ def LoadBitmaps(path):
         tmp = wx.NullBitmap;
     bmps.update( {"SaveAs":tmp} );
     
-    tmp = wx.Bitmap(os.path.normpath(path+"/pack_add.xpm"));
-    if not tmp:
-        tmp = wx.NullBitmap;
-    bmps.update( {"PackAdd":tmp} );
-    
     tmp = wx.Bitmap(os.path.normpath(path+"/info.xpm"));
     if not tmp:
         tmp = wx.NullBitmap;
@@ -62,6 +57,27 @@ def LoadBitmaps(path):
     if not tmp:
         tmp = wx.NullIcon;
     bmps.update( {"Logo":tmp} );
+
+    tmp = wx.Bitmap(os.path.normpath(path+"/help.xpm"));
+    if not tmp:
+        tmp = wx.NullBitmap;
+    bmps.update( {"Help":tmp} );
+
+    tmp = wx.Bitmap(os.path.normpath(path+"/quit.xpm"));
+    if not tmp:
+        tmp = wx.NullBitmap;
+    bmps.update( {"Quit":tmp} );
+
+    tmp = wx.Bitmap(os.path.normpath(path+"/device_add.xpm"));
+    if not tmp:
+        tmp = wx.NullBitmap;
+    bmps.update( {"DeviceAdd":tmp} );
+
+    tmp = wx.Bitmap(os.path.normpath(path+"/server_add.xpm"));
+    if not tmp:
+        tmp = wx.NullBitmap;
+    bmps.update( {"ServerAdd":tmp} );
+
 
     return(bmps);
     

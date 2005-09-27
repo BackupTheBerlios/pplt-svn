@@ -21,24 +21,11 @@
 
 #TODO:
 
-#REVISION:
-
+# ChangeLog:
+# 2005-09-23:
+#   Added XDR support
 
 
 
 from SimaticS7 import Object;
 
-DCPUVERSION     = 0x000100;
-VERSION         = 0x00001C;
-AUTHOR          = "Hannes Matuschek <hmatuschek[at]gmx.net>";
-DATE            = "UNIXTIMESTAMP";
-
-DESCRIPTION     = {'en': """ This module implements the message format to make 
-                              commands to a Simens SIMATIC S7-200. (may be other too)""",
-                   'de': """ Dieses Modul implementiert das Nachrichten-Format um
-                              Befehle an eine Simens SIMATIC S7-200 zu senden."""};
-
-PARAMETERS      = None;     # this module needs no parameters...
-
-IS_ROOT_MODULE  = False;
-CHILD_NEED_ADDR = True;

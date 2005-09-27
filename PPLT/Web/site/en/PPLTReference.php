@@ -1,7 +1,7 @@
 <div class="TextBody">
 	<div class="Text">
 		In this document, i'll give you a short reference for the PPLT library. This library is a python package
-		so you can use it in you own scripts. The PPLT is build on the top of pyDCPU.  
+		so you can use it in you own scripts. The PPLT is built on the top of pyDCPU.  
 	</div>
 	
 	<div class="Head">Start the System</div>
@@ -19,14 +19,14 @@ psys = = PPLT.System();
 
 	<div class="Head">Load a Device</div>
 	<div class="Text">
-		To load a divice you need to know it's name and the parameters.
+		To load a device you need to know its name and the parameters.
 <pre>
 if not psys.LoadDevice(DeviceName, Alias, Parameters):
 	print "Error while load Device";
 </pre>
 		<p>
 		The <i>LoadDevice</i> method will load the device named <i>DeviceName</i> as 
-		<i>Alias</i> with the parameters <i>Parameters</i>. That means, that the device
+		<i>Alias</i> with the parameters <i>Parameters</i>. This means, that the device
 		if it could be loaded, will have the "Name" you set in <i>Alias</i>. Later you
 		can access the device over this alias. For example if you want to attach a Symbol
 		to this device.</p>

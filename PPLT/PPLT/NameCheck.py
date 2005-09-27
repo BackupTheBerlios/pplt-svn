@@ -29,10 +29,10 @@ import re;
 
 
 
-RE_SLOT     = "^[a-z|A-Z|0-9|_|\-]+::[a-z|A-Z|0-9|_|\-]+::[a-z|A-Z|0-9|_|\-]+$";
+RE_SLOT     = "^[a-z|A-Z|0-9|_|\-|]+::[a-z|A-Z|0-9|_|\-]+::([a-z|A-Z|0-9|_|\-|\.]+:?)+$";
 RE_DEV_SRV  = "^[a-z|A-Z|0-9|_|\-]+\.([a-z|A-Z|0-9|_|\-]+\.)*[a-z|A-Z|0-9|_|\-]+$"
 RE_USR_GRP  = "^[a-z|A-Z|0-9|_|\-]+$";
-RE_PATH     = "^/[a-z|A-Z|0-9|_|\-]*(/[a-z|A-Z|0-9|_|\-]+)*$";
+RE_PATH     = "^/[a-z|A-Z|0-9|_|\-|\.]*(/[a-z|A-Z|0-9|_|\-\.]+)*$";
 
 
 """ Internal used functions to check alias-, device- , server-, ..., -names. """ 

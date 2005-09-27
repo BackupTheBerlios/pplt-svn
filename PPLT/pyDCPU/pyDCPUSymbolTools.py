@@ -44,4 +44,10 @@ def PopItemFromPath(Path):
     elif len(tmp) == 2:
         return( (tmp[0], tmp[1]) );
     else:
-        return( (None, None) ); 
+        return( (None, None) );
+
+
+def NormPath(Path):
+    nPath = "/";
+    PList = SplitPath(Path);
+    return (nPath+string.join(PList,"/"));

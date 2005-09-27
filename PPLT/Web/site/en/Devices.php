@@ -11,30 +11,32 @@
 
 		<li><b>PLC</b>
 		<ul>
+			<li><b><a href="#FPX">Panasonic-FPX</a></b> - Access to the values of the Markers
+			of a Panasonic FP0 or FP2.</li>
+			<li><b><a href="#FPWEB">Panasonic-FPWEB</a></b> - Accesses a Panasonic FP0 via a connected
+			Panasonic FPWEB server.</li>
 			<li><b><a href="#S7-200">S7-200</a></b> - Access to 
 			the values of the Markers of a Siemens SIMATIC S7-200.</li>
-			<li><b><a href="#FPX">NAiS-FPX</a></b> - Access to the values of the Markers
-			of a NAiS FP0 or FP2.</li>
-			<li><b><a href="#FPWEB">NAiS-FPWEB</a></b> - Access a NAiS FP0 via a connected
-			NAiS FPWEB server.</li>
 		</ul>
 
 		<li><b>Measure</b>
 		<ul>
-			<li><b><a href="#AGI">Agilent 5462x</a></b> - Measureing unsing the ossiloscopes
+			<li><b><a href="#AGI">Agilent 5462x</a></b> - Measuring, using the oscilloscopes
 			of the 5462x series by Agilent.</li>
 		</ul>
 		</li>
 
 		<li><b>Mobile</b>
 		<ul>
-			<li><b><a href="#GSM">GSM</a></b> - Reading values like battery-level or
+			<li><b><a href="#GSM">GSM</a></b> - Reads values like battery-level or
 			signal-quality out of a GSM compatible mobile phone.</li>
 		</ul>
 		</li>
 	</ul>
 	</div>
 
+<!-- vielleicht solltest du dich beim verb auf eine verbform einigen, falls möglich. geht 
+vielleicht?: measures while using the os...//--> 
 
 
 
@@ -42,11 +44,11 @@
 
 	<div class="Head"><a name="rand">RandomGenerator</a></div>
 	<div class="Text">
-	This device generates random values of different types. It needs no specific hard-
-	or software, so it is pretty good for testing the PPLT system. 
+	This device generates random values of different types. It doesn't need any specific hard-
+	or software, so it is pretty useful for testing the PPLT system. 
 
-	<p>This device also needs no parameters, so you only need to set an alias
-	to setup the device.
+	<p>This device also doesn't need any parameters, so you only need to set an alias for the device
+	to setup.
 	<div style="text-align:center">
 		<img 	src="/img/RandomGenerator01.png"
 				alt="The RandomGenerator setup dialog.">
@@ -60,12 +62,12 @@ import PPLT;
 system = PPLT.System();
 system.LoadDevice("Debug.RandomGenerator", "alias", {});
 </pre>
-	Note: replace <i>alias</i> with the alias you want to give to the RandomGenerator.
+	Note: Replace <i>alias</i> with the alias you want to use for the RandomGenerator.
 	</p> 
 
 	
-	<p>This device provide one Namespace <i>Generator</i> with 6 slots. Each
-	slot holds the random numbers for a definite type. So holds the slot 
+	<p>This device provide one Namespace <i>Generator</i> with 6 slots in it. Each
+	slot holds the random numbers for a defined type. So the slot holds
 	<i>Byte</i> random values of the type byte, etc. 
 	<table align="center">
 		<tr><th>Slot</th><th>Type</th><th>Meaning</th></tr>
@@ -92,12 +94,12 @@ system.LoadDevice("Debug.RandomGenerator", "alias", {});
 		<tr>
 			<td>Float</td>
 			<td>float</td>
-			<td>An floating point value between 0 and 1.</td>
+			<td>A floating point value between 0 and 1.</td>
 		</tr>
 		<tr>
 			<td>Double</td>
 			<td>double</td>
-			<td>An floating point value between 0 and 1.</td>
+			<td>A floating point value between 0 and 1.</td>
 		</tr>
 	</table>
 	</p>
@@ -118,16 +120,16 @@ system.LoadDevice("Debug.RandomGenerator", "alias", {});
 
 	<p>This device needs 3 parameters to setup. At first the <i>Port</i>. This
 	is the number of the serial interface, the PPI cable is connected to.
-	<b>Note</b>: The nuber for the first port (COM1) is 0!<br>
+	<b>Note</b>: The number for the first port (COM1) is 0!<br>
 	The other parameters are the PPI-addresses for the PC: <i>PCAddr</i> 
-	(in the most cases 0) and the PPI-address of the PLC: <i>S7Addr</i>.
+	(in most cases 0) and the PPI-address of the PLC: <i>S7Addr</i>.
 	<div style="text-align:center">
 		<img	src="/img/SimaticS7-200.png"
 				alt="Setup dialog for the S7-200 device.">
 	</div></p>
 
 	<p>
-	The library call should look like:
+	The library call should look like this:
 <pre>
 import PPLT;
 system = PPLT.System();
@@ -144,6 +146,9 @@ system.LoadDevice("PLC.S7-200", "alias", {"Port":"0", "PCAddr":"0", "S7Addr":"2"
 	marker you need to set it in the symbol-property-dialog.<br>
 	Else if you use PPLT as a Python library type (to access marker 
 	<i>SMB28</i>):  
+
+<!--was soll beim letzten satz 'else' heißen? falls es 'ebenfalls' sein soll, sag lieber: If you use ..., do this aswell.//--> 
+
 <pre>
 import PPLT;
 system = PPLT.System();
@@ -152,9 +157,9 @@ system.CreateSymbol("/PathToSymbol", "s7-200::Markers::SMB28", "Byte");
 </pre>
 	</p>
 
-	<p>The second slot range called <i>PPIStatistic</i> holds 5 Slots. Each slot
-	holds a statistic value about the data going throug the PPI kable. For example
-	holds the <i>read_data</i> slot the number of bytes readed back from the PLC.
+	<p>The second namespace called <i>PPIStatistic</i> holds 5 Slots. Each slot
+	holds a statistic value about the data going through the PPI kable. For example the <i>read_data</i> slot 
+	holds the number of bytes readed back from the PLC.
 	<table align="center">
 		<tr><th>Slot</th><th>Type</th><th>Meaning</th></tr>
 		<tr>
@@ -170,7 +175,7 @@ system.CreateSymbol("/PathToSymbol", "s7-200::Markers::SMB28", "Byte");
 		<tr>
 			<td>read_speed</td>
 			<td>double</td>
-			<td>Bytes per second recived.</td>
+			<td>Bytes per second received.</td>
 		</tr>
 		<tr>
 			<td>write_speed</td>
@@ -189,15 +194,16 @@ system.CreateSymbol("/PathToSymbol", "s7-200::Markers::SMB28", "Byte");
 
 	
 	
-	<div class="Head"><a name="FPX">NAiS FP0/2</a></div>
+	<div class="Head"><a name="FPX">Panasonic FP0/2</a></div>
 	<div class="Text">
-	With this device you can access all markers of a NAiS FP0 or FP2
+	With this device you can access all markers of a Panasonic FP0 or FP2
 	via the so called <i>ToolPort</i>. The ToolPort is connected via
 	an simple cable to a serial interface of the PC.</p> 
 	
 	<p><b>Note:</b> Because of that this device uses the core module
-	<i>UniSerial</i>. And this modules uses the Python library 
-	<i>pyserial</i>. So please be sure to have this library installed 
+	<i>UniSerial</i> and this modules uses the Python library 
+	<i>pyserial</i> you need to have this installed. 
+	So please be sure to have this library installed 
 	before loading this device.</b>
 
 	<p>To load this device only 2 Parameters are needed. <i>Port</i>
@@ -206,11 +212,12 @@ system.CreateSymbol("/PathToSymbol", "s7-200::Markers::SMB28", "Byte");
 	(COM1) is 0!<br>
 	The second parameter is the address of the PLC. Only if you
 	want to access the PLC over a MEWTOCOL-COM bus you need to
-	set this feeld. Else you can set this to any number between
-	1 and 254.
+	set this feeld. Otherwise you can set this to any number between     <!-- statt feeld, field? //-->
+	1 and 254 (because the PLC ignores the destinationfield in the
+	message if you use the ToolPort).
  	<div style="text-align:center">
-		<img	src="/img/NAiS-FPX01.png"
-				alt="Setup dialog for the NAiS FP0 or FP2 device.">
+		<img	src="/img/FPX01.png"
+				alt="Setup dialog for the Panasonic FP0 or FP2 device.">
 	</div>
 	</p>
 	
@@ -218,30 +225,30 @@ system.CreateSymbol("/PathToSymbol", "s7-200::Markers::SMB28", "Byte");
 <pre>
 import PPLT;
 system = PPLT.System();
-system.LoadDevice("PLC.NAiS-FPX", "alias", {"Port":"0", "Address":"1"});
+system.LoadDevice("PLC.Panasonic-FPX", "alias", {"Port":"0", "Address":"1"});
 </pre>
 	Substitute <i>alias</i> with the alias you want to give the device.</p>
 
 	<p>
-	The NAiS-FPX device provides only one namespace (<i>Marker</i>). In 
-	this namespace are one Slot named <i>STATUS</i> and a slotrange 
+	The Panasonic-FPX device provides only one namespace (<i>Marker</i>). In 
+	this namespace there are one Slot named <i>STATUS</i> and a slotrange 
 	named (<i>Marker</i>) available. <br>
 	The slotrange is a placeholder for all markers of the
-	PLC. If you select this slotrange in the PPLT-Center application
-	you will be asked for a specific marker address.<br>
+	PLC. If you select this slotrange in the PPLT-Center an application
+	will ask you for a specific marker address.<br>
 	<b>Note:</b> You will need to set a type for the symbol at the 
 	property-dialog.<br>
-	Else if you want to use the PPLT as a library you can ignore the
-	existence of this palceholder and simply use the marker address
+	But if you want to use the PPLT just as a library you can ignore the
+	existence of this placeholder and simply use the marker address
 	as a name of a slot. For example (to access the first input bit):
 <pre>
 import PPLT;
 system = PPLT.System();
-system.LoadDevice("PLC.NAiS-FPX", "fp0", {"Port":"0", "Address":"1"});
+system.LoadDevice("PLC.Panasonic-FPX", "fp0", {"Port":"0", "Address":"1"});
 system.CreateSymbol("/PathToSymbol", "fp0::Marker::Y0", "Bool");
 </pre> 
 
-	The slot <i>STATUS</i> is read/writable and controls the status
+	The slot <i>STATUS</i> is read- and writable and controls the status
 	of the PLC. If this Slot is True, the PLC is in the <i>RUN</i>
 	mode else it is in the <i>STOP</i> mode. So you can also control
 	the mode of the PLC.
@@ -253,35 +260,35 @@ system.CreateSymbol("/PathToSymbol", "fp0::Marker::Y0", "Bool");
 
 
 
-	<div class="Head"><a name="FPWEB">NAiS FP-WEB server</a></div>
+	<div class="Head"><a name="FPWEB">Panasonic FP-WEB server</a></div>
 	<div class="Text">
-	The <i>NAiS-FPWEB</i> device is nealy the same like the <i>NAiS-FPX</i>.
-	But with this device you access the PLC trought the tunneled ToolPort
-	by the NAiS FPWEB server. If you config the FPWEB server, it will
+	The <i>Panasonic-FPWEB</i> device is almost the same like the <i>Panasonic-FPX</i>.
+	But with this device you access the PLC trough the tunneled ToolPort
+	by the Panasonic FPWEB server. If you config the FPWEB server, it will
 	tunnel the toolport transparent to a TCP/IP port and so this device
 	can access the PLC by this port.</p>
 
-	<p>To load this device you need (like the NAiS-FPX device) only 
+	<p>To load this device you need (like the Panasonic-FPX device) only 
 	2 parameters. The first <i>NetAddr</i> is the network address
-	of the NAiS-FPWEB server in the format ADDRESS:PORT (for
+	of the Panasonic-FPWEB server in the format ADDRESS:PORT (for
 	example 10.1.1.10:9094 or www.yoursite.com:9094). The second 
 	Parameter is the MEWTOCOL address of the PLC connected to
 	the webserver. Because the ToolPort will often be tunneled
-	it could be any nuber between 1 and 254.
+	it could be any number between 1 and 254.
 	<div style="text-align:center">
-		<img	src="/img/NAiS-FPWEB01.png"
-				alt="The setup dialog of the NAiS-FPWEB device.">
+		<img	src="/img/FPWEB01.png"
+				alt="The setup dialog of the Panasonic-FPWEB device.">
 	</div></p>
 	
-	<p>If you want to use the PPLT an a Python library type:
+	<p>If you want to use the PPLT as a Python library type:
 <pre>
 import PPLT;
 system = PPLT.System();
-system.LoadDevice("PLC.NAiS-FPWEB", "alias", {"NetAddr":"10.1.1.10:9094", "MEWAddr":"1"});
+system.LoadDevice("PLC.Panasonic-FPWEB", "alias", {"NetAddr":"10.1.1.10:9094", "MEWAddr":"1"});
 </pre></p>
 	
 	<p>This device provides the same namespace, slot and slot-range like the 
-	<a href="#FPX">NAiS-FPX</a> device. So take a look at the description
+	<a href="#FPX">Panasonic-FPX</a> device. So take a look at the description
 	of this device to find out more.</p> 
 	</div>
 
@@ -294,17 +301,17 @@ system.LoadDevice("PLC.NAiS-FPWEB", "alias", {"NetAddr":"10.1.1.10:9094", "MEWAd
 	<div class="Head"><a name="GSM">GSM mobile phone</a></div>
 	<div class="Text">
 	With this device you can access some status information of a GSM
-	compatible mobile phone like battary-level or signal-quality.
+	compatible mobile phone like battery-level or signal-quality.
 
 	<p><b>Note:</b> Because this device uses the <i>UniSerial</i> core
-	module to access the serial interface, you have to have install
+	module to access the serial interface, you have to have installed
 	the <i>pyserial</i> Python library before you can use this device.</p>
 	
 	<p>To load this device you need to set two parameters. The first
 	<i>Port</i> sets the number of the serial interface you'll use.
 	<br><b>Note:</b>The number of the first serial interface is 0!<br>
-	The second parameter sets the speed int baud to be used. 9600 baud
-	sould be a useable value.
+	The second parameter sets the speed in baud to be used. 9600 baud       <!--ich weiß nich, was 'baud' is, aber 'to be used' erscheint mir unpassend, wenns ne einheit sein soll.//-->
+	should be a useable value.
 	<div style="text-align:center">
 		<img	src="/img/GSMDev01.png"
 				alt="Setup dialog of the GSMMobilePhone device.">
@@ -317,7 +324,7 @@ system = PPLT.System();
 system.LoadDevice("Mobile.GSMMobilePhone", "alias", {"Port":"0", "Speed":"9600"});
 </pre></p>
 
-	<p>This device provide only one namespace named <i>GSM</i> with 4 slots.
+	<p>This device provides only one namespace named <i>GSM</i> with 4 slots in it.
 	<table align="center">
 		<tr><th>Slot</th> <th>Type</th> <th>Meaning</th></tr>
 		<tr>
@@ -346,22 +353,22 @@ system.LoadDevice("Mobile.GSMMobilePhone", "alias", {"Port":"0", "Speed":"9600"}
 
 
 
-	<div class="Head"><a name="AGI">Agilent oszilloscope 5462x</a></div>
+	<div class="Head"><a name="AGI">Agilent oscilloscope 5462x</a></div>
 	<div class="Text">
 	<p>With this device you can control and get back the results of the measurement
-	of an oszilloscope of the 5462x series by Agilent. This device uses the serial
-	interface to connect the oszilloscope.</p>
+	of an oscilloscope of the 5462x series by Agilent. This device uses the serial
+	interface to connect the oscilloscope.</p>
 	
 	<p><b>Note:</b> This device uses the <i>UniSerial</i> core module. The module
 	needs the <i>pyserial</i> Python extension. So be sure to have it installed 
-	before unsing this device.</p>
+	before using this device.</p>
 
 	<p>This device needs 3 parameters to setup. The first parameter <i>Port</i>
-	is the number of the serial interface to be used.<br>
+	is the number of the serial interface to be used.<br>                         <!-- statt 'to be used', 'which you use'? //-->
 	<b>Note:</b> The first serial interface has the number 0!<br>
-	The next prameter is the primary signal source <i>Primary</i> and
+	The next parameter is the primary signal source <i>Primary</i> and
 	the last is the secondary signal source <i>Secondary</i>. You need
-	to set booth signal soreces if you want to do measurements that
+	to set booth signal soreces if you want to do measurements that           <!--was ist 'soreces'? vielleicht 'sources'?//-->
 	compares two signals like the phase-difference. Else you only need 
 	to set the primary. (Set the secondary to the same value.)
 	<div style="text-align:center">
@@ -375,8 +382,8 @@ system = PPLT.System();
 system.LoadDevice("Measue.AGILENT-5462X", "alias",{"Port":"0", "Primary":"A1", "Secondary":"A2"});
 </pre></p>	
 
-	<p>This device provide only one namespace (<i>Values</i>) in this namespace
-	are all slots to meassure a specific value (see the table).
+	<p>This device provides only one namespace (<i>Values</i>). In this namespace
+	are all slots to measure a specific value (see the table). <!--statt diesem satz, der grammtikalisch falsch ist!!, vielleicht: All slots in this namespace measure...//-->
 	<table align="center">
 		<tr><th>Slot</th> <th>Type</th> <th>Meaning</th></tr>
 		<tr>

@@ -1,0 +1,91 @@
+<?xml version="1.0"?>
+
+<ModuleListing name="--- PPLT Module Repository ---">
+	<PPLTModules>
+		<Device name="AGILENT-5462X" class="Measure" version="0.3.0" file="AGILENT_5462X-0.3.xml">
+			<Require>
+				<DCPUModule>Master.Interface.UniSerial</DCPUModule>
+				<DCPUModule>Master.Transport.ReadLine</DCPUModule>
+				<DCPUModule>Master.Device.5462X</DCPUModule>
+			</Require>
+			<Description lang="de">Agilent Oszilloskop der Serie 5462X</Description>
+			<Description lang="en">Agilent oscilloscope 5462X.</Description>
+		</Device>
+
+   		<Device name="GSMMobilePhone" class="Mobile" version="0.3.0" file="GSMMobilePhone-0.3.xml">
+			<Require>
+				<DCPUModule>Master.Interface.UniSerial</DCPUModule>
+				<DCPUModule>Master.Transport.ReadLine</DCPUModule>
+				<DCPUModule>Master.Device.GSM</DCPUModule>
+			</Require>
+			<Description lang="de">GSM Mobiltelefone.</Description>
+			<Description lang="en">GSM mobile-phones.</Description>
+		</Device>
+
+        <Server name="JVisuServer" class="Visu" version="0.3.0" file="JVisuServer-0.3.xml">
+   			<Require>
+				<DCPUModule>Export.JVisu</DCPUModule>
+			</Require>
+			<Description lang="de">Ein JVisu Socket-Server.</Description>
+			<Description lang="en">A JVisu socket server.</Description>
+        </Server>
+
+   		<Device name="FPWEB" class="PLC" version="0.3.1" file="Panasonic_FPWEB-0.3.xml">
+			<Require>
+				<DCPUModule>Master.Interface.Socket</DCPUModule>
+				<DCPUModule>Master.Transport.ReadLine</DCPUModule>
+				<DCPUModule>Master.Transport.MEWCOM-TL</DCPUModule>
+				<DCPUModule>Master.Device.MEWCOM-CL</DCPUModule>
+			</Require>
+			<Description lang="en">Panasonic FP0 or FP2 access by the FP-WEB server.</Description>
+			<Description lang="de">Zugriff auf eine Panasonic FP0 oder FP2 über den FP-WEB Server.</Description>
+		</Device>
+        
+   		<Device name="Panasonic-FPX" class="PLC" version="0.3.1" file="Panasonic_FPX-0.3.xml">
+			<Require>
+				<DCPUModule>Master.Interface.UniSerial</DCPUModule>
+				<DCPUModule>Master.Transport.ReadLine</DCPUModule>
+				<DCPUModule>Master.Transport.MEWCOM-TL</DCPUModule>
+				<DCPUModule>Master.Device.MEWCOM-CL</DCPUModule>
+			</Require>
+			<Description lang="en">Panasonic FP0 or FP2 access.</Description>
+			<Description lang="de">Zugriff auf eine Panasonic FP0 oder FP2.</Description>
+		</Device>
+
+        <Server name="PPLTWebServer" class="Web" version="0.3.0" file="PPLTWebServer-0.3.xml">
+   			<Require>
+				<DCPUModule>Export.PPLTWeb</DCPUModule>
+			</Require>
+			<Description lang="de">Ein Web-Server.</Description>
+			<Description lang="en">A webserver.</Description>
+        </Server>
+
+        <Device name="RandomGenerator" class="Debug" version="0.3.0" file="RandomGenerator-0.3.xml">
+			<Require>
+				<DCPUModule>Master.Debug.Random</DCPUModule>
+			</Require>
+			<Description lang="de">Einfacher Zufallszahlengenerator</Description>
+			<Description lang="en">Simple random-generator.</Description>
+		</Device>
+
+   		<Device name="S7-200" class="PLC" version="0.3.0" file="SIMATIC_S7_200-0.3.xml">
+			<Require>
+				<DCPUModule>Master.Interface.UniSerial</DCPUModule>
+				<DCPUModule>Master.Debug.Statistic</DCPUModule>
+                <DCPUModule>Master.Transport.PPI</DCPUModule>
+				<DCPUModule>Master.Device.S7</DCPUModule>
+			</Require>
+			<Description lang="en">Siemens SIMATIC S7-200.</Description>
+			<Description lang="de">Siemens SIMATIC S7-200.</Description>
+		</Device>
+
+        <Server name="SimpleExport" class="RPC" version="0.3.0" file="SimpleExportServer-0.3.xml">
+   			<Require>
+				<DCPUModule>Export.SimpleExport</DCPUModule>
+			</Require>
+			<Description lang="de">Ein XMLRPC-Server.</Description>
+			<Description lang="en">A XMLRPC server.</Description>
+        </Server>
+
+	</PPLTModules>
+</ModuleListing>

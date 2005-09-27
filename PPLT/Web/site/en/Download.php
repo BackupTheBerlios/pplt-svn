@@ -1,6 +1,6 @@
 <div class="TextBody">	
 	<div class="Head">Get the current release</div>
-	<div class="Text">You can get the current version of PPLT an the PPLT-Modules
+	<div class="Text">You can get the current version of PPLT and the PPLT-Modules
 	from the Berlios site or the anonymous ftp-site:<br>
 	<ul>
 		<li><a href="http://developer.berlios.de/project/showfiles.php?group_id=3237">Download from Berlios</a></li>
@@ -8,13 +8,13 @@
 	</ul>
 	</div>
 	
-	<div class="Head">Get current morking copy</div>
-	<div class="Text">You can get the current working-copy of the PPLT source
+	<div class="Head">Get current working copy</div>
+	<div class="Text">You can get the current working-copy of the PPLT sourcecode
 	from the SVN repository. You can checkout by calling:
 	<br><b>svn co svn://svn.berilos.de/svnroot/repos/pplt/PPLT PPLT</b> 
 
 	<p><b>Note:</b> If you want to commit changes to this repository you'll
-	need to be a memeber of the PPLT project at berlios. Send me an 
+	need to be a member of the PPLT project at berlios. Send me an 
 	<a href="/en/Contact.html">e-mail</a> if you want to.</p>	
 	</div>
 </div>

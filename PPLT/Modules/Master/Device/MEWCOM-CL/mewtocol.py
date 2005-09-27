@@ -37,7 +37,7 @@ class Object (pyDCPU.MasterObject):
 
 
 
-def NAIS_read(Connection, Address, Len):
+def NAIS_read(Connection, Address, Len=None):
     Logger = logging.getLogger('pyDCPU');
     # check parameters:
     if not isinstance(Connection, pyDCPU.MasterConnection):
@@ -46,9 +46,9 @@ def NAIS_read(Connection, Address, Len):
     if not isinstance(Address, NAISAddress.NAIS_Address):
         Logger.error("AddressObject is not a NAIS_Address");
         raise pyDCPU.FatIOModError;
-    if not Len:
-        Logger.debug("Read nothing");
-        return(None);
+    #if not Len:
+    #    Logger.debug("Read nothing");
+    #    return(None);
     if not Address.IsValid():
         Logger.error("NAIS Address is not Valid");
         raise pyDCPU.FatIOModError;

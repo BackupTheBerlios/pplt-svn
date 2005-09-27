@@ -64,11 +64,11 @@ class ServerParameterDialog(wx.Dialog):
         for var in varlist:
             self.__AddEntry(var);
 
-        ok = wx.Button(self, wx.ID_OK,_(" OK "));
-        ca = wx.Button(self, wx.ID_CANCEL, _(" Cancel "));
+        ok = wx.Button(self, -1, _("OK"));
+        ca = wx.Button(self, wx.ID_CANCEL, _("Cancel"));
         box = wx.BoxSizer(wx.HORIZONTAL);
-        box.Add(ok, 1, wx.ALIGN_CENTER|wx.ALL, 3);
         box.Add(ca, 1, wx.ALIGN_CENTER|wx.ALL,3);
+        box.Add(ok, 1, wx.ALIGN_CENTER|wx.ALL, 3);
         self.__MySizer.Add(box, 1, wx.ALIGN_CENTER|wx.GROW);
 
         self.Bind(wx.EVT_BUTTON, self.OnOK, ok);
@@ -106,6 +106,7 @@ class ServerParameterDialog(wx.Dialog):
         for var in self.__Parameters.keys():
             val = self.__Parameters[var].GetValue();
             self.Values.update( {var:val} );
+        print "OK >>> %s"%str(self.Values)
         self.EndModal(wx.ID_OK);
 
 

@@ -139,9 +139,9 @@ class UserDBPanel(wx.TreeCtrl):
         (IsGrp2, IsSU2) = self.GetPyData(item2);
         if IsGrp2 and IsSU2: IsGrp2 = False;        # make user-paroxy handled like users
         if IsGrp1 and not IsGrp2:
-            return -1;
-        elif IsGrp2 and not IsGrp1:
             return 1;
+        elif IsGrp2 and not IsGrp1:
+            return -1;
         if Label1.lower() > Label2.lower():
             return 1;
         elif Label1.lower() == Label2.lower():

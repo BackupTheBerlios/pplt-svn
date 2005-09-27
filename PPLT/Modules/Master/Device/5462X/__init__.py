@@ -19,31 +19,12 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    #
 # ############################################################################ #
 
+
+#CHANGELOG:
+# 2005-09-23:
+#   Added support for XDR encoded values!
+
+
 from AGI54622A import Object;
 
-DCPUVERSION     = 0x000100;     #HEX version-number of pyDCPU-package this module was written for
-VERSION         = 0x000001;     #HEX version-number of this package.
 
-AUTHOR          = "Hannes Matuschek <hmatuschek[AT]gmx.net>";
-DATE            = "2005-02-04";                                     #Last update.
-
-
-#a description in multible lang.
-DESCRIPTION     = {'en': """""",
-                   'de': """"""};
-
-PARAMETERS      = {'PSource':{'duty':True,
-                              'default':'A1',
-                              'help':{'en':'',
-                                      'de':''}
-                              },
-                   'SSource':{'duty':True,
-                              'default':'A1',
-                              'help':{'en':'',
-                                      'de':''}
-                              }
-                   };
-
-
-IS_ROOT_MODULE  = False;
-CHILD_NEED_ADDR = True;

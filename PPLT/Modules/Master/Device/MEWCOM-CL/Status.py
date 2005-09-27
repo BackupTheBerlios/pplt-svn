@@ -20,10 +20,12 @@ def GetStatus(Connection, Address):
 
     try:
         buff = Connection.read(100);
-    except:
-        Logger.error("Error while read: maybe a bad Marker-Address???");
+    except Exception, e:
+        Logger.error("Error while read: %s",str(e));
         raise pyDCPU.IOModError;
-    return(MEWConvert.UnPack(buff[2]));
+    Value = MEWConvert.HexUnpack(buff[2]);
+    return MEWConvert.BoolPack(Value);
+    #return(MEWConvert.UnPack(buff[2]));
 
 
 
@@ -34,12 +36,12 @@ def SetStatus(Connection, Address, Data):
     if not isinstance(Address, NAISAddress.NAIS_Address):
         return(None);
 
-    if ord(Data[0]):
+    if MEWConvert.BoolUnpack(Data):
         Value = 'R';
     else:
         Value = 'P';
 
-
+    
     CMD = "RM%s"%Value;
 
     try:

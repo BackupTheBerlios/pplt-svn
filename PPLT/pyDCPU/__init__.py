@@ -20,11 +20,34 @@
 
 __author__  = 'Hannes Matuschek <hmatuschek@gmx.net>'
 __status__  = 'beta'
-__version__ = '0.3.0'
+__version__ = '0.4.0'
 __date__    = '2005-08-28'
 
-VERSION = 0x000300;              # this version-number is used internal to check
+VERSION = 0x000400;              # this version-number is used internal to check
                                  # if a module fit in this system.
+
+#
+# Definition of types:
+#
+TBool = "Bool";
+TInteger = "Integer";
+TUnsignedInteger = "uInteger";
+TLong = "Long";
+TUnsignedLong = "uLong";
+TFloat = "Float";
+TDouble = "Double";
+TString = "String";
+TArrayOfBool = "ArrayBool";
+TArrayOfInteger = "ArrayInteger";
+TArrayOfUnsignedInteger = "ArrayuInteger";
+TArrayOfLong = "ArrayLong";
+TArrayOfUnsignedLong = "ArrayuLong";
+TArrayOfFloat = "ArrayFloat";
+TArrayOfDouble = "ArrayDouble";
+TArrayOfString = "ArrayString";
+
+
+
 
 from Exceptions import *;
 from pyDCPUCore import *;

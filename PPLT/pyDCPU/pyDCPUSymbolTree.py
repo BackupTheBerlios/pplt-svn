@@ -115,7 +115,22 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
             return(None);
         return(Element.ListSymbols(SessionID));
 
+    
+    def GetTypeName(self, PathToSymbol, SessionID):
+        """ Return the name of the original type of the source. """
+        PList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
+        Element = self.__GetElementByPath(PList);
+        print "Typename of (%s)%s"%(PathToSymbol,Element);
+        if not isinstance(Element, pyDCPUSymbol.Symbol): return None;
+        return Element.GetTypeName();
 
+    def GetLastUpdate(self, PathToSymbol, SessionID):
+        """ Return the timestamp of the symbol. """
+        PList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
+        Element = self.__GetElementByPath(PList);
+        if not isinstance(Element, pyDCPUSymbol.Symbol): return 0;
+        return Element.GetLastUpdate();
+         
 
     #
     # The next methods are used by the CoreObject

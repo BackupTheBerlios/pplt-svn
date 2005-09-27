@@ -19,6 +19,7 @@
 # ############################################################################ # 
 
 import pyDCPU;
+import pyDCPU.pyDCPUSymbolTools as SymbolTools
 import Configuration;
 import Logging;
 import Install;
@@ -588,6 +589,7 @@ Return a list of strings. """
         if not serverFileName:
             self.__Logger.warning("No server found named %s"%ServerName);
             return(False);
+        self.__Logger.debug("Try to load server %s with %s as %s"%(ServerName, str(Parameters), Alias));
         try:
             server = Server.Server(self.__Core, serverFileName, ServerName, DefaultUser, Parameters, Root);
         except:
@@ -684,13 +686,25 @@ doesn't know a authentification."""
             self.ChangeModus(Path,Modus);
         return(True);
 
+
     def MoveFolder(self, From, To):
         """ Move a folder from (From) to (To). """
         #check path:
+        To = SymbolTools.NormPath(To);
+        From  = SymbolTools.NormPath(From);
+        self.__Logger.debug("Move Folder from %s to %s"%(From, To));
+
         To = NameCheck.CheckPath(To);
         if not To:
             self.__Logger.error("Invalid path-format for destination.");
             return(False);
+        
+        if not self.__Core.SymbolTreeCheckPath(From):
+            self.__Logger.error("Source %s does not exsists."%From);
+            return False;
+        if self.__Core.SymbolTreeCheckPath(To):
+            self.__Logger.error("Destination %s already exsists."%To);
+            return False;
 
         # get pathes of all symbols under folder (From):
         OSymList = RecursiveSymbolList(self, From);
@@ -819,6 +833,8 @@ doesn't know a authentification."""
 
     def MoveSymbol(self, From, To):
         """Move a symbol from (From) to (To). Please use only full pathes."""
+        To = SymbolTools.NormPath(To);
+        From = SymbolTools.NormPath(From)
         To = NameCheck.CheckPath(To);
         if not To:
             self.__Logger.error("Invalid symbolpath-format for destiantion.");
@@ -896,6 +912,10 @@ doesn't know a authentification."""
             self.__Logger.error("No symbol: %s"%Path);
             return(None);
         return(para[1]);
+
+    def GetSymbolTimeStamp(self, Path):
+        """ Return the time of the last update of the symbol pointed by Path. """
+        return self.__Core.SymbolTreeGetTimeStamp(Path);
 
     def GetModus(self, Path, Format=MODUS_FMT_OCTAL):
         """ Return the modus of a symbol or folder in Format.

@@ -32,7 +32,8 @@ import wx;
 from ModusBox import ModusBox;
 import PPLT;
 import os;
-
+import textwrap;
+import string;
 
 class SelectSlotDialog(wx.Dialog):
     def __init__(self, parent, PPLTSys):
@@ -77,38 +78,52 @@ class SelectSlotDialog(wx.Dialog):
         self.__HelpText.SetEditable(False);
         sizer.Add(self.__HelpText, 1, wx.EXPAND|wx.ALL, 3);
 
+        box = wx.BoxSizer(wx.HORIZONTAL);
+        ok = wx.Button(self, wx.ID_OK, "OK");
+        ca = wx.Button(self, wx.ID_CANCEL, "Cancel");
+        box.Add(ca, 1, wx.ALIGN_LEFT|wx.ALL, 3);
+        box.Add(ok, 1, wx.ALIGN_RIGHT|wx.ALL, 3);
+        sizer.Add(box, 0, wx.GROW|wx.TOP,5);
+
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelect, self.__Tree);
+        self.Bind(wx.EVT_BUTTON, self.OnOK, id=wx.ID_OK);
         self.__Tree.Bind(wx.EVT_LEFT_DCLICK, self.OnDClick);
 
         self.SetSizer(sizer);
         sizer.Fit(self);
 
         self.__AddDevices();
-
+        self.Selection = None;
 
 
 
     def OnSelect(self, event):
         item = event.GetItem();
         if item == self.__ROOT or not item:
+            self.Selection = None;
             return(None);
         (iden, data, info) = self.__Tree.GetPyData(item);
         self.__HelpText.Clear();
         if iden == 1:
+            self.Selection = None;
             txt = info.GetDescription();
             if txt and txt!="":
                 self.__HelpText.SetValue(txt);
         elif iden == 4:
+            self.Selection = item;
             (fqdn, dev, ns, name) = data;
             txt = info.GetSlotRangeDescription(ns,name);
             if txt and txt!="":
                 self.__HelpText.SetValue(txt);
         elif iden == 3:
+            self.Selection = item;
             (fqdn, dev, ns, name) = data;
             txt = info.GetSlotDescription(ns,name);
             if txt and txt!="":
                 self.__HelpText.SetValue(txt);
+        else: self.Selection = None;
             
+
     def OnDClick(self, event):
         pt = event.GetPosition();
         (item,flags) = self.__Tree.HitTest(pt);
@@ -126,14 +141,49 @@ class SelectSlotDialog(wx.Dialog):
         (fqdn, dev, ns, slot) = data
 
         if iden == 4:       #if slotrange: ask for spec. slot
-            dlg = wx.TextEntryDialog(self, _("Enter expl. slot name or addr.:"),_("Slot"));
+            txt = info.GetSlotRangeDescription(ns, slot);
+            if txt:
+                txt_lines = textwrap.wrap(txt,50);
+                txt = string.join(txt_lines,"\n");
+            else: txt = _("Enter expl. slot name or addr.:");
+            dlg = wx.TextEntryDialog(self, txt, _("Slot"));
             if not dlg.ShowModal()==wx.ID_OK:
                 return(None);
             slot = dlg.GetValue();
 
         self.RETURN = ("%s::%s::%s"%(dev, ns, slot),info.GetSlotType(ns,slot));
         self.EndModal(wx.ID_OK);
-    
+   
+
+    def OnOK(self, event):
+        if not self.Selection: return None;
+        item = self.Selection;
+        (iden, data, info) = self.__Tree.GetPyData(item);
+        if iden in (0,1,2):
+            if self.__Tree.IsExpanded(item):
+                self.__Tree.Collapse(item);
+            else:
+                self.__Tree.Expand(item);
+        if not iden in (3,4):
+            return(None);
+        (fqdn, dev, ns, slot) = data
+
+        if iden == 4:       #if slotrange: ask for spec. slot
+            txt = info.GetSlotRangeDescription(ns,slot);
+            if txt:
+                txt_lines = textwrap.wrap(txt,50);
+                txt = string.join(txt_lines,"\n");
+            else: txt = _("Enter expl. slot name or addr.:");
+            dlg = wx.TextEntryDialog(self, txt, _("Slot"));
+            if not dlg.ShowModal()==wx.ID_OK:
+                return(None);
+            slot = dlg.GetValue();
+            dlg.Destroy();
+
+        self.RETURN = ("%s::%s::%s"%(dev, ns, slot),info.GetSlotType(ns,slot));
+        self.EndModal(wx.ID_OK);
+   
+
     def __AddDevices(self):
         devlst = self.__PPLTSys.ListDevices();
         for dev in devlst:
@@ -199,7 +249,13 @@ class PropertyDialog(wx.Dialog):
         self.__VBox.Add(wx.StaticLine(self,-1,style=wx.HORIZONTAL),0,wx.GROW|wx.TOP|wx.BOTTOM,2);
 
         tmp = wx.StaticText(self, -1, _("Type: "));
-        self.__Type = wx.ComboBox(self, -1, choices=["Bool","Byte","Word","DWord","Float","Double","String"]);
+        self.__Type = wx.ComboBox(self, -1, choices=["Bool", "Integer", "uInteger",
+                                                     "Long", "uLong", "Float",
+                                                     "Double","String", "ArrayBool",
+                                                     "ArrayInteger", "ArrayuInteger",
+                                                     "ArrayLong","ArrayuLong",
+                                                     "ArrayFloat", "ArrayDouble",
+                                                     "ArrayString"]);
         if Type:
             self.__Type.SetValue(str(Type));
             self.__Type.SetEditable(False);
@@ -217,11 +273,11 @@ class PropertyDialog(wx.Dialog):
 
         self.__VBox.Add(wx.StaticLine(self,-1,style=wx.HORIZONTAL),0,wx.GROW|wx.TOP|wx.BOTTOM,2);
 
-        self.__OK = wx.Button(self,wx.ID_OK, _(" OK "));
-        self.__CANCEL = wx.Button(self, wx.ID_CANCEL, _(" Cancel "));
+        self.__OK = wx.Button(self,wx.ID_OK, _("OK"));
+        self.__CANCEL = wx.Button(self, wx.ID_CANCEL, _("Cancel"));
         box = wx.BoxSizer(wx.HORIZONTAL);
-        box.Add(self.__OK,1,wx.GROW|wx.ALL,3);
-        box.Add(self.__CANCEL,1,wx.GROW|wx.ALL,3);
+        box.Add(self.__CANCEL, 1, wx.GROW|wx.ALL, 3);
+        box.Add(self.__OK, 1, wx.GROW|wx.ALL, 3);
         self.__VBox.Add(box,1,wx.TOP|wx.ALIGN_CENTER|wx.GROW,5);
         
         self.Bind(wx.EVT_KEY_UP, self.OnKey);

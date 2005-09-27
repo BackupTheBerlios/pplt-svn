@@ -30,5 +30,5 @@ def RCC(Connection, Address):
     except:
         Logger.error("Error while read: maybe a bad Marker-Address???");
         raise pyDCPU.ModIOError;
-
-    return(MEWConvert.UnPack(buff[2:]));
+    Value = MEWConvert.HexUnpack(buff[2:]);
+    return(MEWConvert.UIntPack(Value));

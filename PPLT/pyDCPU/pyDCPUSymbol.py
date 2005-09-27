@@ -54,15 +54,17 @@ class Symbol:
         self.__SymbolSlot.RegisterSymbol();        
 
 
-    def IsValid(self):
-        return(self.__Valid);
+    def IsValid(self): return(self.__Valid);
 
     def Rename(self, Name):
         self.__Name = Name;
         return(True);
 
-    def Unregister(self):
-        return(self.__SymbolSlot.UnregisterSymbol());
+    def Unregister(self): return(self.__SymbolSlot.UnregisterSymbol());
+
+    def GetTypeName(self): return(self.__SymbolSlot.GetTypeName());
+   
+    def GetLastUpdate(self): return(self.__SymbolSlot.GetLastUpdate());
    
     def GetValue(self, SessionID):
         if not self.__Possession.CanRead(SessionID):

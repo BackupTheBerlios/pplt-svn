@@ -1,7 +1,7 @@
 import struct;
 import re;
 import string;
-
+import xdrlib;
 
 # SOURCE 
 AGI_SRC_DIGI    = 1;
@@ -154,4 +154,6 @@ def GetWidth(Con, Src):
     return(float(ret));
 
 def PackDouble(Value):
-    return( struct.pack("d",float(Value)) );
+    packer = xdrlib.Packer();
+    packer.pack_double(float(Value));
+    return( packer.get_buffer() );

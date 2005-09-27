@@ -21,7 +21,7 @@ def WCS(Connection, Address, Data):
     if not AreaCode:
         return(None);
 
-    if ord(Data[0]):
+    if MEWBoolUnpack(Data):
         Value = 1;
     else:
         Value = 0;

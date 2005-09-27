@@ -55,25 +55,37 @@ To see a short help-text for a device, single-click it.""")
         sizer.Add(self.__Tree, 1, wx.ALIGN_CENTRE|wx.GROW, 3);
         sizer.Add(self.__Help, 0, wx.ALIGN_CENTRE|wx.GROW|wx.TOP, 3);
 
+        box = wx.BoxSizer(wx.HORIZONTAL);
+        ok = wx.Button(self, wx.ID_OK, "OK");
+        ca = wx.Button(self, wx.ID_CANCEL, "Cancel");
+        box.Add(ca, 1, wx.ALL|wx.ALIGN_LEFT, 3);
+        box.Add(ok, 1, wx.ALL|wx.ALIGN_RIGHT, 3);
+        sizer.Add(box, 0, wx.ALIGN_CENTER|wx.TOP|wx.GROW,5);
+
         self.SetSizer(sizer);
         self.SetAutoLayout(True);
         sizer.Fit(self.__Tree);
 
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelect, self.__Tree);
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnDClick, self.__Tree);
+        self.Bind(wx.EVT_BUTTON, self.OnOK, id=wx.ID_OK);
 
+        self.SelectedDevice = None;
 
     def OnSelect(self, event):
         item = event.GetItem();
         if not item:
+            self.SelectedDevice = None;
             return(None);
         dat = self.__Tree.GetPyData(item);
         if dat:
+            self.SelectedDevice = dat;
             self.__Help.Clear();
             info = self.__PPLTSys.GetDeviceInfo(dat);
             if info and info!="":
                 txt = info.GetDescription();
                 self.__Help.AppendText(txt);
+        else: self.SelectedDevice = None;
         
     def OnDClick(self, event):
         item = event.GetItem();
@@ -82,6 +94,11 @@ To see a short help-text for a device, single-click it.""")
             if dat:
                 self.SelectedDevice = dat;
                 self.EndModal(wx.ID_OK);
+                
+    def OnOK(self, event):
+        if self.SelectedDevice: self.EndModal(wx.ID_OK);
+
+
 
 
 class DeviceTree(wx.TreeCtrl):

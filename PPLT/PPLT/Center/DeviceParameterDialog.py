@@ -49,8 +49,8 @@ class DeviceParameterDialog(wx.Dialog):
         ok = wx.Button(self, wx.ID_OK,_(" OK "));
         ca = wx.Button(self, wx.ID_CANCEL, _(" Cancel "));
         box = wx.BoxSizer(wx.HORIZONTAL);
-        box.Add(ok, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2);
         box.Add(ca, 0, wx.ALIGN_RIGHT|wx.RIGHT|wx.LEFT,2);
+        box.Add(ok, 0, wx.ALIGN_LEFT|wx.RIGHT|wx.LEFT, 2);
         self.__MySizer.Add(box, 0, wx.ALL|wx.GROW, 3);
 
         self.Bind(wx.EVT_BUTTON, self.OnOK, ok);

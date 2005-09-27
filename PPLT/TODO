@@ -35,6 +35,3 @@
 
 [pyDCPU]
     Symbolslots should keep there cached values if a error appears
-
-[PPLT]
-    Install/Uninstall of modules.

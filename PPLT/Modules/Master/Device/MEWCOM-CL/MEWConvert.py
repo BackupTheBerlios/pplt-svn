@@ -1,30 +1,49 @@
-import struct;
 import NAISAddress;
+import xdrlib;
 
-def UnPack(HexStr):
+
+def HexUnpack(Buff):
     if len(HexStr)==1:
-        return(struct.pack("B",int(HexStr,16)));
+        return int(HexStr,16);
     if len(HexStr)==4:
-        return(struct.pack("!H",int(HexStr,16)));
+        return int(HexStr,16);
     elif len(HexStr) == 8:
-        return(struct.pack("!HH",int(HexStr[0:2],16),int(HexStr[2:],16)));
-    return(None);1
-
-def Pack(Data, Type):
-    if not Data:
-        return(None);
-    if Type == NAISAddress.NAIS_WORD:
-        try:
-            (Val) = struct.unpack("!H", Data);
-            return("%04X"%Val);
-        except:
-            return(None);
-    elif Type == NAISAddress.NAIS_DWORD:
-        try:
-            (ValA,ValB) = struct.unpack("!HH",Data);
-            return("%04X%04X"%(ValA,ValB));
-        except:
-            return(None);
+        return int(HexStr,16)  # decode and switch ByteOrder!
     return(None);
-    
-               
+
+
+def HexPack(Val, Type):
+    if not Data: return(None);
+    if Type == NAISAddress.NAIS_WORD:
+        try: return("%04X"%Val);
+        except: return(None);
+    elif Type == NAISAddress.NAIS_DWORD:
+        try: return("%08X"%Val);
+        except: return(None);
+    return(None);
+
+
+
+
+def BoolPack(Value):
+    packer = xdrlib.Packer();
+    packer.pack_bool(Value);
+    return packer.get_buffer();
+
+def BoolUnpack(Data):
+    packer = xdrlib.Unpacker(Data);
+    val = packer.unpack_bool();
+    packer.done();
+    return val;
+
+def UIntPack(Value):
+    packer = xdrlib.Packer();
+    packer.pack_uint(Value);
+    return packer.get_buffer();
+
+def UIntUnpack(Data):
+    packer = xdrlib.Unpacker(Data);
+    val = packer.unpack_uint();
+    packer.done();
+    return val;
+

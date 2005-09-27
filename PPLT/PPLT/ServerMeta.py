@@ -96,7 +96,7 @@ class MetaData:
 
     def GetName(self): return(self.__Name);
     def GetClass(self): return(self.__ClassString);
-    def GetVersion(self): retunr(self.__Version);
+    def GetVersion(self): return(self.__Version);
 
     def GetDescription(self, lang=None, altlang=None):
         if not lang:

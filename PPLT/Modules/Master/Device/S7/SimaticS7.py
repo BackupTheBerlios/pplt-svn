@@ -24,6 +24,8 @@
 import S7Register;
 import S7Message;
 import pyDCPU;
+import struct;
+import xdrlib;
 
 class Object(pyDCPU.MasterObject):
     def setup(self):
@@ -40,6 +42,7 @@ class Object(pyDCPU.MasterObject):
         return(Connection);
 
     def write(self, Connection, Data):
+        Data = XDR2Raw(Data, Connection.Address.GetType());         #convert XDR to raw byte-data
         DataSet = S7Message.S7DataSet(Data, Connection.Address);
         CommSet = S7Message.S7CommandSet(S7Message.S7FunctionWrite, Connection.Address);
         Message = S7Message.S7Message(CommSet, DataSet);
@@ -69,7 +72,7 @@ class Object(pyDCPU.MasterObject):
         self.Logger.error("S7 returned error...");
         raise(pyDCPU.IOModError);
 
-    def read(self, Connection, Data):
+    def read(self, Connection, Data=None):
         CommSet = S7Message.S7CommandSet(S7Message.S7FunctionRead, Connection.Address);
         Message = S7Message.S7Message(CommSet);
 
@@ -90,8 +93,32 @@ class Object(pyDCPU.MasterObject):
         DataSet = Message.GetDataSet();
 
         if DataSet.GetErrCode() == 0xff:
-            return(DataSet.GetDataString());
+            return(Raw2XDR(DataSet.GetDataString(), Connection.Address.GetType()));
 
         self.Logger.error("S7 returned error");
         raise(pyDCPU.IOModError);
-        
+
+
+def Raw2XDR(Data, Type):
+    packer = xdrlib.Packer();
+    if Type == S7Register.S7Bit:
+        (value,) = struct.unpack("B",Data);
+        packer.pack_bool(value);
+    elif Type == S7Register.S7Byte:
+        (value,) = struct.unpack("B",Data);
+        packer.pack_uint(value);
+    elif Type == S7Register.S7Word:
+        (value,) = struct.unpack("H",Data);
+        packer.pack_uint(value);
+    elif Type == S7Register.S7DWord:
+        (value,) = struct.unpack("I",Data);
+        packer.pack_uint(value);
+    return packer.get_buffer();
+
+def XDR2Raw(Data, Type):
+    unpacker = xdrlib.Unpacker(Data);
+    if Type == S7Register.S7Bit: return struct.pack("B", unpacker.unpack_bool());
+    elif Type == S7Register.S7Byte: return struct.pack("B", unpacker.unpack_uint());
+    elif Type == S7Register.S7Word: return struct.pack("H", unpacker.unpack_uint());
+    elif Type == S7Register.S7DWord: return struct.pack("I", unpacker.unpack_uint());
+

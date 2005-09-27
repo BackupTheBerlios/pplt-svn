@@ -40,7 +40,8 @@ import zipfile;
 import xml.dom.minidom;
 import logging;
 import shutil;
-
+import string;
+  
 class DataBase:
     """ The Module database handles all kinds of modules, like servers, devices
 and core-modules.
@@ -139,13 +140,13 @@ You can install and uninstall (if you have the right to do) modules. """
     def InstallServer(self, File):
         " Install/Update the server in file. And add to DB."
         #test if I can write do dir:
-        if not os.access(self.__PPLTModulePath, os.F_OK, os.W_OK):
+        if not os.access(self.__PPLTModulePath, os.F_OK|os.W_OK):
             self.__Logger.error("Can't write to PPTL module dir %s."%self.__PPLTModulePath);
             return False;
         # parse and check file
-        try: Item = CreateItem(File, Lang, AltLang, self);
-        except:
-            self.__Logger.error("Error while add Server %s to DataBase"%File);
+        try: Item = CreateItem(File, self.__Lang, self.__AltLang, self);
+        except Exception,e:
+            self.__Logger.error("Error while add Server %s to DataBase: %s"%(File, str(e)));
             return False;
         #check if I know this server already:
         FQSN = Item.GetClass()+"."+Item.GetName();
@@ -155,12 +156,14 @@ You can install and uninstall (if you have the right to do) modules. """
                 self.__Logger.error("Unable to uninstall old server (%s)."%FQSN);
                 return False;
         #copy new server-file into PPLT-Module-Dir:
-        newFile = os.path.normpath(self.__PPLTModulePath+"/"+os.path.baseName(File));
-        if not shutil.copyfile(File,newFile):
-            self.__Logger.error("Can't install new server %s: Can't copy from %s to %s."%(FQSN,File,newFile));
+        newFile = string.join(FQSN.split("."),"_")+".xml";
+        newFile = os.path.normpath(self.__PPLTModulePath+"/"+newFile);
+        try: shutil.copyfile(File,newFile);
+        except Exception, e:
+            self.__Logger.error("Can't install new server %s: Can't copy from %s to %s. (%s)"%(FQSN,File,newFile,str(e)));
             return False;
         #create new server-item at new path:
-        try: Item = CreateItem(newFile, self.__Lang, self.__AltLang);
+        try: Item = CreateItem(newFile, self.__Lang, self.__AltLang, self);
         except:
             self.__Logger.error("Error while install server %s: Unable to reate DB item from file %s"%(FQSN, newFile));
             return False;
@@ -195,7 +198,7 @@ You can install and uninstall (if you have the right to do) modules. """
 
     def GetServerVersion(self, Name):
         " Returns the Version-Object of the given server. "
-        Srv = self.__GetServer(self, Name);
+        Srv = self.__GetServer(Name);
         if not Srv: return(None);
         return(Srv.GetVersion());
 
@@ -232,7 +235,11 @@ You can install and uninstall (if you have the right to do) modules. """
         if not Srv: return(None);
         return(Srv.GetDefaultValue(VarName));
 
-
+    def GetServerReqCoreMods(self, SrvName):
+        """ Returns the core modules required by the server. """
+        Srv = self.__GetServer(SrvName);
+        if not Srv: return(None);
+        return Srv.GetReqCoreMods();
 
     # ###################################################################### #
     # Methods to handle devices                                              # 
@@ -269,30 +276,32 @@ You can install and uninstall (if you have the right to do) modules. """
     def InstallDevice(self, File):
         " Install/Update a device and add it to the DB." 
         #test if I can write do dir:
-        if not os.access(self.__PPLTModulePath, os.F_OK, os.W_OK):
+        if not os.access(self.__PPLTModulePath, os.F_OK|os.W_OK):
             self.__Logger.error("Can't write to PPTL module dir %s."%self.__PPLTModulePath);
             return False;
         # parse and check file
-        try: Item = CreateItem(File, Lang, AltLang, self);
-        except:
-            self.__Logger.error("Error while add Device %s: Parse error!"%File);
+        try: Item = CreateItem(File, self.__Lang, self.__AltLang, self);
+        except Exception, e:
+            self.__Logger.error("Error while add Device %s: Parse error! (%s)"%(File,str(e)));
             return False;
         #check if I know this device already:
         FQDN = Item.GetClass()+"."+Item.GetName();
-        if self.HasDevice(FQSN): 
+        if self.HasDevice(FQDN): 
             #remove device from list and from filesystem:
             if not self.UnInstallDevice(FQDN):
                 self.__Logger.error("Unable to uninstall old device (%s)."%FQDN);
                 return False;
         #copy new device-file into PPLT-Module-Dir:
-        newFile = os.path.normpath(self.__PPLTModulePath+"/"+os.path.baseName(File));
-        if not shutil.copyfile(File,newFile):
-            self.__Logger.error("Can't install new device %s: Can't copy from %s to %s."%(FQDN,File,newFile));
+        newFile = string.join(FQDN.split("."),"_")+".xml";
+        newFile = os.path.normpath(self.__PPLTModulePath+"/"+newFile);
+        try:shutil.copyfile(File,newFile);
+        except Exception, e:
+            self.__Logger.error("Can't install new device %s: Can't copy from %s to %s. (%s)"%(FQDN,File,newFile, str(e)));
             return False;
         #create new device-item at new path:
-        try: Item = CreateItem(newFile, self.__Lang, self.__AltLang);
-        except:
-            self.__Logger.error("Error while install device %s: Unable to reate DB item from file %s"%(FQDN, newFile));
+        try: Item = CreateItem(newFile, self.__Lang, self.__AltLang, self);
+        except Exception,e:
+            self.__Logger.error("Error while install device %s: Unable to reate DB item from file %s. (%s)"%(FQDN, newFile,str(e)));
             return False;
         # add to DB:        
         if not isinstance(Item, DeviceItem):
@@ -402,7 +411,13 @@ You can install and uninstall (if you have the right to do) modules. """
         if not Dev: return("");
         return(Dev.GetSlotRangeDescription(NS, SlotRange, self.__Lang, self.__AltLang));
 
+    def GetDeviceReqCoreMods(self, DevName):
+        """ Return required coremodules for the device. """
+        Dev = self.__GetDevice(DevName);
+        if not Dev: return None;
+        return Dev.GetReqCoreMods();
 
+    
 
     # ###################################################################### #
     # Methods to handle core-modules                                         # 
@@ -469,9 +484,9 @@ You can install and uninstall (if you have the right to do) modules. """
                 return False;
         FilePath = os.path.normpath(DirName+"/"+FileName);
         #copy file:
-        try: shutils.copyfile(File, FilePath);
-        except:
-            self.__Logger.error("Error while install %s: Can't copy file %s to %s."%(AsName, File, FilePath));
+        try: shutil.copyfile(File, FilePath);
+        except Exception, e:
+            self.__Logger.error("Error while install %s: Can't copy file %s to %s. [%s]"%(AsName, File, FilePath,str(e)));
             return False;
         #crate item and add to db:
         Item = CoreModItem(FilePath);
@@ -535,7 +550,7 @@ class BaseClass:
         if len(ClassList) == 0:
             if self.__Items.has_key(Item):
                 del self.__Items[Item];
-                return(Ture);
+                return(True);
             return(False);
         SubClass = ClassList.pop(0);
         if self.__SubClasses.has_key(SubClass):
@@ -642,8 +657,8 @@ class ServerItem:
         # load meta-data from file:
         self.__Meta = ServerMeta.MetaData(Document, Lang, AltLang);
         #check if all needed core-mods are present:
-        req_core_mods = self.__Meta.GetRequiredModules();
-        for core_mod in req_core_mods:
+        self.ReqCoreMods = self.__Meta.GetRequiredModules();
+        for core_mod in self.ReqCoreMods:
             if not DataBase.HasCoreMod(core_mod):
                 raise Exception("Can't load PPLT Module %s: Missing Core-Mod: %s"%(self.__Meta.GetName(),core_mod));
         # ---done---
@@ -665,7 +680,7 @@ class ServerItem:
         return(self.__Meta.GetVariableDefaultValue(VarName));
     def GetVariableHelp(self, VarName, Lang=None, AltLang=None):
         return(self.__Meta.GetVariableDescription(VarName, Lang, AltLang));
-
+    def GetReqCoreMods(self): return(self.ReqCoreMods);
 
 
 
@@ -679,8 +694,8 @@ class DeviceItem:
         # load meta-data:
         self.__Meta = DeviceMeta.MetaData(Document, Lang, AltLang);
         #check for core-modules:
-        core_mods = self.__Meta.GetRequiredModules();
-        for core_mod in core_mods:
+        self.ReqCoreMods = self.__Meta.GetRequiredModules();
+        for core_mod in self.ReqCoreMods:
             if not DataBase.HasCoreMod(core_mod):
                 raise Exception("Missing core module %s"%core_mod);
         #---done---
@@ -715,7 +730,7 @@ class DeviceItem:
         return(self.__Meta.GetSlotType(NS, Name));
     def GetSlotMode(self, NS, Name):
         return(self.__Meta.GetSlotMode(NS, Name));
-
+    def GetReqCoreMods(self): return self.ReqCoreMods;
 
 
 class ServerInfo:

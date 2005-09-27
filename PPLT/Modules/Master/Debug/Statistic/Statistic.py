@@ -18,9 +18,15 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
 # ############################################################################ # 
 
+# CHANGELOG:
+# 2005-09-23: 
+#   Changed value conversion to XDR
+
+
 import pyDCPU;
 import time;
 import struct;
+import xdrlib;
 
 """
     This module collects statistic information about the data
@@ -142,4 +148,6 @@ class Object(pyDCPU.MasterObject):
 
 def ConvToRaw(Value):
     """ This function converts a integer value to it's memory representation """
-    return(struct.pack('I',Value));
+    packer = xdrlib.Packer();
+    packer.pack_int(Value);
+    return(packer.get_buffer());

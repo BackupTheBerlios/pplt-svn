@@ -39,7 +39,7 @@ class MasterConnection:
     def close(self):
         return(self.Parent.close());
 
-    def read(self, Len):
+    def read(self, Len=None):
         if self.Parent.islocked():
             raise(pyDCPU.LockModError);
         self.Parent.lock();

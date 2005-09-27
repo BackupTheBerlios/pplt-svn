@@ -42,7 +42,7 @@ class MetaData:
         
         if not xmlstr:
             self.__Logger.error("Error while load meta data");
-            raise Exception;
+            raise Exception("Error while load meta data from file: %s"%(FileName));
         doc = xml.dom.minidom.parseString(xmlstr).documentElement;
         
         self.__FileName = FileName;
@@ -72,6 +72,8 @@ class MetaData:
         self._addPythonModule(tmp);
         tmp = doc.getElementsByTagName("Parameter");
         self._addParameter(tmp);
+        tmp = doc.getElementsByTagName("Description");
+        self._addModDescription(tmp);
         doc.unlink();
         #--- done ---
 
@@ -139,7 +141,17 @@ class MetaData:
                     default = str(node.getAttribute("default"));
                 self.__Parameters.update( {name:(duty,default)} );
                 
-
+    def _addModDescription(self, xmlNodes):
+        for xmlNode in xmlNodes:
+            langAttr = xmlNode.attributes.get("lang");
+            if not langAttr:
+                return(False);
+            lang = langAttr.value;
+            if not xmlNode.hasChildNodes(): continue;
+            if xmlNode.firstChild.nodeType == xmlNode.TEXT_NODE:
+                text = xmlNode.firstChild.wholeText;
+                self.__Descriptions.update( {lang:text} );
+        return(True);
 
     def GetVersionString(self): return(self.__VersionString);
     def GetVersion(self): return(Version.Version(self.__VersionString));

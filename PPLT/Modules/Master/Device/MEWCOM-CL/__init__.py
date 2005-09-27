@@ -21,24 +21,12 @@
 
 #TODO:
 
-#REVISION:
-
-
+#Changelog:
+# 2005-09-23:
+#   Added XDR encoding of values
 
 
 from mewtocol import Object;
 
-DCPUVERSION     = 0x000100;
-VERSION         = 0x000001;
-AUTHOR          = "Hannes Matuschek <hmatuschek[at]gmx.net>";
-DATE            = "UNIXTIMESTAMP";
-
-DESCRIPTION     = {'en': """ """,
-                   'de': """ """};
-
-PARAMETERS      = {};
-
-IS_ROOT_MODULE  = False;
-CHILD_NEED_ADDR = True;
 
 

@@ -7,9 +7,9 @@
 	a folder in the start menu.<br>
 	<u>Please update!</u><br><br> 
 	<b>2005-08-20 - Release of PPLT Version 0.3.0</b><br>
-	I've done a lot of debuging and (sometimes) rewiteing
-	wide parts of the PPLT library. Will stop now developing
-	to focus on debuging to reach the stabil state.
+	I've done a lot of debugging and (sometimes) rewriting
+	wide parts of the PPLT library. Will stop now developping
+	to focus on debugging to reach the stabil state.
 	<u>Note:</u> Please also update the Modules!<br><br>
 	<b>2005-06-03 - Release of PPLT Version 0.2.2</b><br>
 	I've added some features to the library and the PPLTC application.
@@ -30,7 +30,7 @@
 	but I've removed some ugly bugs.<br><br>
 	<b>2005-04-25 - Release PPLT version 0.1pre2</b><br>
 	I've released a second prealpha version of the PPLT library.
-	The new feature is an abstraction layer. Now it is quiet simple
+	The new feature is an abstraction layer. Now it is quite simple
 	to load and manage devices and servers.<br><br> 
 	<b>2005-03-31 - Release PPLT version 0.1pre</b><br>
     I've <a href="http://developer.berlios.de/project/showfiles.php?group_id=3237"

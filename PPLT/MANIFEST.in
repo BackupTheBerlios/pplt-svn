@@ -2,6 +2,8 @@ include ChangeLog TODO LICENSE MANIFEST.in
 include UserDB.xml PPLT.conf PPLT.bmp
 include icons/*.xpm
 include icons/*.ico
+include *.chm
+include *.htb
 recursive-include I18N *.po *.mo
 graft examples
 

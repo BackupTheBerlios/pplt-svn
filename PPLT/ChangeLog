@@ -1,13 +1,26 @@
-	* changed config file entrys: 
-	  now you only need to set the BasePath of the PPLT dir.
-	  So fixed (PPLTC, ...)
+    * Added SetValueDialog to SymbolTreePanel in PPLT/Center
+    * Improved type-coding for symbol-slots:
+        Now the symbolslots using XDR type codeing to provide 
+        values to symbols: So all types of the XDR standard RFC-1832
+        are supported including array types.
+    * SymbolTree and ExportableSymboltree has now methods to get the timestamp
+      and typename of a symbol
+    * Made all dialogs to look uniform
+    * Changed GUI of PPLT Center:
+        removed toolbar
+        added menu
+    * Added usable modulemanager for (un-)install/update modules:
+        So added Script/PPLTMod.py PPLT/ModSrc/*.py
+    * changed config file entrys: 
+	    now you only need to set the BasePath of the PPLT dir.
+	    So fixed (PPLTC, ...)
 	* removed ConfigFile option from PPLT.System().__init__();
     + added (Un)InstallServer(), (Un)InstallDevice() and (Un)InstallCoreMod() to 
-      DataBase class in PPLT/DataBase.py:
+        DataBase class in PPLT/DataBase.py:
         added this methods to provide a usable interface for un/install
         and update modules. 
     * fixed buggy GetDescription() methos in CoreModItem class in 
-      PPLT/DataBase.py
+        PPLT/DataBase.py
     * fixed sorting funktion in PPLT/Center/UserDBPanel.py:
         - now user-proxies are sortet as users.
         - now sorting ignore case
@@ -26,7 +39,7 @@ Version 0.3.1 (Rev: 23) - 2005-08-28:
     * updated project description in setup.py
     * add move/renameing folders
 
-    (Revision 22)
+    * Commit: (Revision 22)
 
     * fixed MANIFEST.in
     * fixed in PPLT/DataBase.py:
@@ -41,7 +54,7 @@ Version 0.3.1 (Rev: 23) - 2005-08-28:
         - fixed wrong getopt call
         - add "verbose" option (-v)
 
-    (Revision 21)
+    * Commit: (Revision 21)
 
     * fixed in PPLT/Center/SymbolTreePanel.py, PPLT/Center/UserDBPanel.py:
         - items sort
@@ -63,7 +76,7 @@ Version 0.3.1 (Rev: 23) - 2005-08-28:
         - changed password will not be encoded 
           twice anymore.
         
-    (Revision: 20) 
+    * Commit: (Revision 20) 
     
     * added in PPLT/Center/SymbolTreePanel.py:
         Add renameing and moveing of symbols.

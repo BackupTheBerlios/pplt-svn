@@ -1,0 +1,254 @@
+\documentclass[a4paper]{article}
+
+\usepackage[ngerman]{babel}								%Sprache
+\usepackage[ansinew]{inputenc}						%Umlaute ohne Maske
+\usepackage{amsmath}											%Mathe für alle!
+\usepackage{amsfonts}											%Mathefonts
+%\usepackage{graphicx}											%Bessere Grafikunterstüzung
+%\usepackage[pdfborder = 0 0 0]{hyperref}	%Nette PDFs ohne Müh...
+
+
+
+\begin{document}
+	%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+	%%% Hier Text einfügen...
+	\section{Geräte}
+	\subsection{Ein Gerät laden}
+	Um ein Gerät zu laden klicken sie bitte im Menü \textit{Laden}
+	auf \textit{Gerät laden}. Oder sie benutzen den Rechtsklick auf
+	eine freie Fläche der Geräteliste und wählen dann den Menüpunkt
+	\textit{Gerät hinzufügen} im Kontextmenü aus.
+	\par
+	Dann sollte ein Dialog erscheinen, indem alle bekannten Geräte nach ihren
+	Klassen geordnet aufgelistet sind. Sie können ein Klasse öffnen in dem
+	sie doppelt auf diese klicken.
+	\par
+	Wählen sie nun das Gerät aus, das sie laden wollen. Bestätigen sie ihre 
+	Auswahl indem sie doppelt auf das Gerät klicken oder das Gerät auswählen
+	und auf OK klicken.
+	\par
+	Nun sollte ein Dialog erscheinen, in dem sie die Parameter, mit denen
+	das Gerät geladen werden soll, setzen können. Sie müssen mindestens
+	den Eintrag \textit{Alias} ändern. Mit diesem Alias können sie
+	das Gerät später (beim Erzeugen von Symbolen) identifizieren.
+	Sie erhalten zu den einzelnen Parametern eine kurze Hilfe, wenn
+	sie mit dem Mauszeiger über dem Eingabefeld verweilen.
+	\par
+	Bestätigen ihre Eingabe indem sie auf den OK Button klicken.
+	
+	\subsection{Geräte entladen}
+	Um ein Gerät wieder zu entfernen, wählen sie das Gerät aus und öffnen sie
+	das Kontextmenu mittels rechts-klick. Wählen sie nun den Menüpunkt
+	\textit{Gerät entfernen}. Nun sollte das Gerät entladen und aus
+	der Liste entfernt worden sein.
+	\par
+	\textbf{Hinweis}: Sie können nur Gräte entladen, wenn keine Symbole
+	diese benutzen.
+
+
+	
+	\section{Symbole und Ordner}
+	\subsection{Ein Symbol erzeugen}
+	Zum Erzeugen eines Symbols klicken sie mit der rechten Maustaste 
+	auf den Ordner, in dem sie das Symbol erzeugen wollen. Oder wenn
+	sie das Symbol in Basis-Pfad (Wurzel) erzeugen wollen, klicken
+	sie mit der rechten Maustaste auf eine freie Fläche im Symbolbaum.
+	Wählen sie nun im Kontextmenü den Punkt \textit{Symbol hinuzf.}
+	aus.
+	\par
+	Es erscheint nun ein Dialog, indem alle geladenen Gräte aufgelistet
+	sind. Jedes Gerät beinhaltet mindestens ein Namensraum und Jeder
+	Namensraum beinhaltet mindestens ein Sybolslot oder einen
+	Symbolslotbereich. Ein Symbolslot ist die Schnittstelle zwischen
+	den Geräten und den Symbolen. Ein Symbolslotbereich ist gleich
+	eine ganze Sammlung von Slots. So werden zum Beispiel alle Merker
+	einer SPS durch einen einzigen Symbolslotbereich zusammengefasst.
+	Wählen sie nun den Symbolslot (oder auch Bereich) aus, den sie
+	verwenden wollen und bestätigen sie ihre Auswahl.
+	\par
+	Wenn sie einen Symbolslotbereich ausgewählt haben, wird nun eine
+	kleiner Dialog erscheinen, in dem sie den zu verwendenen Slot 
+	genauer angeben müssen. Wenn sie zum Beispiel auf einen Merker
+	einer SPS zugreifen wollen und den Slotbereich für die Merker
+	der Steuerung ausgewählt haben, sollten sie hier nun den 
+	Merker angeben, den sie verwenden wollen.
+	\par
+	Wenn sie dann einen Slot ausgewählt haben, wird ein Dialog 
+	erscheinen, in dem sie die Eigenschaften des Symbols festlegen
+	können. Sie können hier den Besitzer und die Gruppe auswählen,
+	zu dem das Symbol gehören soll. Des weiteren können sie 
+	die Zeit festlegen, die der Wert des Symbols zwischengespeichert
+	werden soll. \textbf{Hinweis}: Wenn sie einen Slotbereich aus
+	gewählt haben sollten sie den Typ des Symbols überprüfen. 
+	Sollte der Slot einen Ganzzahligen wert liefern, verwenden sie
+	bitte den Typ \texttt{Integer} oder \texttt{uInteger}(für 
+	ausschließlich positive Werte).
+	\par
+	Bestätigen sie ihre Einstellungen indem sie auf den OK Button
+	klicken.
+	
+	\subsection{Ein Symbol umbenennen}
+	Sie können den Namen eines Symbols ändern, indem sie das 
+	Kontextmenü des Symbols öffnen und den Menüpunkt \textit{Umbenennen}
+	auswählen. Nun sollte der Name des Symbols editierbar werden.
+	Ändern sie den Namen und bestätigen sie ihre Änderung mit der 
+	\texttt{Entertaste}.
+	
+	\subsection{Ein Symbol verschieben}
+	Sie können ein Symbol mittels Drag'n'Drop verschieben. Positionieren
+	sie dazu den Mauszeiger über dem Symbol das sie verschieben wollen
+	und drücken sie die linke Maustaste. Halten sie diese gedrück wärend sie
+	den Maszeiger über den Ordner bewegen in dem sie das Symbol
+	verschieben wollen. Lassen sie die Maustaste los und das Symbol
+	wird in den Ordner verschoben, über dem sich der Mauszeiger befindet.
+	
+	\subsection{Ein Symbol löschen}
+	Sie können ein Symbol löschen, indem sie das Kontextmenu des Symbols 
+	mittels rechter Maustaste öffnen und den Menüpunkt 
+	\textit{Symbol entfernen} auswählen. Das Symbol sollte nun entfernt 
+	worden sein.
+	
+	\subsection{Ein Ordner erstellen}
+	Um einen Ordner zu erstellen klicken sie mit der rechten Maustaste 
+	auf den Ordner in den sie den neuen Order erstellen wollen. Oder,
+	wenn sie einen Order in Basis-Verzeichnis erstellen wollen, klicken
+	sie auf eine freie Fläche des Symbolbaums. Wählen sie dann den
+	Menüpunkt \textit{Order hinzuf.}. Nun sollte ein Dialog erscheinen,
+	in dem sie den Namen, den Besitzer, die Gruppe und die Zugriffstrechte
+	für das Verzeichnis setzen können. Bestätigen sie ihre Eingabe mit
+	OK. 
+	
+	\subsection{Ein Ordner umbenennen}
+	Um einen Ordner um zu benennen, klicken sie mit der rechten
+	Maustaste auf den Ordner und wählen sie \textit{Umbenennen}
+	im Kontextmenü aus. Nun sollte der Name des Ordners editierbar 
+	werden. Ändern sie nun den Name und drücken sie \texttt{Enter}
+	um den neuen Namen zu übernehmen.
+	
+	\subsection{Einen Ordner verschieben}
+	Das Verschieben eines Ordners geschieht per Drag'n'Drop.
+	Positionieren sie dazu den Mauszeiger über dem Ordner und
+	drücken auf die linke Maustaste. Halten sie die Maustaste
+	gedrückt und ziehen sie die Maus nun über den Ordner,
+	in den sie den Ordner verschieben wollen. Lassen sie die
+	Maustste los und der Ordner wird in den Ordner verschoben 
+	über dem sich der Mauszeiger befindet.
+	
+	\subsection{Ein Ordner löschen}
+	Um einen Ordner zu löschen. Öffnen sie bitte dessen Kontextmenü
+	indem sie mit der rechten Maustaste auf den Ordner klicken. 
+	Wählen sie nun den Menüpunkt \textit{Ordner löschen}. Wenn
+	der Ordner leer war sollte dieser nun gelöscht worden sein.
+	
+	\subsection{Zugriffsrechte Ändern}
+	Das Ändern von Zugriffsrechten ist für Ordner und Symbole identisch.
+	Öffnen sie per rechte Maustatse das Kontextmenü des Ordners oder 
+	Symbols und wählen sie Menüoption \textit{Eigenschaften}. 
+	Nun sollte sich ein Dialog öffnen in dem sie den Besitzer,
+	die Gruppe und die Zugriffsrechte ändern können. Bestätigen
+	sie ihre Änderungen mit dem OK Button.
+	
+	\section{Server}
+	\subsection{Einen Server starten}
+	Um einen Server zu starten wählen sie bitte im Hauptmenü den Punkt
+	\textit{Laden} und dann den im Untermenü den Punkt \textit{Server laden}
+	aus. Oder sie benutzen den Rechtsklick auf eine freie Fläche in der
+	Serverliste und wählen im Kontextmenü den Punkt \textit{Server hinzufügen}.
+	\par
+	Nun sollte ein Dialog mit der Serverauswahl erscheinen. Dieser ist 
+	sehr ähnlich mit der Gräte Auswahl. Es sind alle bekannten Server 
+	nach den Klassen geordnet aufgelistet. Sie können eine Klasse
+	öffnen, indem sie doppelt auf die Klasse klicken. Wählen sie 
+	einen Server aus und bestätigen sie die Auswahl mit dem 
+	OK Button. 
+	\par
+	Nun sollte der Dialog erscheinen, in dem sie die Parameter, mit 
+	denen der Server geladen werden soll, setzen können. Sie müssen
+	mindestens die Felder \textit{Alias}, \textit{Std. Benutzer} und
+	\textit{Root} ausfüllen. Mit \textit{Alias} geben sie dem 
+	Server einen eindeutigen Namen, da sie durchaus mehrere Instanzen
+	eines bestimmten Servers laden können. Mit \textit{Std. Benutzer}
+	übergeben sie dem Server die Rechte eines Benutzers, mit denen
+	der Server läuft, wenn dieser keine Authentifizierung kennt. 
+	Mit \textit{Root} setzen sie die Server-Root des Servers. Das heißt,
+	dass nur Dieses Verzeichnis und dessen Unterverzeichnisse über den
+	Server exportiert werden. Alle anderen Verzeichnisse sind dann nicht
+	über diesen Server zu erreichen.
+	\par
+	Wie auch beim Parameter Dialog der Geräte, erhalten sie eine
+	kurzen Hilfe zu einem Parameter, wenn sie mit der Maus über 
+	einem Feld verweilen. Bestätigen sie ihre Eingabe indem sie
+	auf den OK Button klicken. 
+	
+	\subsection{Server anhalten und löschen}
+	Sie können einen Server anhalten, indem sie mittels Rechtsklick
+	auf den Server sein Kontextmenü öffnen und den Punkt 
+	\textit{Server löschen} auswählen. Nun sollte der Server angehalten
+	und von der List entfernt werden.
+
+
+	
+	\section{Benutzer Datenbank}
+	\subsection{Einen Benutzer anlegen}
+	Um einen Benutzer anzulegen, klicken sie bitte mit der rechten 
+	Maustaste auf die Gruppe, zu der der neue Benutzer gehören soll.
+	Wählen sie \textit{Benutzer anlegen} im Kontextmenü. Nun sollte
+	sich ein Dialog öffnen, in dem sie den Benutzernamen und 
+	das Passwort eingeben können. Bestätigen sie die Eingaben mit
+	den OK Button.
+	
+	\subsection{Passwort ändern}
+	Um das Passwort eines Benutzers zu ändern, klicken sie mit der
+	rechten Maustaste auf den Benutzer und wählen sie im Kontextmenü
+	den Eintrag \textit{Passwort ändern}. Nun sollte ein Dialog
+	erscheinen, in dem sie das neue Passwort eingeben können.
+	Bestätigen sie mit dem OK Button.
+	
+	\subsection{Einen Benutzer löschen}
+	Um einen Benutzer zu löschen klicken sie mit der rechten Mausaste
+	auf den Benutzer und wählen sie im Kontextmenü den Eintrag 
+	\textit{Benutzer löschen}. Der Benutzer sollte nun 
+	aus der Liste entfernt worden sein.
+	
+	\subsection{Eine Gruppe anlegen}
+	Sie können eine Gruppe anlegen, wenn sie mit der rechten Maustaste 
+	auf ein freies Feld im Benutzerbaum klicken und den Eintrag
+	\textit{Gruppe anlegen} wählen. Klicken sie jedoch mit der rechten
+	Maustaste auf eine Gruppe und wählen dann den Eintrag, wird eine
+	Untergruppe zu der Gruppe, die sie ausgewählt haben, hinzugefügt.
+	Es sollte dann ein Dialog erscheinen, in dem sie den Namen
+	der Gruppe eingeben können. 
+	\par
+	\textbf{Hinweis}: Der Name
+	einer Gruppe muss immer eindeutig sein, das heißt, dass der
+	Name der Gruppe noch nicht von einer anderen Gruppe verwendet
+	wird. 
+	\par
+	Bestätigen sie ihre Eingabe mit dem OK Button.
+	
+	\subsection{Eine Gruppe löschen}
+	Um eine \textbf{leere} Gruppe zu löschen, klicken sie mit der
+	rechten Maustaste auf die zu löschende Gruppe und wählen den
+	Eintrag \textit{Gruppe löschen} im Kontextmenü. Wenn die
+	Gruppe leer war, sollte diese nun gelöscht sein.
+	
+	\subsection{Einen Vertreter erzeugen}
+	Um einen Vertreter für einen Benutzer in einer Gruppe zu erzeugen,
+	klicken sie mit der rechten Maustaste auf die Guppe und wählen sie
+	im Kontextmenu den Eintrag \textit{Vertreter hintzfügen}. Nun
+	sollte ein Dialog erscheinen, in dem sie den Benutzer auswählen 
+	können, für den sie den Vertreter erzeugen wollen. Bestätigen sie
+	ihre Auswahl mit dem OK Button.
+	
+	\subsection{Einen Vertreter löschen}
+	Sie können einen Vertreter wieder aus der Gruppe entfernen, 
+	indem sie mit der rechten Maustaste auf den Vertreter klicken
+	und im Kontextmenü den Punkt \textit{Vertreter löschen} wählen.
+	
+	\subsection{Den Superuser setzen}
+	Sie können jeden Benutzer zum Superuser machen, indem sie
+	mit der rechten Maustaste auf den Benutzer klicken und im
+	Kontextmenü den Punkt \textit{Superuser setzen}. Nun sollte
+	der Benutzer als Superuser definiert sein.  
+	
+\end{document}

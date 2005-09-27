@@ -66,10 +66,10 @@ class CreateMemberDialog(wx.Dialog):
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5)
 
         box = wx.BoxSizer(wx.HORIZONTAL);
-        self.ok = wx.Button(self, wx.ID_OK, _(" Ok "));
-        ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
-        box.Add(self.ok, 0, wx.ALIGN_CENTRE|wx.ALL, 3);
-        box.Add(ca, 0, wx.ALIGN_CENTRE|wx.ALL, 3);
+        self.ok = wx.Button(self, wx.ID_OK, _("OK"));
+        ca = wx.Button(self, wx.ID_CANCEL, _('Cancel'));
+        box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+        box.Add(self.ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
         sizer.Add(box, 0, wx.ALIGN_CENTRE|wx.GROW);
 
         self.Bind(wx.EVT_KEY_UP, self.OnKey);
@@ -128,10 +128,10 @@ class CreateGroupDialog(wx.Dialog):
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 2)
 
         box = wx.BoxSizer(wx.HORIZONTAL);
-        ok = wx.Button(self, wx.ID_OK, _(" Ok "));
-        box.Add(ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
-        ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
+        ca = wx.Button(self, wx.ID_CANCEL, _('Cancel'));
         box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+        ok = wx.Button(self, wx.ID_OK, _("OK"));
+        box.Add(ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
         sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
 
         self.Bind(wx.EVT_KEY_UP, self.OnKey);
@@ -170,10 +170,10 @@ class CreateProxyDialog(wx.Dialog):
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 2)
 
         box = wx.BoxSizer(wx.HORIZONTAL);
-        ok = wx.Button(self, wx.ID_OK, _(" Ok "));
-        box.Add(ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
-        ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
+        ca = wx.Button(self, wx.ID_CANCEL, _('Cancel'));
         box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+        ok = wx.Button(self, wx.ID_OK, _("OK"));
+        box.Add(ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
         sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
 
         self.Bind(wx.EVT_KEY_UP, self.OnKey);
@@ -221,10 +221,10 @@ class PasswdDialog(wx.Dialog):
         sizer.Add(line, 0, wx.GROW|wx.ALIGN_CENTER_VERTICAL|wx.TOP|wx.BOTTOM, 5)
 
         box = wx.BoxSizer(wx.HORIZONTAL);
-        self.ok = wx.Button(self, wx.ID_OK, _(" Ok "));
-        ca = wx.Button(self, wx.ID_CANCEL, _(' Cancel '));
-        box.Add(self.ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+        self.ok = wx.Button(self, wx.ID_OK, _("OK"));
+        ca = wx.Button(self, wx.ID_CANCEL, _('Cancel'));
         box.Add(ca, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
+        box.Add(self.ok, 1, wx.ALIGN_CENTRE|wx.ALL, 3);
         sizer.Add(box, 1, wx.ALIGN_CENTRE|wx.GROW);
 
         self.Bind(wx.EVT_KEY_UP, self.OnKey);

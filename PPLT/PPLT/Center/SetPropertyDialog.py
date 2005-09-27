@@ -35,11 +35,11 @@ class SetPropertyDialog(wx.Dialog):
         self.__modbox = ModusBox(self, PPLTSys, owner, group, modus);
         sizer.Add(self.__modbox, 0, wx.EXPAND|wx.ALL, 3);
         
-        ok = wx.Button(self, wx.ID_OK, _(" Ok "));
-        ca = wx.Button(self, wx.ID_CANCEL, _(" Cancel "));
+        ok = wx.Button(self, wx.ID_OK, _("OK"));
+        ca = wx.Button(self, wx.ID_CANCEL, _("Cancel"));
         box = wx.BoxSizer(wx.HORIZONTAL);
-        box.Add(ok, 1, wx.ALL|wx.ALIGN_CENTER, 3);
-        box.Add(ca, 1, wx.ALL|wx.ALIGN_CENTER, 3);
+        box.Add(ca, 1, wx.ALL|wx.ALIGN_LEFT, 3);
+        box.Add(ok, 1, wx.ALL|wx.ALIGN_RIGHT, 3);
         sizer.Add(box, 1, wx.GROW|wx.ALIGN_CENTER);
 
         self.Bind(wx.EVT_KEY_UP, self.OnKey);

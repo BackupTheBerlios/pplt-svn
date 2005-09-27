@@ -19,6 +19,8 @@
 # ############################################################################ #
 
 #Revision:
+# 2005-09-23:
+#   + new typecoding based on XDR RFC1832
 # 2005-02-06
 #   + caching
 # 2005-04-20
@@ -45,8 +47,6 @@ class MasterSlot(SymbolSlot):
  :::Cacheing:::(default 0.5sec)"""
     
     def __init__(self, Connection, ID, TypeName, Logger, TimeOut=0.5):
-        if not Logger:
-            return(None);
         self.__Logger = Logger;
 
         self.Class = "[MasterSymbolSlot]";
@@ -54,6 +54,7 @@ class MasterSlot(SymbolSlot):
         self.ID = ID;
         self.TypeName = TypeName;
         self.TimeOut = TimeOut;
+        self.LastUpdate = 0;
         self.LastReadData = None;
         self.SymbolCount = 0;
         if TimeOut == 0.0:
@@ -64,17 +65,14 @@ class MasterSlot(SymbolSlot):
         self.__Logger.info("Setup symbol-slot for master tree");
         if not Connection:
             self.__Logger.warning("Error: No active conncetion for me...");
-            return(None);
+            raise Exception("Error: No active connection for me...");
         self.__Connection = Connection;
 
         if not TypeName:
             self.__Logger.warning("No Type!!! Need a type..");
-            return(None);
+            raise Exception("Error: No Type given!!!");
 
         self.__Converter = pyDCPUConverter.Converter(TypeName);
-        if not self.__Converter.GetState():
-            self.__Logger.error("Error while create Converter...");
-            return(None);
 
         
 
@@ -91,24 +89,29 @@ class MasterSlot(SymbolSlot):
             self.SymbolCount -= 1;
         return(True);
 
+    def GetLastUpdate(self): return self.LastUpdate;
+    def GetTypeName(self): return self.__Converter.GetTypeName();
+
     def GetValue(self):
         if not self.__Connection:
             self.__Logger.warning("No Connection->No Value");
             return(None);
         if self.LastReadUpdate == None:
+            self.LastUpdate = time.time();
             try:
-                self.LastReadData = self.__Connection.read(self.__Converter.GetSize());
-            except:
-                self.__Logger.error("error while read from object");
+                self.LastReadData = self.__Connection.read();
+            except Exception, e:
+                self.__Logger.error("error while read from object: %s"%str(e));
                 return(None);
     
         elif (self.LastReadUpdate+self.TimeOut)<=time.time():
             self.__Logger.debug("Update data...");
             try:
                 self.LastReadUpdate = time.time();
-                self.LastReadData = self.__Connection.read(self.__Converter.GetSize());
-            except:
-                self.__Logger.error("error while read from object");
+                self.LastUpdate = time.time();
+                self.LastReadData = self.__Connection.read();
+            except Exception, e:
+                self.__Logger.error("error while read from object: %s"%str(e));
                 return(None);
         else:
             self.__Logger.debug("return cached data");
@@ -116,8 +119,8 @@ class MasterSlot(SymbolSlot):
             val = self.__Converter.ConvertToValue(self.LastReadData);
             self.__Logger.debug("Convert %s to %s"%(binascii.b2a_hex(self.LastReadData),str(val)));
             return(val);
-        except:
-            self.__Logger.error("Error while convert to value: maybe wrong data format");
+        except Exception, e:
+            self.__Logger.error("Error while convert to value: %s"%str(e));
             return(None);
         return(None);
         

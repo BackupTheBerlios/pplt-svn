@@ -19,6 +19,10 @@
 # ############################################################################ # 
 
 #ChangeLog:
+# 2005-09-23:
+#   Added SetValueDialog
+# 2005-09-21:
+#   fixed crash if moveing symbols/folders
 # 2005-08-29:
 #   add move folders.
 # 2005-08-28:
@@ -37,6 +41,7 @@ import wx;
 from AddFolderDialog import AddFolderDialog;
 from AddSymbolDialog import SelectSlotDialog, PropertyDialog;
 from SetPropertyDialog import SetPropertyDialog;
+from SetValueDialog import SetValueDialog;
 import string;
 import PPLT;
 import os;
@@ -88,6 +93,7 @@ class SymbolTreePanel(wx.TreeCtrl):
     def Build(self, Item=None, Path="/"):
         if Item == None:
             Item = self.__myRoot;
+        # build symbols:
         symlst = self.__PPLTSys.ListSymbols(Path);
         for sym in symlst:
             if Path[-1] == "/":
@@ -96,7 +102,7 @@ class SymbolTreePanel(wx.TreeCtrl):
                 symp = Path+"/"+sym;
             slot = str(self.__PPLTSys.GetSymbolSlot(symp));
             nitem = self.AppendItem(Item, "%s  @ %s"%(sym,slot));
-            self.SetPyData(nitem, (False, symp));
+            self.SetPyData(nitem, (False, str(sym)));
             self.SetItemImage(nitem, self.__SymbolIcon, wx.TreeItemIcon_Normal);
             self.SortChildren(Item);
 
@@ -107,7 +113,7 @@ class SymbolTreePanel(wx.TreeCtrl):
             else:
                 folp = Path+"/"+fol;
             nitem = self.AppendItem(Item, fol);
-            self.SetPyData(nitem, (True, folp));
+            self.SetPyData(nitem, (True, str(fol)));
             self.SetItemImage(nitem, self.__FolderIcon, wx.TreeItemIcon_Normal);
             self.SetItemImage(nitem, self.__FolderIcon2, wx.TreeItemIcon_Expanded);
             self.Build(nitem, folp);
@@ -121,14 +127,10 @@ class SymbolTreePanel(wx.TreeCtrl):
         Label2 = self.GetItemText(item2);
         (IsFolder1, Path1) = self.GetPyData(item1);
         (IsFolder2, Path2) = self.GetPyData(item2);
-        if IsFolder1 and not IsFolder2:
-            return -1;
-        elif IsFolder2 and not IsFolder1:
-            return 1;
-        if Label1 > Label2:
-            return 1;
-        if Label1 == Label2:
-            return 0;
+        if IsFolder1 and not IsFolder2: return -1;
+        elif IsFolder2 and not IsFolder1: return 1;
+        if Label1 > Label2: return 1;
+        if Label1 == Label2: return 0;
         return -1;
 
     def OnRightClick(self, event):
@@ -150,80 +152,63 @@ class SymbolTreePanel(wx.TreeCtrl):
         (item, flag) = self.HitTest(pt);
         if not item:
             return(None);
-        (IsFolder, OPath) = self.GetPyData(item);
+        (IsFolder, Name) = self.GetPyData(item);
         if IsFolder:
             if self.IsExpanded(item):
                 self.Collapse(item);
             else:
                 self.Expand(item);
-        else:
-            self.EditLabel(item);
-
 
     def OnEditLabel(self, event):
+        print event;
         item = event.GetItem();
-        (IsFolder, Path) = self.GetPyData(item);
-        tmpList = Path.split("/");
-        OPList = [];
-        for tmp in tmpList:
-            if tmp and tmp != "":
-                OPList.append(tmp);
-        OName = OPList[-1];
-        self.SetItemText(item,OName);
-
-
+        (IsFolder, OldName) = self.GetPyData(item);
+        self.SetItemText(item, OldName)
+        
     def OnStopEditLabel(self, event):
-        item = event.GetItem();
+        OldItem = event.GetOldItem();
+        NewItem = event.GetItem();
+        print "old %s\nnew %s"%(OldItem, NewItem)
+        if not OldItem: OldItem = NewItem;
+
+        (IsFolder, OName) = self.GetPyData(OldItem);
+        if event.IsEditCancelled():
+            if IsFolder:
+                self.SetPyData(OldItem, (IsFolder,OName));
+                return;
+            path = self._FindPathByItem(OldItem);
+            txt = "%s  @ %s"%(OName, str(self.__PPLTSys.GetSymbolSlot(path)));
+            self.SetItemText(OldItem, txt);
+            self.SetPyData(OldItem, (IsFolder, OName));
+            return;
+        
         NName = event.GetLabel();
-
-        (IsFolder, OPath) = self.GetPyData(item);
-
-        tmpList = OPath.split("/");
-        NPList = [];
-        for tmp in tmpList:
-            if tmp and tmp!="":
-                NPList.append(tmp);
-
-        OName = NPList[-1];
-        NPList[-1] = NName;
+        OPath = self._FindPathByItem(OldItem);
+        NPList = OPath.split("/")[:-1];
+        NPList.append(NName);
         NPath = "/"+string.join(NPList,"/");
         if IsFolder:
-            if event.IsEditCancelled() or ("/" in NName) or OName == NName:
-                self.SetItemText(item, OName);
-                event.Veto();
-                return
-    
-            if not self.__PPLTSys.MoveFolder(OPath,NPath):
-                self.SetItemText(item, OName);
-                event.Veto();
-                return
-            self.Clean();
-            self.Build();
-            event.Veto();
-            (startItem, flag) = self.GetFirstChild(self.__myRoot);
-            nitem = self._FindItemByPath(NPath, startItem);
-            if nitem: self.EnsureVisible(nitem)
-            return;
+            NLabel = NName;
+            if not self.__PPLTSys.MoveFolder(OPath, NPath):
+                event.SetEditCanceled(True);
+                self.SetItemText(NewItem, OName);
+                self.SetPyData(NewItem, (IsFolder, OName));
+                return;
         else:
-            Slot = str(self.__PPLTSys.GetSymbolSlot(OPath));
-            if event.IsEditCancelled() or ("/" in NName) or OName == NName:
+            Slot = str(self.__PPLTSys.GetSymbolSlot(OPath))
+            NLabel = "%s  @ %s"%(NName, Slot);
+            if not self.__PPLTSys.MoveSymbol(OPath, NPath):
+                event.SetEditCanceled(True);
                 txt = "%s  @ %s"%(OName, Slot);
-                self.SetItemText(item, txt);
-                event.Veto();
-                return
-    
-            if not self.__PPLTSys.MoveSymbol(OPath,NPath):
-                txt = "%s  @ %s"%(OName, Slot);
-                self.SetItemText(item, txt);
-                event.Veto();
-                return
-            txt = "%s  @ %s"%(NName, Slot);
-    
-        self.SetPyData(item, (IsFolder, NPath));
-        self.SetItemText(item, txt);
+                self.SetItemText(NewItem,txt);
+                self.SetPyData(NewItem, (IsFolder, OName));
+                return;
+        self.SetItemText(NewItem, NLabel);
+        self.SetPyData(NewItem, (IsFolder,NName));
+        pitem = self.GetItemParent(NewItem);
+        self.SortChildren(pitem);
         event.Veto();
-        self.SortChildren(self.GetItemParent(item));
-        return
+        return;
 
 
     def OnLeftDown(self, event):
@@ -242,7 +227,7 @@ class SymbolTreePanel(wx.TreeCtrl):
             return(None);
 
         self.SelectItem(item);
-        (IsItemFolder, Path) = self.GetPyData(item);
+        (IsItemFolder, Name) = self.GetPyData(item);
         self.__DragMode = False;
         self.__DragItem = item;
 
@@ -265,28 +250,22 @@ class SymbolTreePanel(wx.TreeCtrl):
             FPath = "/";
             item = self.__myRoot;
         else:
-            (IsItemFolder, FPath) = self.GetPyData(item);
+            (IsItemFolder, FName) = self.GetPyData(item);
+            FPath = self._FindPathByItem(item);
 
         if not IsItemFolder:
             self.__DragItem = None;
             return(None);
         
-        (IsDragItemFolder, OPath) = self.GetPyData(DragItem);
-        tmpList = OPath.split("/");
-        OPList = [];
-        for tmp in tmpList:
-            if tmp and tmp != "":
-                OPList.append(tmp);
-        
-        SymName = OPList[-1];
-        
+        (IsDragItemFolder, ItemName) = self.GetPyData(DragItem);
+        OPath = self._FindPathByItem(DragItem);
         tmpList = FPath.split("/");
         FPList = [];
         for tmp in tmpList:
             if tmp and tmp!="":
                 FPList.append(tmp);
         NPList = FPList;
-        NPList.append(SymName);
+        NPList.append(ItemName);
         NPath = "/"+string.join(NPList,"/");
         
         if NPath == OPath:
@@ -306,8 +285,8 @@ class SymbolTreePanel(wx.TreeCtrl):
         (startItem, flag) = self.GetFirstChild(self.__myRoot);
         nitem = self._FindItemByPath(NPath, startItem);
         if nitem: self.EnsureVisible(nitem)
-        return;
-        self.SortChildren(item);
+        #return;
+        self.SortChildren(nitem);
 
 
     def OnMove(self, event):
@@ -322,7 +301,7 @@ class SymbolTreePanel(wx.TreeCtrl):
             return(None);
         
         self.SelectItem(item);
-        (IsFolder, Path) = self.GetPyData(item);
+        (IsFolder, Name) = self.GetPyData(item); 
         if IsFolder:
             self.__ExpandTimer.Restart(1000,item);
 
@@ -344,8 +323,9 @@ class SymbolTreePanel(wx.TreeCtrl):
             ItemIsFolder = True;
             Path = "/";
         else:
-            (ItemIsFolder, Path) = self.GetPyData(item);
-
+            (ItemIsFolder, ItemName) = self.GetPyData(item);
+            Path = self._FindPathByItem(item);
+            
         dlg = SelectSlotDialog(self, self.__PPLTSys);
         if not dlg.ShowModal() == wx.ID_OK:
             dlg.Destroy();
@@ -374,7 +354,7 @@ class SymbolTreePanel(wx.TreeCtrl):
             self.__Logger.error("Error while create symbol");
             return(None);
         nitem = self.AppendItem(item, "%s  @ %s"%(name,slot));
-        self.SetPyData(nitem, (False, npath));
+        self.SetPyData(nitem, (False, str(name)));
         self.SetItemImage(nitem, self.__SymbolIcon, wx.TreeItemIcon_Normal);
         if item != self.__myRoot:
             self.Expand(item);
@@ -383,10 +363,11 @@ class SymbolTreePanel(wx.TreeCtrl):
     def OnAddFolder(self, event):
         item = self.GetSelection();
         if not item or item == self.__myRoot:
-            (ItemIsFolder, Path) = (True,"/");
+            (ItemIsFolder, Path, Name) = (True,"/","");
             item = self.__myRoot;
         else:
-            (ItemIsFolder, Path) = self.GetPyData(item);
+            (ItemIsFolder, Name) = self.GetPyData(item);
+            Path = self._FindPathByItem(item);
         dlg = AddFolderDialog(self, self.__PPLTSys, Path);
         ret = dlg.ShowModal();
         if not ret == wx.ID_OK:
@@ -406,7 +387,7 @@ class SymbolTreePanel(wx.TreeCtrl):
         if not self.__PPLTSys.CreateFolder(npath, "%o"%mod, owner, group):
             return(None);
         nitem = self.AppendItem(item, "%s"%name);
-        self.SetPyData(nitem, (True, npath));
+        self.SetPyData(nitem, (True, str(name)));
         self.SetItemImage(nitem, self.__FolderIcon, wx.TreeItemIcon_Normal);
         self.SetItemImage(nitem, self.__FolderIcon2, wx.TreeItemIcon_Expanded);
         if item != self.__myRoot:
@@ -417,7 +398,7 @@ class SymbolTreePanel(wx.TreeCtrl):
         item = self.GetSelection();
         if not item:
             return(None);
-        (ItemIsFolder, Path) = self.GetPyData(item);
+        (ItemIsFolder, Name) = self.GetPyData(item);
         self.EditLabel(item);
         
 
@@ -426,7 +407,8 @@ class SymbolTreePanel(wx.TreeCtrl):
         if not item:
             self.__Logger.info("Can't del root");
             return(None);
-        (ItemIsFolder, Path) = self.GetPyData(item);
+        (ItemIsFolder, Name) = self.GetPyData(item);
+        Path = self._FindPathByItem(item);
         if not self.__PPLTSys.DeleteSymbol(Path):
             self.__Logger.error("Can't del symbol %s"%Path);
             return(None);
@@ -438,7 +420,8 @@ class SymbolTreePanel(wx.TreeCtrl):
         if not item:
             self.__Logger.info("Can't del root");
             return(None);
-        (IsFolder, path) = self.GetPyData(item);
+        (IsFolder, Name) = self.GetPyData(item);
+        path = self._FindPathByItem(item);
         if not self.__PPLTSys.DeleteFolder(path):
             self.__Logger.warning("Can't del Folder %s (is it empty)"%path);
             return(None);
@@ -449,8 +432,8 @@ class SymbolTreePanel(wx.TreeCtrl):
         item = self.GetSelection();
         if not item:
             return(None);
-        (IsFolder, Path) = self.GetPyData(item);
-
+        (IsFolder, Name) = self.GetPyData(item);
+        Path = self._FindPathByItem(item);
         own = self.__PPLTSys.GetOwner(Path);
         grp = self.__PPLTSys.GetGroup(Path);
         mod = self.__PPLTSys.GetModus(Path);
@@ -472,10 +455,21 @@ class SymbolTreePanel(wx.TreeCtrl):
         self.__PPLTSys.ChangeModus(Path,mod);
 
 
+    def OnSetValue(self, event):
+        item = self.GetSelection();
+        if not item: return None;
+
+        Path = self._FindPathByItem(item);
+        dlg = SetValueDialog(self, Path, self.__PPLTSys);
+        dlg.ShowModal();
+        dlg.Destroy();
+
+
     def _FindItemByPath(self, Path, StartItem):
         if not StartItem:
             return(None);
-        (IsFolder, myPath) = self.GetPyData(StartItem);
+        (IsFolder, Name) = self.GetPyData(StartItem);
+        myPath = self._FindPathByItem(StartItem);
         if myPath==Path:
             return(StartItem);
         if self.ItemHasChildren(StartItem):
@@ -484,6 +478,15 @@ class SymbolTreePanel(wx.TreeCtrl):
             if item: return(item);
         return(self._FindItemByPath(Path, self.GetNextSibling(StartItem)));
 
+    def _FindPathByItem(self, Item, Path=None):
+        if not Path:
+            Path = list();
+        if not Item or Item == self.__myRoot:
+            return "/"+string.join(Path,"/");
+        (IsFolder, Name) = self.GetPyData(Item);
+        Path.insert(0, Name);           #prepend item
+        return self._FindPathByItem(self.GetItemParent(Item),Path);
+            
 
 class CtxMenu(wx.Menu):
     def __init__(self, tree, obj=None):
@@ -491,17 +494,16 @@ class CtxMenu(wx.Menu):
             ObjIsFolder = True;
             Path = "/";
         else:
-            (ObjIsFolder, Path) = tree.GetPyData(obj);
+            (ObjIsFolder, Path) = tree.GetPyData(obj);      #XXX
         self.__AddSym = wx.NewId();
         self.__AddFol = wx.NewId();
         self.__DelFol = wx.NewId();
         self.__DelSym = wx.NewId();
         self.__Prop   = wx.NewId();
         self.__Rename = wx.NewId();
+        self.__SetVal = wx.NewId();
 
         wx.Menu.__init__(self);
-        item = wx.MenuItem(self, self.__Rename, _("Rename"));
-        self.AppendItem(item);
 
         if ObjIsFolder:
             item = wx.MenuItem(self, self.__AddSym, _("Add Symbol"));
@@ -509,7 +511,13 @@ class CtxMenu(wx.Menu):
             item = wx.MenuItem(self, self.__AddFol, _("Add Folder"));
             self.AppendItem(item)
         else:
+            item = wx.MenuItem(self, self.__SetVal, _("Get/Set Value"));
+            self.AppendItem(item);
             item = wx.MenuItem(self, self.__DelSym, _("Delete Symbol"));
+            self.AppendItem(item);
+
+        if Path != "/":
+            item = wx.MenuItem(self, self.__Rename, _("Rename"));
             self.AppendItem(item);
 
         if ObjIsFolder and Path!="/":
@@ -526,4 +534,5 @@ class CtxMenu(wx.Menu):
         self.Bind(wx.EVT_MENU, tree.OnDelFolder, id = self.__DelFol);
         self.Bind(wx.EVT_MENU, tree.OnDelSymbol, id = self.__DelSym);
         self.Bind(wx.EVT_MENU, tree.OnRename, id = self.__Rename);
+        self.Bind(wx.EVT_MENU, tree.OnSetValue, id = self.__SetVal);
 
