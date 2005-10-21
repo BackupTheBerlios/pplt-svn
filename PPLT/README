@@ -1,8 +1,8 @@
-= ========================================================================== =
-= Postdamer Prozess-LeitTechnik --- a framework of industrial communication. =
-= ========================================================================== =
+= ============================================================================ =
+= Postdamer Prozess-LeitTechnik --- a framework of master-slave communication. =
+= ============================================================================ =
 
-The PPLT is a framework for industrial communication. An interface between 
+The PPLT is a framework for master-slave communication. An interface between 
 devices (like PLCs) and applications like visualisations. 
 
 INSTALL:
@@ -41,7 +41,7 @@ INSTALL PLUGINS(Modules):
 =========================
 The best (simple) way to install the PPLT modules is to use the PPLT Center
 GUI application. Now, get the Modules-?.?.?.zip arcive from 
-http://pplt.berlios.de and unpack it. There are a lot of zip and xml files.
+http://pplt.berlios.de and unpack it. There are a lot of zip and xml files in it.
 Do not unpack the zip files!. 
 Now start the PPLT Center and click at the "Install modules" button on the left
 tool-bar. Now select the "Setup.idf" file you extracted from the modules arcive.
@@ -51,8 +51,8 @@ To use the modules you need to restart the PPLT Center.
 
 HELP WANTED:
 ============
-Please, contact me if you have a quetions related to the PPLT. Also, please report
-any bug you find.
+Please, contact me if you have a questions related to the PPLT. Also, please report
+any bug you find...
 
 So: Have a lot of fun...
                                              Hannes Matuschek <hamtuschek@gmx.net>

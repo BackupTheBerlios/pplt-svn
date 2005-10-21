@@ -1,0 +1,43 @@
+<?xml version="1.0" ?>
+<PPLTSession>
+    <Servers>
+        <Server alias="Web" fqsn="Web.PPLTWebServer" root="/" user="Hannes">
+            <Parameter name="Port">8080</Parameter>
+            <Parameter name="Address">127.0.0.1</Parameter>
+        </Server>
+    </Servers>
+    <Devices>
+        <Device alias="rand" fqdn="Debug.RandomGenerator"/>
+        <Device alias="s7" fqdn="PLC.S7-200">
+            <Parameter name="PCAddr">0</Parameter>
+            <Parameter name="Port">1</Parameter>
+            <Parameter name="S7Addr">2</Parameter>
+        </Device>
+    </Devices>
+    <SymbolTree>
+        <Folder group="Admin" modus="600" name="Rand" owner="admin">
+            <Symbol group="Users" modus="640" name="r_double" 
+                    owner="Hannes" slot="rand::Generator::Double" type="Double"/>
+            <Symbol group="Admin" modus="640" name="r_bool" 
+                    owner="admin" slot="rand::Generator::Bool" type="Bool"/>
+        </Folder>
+        <Folder group="Admin" modus="600" name="S7" owner="admin">
+            <Symbol group="Users" modus="640" name="A02" 
+                    owner="Hannes" slot="s7::Marker::A0.2" type="Bool"/>
+            <Symbol group="Users" modus="640" name="A00" owner="Hannes" 
+                    slot="s7::Marker::A0.0" type="Bool"/>
+            <Symbol group="Users" modus="640" name="A01" 
+                    owner="Hannes" slot="s7::Marker::A0.1" type="Bool"/>
+            <Symbol group="Users" modus="640" name="SMB28" 
+                    owner="Hannes" slot="s7::Marker::SMB28" type="uInteger"/>
+            <Folder group="Admin" modus="640" name="PPI" owner="Hannes">
+                <Symbol group="Users" modus="640" name="read_data" 
+                        owner="Hannes" slot="s7::PPIStatistic::read_data" type="uInteger"/>
+                <Symbol group="Users" modus="600" name="write_data" 
+                        owner="Hannes" slot="s7::PPIStatistic::write_data" type="uInteger"/>
+                <Symbol group="Users" modus="640" name="error_count" 
+                        owner="Hannes" slot="s7::PPIStatistic::error" type="uInteger"/>
+            </Folder>
+        </Folder>
+    </SymbolTree>
+</PPLTSession>

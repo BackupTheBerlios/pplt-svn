@@ -32,6 +32,7 @@ class MyLogger(logging.Handler):
         self.__TxtCtrl = LogTextCtrl;
 
     def emit(self, record):
+        name = record.name;
         level  = record.levelno;
         leveln = record.levelname;
         if level < 20:
@@ -45,7 +46,7 @@ class MyLogger(logging.Handler):
         else:
             self.__TxtCtrl.SetDefaultStyle(wx.TextAttr(wx.BLACK));
         self.__TxtCtrl.SetInsertionPoint(0);
-        self.__TxtCtrl.WriteText("%s: %s\n"%(leveln, record.getMessage()) );
+        self.__TxtCtrl.WriteText("%s >>> %s: %s\n"%(name,leveln, record.getMessage()) );
 
 
 class LogWindow(wx.TextCtrl):
@@ -56,3 +57,5 @@ class LogWindow(wx.TextCtrl):
         logger = MyLogger(self);
         self.__Logger.addHandler(logger);
         self.__Logger.info("PPLT Center Start...");
+        self.__Logger = logging.getLogger("pyDCPU");
+        self.__Logger.addHandler(logger);

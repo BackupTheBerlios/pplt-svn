@@ -20,10 +20,10 @@
 
 __author__  = 'Hannes Matuschek <hmatuschek@gmx.net>'
 __status__  = 'beta'
-__version__ = '0.4.0'
+__version__ = '0.9.0'
 __date__    = '2005-08-28'
 
-VERSION = 0x000400;              # this version-number is used internal to check
+VERSION = 0x000900;              # this version-number is used internal to check
                                  # if a module fit in this system.
 
 #
@@ -45,7 +45,7 @@ TArrayOfUnsignedLong = "ArrayuLong";
 TArrayOfFloat = "ArrayFloat";
 TArrayOfDouble = "ArrayDouble";
 TArrayOfString = "ArrayString";
-
+TRaw = "Raw"
 
 
 

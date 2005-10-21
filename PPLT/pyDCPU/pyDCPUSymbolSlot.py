@@ -21,10 +21,10 @@
 #Revision:
 # 2005-09-23:
 #   + new typecoding based on XDR RFC1832
-# 2005-02-06
-#   + caching
 # 2005-04-20
 #   + Un/Register Symbols (so you can't delete a Slot if a Symbol use it)
+# 2005-02-06
+#   + caching
 
 
 import pyDCPUConverter;
@@ -110,17 +110,25 @@ class MasterSlot(SymbolSlot):
                 self.LastReadUpdate = time.time();
                 self.LastUpdate = time.time();
                 self.LastReadData = self.__Connection.read();
+            except pyDCPUIOModError:
+                self.__Logger.error("IO Error while read from object.");
+                self.__Connection.flush();
+                return None;
+            except pyDCPULockModError:
+                self.__Logger.errro("Parent is locked!");
+                return None;
             except Exception, e:
                 self.__Logger.error("error while read from object: %s"%str(e));
                 return(None);
+
         else:
             self.__Logger.debug("return cached data");
         try:
             val = self.__Converter.ConvertToValue(self.LastReadData);
-            self.__Logger.debug("Convert %s to %s"%(binascii.b2a_hex(self.LastReadData),str(val)));
+            self.__Logger.debug("Convert %s to %s"%(binascii.b2a_hex(self.LastReadData),val));
             return(val);
         except Exception, e:
-            self.__Logger.error("Error while convert to value: %s"%str(e));
+            self.__Logger.error("Error while convert to value: %s"%e);
             return(None);
         return(None);
         
@@ -143,7 +151,7 @@ class MasterSlot(SymbolSlot):
             length = self.__Connection.write(Data);
             if length != len(Data):
                 self.__Logger.warning("retuned length != len(data): bad written modle???");
-                self.__Logger.debug("DATA: %i SEND: %i"%(len(Data),length));
+            self.__Logger.debug("DATA: %i SEND: %i"%(len(Data),length));
         except pyDCPU.IOModError:
             self.__Logger.error("IO error returned from Parent");
             self.__Connection.flush();

@@ -56,35 +56,45 @@ You can install and uninstall (if you have the right to do) modules. """
         self.__Servers          = BaseClass();
         self.__Devices          = BaseClass();
         self.__CoreMods         = BaseClass();
-        
+
+        # find (recursive) all files ending with .zip starting at self.__CoreModulePath:         
         ZIPList = RGlob(self.__CoreModulePath,"*.zip");
         self.__Logger.info("Try to add %i DCPU-Modules to DB"%len(ZIPList));
+
         for ZIPFile in ZIPList:
             try:
+                # try to create a meta-data item from the zip file
                 Item = CreateItem(ZIPFile, Lang, AltLang, self);
             except Exception, e:
-                self.__Logger.error("Error while add Core mod %s to DB :: %s"%(ZIPFile,str(e)))
+                self.__Logger.error("Error while add Core mod %s to DB: %s"%(ZIPFile,str(e)))
                 Item = None;
+                continue;
             if isinstance(Item, CoreModItem):
+                # because the classname is a filepath i need to determ the classname:
                 ClassList = ClassFromPath(ZIPFile,self.__CoreModulePath);
                 ItemName  = Item.GetName();
+                #add item to coremod list:
                 self.__CoreMods.AddItem(Item, ItemName, ClassList);
             else:
                 self.__Logger.fatal("DB-Item is not a CoreModItem! (%s)"%ZIPFile);
                 
+        # find (rec.) all files anding with .xml starting at path in self.__PPLTModulePath:
         XMLList = RGlob(self.__PPLTModulePath, "*.xml");
         self.__Logger.info("Try to add %i PPLT-Modules to DB"%len(XMLList));
         for XMLFile in XMLList:
             try:
+                # create meta-data item from XML file:
                 Item = CreateItem(XMLFile, Lang, AltLang, self);
-            except:
-                self.__Logger.error("Error while load PPLT mod %s to DataBase"%XMLFile);
+            except Exception, e:
+                self.__Logger.error("Error while load PPLT mod %s to DataBase: %s"%(XMLFile,str(e)));
                 Item = None;
             if isinstance(Item, ServerItem):
+                # if item is a server item:
                 ClassList = Item.GetClass().split(".");
                 ItemName  = Item.GetName()
                 self.__Servers.AddItem(Item, ItemName, ClassList);
             elif isinstance(Item, DeviceItem):
+                # if item is device item:
                 ClassList = Item.GetClass().split(".");
                 ItemName  = Item.GetName();
                 self.__Devices.AddItem(Item, ItemName, ClassList);
@@ -94,7 +104,7 @@ You can install and uninstall (if you have the right to do) modules. """
     # Objects to handle server/device info easily                            #
     # ###################################################################### #
     def GetServerInfo(self, SerName):
-        """ Return a ServerInfo instance. To access server specivic information."""
+        """ Return a ServerInfo instance. To access server specific information."""
         if not self.HasServer(SerName):
             return(None);
         return(ServerInfo(SerName, self));
@@ -735,7 +745,7 @@ class DeviceItem:
 
 class ServerInfo:
     """Proxyclass for DataBase to access specific information for
- singe server."""
+ a singe server."""
     
     def __init__(self, ServerName, DataBaseObj):
         self.__DataBase = DataBaseObj;
@@ -756,7 +766,7 @@ class ServerInfo:
 
 
 class DeviceInfo:
-    """ Proxyclass for Database to simplify accessing infotmation for
+    """ Proxyclass for Database to simplify accessing information for
  a specific Device. """
     def __init__(self, DeviceName, DataBaseObj):
         self.__DeviceName = DeviceName;

@@ -1,0 +1,440 @@
+\newcommand{\PPLTModDesc}[1]{\subsection{#1}\indexii{PPLT Module}{#1}}
+\newcommand{\PPLTMod}[1]{\code{#1}}
+\newcommand{\PPLTDev}[1]{\PPLTMod{#1}}
+\newcommand{\PPLTSrv}[1]{\PPLTMod{#1}}
+
+
+\chapter{PPLT Module Reference}
+In this chapter i will describe all avaiable PPLT modules. A PPLT module is server or device, that consists of one or more
+so called \textit{core modules}. The main idea of having an abstract device instead of many (more flexible) core modules, is the
+easy handleing of a (single) simple device insted of dealing with a couple of modules. 
+
+Technical, a PPLT module is an XML file describing how to combine the coremodules to get the support for
+a special device or system. 
+
+For example; If you want to access the markers of a Siemens SIMATIC S7-200 
+by the PPI bus you have to load the coremodule for the serial interface, the module for the PPI bus and
+at the end the module for the S7-200. Each of these module has a couple of parameters, to get the 
+system running. Sometimes you'll need to know a lot about the bus-system to know how to setup the 
+single core modules. Instead of this you can load a single PPLT module called \PPLTMod{'PLC.S7-200'}. This 
+module needs only 3 paremeters to setup the support for the S7. This would be much easier.
+
+
+
+
+\section{Devices}
+This section describe all devices. All devices are grouped in classes. The name of the device consists of
+the full class path and the name of the specific device, devided by a singel dot. For example: 
+\PPLTMod{Debug.RandomGenerator}.
+
+
+
+
+
+
+\PPLTModDesc{Debug.RandomGenerator}
+The PPLT module \PPLTMod{Debug.RandomGenrator} implements a simple random gererator, thats provide random
+value in different types. This is the simplest device. It needs no additional python libraries nor any 
+special hardware to run. So it can easiely be used to test the PPLT.
+
+\subsubsection{Parameters}
+This device needs no parameters to be setted up. 
+
+\subsubsection{Namespaces and slots}
+This device provide only one namespace called \code{Generatior}. This namespace conatains
+4 slots. Each slot provide a random value for a different type. And different range.
+
+\paragraph{Slots of namespace \texttt{Generator}:}
+Each slot retuns a value of the type by his name.
+\begin{tableiii}{l|l|l}{textrm}{Slotname}{Type}{Description}
+\lineiii{Bool}
+        {Bool}
+        {Returns randomly \code{True} or \code{False}}
+\lineiii{uInteger}
+        {uInteger}
+        {Returns a unsigned integer between 0-100.}
+\lineiii{Float}
+        {Float}
+        {Returns a floatingpoint number between 0-1.}
+\lineiii{Double}        
+        {Double}
+        {Returns a floatingpoint number betwenn 0-1.}
+\end{tableiii}
+
+\subsubsection{Example}
+\begin{verbatim}
+import PPLT
+
+pplt = PPLT.System();
+pplt.LoadDevice("Debug.RandomGenerator", "alias", {})
+\end{verbatim}
+
+This example loads the device as \code{"alias"}. This alias should be replaced by the alias you want to give to
+the loaded device-instance. You'll need this alias later to unload the device or to connect symbols to it.
+
+
+
+
+
+
+
+
+
+\PPLTModDesc{Mobile.GSMMobilePhone}
+This device can access a GSM compatible mobile phone by the serial interface. It can read out
+some status infromation  like batterielevel, signal quality, etc... In the near future this 
+device will also learn to send SMS. 
+
+\begin{notice}
+Because this device uses the serial interface, you'll need to have the \module{pyserial} 
+python library installed. Please check this before you use this device.
+\end{notice}
+
+\subsubsection{Parameters}
+This device needs some parameters\footnote{Please note, that all 
+parameter-value have to be strings.} be setted up. At least you have to set 
+the port (number of the serial interface) where the mobile phone is connected 
+to the computer. Additional you can set the speed (in baud) of the interface.
+\begin{tableiii}{l|l|l}{textrm}{Parameter}{Description}{Default value}
+\lineiii{Port}
+        {Sets the number of the serial interface. Note: COM1 (ttyS0) = 0, COM2 = 1, ...} 
+        {"0"}
+\lineiii{Speed}
+        {Sets the speed in baud of the serial interface.}
+        {"9600"}
+\end{tableiii}
+
+\subsubsection{Namespaces and slots}
+This device provides only one namespace called \code{GSM}. This namespace 
+contains 6 slots. These slots provides status information about the 
+mobilephone.
+
+\paragraph{Slots of namespace \texttt{GSM}:}
+There are several slots, each providing a status value of the mobile phone.
+\begin{tableiii}{l|l|l}{textrm}{Slotname}{Type}{Description}
+\lineiii{battery}
+        {uInteger}
+        {The battery level in percent.}
+\lineiii{network}
+        {uInteger}
+        {The networkstatus of the mobile phone.}
+\lineiii{quality}
+        {uInteger}
+        {The signal quality.}
+\lineiii{errorrate}
+        {uInteger}
+        {The errorate of the networkconnection.}
+\lineiii{manufacturer}
+        {String}
+        {Manufacturer name.}
+\lineiii{model}
+        {String}
+        {Modelname.}
+\end{tableiii}
+
+
+\subsubsection{Example}
+This example loads the \PPLTDev{GSMMobilePhone} module on port 0 (COM1) with speed 9600 baud as the alias \code{'gsm'}. Then it creates a symbol \code{/manu}
+that will be connected with the \code{manufacturer} slot of the device. And at the end the symbol will be readed out.
+\begin{verbatim}
+import PPLT
+
+pplt = PPLT.System()
+pplt.LoadDevice("Mobile.GSMMobilePhone","gsm",{'Port':'0', 'Speed':'9600'})
+pplt.CreateSymbol("/manu","gsm::GSM::manufacturer","String")
+
+print pplt.GetValue("/manu")
+\end{verbatim}
+
+
+
+
+
+
+\PPLTModDesc{PLC.Panasonic-FPX}
+This device implements the support for the Panasonic FP0 and FP2 PLCs. With 
+this device you can read/write the markers of the PLC connected to the PC by 
+the so called ToolPort or over the Mewtocol-BUS. 
+
+You can also acces a FP0 by the FP-WEB server, who tunnels the toolport to a 
+TCP port by the \PPLTDev{PLC.Panasonic-FPWEB} device. 
+
+\subsubsection{Parameters}
+This device needs at least the number of the serial interface and
+the Mewtocol-address of the PLC.
+\begin{notice}
+All parameter-values have to be strings!
+\end{notice}
+
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default value}
+\lineiii{Port}
+        {The number of the serial interface, where the PLC is connected to. (Note: COM1(ttyS0) = 0, COM2(ttyS1) = 1,...)}
+        {}
+\lineiii{Address}
+        {The Mewtocol-address of the PLC in the Mewtocol BUS. Note: If you use
+        the ToolPort to access the PLC you can take any number between 0 and
+        255. (The mashine will ignore the address.)}
+        {}
+\end{tableiii}
+
+\subsubsection{Namespaces and slots}
+Also this device provide only one namespace called \code{Marker}. This 
+namespace contains the slot \var{STATUS} and the slotrange \var{Marker}. A 
+slotrange is a placeholder of a couple of slots. In this conectext it is a
+placeholder for all markers of the PLC. So if you want to access a marker,
+for example \code{Y0}\footnote{The first output pin.}, you should replace
+the slotrange by the name of the marker: \code{Alias::Marker::Y0}. 
+You have to figure out the type of the slot by your self, if you use
+a slotrange! But so far, if you access a boolean marker, use \code{'Bool'}
+if you access an integer marker (byte, word, double word) please use 
+the unsigned integer \code{'uInteger'} as type.
+\begin{notice}
+Please use uppercase for the name of the marker!
+\end{notice}
+
+\paragraph{Slots of the namespace \texttt{Marker}:}
+There is only on slot in this namespace. But you can access all markers 
+of the PLC like described above.
+\begin{tableiii}{l|l|p{10cm}}{textrm}{Slotname}{Type}{Description}
+\lineiii{STATUS}
+        {Bool}
+        {This slot controlls the status of the PLC, if this slot is 
+        \code{True} the PLC is in the \emph{Run} mode if it is
+        \code{False} it is in the \emph{Stop} mode. You can also
+        set the mode by writing into this slot.}
+\end{tableiii}
+
+\subsubsection{Example}
+In this example I show you how to setup the \PPLTDev{PLC.Panasonic-FPX} 
+device. Then I create a symbol for the status bit and one for the first 
+output-bit (Y0). Then I set the PLC into the \emph{Run} mode. At the end the
+script willwait for a second and then it will set the first output-bit
+to \code{True}.
+
+\begin{verbatim}
+import PPLT
+import time
+
+pplt = PPLT.System()
+pplt.LoadDevice("PLC.Panasonic-FPX","fp0",{"Port":"0", "Address":"1"});
+
+pplt.CreateSymbol("/stat","fp0::Marker::STATUS","Bool");
+pplt.CreateSymbol("/y0", "fp0::Marker::Y0", "Bool");
+
+# set the PLC into run-mode:
+pplt.SetValue("/stat",True);
+
+# wait a second:
+time.sleep(1);
+
+# set Y0 to 1:
+pplt.SetValue("/y0",True);
+\end{verbatim}
+
+
+
+
+
+
+\PPLTModDesc{PLC.FPWEB}
+This device implements the access to a Panasonic FP0 or FP2 over the toolport 
+tunneled by the Panasonic FP-WEB server. This device is quiet equal to the
+\PPLTDev{PLC.Panasonic-FPX} device. So it provides the same namespace with
+the same slots and slotranges.
+
+If you want to access the FP0 or FP2 directly by the toolport, please use
+the \PPLTDev{PLC.Panasonic-FPX} device instead.
+
+\subsubsection{Parameters}
+This device needs only two parameters to be setted up correctly. The nework
+address of the webserver and the Mewtocol address of the PLC.
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default value}
+\lineiii{NetAddr}
+        {The network address of the webserver and the port of the tunneled
+        toolport in the format \code{ADDRESS:PORT}. For example 
+        \code{10.1.1.4:9094}.}
+        {}
+\lineiii{MewAddr}
+        {The Mewtocol address of the PLC connected to the webserver. In
+        the normal case, the webserver will be pluged on the toolport
+        of the PLC so this number could be any between 0 and 255 because
+        the PLC will ignore the destination address field.}
+        {\code{1}}
+\end{tableiii}
+
+\subsubsection{Namespaces and slots}
+Also this device provide only one namespace called \code{Marker}. This 
+namespace contains the slot \var{STATUS} and the slotrange \var{Marker}. A 
+slotrange is a placeholder of a couple of slots. In this conectext it is a
+placeholder for all markers of the PLC. So if you want to access a marker,
+for example \code{Y0}\footnote{The first output pin.}, you should replace
+the slotrange by the name of the marker: \code{Alias::Marker::Y0}. 
+You have to figure out the type of the slot by your self, if you use
+a slotrange! But so far, if you access a boolean marker, use \code{'Bool'}
+if you access an integer marker (byte, word, double word) please use 
+the unsigned integer \code{'uInteger'} as type.
+\begin{notice}
+Please use uppercase for the name of the marker!
+\end{notice}
+
+\paragraph{Slots of the namespace \texttt{Marker}:}
+There is only on slot in this namespace. But you can access all markers 
+of the PLC like described above.
+\begin{tableiii}{l|l|p{10cm}}{textrm}{Slotname}{Type}{Description}
+\lineiii{STATUS}
+        {Bool}
+        {This slot controlls the status of the PLC, if this slot is 
+        \code{True} the PLC is in the \emph{Run} mode if it is
+        \code{False} it is in the \emph{Stop} mode. You can also
+        set the mode by writing into this slot.}
+\end{tableiii}
+
+\subsubsection{Example}
+In this example I will show you how to load the \PPLTDev{PLC.FPWEB} device. 
+The script will then do the same like the example script of the 
+\PPLTDev{PLC.Panasonic-FPX} device. It will create 2 symbols, one for
+the status bit and one for the first output bit (Y0), then it will
+set the PLC into the \emph{Run} mode and will set the Y0 to True.
+
+\begin{verbatim}
+import PPLT
+import time
+
+pplt = PPLT.System()
+pplt.LoadDevice("PLC.FPWEB","fp",{"NetAddr":"10.1.1.100:9094", "MewAddr":"1"});
+
+pplt.CreateSymbol("/stat","fp::Marker::STATUS","Bool");
+pplt.CreateSymbol("/y0", "fp::Marker::Y0", "Bool");
+
+# set the PLC into run-mode:
+pplt.SetValue("/stat",True);
+
+# wait a second:
+time.sleep(1);
+
+# set Y0 to 1:
+pplt.SetValue("/y0",True);
+\end{verbatim}
+
+
+
+
+
+
+\PPLTModDesc{PLC.S7-200}
+This device implements the access to a Siemens SIMATIC 
+S7-200\footnote{I've only tested it with a S7-200 maybe other also working 
+fine. Please let me know if it woks for you.} PLC. With this device you can 
+read/write the markers of a Siemens PLC. Additional you can get some 
+statistical values about the PPI BUS line muber of bytes send/recived.
+\begin{notice}
+This device implements only the access over a PPI cable!
+\end{notice}
+
+
+\subsubsection{Parameters}
+To setup the device you need to set at least the number of the serial 
+interface used and the PPI address of the PC and the PLC.
+\begin{tableiii}{l|l|l}{textrm}{Parameter}{Description}{Default value}
+\lineiii{Port}
+        {Number of the serial interface to be used. (COM1=0, COM2=1,...)}
+        {0}
+\lineiii{PCAddr}
+        {The PPI address of the PC. This would normaly 0(Master).}
+        {0}
+\lineiii{S7Addr}
+        {The PPI address of the PLC. Normaly a number between 0 and 32.}
+        {2}
+\end{tableiii}
+
+\subsubsection{Namespaces and slots}
+This device provides two namespaces. One called \code{PPIStatistic}, provides 
+slots for statistical values about the PPI BUS. The other one called 
+\code{Marker} provides a slotrange named \code{Merkers}.
+
+A slotrange is a placeholder for a whole range of slots. In this case it
+is a placeholder for all markers of the PLC. So if you want to access a
+marker, please replace the slotrange by the name of the marker you want 
+to use. For example if you want to connect a symbol to the marker
+\code{SMB28} please use \code{"ALIAS::Marker::SMB28"} as the 
+slotname\footnote{Please use only uppercase letters for the merkername.}. 
+
+\paragraph{Slots of the namespace \texttt{PPIStatistic}:}
+This namespace contains some slot for statistical information about the 
+underlaying PPI BUS. 
+\begin{tableiii}{l|l|p{10cm}}{textrm}{Slotname}{Type}{Description}
+\lineiii{read\_data}
+        {uInteger}
+        {This slot returns the nuber of recived bytes.}
+\lineiii{write\_data}
+        {uInteger}
+        {This slot returns the number of send bytes.}
+\lineiii{read\_speed}
+        {uInteger}
+        {Returns the number of bytes recived per second.}
+\lineiii{write\_speed}
+        {uInteger}
+        {Returns the number of bytes send per second.}
+\lineiii{error}
+        {uInteger}
+        {Counts the transpor.......}
+        
+\subsubsection{Example}
+
+
+
+
+
+
+
+\PPLTModDesc{Measure.AGILENT-5462X}
+This device implements the access to a Agilent oscilloscope of the 5462X 
+series. With this device you can contol the oscilloscope, for example you can
+measure the frequency of a signal. This device supports only the serial
+interface to the Agilent, GIPB or something like this is not supported.
+
+\subsubsection{Parameters}
+\subsubsection{Namespaces and slots}
+\subsubsection{Example}
+
+
+
+
+
+
+
+
+
+
+
+
+
+\section{Servers}
+In this section i'll describe all available servers for the PPLT system.
+(some more text...)
+
+
+
+
+
+\PPLTModDesc{Web.PPLTWebServer}
+\subsubsection{Parameters}
+\subsubsection{Example}
+
+
+
+
+
+
+\PPLTModDesc{Visu.JVisuServer}
+\subsubsection{Parameters}
+\subsubsection{Example}
+
+
+
+\PPLTModDesc{RPC.SimpleExport}
+\subsubsection{Parameters}
+\subsubsection{Example}
+
+
+

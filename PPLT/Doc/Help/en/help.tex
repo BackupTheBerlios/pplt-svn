@@ -15,30 +15,29 @@
 	\section{Handle devices}
 	\subsection{Load a device}
 	To load a device you can select "Load Device" in the main-menu "Load". 
-	Or you can right-click on the device list and select the menu entry "Add Device".
+	Or you can right-click on the devicelist and select the menu entry "Add Device".
 	\par
-	Now you'll see the device selection dialog. In this dialog all known devices are
+	Now you'll see the deviceselection dialog. In this dialog all known devices are
 	listed by there classes. You can open a class by double clicking the class.
-	Now select the device you want to load and confirm it by double-click the device
-	or click on the OK button. 
+	Now select the device you want to load and confirm it by clicking on the OK button. 
 	\par
-	Now you'll see the device setup dialog. There you can set all parameters needed to
+	Now you'll see the devicesetup dialog, where you can set all parameters needed to
 	load and configure the device correctly. Fill up the form and click on the OK 
 	button to confirm your settings. Note that you need to set at least the alias
 	for the device, to indentify it later. If you need help for a specific
-	parameter, keep a while with your mouse over the entryfeeld to get a
+	parameter, keep a while with your mouse over the entryfield to get a
 	tool-tip help. 
 	\par
-	If all going right, you'll see your device now in the device list. If an error 
-	accours you can check out the logging window on the	bottom of the PPLT Center 
-	window for the reasons.  
+	If all going right, you'll see your device now in the devicelist. If an error 
+	occours you can check out the logging window at the	bottom of the PPLT Center 
+	window for the reason.  
 		
 		
 	\subsection{Unload a device}
-	To unload a device simply right-click on the device in the devicelist. Now
+	To unload a device simply right-click on the device at the devicelist. Now
 	select "Del Device" in the context menu. If the device can be unloaded the
 	system will do so. Otherwise you will see a error message in the 
-	logingwindow at the bottom of the application. 
+	loggingwindow at the bottom of the application. 
 	\par
 	\textbf{Note}: No symbols should be connected to the device if you want to
 	unload the device.
@@ -47,8 +46,8 @@
 	\section{Handle symbols and folders}
 	\subsection{Create a folder}
 	To create a folder please right-click at the folder where do you want to
-	create the new folder. If you want to create a folder on the root directory
-	simple right click at a free space in the symboltree or at the 
+	create the new folder. If you want to create a folder in the root directory
+	simply right click at a free space in the symboltree or at the 
 	\textit{Symbol Tree} tab. Then select \textit{Add Folder} in the contextmenu.
 	Now you will be asked for a name of the folder. In this dialog you can also
 	set the owner, gorup and access-rights for this folder. 
@@ -60,53 +59,53 @@
 	\subsection{Rename a folder}
 	To rename a folder, right-click the folder and select 
 	\textit{rename} in the context-menu. Now the label 
-	if the folder shloud become editable. Rename the folder
+	of the folder should become editable. Rename the folder
 	and confirm by pressing RETURN. If the new name alredy 
-	exists an error message will be shown in the logging window
+	exists, an error message will be shown in the logging window
 	at the bottom of the application and the old name will be 
 	restored.
 	
 	
 	\subsection{Move a folder}
-	You can move a folder into an other or at the root by drag 
-	and drop.
+	You can move a folder into an other or at the root by
+	Drag'n'Drop.
 	\par
-	\textbf{Note}: You can't move a folder into a a sub folder
-	of the one you want to move.
+	\textbf{Note}: You can't move a folder into a sub folder
+	of the one, you want to move.
 
 
 	\subsection{Delete a folder}
 	To delete a folder right-click the folder and select 
 	\textit{Del folder} in the context-menu. If the folder
-	was empty the it shloud be removed now. 
+	was empty it should be removed now. 
 	\par
 	\textbf{Note}: The folder but be empty.
 	
 	
 	\subsection{Create a symbol}
-	To create a symbol you could right-click the folder where you want to
+	To create a symbol you should right-click the folder where you want to
 	create the symbol. Or, if you want to create the symbol at the root
-	directory, right-click a free space inside the \textit{Symbol Tree}.
+	directory, right-click at a free space inside the \textit{Symbol Tree}.
 	Then select \textit{Add symbol} in the context menu. 
 	\par
 	Now you should see a dialog with a list of all loaded devices. Open the
-	device you want the symbol be connected to by a double-click. Now you should
-	see a list of all namspaces the device offers. Mostly there are only one
+	device, you want the symbol to be connected to, by a double-click. Now you should
+	see a list of all namespaces, the device offers. Mostly, there are only one
 	or two namespaces per device. Inside a namespace, you will find
 	the slots of the device. Open the namespace by a double-click.
 	\par
-	Now select the slot you want to use with a double-click. You can see a
+	Now select the slot you want to use by a double-click. You can see a
 	short description of the slot at the bottom of the dialog , if you 
 	single click the specific slot.
 	\par
 	If you selected a slot-range you will now be asked for a specific 
-	address of name for the slot. This means that the application can't
-	list for example all makers of a PLC. So the slot-rang is a placeholder
+	address or name for the slot. This means that the application can't
+	list for example all makers of a PLC, so the slot-rang is a placeholder
 	for all markers and you have to specify now the maker you want to use.
 	\par
 	Now the symbol-property dialog pops up. Here you set the name and the
 	ownership of the symbol. If you selected a slot-range you have to set also
-	the type of the symbol. Also you can set here the cashing time for
+	the type of the symbol. Also you can set here the chashing time for
 	the symbol (in seconds).
 	\par
 	Click on the OK button to complete the setup and create the symbol.
@@ -116,12 +115,11 @@
 	To rename a symbol you can simply double-click the label of the
 	symbol or right-click the symbol and select \textit{rename} at
 	the context-menu. Now the label of the symbol should become 
-	editable. Make your canges and confirme them by pressing RETURN.
+	editable. Make your changes and confirm them by pressing RETURN.
 	\par
-	\textbf{Note}: You can't rename a symbol to a symbol already exists.
-	In this case, the old name will be restored and a error message 
-	will be shown in the logging window at the bottom of the
-	application.
+	If the symbol can't be renamed, the old name will be restored and 
+	a error message will be shown in the logging window at the bottom 
+	of the application.
 		
 	\subsection{Move a symbol}
 	Like a folder you can also move a symbol into an other
@@ -133,15 +131,15 @@
 	the context menu. The symbol should now be removed.
 	
 	\subsection{Get or set values}
-	To get or set the value of a symbol, you can right-klick the symbol and
+	To get or set the value of a symbol, you should right-click the symbol and
 	select \textit{Get/Set value}. Now you should see a small dialog. You 
 	can set the value of the symbol by changeing the entry \textit{Value}
-	and then klick the \textit{Set} button. 
+	and then click the \textit{Set} button. 
 
 	\subsection{Change owner, group and rights}
 	To change the owner, group and the access rights of a symbol or folder right-click
 	the item and select \textit{Properties} in the context-menu. Now you should
-	see a dialog where you can set all these things. Confirm you canges by clicking
+	see a dialog where you can set all these things. Confirm you changes by clicking
 	the OK button.
 	
 	
@@ -170,42 +168,41 @@
 	
 	\section{Userdatabase}
 	\subsection{Create a user}
-	To create a user right-click the group where the new user should be member of
+	To create a user right-click the group, the new user should be member of
 	and select \textit{Add user} in the context-meun.
 	\par
 	Now you should see a dialog where you can set the user-name and also
-	his password. Fill up the form and confirm you settings by klicking the
+	his password. Fill up the form and confirm you settings by clicking the
 	OK Button.
 	\par
-	\textbf{Note}: A user must be a member of a group! So you'll need
-	to define a group where the you will be created in.
+	\textbf{Note}: A user must be a member of a group!
 	
 	\subsection{Change password of a user}
 	To change the password of a user, right-click the user and select 
 	\textit{Change password} in the context menu. Now there should popup
-	a dialog where you can type the new password. Confirm your changes by
+	a dialog where you can set the new password. Confirm your changes by
 	clicking the OK button.
 	
-	\subsecton{Delete a user}
+	\subsection{Delete a user}
 	To delete a user, right-click the user and select \textit{Del user}
 	in the context menu. The user should now be removed.
 	
 	\subsection{Create a group}
-	If you want to create a subgroup right-klick on the group where you want
-	to craete the subgroup. Else if you want to reate a (root) group right-click
+	If you want to create a subgroup right-click on the group where you want
+	to create the subgroup. Else if you want to create a (root) group right-click
 	on a empty field on the user-tree or on the tab \textit{UserDB}.
 	Select \textit{Add group} in the context menu. Now you should see a 
 	dialog where you can set the name of the new group. Click OK to finish.
 	
 	\subsection{Delete a group}
-	To delete a group, right-klick the group and select \textit{Del group}
+	To delete a group, right-click the group and select \textit{Del group}
 	in the context-menu. Now the gorup should be removed.
 	\par
-	\textbf{Note}: The group must be empty (no users of subgroup in it) to
+	\textbf{Note}: The group must be empty (no users or subgroups in it) to
 	delete it.
 	
 	\subsection{Create a user-proxy}
-	To create a proxy for an user, right-klick the group where you want to
+	To create a proxy for an user, right-click the group where you want to
 	add the proxy. Select \textit{Add user-proxy} in the context-menu.
 	Now you should see a dialog where you can select the user. 
 	Click OK to finish.
@@ -216,7 +213,7 @@
 	proxy should be removed.
 	
 	\subsection{Set the superuser}
-	Right-klick the user, who should become the new superuser
+	Right-click the user, who should become the new superuser
 	and select \textit{Set superuser}. This user should be now
 	the superuser.
 	

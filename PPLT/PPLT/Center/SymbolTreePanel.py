@@ -160,7 +160,7 @@ class SymbolTreePanel(wx.TreeCtrl):
                 self.Expand(item);
 
     def OnEditLabel(self, event):
-        print event;
+        #print event;
         item = event.GetItem();
         (IsFolder, OldName) = self.GetPyData(item);
         self.SetItemText(item, OldName)
@@ -168,7 +168,7 @@ class SymbolTreePanel(wx.TreeCtrl):
     def OnStopEditLabel(self, event):
         OldItem = event.GetOldItem();
         NewItem = event.GetItem();
-        print "old %s\nnew %s"%(OldItem, NewItem)
+        #print "old %s\nnew %s"%(OldItem, NewItem)
         if not OldItem: OldItem = NewItem;
 
         (IsFolder, OName) = self.GetPyData(OldItem);

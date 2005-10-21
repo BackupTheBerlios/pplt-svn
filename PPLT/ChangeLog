@@ -1,3 +1,10 @@
+
+    * Fixed in pyDCPU/UserDB/UserDB.py in CreateUserProxy():
+        - possebility to create multible proxies of one user in 
+        one group.
+    * Added usable output for a parse-error.:
+        - PPLT/Setup.py
+        - pyDCPU/Modules/CoreModInfo.py
     * Added SetValueDialog to SymbolTreePanel in PPLT/Center
     * Improved type-coding for symbol-slots:
         Now the symbolslots using XDR type codeing to provide 

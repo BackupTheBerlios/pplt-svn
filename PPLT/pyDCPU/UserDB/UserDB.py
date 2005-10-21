@@ -20,6 +20,8 @@
 
 
 # ChangeLog:
+# 2005-10-20:
+#   - fixed possible multible proxies of one user in one group
 # 2005-08-26:
 #   - changed passwords will now be saved
 # 2005-08-25:
@@ -355,6 +357,14 @@ class UserDB:
         if not CareLess:
             if not self.UserExists(Name):
                 return(False);
+
+        # check if user is allready member of group:
+        if self.IsMemberOf(Group, Name):
+            self.__Logger.error("User %s is allready member of group %s"%(Name, Group));
+            return False;
+        else:
+            self.__Logger.debug("User %s is not member of %s"%(Name,Group));
+
         group = self.GetGroupByName(Group);
         if not group:
             return(False);

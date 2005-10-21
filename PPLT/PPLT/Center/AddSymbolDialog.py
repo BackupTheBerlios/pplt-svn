@@ -255,7 +255,7 @@ class PropertyDialog(wx.Dialog):
                                                      "ArrayInteger", "ArrayuInteger",
                                                      "ArrayLong","ArrayuLong",
                                                      "ArrayFloat", "ArrayDouble",
-                                                     "ArrayString"]);
+                                                     "ArrayString","Raw"]);
         if Type:
             self.__Type.SetValue(str(Type));
             self.__Type.SetEditable(False);

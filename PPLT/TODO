@@ -11,27 +11,31 @@
 
 
 +++ BUGs BUGs BUGs +++
-[ALL]
-    Check all try/except brackets for a usefull debug or error 
-    output. (i know, that i was lasy)
-
-[CoreModule] 
-    JVisu eat all free CPU load. (SimpleExport doesn't, may be 
-    a problem with the non-blocking sockets.)
-
 [pyDCPU]
-    It would be better if the call of setup() of a module will be inside 
-    a try/except pair.
+    - It would be better if the call of setup() of a module will be inside 
+      a try/except pair.
+
+    - Symbolslots should keep there cached values if a error appears
+    
+    - Can create more than one user proxy for one user in the same group.
+	
+    - Implement module-compileing
+
+
+[PPLTCenter]
+    - SymbolTreePanel: Make all visible items visible after rebuild tree.
+
+    - SymbolTreePanel: Edit symbol or server-name is not cancelable under 
+      Win2000 but under Win98
+
+    - Fix filetypes in all fileselection-dialogs. (maybe fix translation)
+
 
 [CoreModule]
-    Prevent PPLTWebServer to write error messages to stderr/stdout.
+	- Write a coremod to read/write to the parallel port (maybe with the option
+	 to control each pin of the port).
 
-[PPLTCenter]
-    SymbolTreePanel: Make all visible item visible after rebuild tree.
+    - Write a SNMP trap and a UDDI servermodule.
+    
 
-[PPLTCenter]
-    SymbolTreePanel: Edit symbol or server-name is not cancelable under 
-    Win2000 but under Win98
-
-[pyDCPU]
-    Symbolslots should keep there cached values if a error appears
+ 

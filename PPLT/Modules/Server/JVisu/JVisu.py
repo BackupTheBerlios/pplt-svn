@@ -39,7 +39,7 @@ class Object (pyDCPU.ExportObject):
 
     def start(self):
         self.__Loop = True;
-        self.__ServSock.setblocking(0);
+        #self.__ServSock.setblocking(0);
         while self.__Loop:
             try:
                 (Client, CAddr) = self.__ServSock.accept();

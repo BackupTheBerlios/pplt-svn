@@ -19,8 +19,10 @@
 # ############################################################################ # 
 
 #CHANGELOG:
+# 2005-10-02:
+#   + added logging for a parse error in Setup() 
 # 2005-08-20:
-#   - fixed Setup() and DocWaker() to reakt on error while loading
+#   - fixed Setup() and DocWaker() to react on error while loading
 #     the core-modules
 # 2005-07-26:
 #   reimplement
@@ -32,10 +34,12 @@ import logging;
 
 
 def Setup(CTX, FileName):
-    doc = xml.dom.minidom.parse(FileName);
     logger = logging.getLogger("PPLT");
-    try:
-        DocWalker(doc.documentElement, CTX, None);
+    try: doc = xml.dom.minidom.parse(FileName);
+    except Exception, e: 
+        logger.error("Error while parse \"%s\": %s"%(FileName, str(e)));
+        return False;
+    try: DocWalker(doc.documentElement, CTX, None);
     except Exception, e:
         logger.error("Unable to setup %s: %s"%(FileName, str(e)));
         CTX.Unload();

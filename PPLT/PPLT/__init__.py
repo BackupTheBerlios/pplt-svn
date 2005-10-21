@@ -32,8 +32,7 @@ from PPLTSystem import *;
 
 __author__	= "Hannes Matuschek <hmatuschek@gmx.net>";
 __status__	= "alpha";
-__version__	= "0.4.0";
-#__date__	= "2005-06-05";
+__version__	= "0.9.0";
 
 
 #
@@ -55,4 +54,4 @@ TArrayOfUnsignedLong = "ArrayuLong";
 TArrayOfFloat = "ArrayFloat";
 TArrayOfDouble = "ArrayDouble";
 TArrayOfString = "ArrayString";
-
+TRaw = "Raw"

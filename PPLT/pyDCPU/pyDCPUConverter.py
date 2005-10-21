@@ -20,6 +20,8 @@
 
 
 # CHANGELOG:
+# 2005-10-02:
+#   + added the raw datatype.
 # 2005-09-23:
 #   + Typecode based on XDR (RFC1832)
 
@@ -32,7 +34,10 @@ class Converter:
     def __init__(self, Type):
         self.__TypeName = Type;
         self.__Logger = logging.getLogger('pyDCPU');
-
+        if Type == "Raw":
+            self.__Pack = "raw";
+            self.__Unpack = "raw";
+            self.__TypeCode = "raw";
         if Type == "Bool":
             self.__Pack = "pack_bool";
             self.__Unpack = "unpack_bool";
@@ -105,6 +110,9 @@ class Converter:
     def GetTypeName(self): return self.__TypeName;
 
     def ConvertToData(self, Value):
+        # interpret value as raw data:
+        if self.__Pack == "raw": return Value;
+        # or pack it into XDR:
         packer = xdrlib.Packer();
         pack_funct = getattr(packer,self.__Pack);
         if self.__TypeName in ("ArrayBool", "ArrayInteger","ArrayuInteger","ArrayLong","ArrayuLong","ArrayFloat","ArrayDouble","ArrayString"):
@@ -118,6 +126,9 @@ class Converter:
         return Data;
 
     def ConvertToValue(self, Data):
+        # interpret data as raw string:
+        if self.__Unpack == "raw": return Data;
+        # or unpack XDR
         packer = xdrlib.Unpacker(Data);
         unpack_funct = getattr(packer, self.__Unpack);
         value = unpack_funct();

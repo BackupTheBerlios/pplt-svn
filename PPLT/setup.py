@@ -3,7 +3,7 @@ from distutils.core import setup;
 
 setup(name = "PPLT",
       version="0.4.0",
-      description="PPLT a free industrial communication framework",
+      description="PPLT a free framework for master-slave communication",
       author="Hannes Matuschek",
       author_email="hmatuschek@gmx.net",
       url='http://pplt.berlios.de',
@@ -55,7 +55,8 @@ setup(name = "PPLT",
                     ('PPLT/de/LC_MESSAGES',['I18N/de/PPLT.mo']),
                     ('PPLT/examples',['examples/Random-JVisuServer.psf','examples/Random-WebServer.psf'])],
 
-      long_description="""PPLT is an industrial communication framework.
+      long_description="""
+PPLT is a framework for master-slave based communication.
 
 Until now there are plugins (modules) for the Siemens SIAMTIC S7-200 over PPI, 
 Panasonic/NAiS FP0 and FP2, Siemens (maybe other GSM compatible) mobile phone

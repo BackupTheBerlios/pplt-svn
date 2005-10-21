@@ -43,8 +43,11 @@ class MetaData:
         if not xmlstr:
             self.__Logger.error("Error while load meta data");
             raise Exception("Error while load meta data from file: %s"%(FileName));
-        doc = xml.dom.minidom.parseString(xmlstr).documentElement;
-        
+        try: doc = xml.dom.minidom.parseString(xmlstr).documentElement;
+        except Exception, e:
+            self.__Logger.error("Error while parse meta-file in %s: %s"%(FileName, str(e)));
+            raise Exception("Error while parse mata-file in %s: %s"%(FileName, str(e)));
+
         self.__FileName = FileName;
         self.__VersionString = str(doc.getAttribute("version"));
 

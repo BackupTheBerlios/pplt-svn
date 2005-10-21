@@ -21,8 +21,7 @@ class InfoFrame(wx.Frame):
 """PPLT Center demonstrate the functionality of the PPLT library.  
 At first create some users and change the password of the 
 superuser.Then load one or two devices, create symbols, that
-are attached to the devices and at least start a server.
-                   If you missing menus: try right-click.\n"""),style=wx.ALIGN_LEFT);
+are attached to the devices and at least start a server.\n"""),style=wx.ALIGN_LEFT);
         box.Add(txt, 0, wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT,10);
     
         txt = wx.StaticText(self,-1,"Have a lot of fun...\nHannes Matuschek",style=wx.ALIGN_RIGHT);

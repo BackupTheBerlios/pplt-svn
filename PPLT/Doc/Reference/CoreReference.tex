@@ -1,0 +1,289 @@
+\chapter{Core reference}
+\section{\module{pyDCPU} --- 
+        \textbf{Py}thon \textbf{D}ata \textbf{C}ollect and \textbf{P}rocess \textbf{U}nit}
+
+\declaremodule{}{pyDCPU}       
+
+\moduleauthor{Hannes Matuschek}{hmatuschek@gmx.net}
+
+
+\modulesynopsis{This is the reference for the core-library of PPLT System.}
+
+The \module{pyDCPU} module provides all needed core methods and functions, to
+get a PPLT system running.
+
+\section{Class description}
+\begin{classdesc}{Core}{\optional{ModulePath, \optional{UserDBFile, \optional{LogLevel, \optional{LogFile, \optional{SysLog}}}}}}
+Creates a new core-instance. The optional argument \var{ModulePath} specify the basepath to the core-modules if missed,
+the defaultpath \texttt{sys.exec\_path+"/PPLT"} will be used. 
+
+The argument \var{UserDBFile} specify the filename of the
+used database to be loeded. If missed the default file (\texttt{sys.exec\_path+"/PPLT/UserDB.xml"}) will be used.
+
+
+The argument \var{LogLevel} specifiy the loglevel and so the verbosity of the core. This shloud be one of (\code{'off'}, 
+\code{'fatal'}, \code{'error'}, \code{'info'} or \code{'debug'}). Note that \code{'off'} switches the logging off and 
+\code{'debug'} will produce a lot of messages. 
+
+In normal case all logging massages were printed on the screen (send to stderr) but with the arguments \var{LogFile} and
+\var{SysLog} you can manipulates this behavor. If the argument \var{LogFile} is given, this file will be used to 
+log all messages to. Note, that if \var{LogFile} specified no messages are shown on stderr. If \var{SysLog} is \code{True}
+all log messages will be send to the local syslog-daemon. Note this argument overrides the setting of \var{LogFile} and
+also no messages were send to stderr.
+\end{classdesc}
+
+\subsection{Core-Objectmethods}
+\label{core-objects}
+
+some text...
+
+\begin{methoddesc}[Core]{MasterTreeAdd}{ParentID, ModName, Address, Parameter}
+This method loads an instance of a coremodule and adds it to the mastertree. The method returns the ID of the loaded mdoule. 
+This ID is unique but if you load the same module with the same parameters, address and at the same parent, the 
+ID of the allready loaded module will be returned. If an error accoures, the method will return \code{None}.
+
+The argument \var{ParentID} specifies the parent-module (ID), the new loaded module will be attached to. If you set 
+\var{ParentID} to \code{None} the module will be loaded as a root\footnote{A root-module has no parent module.}. 
+
+The argument \var{ModName} specifies the full qualified name of the module. All modules are orgenized in classes and
+subclasses. A full qualified name would be a modulname with all classes and subclasses divided by single dots. 
+For example: \code{Master.Interface.UniSerial} or \code{Master.Device.S7-200}.
+
+The argument \var{Address} specifies the address used to connect the parent module. If there is no parent, meaning 
+\var{ParentID} is \code{None}, or there is no need to addressing the parentmodule, the argument \var{Address} should be 
+\code{None}.
+
+The argument \var{Parameter} specifies the parameter used to load (and setup) the module. This argument shlould be a dict. 
+The keywords are the parameters names (all strings) and the vlaues are the values of the singe parameter. \\
+\note{All parameter values are strings!} If the module needs no parameters, please set \var{Parameter} to \code{None}
+or to an empty dict \code{\{\}}.
+\end{methoddesc}
+
+
+
+
+\begin{methoddesc}[Core]{MasterTreeAttachSymbolSlot}{ParentID, Address, TypeName, \optional{TimeOut}}
+This method adds a symbolslot to the module(-instance) given by \var{ParentID}. This slot will be used 
+as an interface for the symbols of the symboltree. The symbolslot takes care about the transformation 
+form data, it got from his parent, to the value the symbol will have. 
+
+The argument \var{ParentID} specifies the moduleinstace, the slot will be attached to. This ID is the ID
+you got back from a \function{MasterTreeAdd()} call.
+
+The argument \var{Address} specifies the address, used to connect the symbolslot to his parent given by the 
+argument \var{ParentID}. If the parent doesn't need a address the argument should be set to \code{None}. 
+
+The argument \var{TypeName} specifies the type of the value, the slot can read from his parent. This shlould be one of \code{'Bool'}, \code{'Integer'}, 
+\code{'uInteger'}, \code{'Long'}, \code{'uLong'}, \code{'Float'}, \code{'Double'},
+\code{String}, \code{'ArrayBool'}, \code{'ArrayInteger'}, \code{'ArrayuInteger'}, \code{'ArrayLong'}, \code{'ArrayuLong'}, \code{'ArrayFloat'}, \code{'ArrayDouble'},
+\code{ArrayString} or \code{Raw}. Alternative you can use the constants defined in the \module{pyDCPU} module: \code{TBool}, \code{TInteger}, \code{TUnsignedInteger}, 
+\code{TLong}, \code{TUnsignedLong}, \code{TFloat}, \code{TDouble}, \code{TString}, \code{TArrayOfBool}, \code{TArrayOfInteger}, \code{TArrayOfUnsignedInteger}, 
+\code{TArrayOfLong}, \code{TArrayOfUnsignedLong}, \code{TArrayOfFloat}, \code{TArrayOfDouble}, \code{TArrayOfString} or \code{TRaw}. 
+
+The optional argument \var{TimeOut} specifies the time in seconds, the value will be chashed. Until this period of time the slot will return the chashed value 
+if a symbol request a value. After this time the slot will refresh the value. By default this will be 0.5 second. If you miss this argument the dafulttime will
+be used.
+
+This methos retuns the ID of the loaded slot if it was sucsessfully attached to the parent and \code{None} otherwise.
+\end{methoddesc}
+
+
+
+
+\begin{methoddesc}[Core]{MasterTreeDel}{ObjectID}
+This method removes an (module-)object from the mastertree and destroy it. \note{The object mast have no chlidren, meaning
+no other objects or symbolslot are connected to this object.}
+
+The argument \var{ObjectID} specifies the object you want to remove. This object ID is the ID you got by the \function{MasterTreeAdd()} 
+method-call.
+
+The method will return \code{True} if the object could be removed and destroyed and \code{False} otherwise.
+\end{methoddesc}
+
+
+
+\begin{methoddesc}[Core]{MasterTreeList}{ParentID}
+This mehtod will list the IDs of all childen of the given moduleinstance. The argument \var{ParentID} specifies the 
+ID of the moduleinstance, that children will be listed. 
+\end{methoddesc}
+
+
+
+\begin{methoddesc}[Core]{SymbolTreeCheckPath}{Path}
+This method checks if the given \var{Path} exists. This method retuns  \code{True} if the given path is a folder or symbol
+and \code{False} otherwise.
+\end{methoddesc}
+
+
+
+\begin{methoddesc}[Core]{SymbolTreeCreateFolder}{Path}
+This method creates a folder. 
+
+The argument \var{Path} specifies the full path to the folder, that will be creted. \note{The path should have the 
+standrd Linux format like: \code{'/path/to/new\_folder'}.}
+
+This method will return \code{Ture} if the folder was sucsessfully created and 
+\code{False} otherwise.
+\end{methoddesc}
+
+
+
+
+\begin{methoddesc}[Core]{SymbolTreeCreateSymbol}{Path, SymbolSlotID}
+This method will creat a new symbol in the symboltree and connect it to the 
+given symbolslot.
+
+The argument \var{Path} specifies the full path to the new symbol. This path 
+should be in the standard Linux format like \code{'/path/to/new\_symbol'}.
+
+The argument \var{SymbolSlotID} specifies the ID of the symbolslot, the new
+symbol will be connected to. This is the ID you got bach from a
+\function{MasterTreeAttachSymbolSlot()} methodcall.
+
+This method will return \code{True} if the symbol was sucessfully created and
+\code{False} otherwise.
+
+\note{You can connect more than one symbol to a single symbolslot.}
+\end{methoddesc}
+
+
+
+\begin{methoddesc}[Core]{SymbolTreeDeleteFolder}{Path}
+This method will remove the given folder. This folder should be empty before removing it.
+
+The argument \var{Path} specifies the path of the folder that will be removed. 
+
+This method returns \code{True} on success and \code{False} on error.
+\end{methoddesc}
+
+
+
+\begin{methoddesc}[Core]{SymbolTreeDeleteSymbol}{Path}
+This method will remove a symbol from the symboltree. 
+
+The argument \var{Path} specifies the full path to the symbol, that will be removed.
+This path should be in the standard Linux format like: \code{'/path/to/symbol'}.
+
+This method will return \code{True} on success and \code{False} otherwise.
+\end{methoddesc}
+
+
+\begin{methoddesc}[Core]{SymbolTreeListFolder}{Path}
+This method list all folders in the folder pointed by \var{Path}.
+
+The argument \var{Path} specifies the full path to the folder, that subfolders
+will be listed. 
+\note{If you want to list all folders at the 
+root-folder, you shloud use \code{'/'} as path.}
+
+The method returns a list of strings or \code{None} if the path doesn't exists. The method will
+return an empty list if the folder has no subfolders.
+\end{methoddesc}
+
+
+\begin{methoddesc}[Core]{SymbolTreeListSymbols}{Path}
+This method will list all symbols in the folder pointed by \var{Path}.
+
+The argument \var{Path} specifies the full path to the folder, that symbols
+will be listed. 
+
+\note{If you want to list all symbols at the 
+root-folder, you should set \var{Path} to \code{'/'}.}
+
+The method will return a list of strings or \code{None} if there are no 
+symbols in the folder.
+\end{methoddesc}
+
+
+
+
+\begin{methoddesc}[Core]{SymbolTreeGetAccess}{Path}
+This method will return the owner, group and accessrights of the given folder or symbol.
+
+The argument \var{Path} specifies the path of the folder or symbol.
+\end{methoddesc}
+
+
+
+\begin{methoddesc}[Core]{SymbolTreeSetAccess}{Path, Owner, Group, Modus}
+This method will set the owner, group and accessrights of the given symbol or folder.
+
+The argument \var{Path} specifies the full path of the symbol or folder.
+
+The argument \var{Owner} specifies the orwer of the symbol or folder, the 
+argument \var{Group} specifies the group the symbol/folder will belong to.
+At least the argument \var{Modus} spceifies the accessrights of the
+symbol/folder.
+
+This method will return \code{True} on success and \code{False} otherwise.
+\end{methoddesc}
+
+
+
+\begin{methoddesc}[Core]{SymbolTreeGetValue}{Path}
+This method will return the value of the symbol pointed by \var{Path}.
+
+The argument \var{Path} specifies the full path to the symbol. 
+
+The method will return the value(s) of the symbol or \code{None} on error.
+\end{methoddesc}
+
+\begin{methoddesc}[Core]{SymbolTreeSetValue}{Path, Value}
+This method will set the value of the symbol pointed by \var{Path} to \var{Value}.
+
+The argument \var{Path} specifies the full path to the symbol, that value will be setted.
+
+The argument \var{Value} specifies the value(s) the symbol will be setted to.
+
+The method will return \code{True} on success or \code{False} else.
+\end{methoddesc}
+
+
+
+
+\begin{methoddesc}[Core]{ExporterAdd}{ExportModule, Parameters, DefualtUser, \optional{Root='/'}}
+This method will load and setup a exporter module. A exporter is something like
+you may call a server.To sucessfully setup the module, some module specific 
+parameters are needed. Also you can set a default user which rights will be 
+used, if the exporter doesn't support any kind of authentication. Optional you can set 
+a server-root. The server root should be a folder in the symbol tree. If a exporter 
+is loaded with the \var{Root} option, only the symbols under the server-root 
+and the subfolders of this root are exported by the server.
+
+The argument \var{ExportModule} specifies the full qualified name of the 
+exporter-module. A full qualified name kontains all classes and subclasses of 
+the exporter. For example: \code{'Export.JVisu'}. 
+
+The argument Parameters specifies the parameters, the export-module needs to be
+successfully seted up. The parameters are given as a dict. The keys of the dict
+are the names of the parameters and the values are the values of the 
+parameters. If the export-module needs no parameters, please set 
+\var{Parameters} to \code{None} or to an empty dict.
+
+The argument \var{DefualtUser} specifies the name of the user, the server will 
+get his rights from. This can be used to controll the rights of a exporter,
+that doesn't know any authentication.
+
+The optional argument \var{Root} specifies the server-root for this exporter. 
+If you miss this argument or set it to \code{'/'}, the whole symboltree
+will be exported by this server. Otherwise only the symbols and subfolders of
+the given folder were be exported.
+
+The method returns the ID of the exporter instance on success or \code{None}
+on error.
+\end{methoddesc}
+
+\begin{methoddesc}[Core]{ExporterList}{}
+This method lists the IDs of all loaded exports (servers). The method returns
+a list of strings containing the IDs you got by the \function{ExporterAdd()}
+methodcall. 
+\end{methoddesc}
+
+\begin{methoddesc}[Core]{ExporterDel}{ObjectID}
+This method will stop and remove the exporter pointed by the given ID. 
+
+The argument \var{ObjectID} specifies the exporter, that should be removed.
+This is the ID you got by the \function{ExporterAdd} methodcall.
+
+The method return \code{True} on success or \code{False} on error.
+\end{methoddesc}

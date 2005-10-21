@@ -1,4 +1,7 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
+#
+
 from PPLT.ModSrc import DataBase;
 import PPLT;
 from PPLT.ModSrc import Set
@@ -7,7 +10,7 @@ import os.path;
 import sys;
 from PPLT.ModSrc.ModInstallList import ModInstallList;
 from PPLT.Center.I18N import InitI18N;
-
+from PPLT.ModSrc.Exceptions import *
 class ReposSelectionDialog(wx.Dialog):
     def __init__(self):
         wx.Dialog.__init__(self, None, -1, _("Select a repositority..."));
@@ -105,7 +108,7 @@ class ReposSelectionDialog(wx.Dialog):
         if self.StdHTTPRepos.GetValue(): URLs.append("http://pplt.local.de/Modules/");
         if self.StdFTPRepos.GetValue(): URLs.append("ftp://10.1.1.4/Modules/");
         if self.AddURLRepos.GetValue(): URLs.append(self.URLRepos.GetValue());
-        if self.AddFileRepos.GetValue(): URLs.append("file://"+self.FileRepos.GetValue());
+        if self.AddFileRepos.GetValue(): URLs.append("file:"+self.FileRepos.GetValue());
         return (URLs, self.FollowLinks.GetValue(), self.FollowOtherSite.GetValue(),);
 
     
@@ -123,14 +126,23 @@ def CreateRemoteDB(URLs, FollowLinks, FollowOtherSites, Proxies):
             dlg.Destroy();
             return None;
         try: RemoteDB.AddSource(URL, Proxies);
-        except Exception, e:
+        except ImportException, e:
             dlg.Destroy()
-            msg = wx.MessageDialog(None, _("Could not import repositority ")+URL+_("\n ErrorCode: ")+str(e),
+            msg = wx.MessageDialog(None, _("Could not import repositority ")+URL+_("\n ErrorCode: ")+e.__unicode__(),
                                    _("Error while import"), 
                                    wx.OK | wx.ICON_ERROR);
             msg.ShowModal();
             msg.Destroy();
             return None;
+        except Exception, e:
+            dlg.Destroy()
+            msg = wx.MessageDialog(None, _("Could not import repositority ")+URL+_("\n ErrorCode: ")+e.__str__(),
+                                   _("Error while import"), 
+                                   wx.OK | wx.ICON_ERROR);
+            msg.ShowModal();
+            msg.Destroy();
+            return None;
+
     dlg.Destroy()
     return RemoteDB;
     

@@ -74,6 +74,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         PathList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PathList);
         if not isinstance(Element, pyDCPUSymbol.Symbol):
+            self.Logger.error("%s doesn't exists!"%PathToSymbol);
             return(False);
         return(Element.SetValue(Value, SessionID));
 
