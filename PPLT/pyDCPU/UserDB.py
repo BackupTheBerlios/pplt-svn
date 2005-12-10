@@ -34,6 +34,7 @@ import LoadDB;
 import Session;
 import xml.dom.minidom;
 import md5;
+import logging;
 
 """
     This module holds the UserDB class. (Check UserDB.UserDB)
@@ -49,21 +50,19 @@ class UserDB:
                                                         Have a lot of fun.
     """
 
-    def __init__(self, Logger, FileName=None, AutoSave = True):
+    def __init__(self, FileName=None, AutoSave = True):
         """
             This is the init method. (you know)
-                * The first option is the loggerobject used to log error,
-                    warning and debuging messages.
-                * The second option is the filename/path to the user-database
+                * The 1st option is the filename/path to the user-database
                     file to load or to save to. (later)
-                * The last boolean option means to autosave all changes you will
+                * The 2nd boolean option means autosave: all changes you will
                     make to the user/group tree.
         """
         self.__GroupHash = {};
         self.__GroupNameList = [];
         self.__MemberNameList = [];
         self.__SuperUser = None;
-        self.__Logger = Logger;
+        self.__Logger = logging.getLogger("pyDCPU");
         self.__DBFileName = FileName;
         self.__SystemSession = None;
         self.__AutoSave = False;
@@ -140,7 +139,7 @@ class UserDB:
     def ValidUser(self, UserName, Passwd):
         """
             This method will test if the password for this user.
-        """
+        """;
         if not self.__MemberNameList.count(UserName):
             self.__Logger.warning("User %s not found"%UserName);
             return(False);

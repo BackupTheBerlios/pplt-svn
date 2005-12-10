@@ -18,44 +18,38 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    #
 # ############################################################################ #
 
-__author__  = 'Hannes Matuschek <hmatuschek@gmx.net>'
-__status__  = 'beta'
-__version__ = '0.9.0'
-__date__    = '2005-10-30'
+import zipfile;
+import imp;
+import marshal;
+import time;
 
-VERSION = 0x000900;              # this version-number is used internal to check
-                                 # if a module fit in this system.
+def Compile(ZipFile):
+    """ This function compiles all python files inside a ZIP archive. """
+    ZIP = zipfile.PyZipFile(ZipFile, mode="a");
+    Files = ZIP.namelist();
+    for FileName in Files:
+        if not FileName[-3:] == ".py": continue;    # compile onyl python
+        if FileName+"c" in Files: continue;         # do not recomplile
+        src_data = ZIP.read(FileName);
+        src_info = ZIP.getinfo(FileName);
+        timestamp = int(time.time());
+        if src_data[-1] != "\n": src_data += "/";
+        src_data.replace("\r\n","\n");  #windows->unix
+        src_data.replace("\r","\n");    #mac->unix
+        
+        bin_obj  = compile(src_data,"<string>","exec");
+        # assamble .pyc file
+        bin_str = imp.get_magic();
+        bin_str += chr(timestamp      &0xff);
+        bin_str += chr((timestamp>>8) &0xff);
+        bin_str += chr((timestamp>>16)&0xff);
+        bin_str += chr((timestamp>>24)&0xff);
+        bin_str += marshal.dumps(bin_obj);
+        
+        ZIP.writestr(FileName+"c",bin_str);
+        print "Compile: %s(%i)\t\t -> (%i)"%(FileName, len(src_data), len(bin_str));
+    ZIP.close();
+    
 
-#
-# Definition of types:
-#
-TBool = "Bool";
-TInteger = "Integer";
-TFloat = "Float";
-TString = "String";
-TArrayOfBool = "ArrayBool";
-TArrayOfInteger = "ArrayInteger";
-TArrayOfFloat = "ArrayFloat";
-TArrayOfString = "ArrayString";
-TUnDef = "undef";
-#direct access types:
-TStream = "Stream";
-TSeqence = "Sequence";
-
-# Quality of service
-QGood = "good";             # all ok
-QCached = "cached";         # cached value
-QBadCached = "badcached";   # read error -> return cached value
-QBad = "bad";               # read error and no cached value
-
-
-
-
-from Exceptions import *;
-from Core import Core;
-from SymbolTree import *
-from MasterObject import *;
-from ExportObject import *;
-from ExportableSymbolTree import *;
-from UserDB import *;
-from CoreModuleInfo import MetaData;
+if __name__=="__main__":
+    Compile("/usr/PPLT/Export/JVisu.zip");

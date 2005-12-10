@@ -30,7 +30,6 @@
 #       symboltree
 
 import pyDCPU;
-import pyDCPU.UserDB;
 import logging;
 import string;
 
@@ -40,7 +39,7 @@ class ExportableSymbolTree:
 
         if not isinstance(SymbolTree, pyDCPU.SymbolTree):
             raise pyDCPU.Error;
-        if not isinstance(UserDB, pyDCPU.UserDB.UserDB):
+        if not isinstance(UserDB, pyDCPU.UserDB):
             raise pyDCPU.Error;
 
         self.__SymbolTree = SymbolTree;
@@ -88,6 +87,11 @@ class ExportableSymbolTree:
         Path = Normpath(self.__Root+"/"+PathToSymbol);
         if not SessionID: SessionID = self.__DefaultSession;
         return self.__SymbolTree.GetTypeName(Path, SessionID);
+
+    def GetQuality(self, PathToSymbol, SessionID):
+        Path = Normpath(self.__Root+"/"+PathToSymbol);
+        if not SessionID: SessionID = self.__DefaultSession;
+        return self.__SymbolTree.GetQuality(Path, SessionID);
 
 def Normpath(Path):
     tmp = Path.split('/');

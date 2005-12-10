@@ -26,8 +26,8 @@
 #   add moveing/renameing symbols feature.
 # 2005-08-25:
 #   fixed ident error in Folder.DeleteSymbol(Folder.DeleteSymbol())
-import pyDCPUSymbolTools;
-import pyDCPUSymbol;
+import SymbolTools;
+import Symbol;
 
 
 
@@ -61,13 +61,13 @@ class Folder:
         return(False);
 
     
-    def AddSymbol(self, Name, Symbol):
+    def AddSymbol(self, Name, Symb):
         if self.FolderHash.has_key(Name) or self.SymbolHash.has_key(Name):
             return(False);
-        if not isinstance(Symbol, pyDCPUSymbol.Symbol):
+        if not isinstance(Symb, Symbol.Symbol):
             return(False);
         
-        self.SymbolHash.update( {Name:Symbol} );
+        self.SymbolHash.update( {Name:Symb} );
         return(True);
         
     def RemoveSymbol(self, Name):
@@ -109,7 +109,7 @@ class Folder:
 
     def GetElementByPath(self, PathToElement):
         """ Get a element from tree by Path """
-        (Item, Path) = pyDCPUSymbolTools.PopItemFromPath(PathToElement);
+        (Item, Path) = SymbolTools.PopItemFromPath(PathToElement);
         
         if Item and not Path:
             if self.SymbolHash.has_key(Item):

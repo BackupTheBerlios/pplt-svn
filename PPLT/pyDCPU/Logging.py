@@ -61,3 +61,11 @@ def SetupLogger(Level,File,SysLog):
             Logger.setLevel(logging.ERROR);
     Logger.info("Start logging");
     return(Logger);
+
+
+def StopLogging():
+    logger = logging.getLogger("pyDCPU");
+    for hld in logger.handlers:
+        #hld.close();
+        logger.removeHandler(hld);
+    #logger.disabled=True;

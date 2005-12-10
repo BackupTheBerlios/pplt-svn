@@ -9,15 +9,15 @@ import string;
 
 
 def GetMetaData(FileName):
-    Logger = logging.getLogger("PPLT");
+    Logger = logging.getLogger("pyDCPU");
     try:
         zipobj = zipfile.ZipFile(FileName,"r");
-    except:
-        Logger.error("Unable to open zip %s"%FileName);
+    except Exception, e:
+        Logger.error("Unable to open zip %s: %s"%(FileName, str(e)));
         return(None);
     lst = zipobj.namelist();
     if not "meta.xml" in lst:
-        Logger.error("Invalid formated file...(meaning no metadata found)");
+        Logger.error("Invalid formated file...(meaning no metadata found)!");
         return(None);
     meta = zipobj.read("meta.xml");
     zipobj.close();
@@ -27,7 +27,7 @@ def GetMetaData(FileName):
 
 class MetaData:
     def __init__(self, FileName):
-        self.__Logger = logging.getLogger("PPLT");
+        self.__Logger = logging.getLogger("pyDCPU");
         self.__Authors = [];
         self.__LastUpdate = None;
         self.__URLs = [];

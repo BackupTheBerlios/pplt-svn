@@ -20,38 +20,38 @@
 
 
 # ChangeLog:
+# 2005-12-09:
+#   removed slots
 # 2005-08-26:
 #   add moveing symbols feature.
 # 2005-08-25:
 #   removed saving the non-existing typename in Symbol.ToXML()
 
-import pyDCPUSymbolSlot
-import pyDCPUConverter;
-import UserDB;
-
-
-Valid_Type_Names = ['Bool','Byte','Word','DWord','Float','Double','String'];
+import logging;
+from Possession import Possession
+import MasterObject
 
 
 
 class Symbol:
-    def __init__(self, Name, SymbolSlot, Possession, Logger):
-        self.__Logger = Logger;
+    def __init__(self, Name, Connection, myPossession):
+        self.__Logger = logging.getLogger("pyDCPU");
         self.__Valid = True;
         if not Name:
             self.__Logger.error("No symbolname given");
             self.__Valid = False;
-        if not isinstance(SymbolSlot, pyDCPUSymbolSlot.SymbolSlot):
+        if not isinstance(Connection, (MasterObject.StreamConnection, 
+                                       MasterObject.SequenceConnection, 
+                                       MasterObject.ValueConnection) ):
             self.__Logger.error("No symbolslot given");
             self.__Valid = False;
-        if not isinstance(Possession, UserDB.Possession):
+        if not isinstance(myPossession, Possession):
             self.__Logger.error("No PossessionObj given");
             self.__Valid = False;
             
         self.__Name = Name;
-        self.__Possession = Possession;
-        self.__SymbolSlot = SymbolSlot;
-        self.__SymbolSlot.RegisterSymbol();        
+        self.__Possession = myPossession;
+        self.__Connection = Connection;
 
 
     def IsValid(self): return(self.__Valid);
@@ -60,43 +60,63 @@ class Symbol:
         self.__Name = Name;
         return(True);
 
-    def Unregister(self): return(self.__SymbolSlot.UnregisterSymbol());
+    def Unregister(self): return(self.__Connection.close());
 
-    def GetTypeName(self): return(self.__SymbolSlot.GetTypeName());
+    def GetTypeName(self): return(self.__Connection.GetTypeName());
    
-    def GetLastUpdate(self): return(self.__SymbolSlot.GetLastUpdate());
-   
+    def GetLastUpdate(self): return(self.__Connection.GetLastUpdate());
+
+    def GetQuality(self): return self.__Connection.GetQuality();
+
     def GetValue(self, SessionID):
         if not self.__Possession.CanRead(SessionID):
             self.__Logger.warning("Session %s: Access denied"%SessionID);
             return(None);
-        return(self.__SymbolSlot.GetValue());
-
+        return(self.__Connection.read_seq());
 
     def SetValue(self, Value, SessionID):
         if not self.__Possession.CanWrite(SessionID):
             self.__Logger.warning("Session %s: Access denied"%SessionID);
             return(False);
-        return(self.__SymbolSlot.SetValue(Value));
+        return(self.__Connection.write_seq(Value));
 
+    def Read(self, Length, SessionID):
+        if not self.__Possession.CanRead(SessionID):
+            self.__Logger.warning("Session %s: Access denied"%SessionID);
+            return None;
+        if isinstance(self.__Connection, MasterObject.SequenceConnection): return self.__Connection.read_seq();
+        elif isinstance(self.__Connection, MasterObject.StreamConnection): return self.__Connection.read(Length);
+        self.__Logger.warning("Can't read from connection: used Get/SetValue instead.");
+        return None;
+
+    def Write(self, Data, SessionID):
+        if not self.__Possession.CanWrite(SessionID):
+            self.__Logger.warning("Session %s: Access denied"%SessionID);
+            return None;
+        if isinstance(self.__Connection, MasterObject.SequenceConnection, MasterObject.StreamConnection): 
+            return self.__Connection.write(Data);
+        self.__Logger.warning("Can't read from connection: used Get/SetValue instead.");
+        return None;
+            
     def SetPossession(self, Possession):
         self.__Possession = Possession;
         return(True);
 
     def GetPossession(self):
         return(self.__Possession);
-    
-    def ToXML(self, Document):
-        """ This method will return a xmlNode contain all info needed
-            to rebuild """
-        Node = Document.createElement("Symbol");
-
-        Node.setAttribute("name",self.__Name);
-        #Node.setAttribute("type",self.__TypeName);
-        Node.setAttribute("slot",str(self.__SymbolSlot._GetID()));
-        Node.setAttribute("own",str(self.__Possession.GetOwner()));
-        Node.setAttribute("grp",str(self.__Possession.GetGroup()));
-        Node.setAttribute("mod",str(self.__Possession.GetRight()));
-        
-        return(Node);
+ 
+# FIXME change to new concept 
+#    def ToXML(self, Document):
+#        """ This method will return a xmlNode contain all info needed
+#            to be rebuild """
+#        Node = Document.createElement("Symbol");
+#
+#        Node.setAttribute("name",self.__Name);
+#        #Node.setAttribute("type",self.__TypeName);
+#        Node.setAttribute("slot",str(self.__SymbolSlot._GetID()));
+#        Node.setAttribute("own",str(self.__Possession.GetOwner()));
+#        Node.setAttribute("grp",str(self.__Possession.GetGroup()));
+#        Node.setAttribute("mod",str(self.__Possession.GetRight()));
+#        
+#        return(Node);
 #END CLASS "SYMBOL"

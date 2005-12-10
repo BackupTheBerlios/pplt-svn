@@ -29,28 +29,30 @@
 #   - bug in DeleteSymbol(): was unable to delete symbol from root
 
 #FIXME:
-#
+#   - the symboltree have to have a owner,group and rights
 
 
 import string;
-import pyDCPUSymbol;
-import pyDCPUSymbolTools;
-import pyDCPUSymbolFolder;
+import Symbol;
+import SymbolTools;
+import SymbolFolder;
 import UserDB;
+from Possession import Possession
+import logging;
 
-
-class SymbolTree(pyDCPUSymbolFolder.Folder):
-    def __init__(self, DefaultUser, DefaultGroup, DefaultRights, UserDBObj, Logger):
+class SymbolTree(SymbolFolder.Folder):
+    def __init__(self, DefaultUser, DefaultGroup, DefaultRights, UserDBObj):
         self.__DefaultUser = DefaultUser;
         self.__DefaultGroup = DefaultGroup;
         self.__DefaultRights= DefaultRights;
-        self.Logger = Logger;
+        self.Logger = logging.getLogger("pyDCPU");
         self.__UserDB = UserDBObj;
         self.__Name = "/";
-#        self.__Possession = UserDB.Possession(self.__DefaultUser,
-#                                                self.__DefaultGroup,
-#                                                self.__DefaultRights,
-#                                                self.__UserDB);
+        self.__Possession = Possession(self.__DefaultUser,
+                                       self.__DefaultGroup,
+                                       self.__DefaultRights,
+                                       self.__UserDB);
+        self.Logger.debug("Defalt user: %s;   default grp: %s;   default right: %i"%(self.__DefaultUser, self.__DefaultGroup, self.__DefaultRights));
         self.SymbolHash = {};
         self.FolderHash = {};
 
@@ -60,9 +62,9 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
     def GetValue(self, PathToSymbol, SessionID):
         """ Returns the Value of the spec. Symbol in Type fromat.
             To control the access a SessionID is needed! """
-        PathList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
+        PathList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PathList);
-        if not isinstance(Element, pyDCPUSymbol.Symbol):
+        if not isinstance(Element, Symbol.Symbol):
             return(False);
         return(Element.GetValue(SessionID));
 
@@ -71,26 +73,26 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
     def SetValue(self, PathToSymbol, Value, SessionID):
         """ Write the value in Value into the symbol addressed by
             PathToSymbol """
-        PathList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
+        PathList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PathList);
-        if not isinstance(Element, pyDCPUSymbol.Symbol):
+        if not isinstance(Element, Symbol.Symbol):
             self.Logger.error("%s doesn't exists!"%PathToSymbol);
             return(False);
         return(Element.SetValue(Value, SessionID));
 
     def CheckFolder(self, PathToFolder):
         """ Check if folder exists. """
-        PathList = pyDCPUSymbolTools.SplitPath(PathToFolder);
+        PathList = SymbolTools.SplitPath(PathToFolder);
         Element = self.__GetElementByPath(PathList);
-        if not isinstance(Element, pyDCPUSymbolFolder.Folder):
+        if not isinstance(Element, SymbolFolder.Folder):
             return(False);
         return(True);
 
     def CheckSymbol(self, PathToSymbol):
         """ Check if symbol exists. """
-        PathList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
+        PathList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PathList);
-        if not isinstance(Element, pyDCPUSymbol.Symbol):
+        if not isinstance(Element, Symbol.Symbol):
             return(False);
         return(True);
 
@@ -99,9 +101,9 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         if PathToFolder == '/':
             return(self.FolderHash.keys());
 
-        PList = pyDCPUSymbolTools.SplitPath(PathToFolder);
+        PList = SymbolTools.SplitPath(PathToFolder);
         Element = self.__GetElementByPath(PList);
-        if not isinstance(Element, pyDCPUSymbolFolder.Folder):
+        if not isinstance(Element, SymbolFolder.Folder):
             return(None);
         return(Element.ListFolders(SessionID));
 
@@ -110,28 +112,34 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         """ List all symbols in folder addressed by PathToFolder """
         if PathToFolder == '/':
             return(self.SymbolHash.keys());
-        PList = pyDCPUSymbolTools.SplitPath(PathToFolder);
+        PList = SymbolTools.SplitPath(PathToFolder);
         Element = self.__GetElementByPath(PList);
-        if not isinstance(Element, pyDCPUSymbolFolder.Folder):
+        if not isinstance(Element, SymbolFolder.Folder):
             return(None);
         return(Element.ListSymbols(SessionID));
 
     
     def GetTypeName(self, PathToSymbol, SessionID):
         """ Return the name of the original type of the source. """
-        PList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
+        PList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PList);
         print "Typename of (%s)%s"%(PathToSymbol,Element);
-        if not isinstance(Element, pyDCPUSymbol.Symbol): return None;
+        if not isinstance(Element, Symbol.Symbol): return None;
         return Element.GetTypeName();
 
     def GetLastUpdate(self, PathToSymbol, SessionID):
         """ Return the timestamp of the symbol. """
-        PList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
+        PList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PList);
-        if not isinstance(Element, pyDCPUSymbol.Symbol): return 0;
+        if not isinstance(Element, Symbol.Symbol): return 0;
         return Element.GetLastUpdate();
          
+    def GetQuality(self, PathToSymbol, SessionID):
+        """ Returns the quality of the symbol. """
+        PList = SymbolTools.SplitPath(PathToSymbol);
+        Element = self.__GetElementByPath(PList);
+        if not isinstance(Element, Symbol.Symbol): return None;
+        return Element.GetQuality();
 
     #
     # The next methods are used by the CoreObject
@@ -140,19 +148,19 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
     def CreateFolder(self, PathToFolder):
         """ """
-        PList = pyDCPUSymbolTools.SplitPath(PathToFolder);
+        PList = SymbolTools.SplitPath(PathToFolder);
         if len(PList) == 0:
             return(False);
         Name = PList[-1];
 
         Parent = self.__GetElementByPath(PList[:-1]);
 
-        Possession = UserDB.Possession(self.__DefaultUser,
-                                        self.__DefaultGroup,
-                                        self.__DefaultRights,
-                                        self.__UserDB);
+        possession = Possession(self.__DefaultUser,
+                                self.__DefaultGroup,
+                                self.__DefaultRights,
+                                self.__UserDB);
 
-        newFolder = pyDCPUSymbolFolder.Folder(Name, Possession);
+        newFolder = SymbolFolder.Folder(Name, possession);
         if not newFolder:
             self.Logger.error("Error while create Folder-Obj");
             return(False);
@@ -166,11 +174,11 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         return(True);
 
     def MoveFolder(self, From, To):
-        OPList = pyDCPUSymbolTools.SplitPath(From);
+        OPList = SymbolTools.SplitPath(From);
         OName  = OPList[-1];
         SPList = OPList[:-1];
         Src    = "/"+string.join(SPList,"/");
-        NPList = pyDCPUSymbolTools.SplitPath(To);
+        NPList = SymbolTools.SplitPath(To);
         NName  = NPList[-1];
         DPList = NPList[:-1];
         Dest   = "/"+string.join(DPList,"/");
@@ -206,7 +214,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
     def DeleteFolder(self, PathToFolder):
         """ """
-        PList = pyDCPUSymbolTools.SplitPath(PathToFolder);
+        PList = SymbolTools.SplitPath(PathToFolder);
         if len(PList)==0:
             return(False);
 
@@ -231,9 +239,9 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
 
 
-    def CreateSymbol(self, PathToSymbol, SymbolSlot):
+    def CreateSymbol(self, PathToSymbol, Connection):
         """ Create a new Symbol """
-        PList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
+        PList = SymbolTools.SplitPath(PathToSymbol);
         if len(PList) == 0:
             return(False);
 
@@ -247,15 +255,14 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
         if not Parent:
             return(False);
         
-        Possession = UserDB.Possession(self.__DefaultUser,
-                                        self.__DefaultGroup,
-                                        self.__DefaultRights,
-                                        self.__UserDB);
+        possession = Possession(self.__DefaultUser,
+                                self.__DefaultGroup,
+                                self.__DefaultRights,
+                                self.__UserDB);
 
-        newSymbol = pyDCPUSymbol.Symbol(Name,
-                                        SymbolSlot,
-                                        Possession,
-                                        self.Logger);
+        newSymbol = Symbol.Symbol(Name,
+                                  Connection,
+                                  possession);
         
         if not newSymbol.IsValid():
             return(False);
@@ -272,8 +279,8 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
     def MoveSymbol(self, OldPath, NewPath):
         """ Move a symbol. """
-        OPList = pyDCPUSymbolTools.SplitPath(OldPath);
-        NPList = pyDCPUSymbolTools.SplitPath(NewPath);
+        OPList = SymbolTools.SplitPath(OldPath);
+        NPList = SymbolTools.SplitPath(NewPath);
 
         if len(OPList)<1 or len(NPList)<1:
             return(False);
@@ -284,7 +291,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
             return(False);
         if len(NPList)>1:
             NParent = self.__GetElementByPath(NPList[:-1]);
-            if not isinstance(NParent, pyDCPUSymbolFolder.Folder):
+            if not isinstance(NParent, SymbolFolder.Folder):
                 return(None);
             self.Logger.debug("Movesymbol: Destinationfolder is a folder.");
         #check if destinatino already exists
@@ -309,7 +316,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
             del self.SymbolHash[OName];
         else:
             Symbol = self.__GetElementByPath(OPList);
-            if not isinstance(Symbol, pyDCPUSymbol.Symbol):
+            if not isinstance(Symbol, Symbol.Symbol):
                 self.Logger.error("Symbol %s not found."%OldPath);
                 return(False);
             OParent = self.__GetElementByPath(OPList[:-1]);
@@ -334,7 +341,7 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
     def DeleteSymbol(self, PathToSymbol):
         """ Delete a Symbol """
-        PList = pyDCPUSymbolTools.SplitPath(PathToSymbol);
+        PList = SymbolTools.SplitPath(PathToSymbol);
         if len(PList)==0:
             return(False);
 
@@ -359,21 +366,21 @@ class SymbolTree(pyDCPUSymbolFolder.Folder):
 
     def SetPossession(self, PathToElement, User, Group, Permissions):
         """ Set the Possession to a folder or symbol """
-        PList = pyDCPUSymbolTools.SplitPath(PathToElement);
+        PList = SymbolTools.SplitPath(PathToElement);
         Element = self.__GetElementByPath(PList);
         if not Element:
             return(False);
 
-        Possession = UserDB.Possession(User,
-                                        Group,
-                                        Permissions,
-                                        self.__UserDB);
+        Possession = Possession(User,
+                                Group,
+                                Permissions,
+                                self.__UserDB);
         if not Element.SetPossession(Possession):
             return(False);
         return(True);
         
     def GetPossession(self, PathToElement):
-        PList = pyDCPUSymbolTools.SplitPath(PathToElement);
+        PList = SymbolTools.SplitPath(PathToElement);
         Element = self.__GetElementByPath(PList);
         if not Element:
             return(None);

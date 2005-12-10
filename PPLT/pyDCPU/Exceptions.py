@@ -29,29 +29,63 @@
 class Error(Exception):
     """ Base exception-class for all execptions raised by pyDCPU
             system and modules """
+    pass;
+
+
+# Exceptions related to Modules:
+class ModuleError(Error): pass;             # general module error class
+class ModuleNotFound(ModuleError): pass;    # if a core-module is not known;
+class ModuleSetup(ModuleError): pass;       # if a module can't be setted up.
+class BadModule(ModuleError): pass;         # if a module mismatch the API or meta.xml is bad
+class ModuleRequirement(ModuleError): pass; # if a requirement of a module is missing.
+class ObjectNotFound(ModuleError): pass;    # if an object can't be found
+class ObjectBusy(ModuleError): pass;        # if an object is used by other one
+class ModuleLocked(ModuleError): pass;      # if you've tried to access a locked module
+
+#Exceptions related to the symboltree
+class SymbolError(Error): pass;             # general symboltree error class
+class ItemNotFound(SymbolError): pass;      # if a symbol/folder doesn't exists
+class AccessDenied(SymbolError): pass;      # if you don't have the permission to access a symbol/folder
+class FolderNotEmpty(SymbolError): pass;    # if you've tried to delete a non empty folder
+
 
 class ModError(Error):
     """ Base class for all exceptions raised in a module. """
     pass;
+
+
+
 class SetupModError(ModError):
     pass;
+
+
+
 class LockModError(ModError):
     """ This execption will be raised, if the module you manted
             to access was locked: [retry] """
     pass;
+
+
 class IOModError(ModError):
     """ This exception should be raised, if there was an IOError:
         This means:
             - error while access to a data-source
             - protocol-errors [retry]"""
     pass;
+
+
+
 class FatIOModError(ModError):
     """ This execption should be raise, if the communication is
             broken down: [stop]"""
     pass;
+
+
+
 class TimeOutError(ModError):
     pass;
     
+
 class ReadOnlyModError(ModError):
     """ This exception should be raised, if the module is readonly"""
     pass;

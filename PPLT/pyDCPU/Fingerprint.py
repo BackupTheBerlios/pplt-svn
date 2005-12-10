@@ -23,7 +23,8 @@ import md5;
 def Fingerprint(Name, Parent = None, Address = None, TypeName = None, 
                 Parameter = None, DefaultUser = None, CacheTime = None, 
                 Root = None):
-    """ Calc a fingerprint from parameters, name, etc... """
+    """ Calc a fingerprint from parameters, name, etc... 
+ This is (internal) used to make the master-objects singleton."""
     fingerprint = md5.new(Name);
     if Parent:
         fingerprint.update(Parent);
