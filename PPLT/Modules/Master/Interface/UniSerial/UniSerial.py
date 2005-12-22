@@ -106,7 +106,7 @@ class Object(pyDCPU.MasterObject):
     def connect(self,Address):
         if Address:
             self.Logger.warning("I don't a connection with a address...");
-        Connection = pyDCPU.MasterConnection(self,None);
+        Connection = pyDCPU.StreamConnection(self,None);
         return(Connection);
 
 

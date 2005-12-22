@@ -6,19 +6,19 @@ import Version;
 import sys;
 import imp;
 import string;
+import pyDCPU.Exceptions as Exceptions;
+import os.path;
 
 
 def GetMetaData(FileName):
     Logger = logging.getLogger("pyDCPU");
-    try:
-        zipobj = zipfile.ZipFile(FileName,"r");
-    except Exception, e:
-        Logger.error("Unable to open zip %s: %s"%(FileName, str(e)));
-        return(None);
+    if not os.path.exists(FileName):
+        raise Exceptions.ItemNotFound("Module @ %s not found!"%FileName);
+    zipobj = zipfile.ZipFile(FileName,"r");
     lst = zipobj.namelist();
+    #check if meta-data exists in zip file:
     if not "meta.xml" in lst:
-        Logger.error("Invalid formated file...(meaning no metadata found)!");
-        return(None);
+        raise Exceptions.BadModule("Invalid module format: no meta.xml found in file %s"%FileName);
     meta = zipobj.read("meta.xml");
     zipobj.close();
     return(meta);
@@ -40,13 +40,10 @@ class MetaData:
 
         xmlstr = GetMetaData(FileName);
         
-        if not xmlstr:
-            self.__Logger.error("Error while load meta data");
-            raise Exception("Error while load meta data from file: %s"%(FileName));
         try: doc = xml.dom.minidom.parseString(xmlstr).documentElement;
         except Exception, e:
             self.__Logger.error("Error while parse meta-file in %s: %s"%(FileName, str(e)));
-            raise Exception("Error while parse mata-file in %s: %s"%(FileName, str(e)));
+            raise Exceptions.BadModule("Error while parse mata-file in %s: %s"%(FileName, str(e)));
 
         self.__FileName = FileName;
         self.__VersionString = str(doc.getAttribute("version"));

@@ -4,3 +4,558 @@
 
 \declaremodule{}{PPLT}
 \moduleauthor{Hannes Matuschek}{hmatuschek@gmx.net}
+\modulesynopsis{The PPLT is a framework for master/slave based communication.}
+
+The \module{PPLT} builds an abstraction layer over the core library 
+(\module{pyDCPU}). With the PPLT you can easily handle abstract devices and 
+server instead of handle with several core modules. Also the corelibray the 
+PPLT has only one class called \code{System}. After instanceing this class, all
+work can be done by calling the methods of this object.
+
+\section{Class description}
+\begin{classdesc}{System}{\optional{BasePath}, \optional{CoreLogLevel}, 
+\optional{PPLTLogLevel}, \optional{LogFile}, \optional{Syslog}, 
+\optional{Lang}, \optional{AltLang}}
+This is the all-in-one class. Wenn this class will be instanced the complete 
+PPLT system will be loaded. Meaning searching plugins (modules), loading 
+user-database, starting core-system, etc...
+
+The argument \var{BasePath} specifies the path of all PPLT related stuff. This 
+is by default \code{sys.exec\_prefix+'/PPLT'}. Under Windows this is the folder 
+where you've installed Python under \UNIX this should be some thing like 
+\code{/usr/local/PPLT}. If you miss this argument, the default path will be 
+used.
+
+The argument \var{CoreLogLevel} specifies the log-level for the core library. 
+This should be one of \code{off}, \code{fatal}, \code{error}, \code{warning}, 
+\code{info}, \code{debug}.  If you select \code{debug} a lot of (not allways 
+usefull) messages will be logged and \code{off} switches the logging off. 
+By default the logging level \code{info} will be used. If you miss this 
+argument, the default value will be used.
+
+The argument \var{PPLTLogLevel} specifies the loglevel of the PPLT library. 
+This should be one of \code{off}, \code{fatal}, \code{error}, \code{warning}, 
+\code{info}, \code{debug}. If you select \code{debug} a lot of (not allways 
+usefull) messages will be logged and \code{off} switches the logging off. 
+By default the logging level \code{info} will be used. If you miss this 
+argument, the default value will be used.
+
+The argument \var{LogFile} specifies the file,  where the logging messages are
+written to. If you missed this argument, there were no messages written to any
+file, all messages were send to screen (\code{stderr}). 
+
+The boolean argument \var{SysLog} specifies if the messages shloud be send to
+the local \code{syslog}-daemon. 
+\begin{notice}
+This argument overwrites the optional argument \var{LogFile}. If \var{SysLog}
+it \code{True} no messages were written into any file nor send to screen!
+\end{notice}
+By default this argument if \code{False}. If you missed this argument, the 
+default will be used.
+
+The argument \var{Lang} specifies the primary language the system will use for
+module description. This option do not change the language of the logging 
+messages (they are not translated). This option is not important for normal
+usage of the PPLT. By default \code{'en'} will be used.
+
+The argument \var{AltLang} specifies the alternative language to be used
+for module description. This should be allways \code{'en'}. \textbf{Do not 
+change until you know what you do.} 
+
+If the primary language can not be found, the alternative will be used. 
+\end{classdesc}
+
+
+
+
+\section{Methods of \class{System}}
+In this section I will describe the methods of the \class{System}-class. I 
+will not list all avaiable methods, because there are mor then 60 of it. Some
+of them are only usefull if you want to write a GUI application like the
+\emph{PPLT Center}. But you can get a short help over all methods by calling
+\code{pydoc PPLT.System}. 
+
+
+\subsection{Device methods}
+\begin{methoddesc}[System]{LoadDevice}{DeviceName, Alias, Parameters}
+This is one of the most important methods. With this method you can load and
+setup a device. This methos loads the device \var{DeviceName} as \var{Alias}. 
+The alias will be used later to specify this device, for example if you want
+to connect a symbol to this device or unload the device.
+
+The argument \var{DeviceName} specifies the full qualified device name. All
+devices (and servers) are grouped by classes. A full qualified device name
+consists allways of all classes and the name devided by a single dot. For
+example \code{'PLC.Panasonic-FPX'}.
+
+The argument \var{Alias} specifies the alias the device will get after being
+loaded. By this alias you will identify the device later.
+
+The attribute \var{Parameters} specifies the parameters the device needs to be
+setted up successfully. This should be a dict with key-value pairs. The key 
+is the parameter name and the value shoud be the parameter-value. For example:
+\code{\{'Port':'0', 'Address':'123'\}}.
+\begin{notice}
+All parameter names and also \textbf{all} parameter values are strings!
+\end{notice}
+
+This method will return \code{Ture} on sucess an \code{False} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{UnLoadDevice}{Alias}
+This method unload and destroy the given device. 
+
+The argument \var{Alias} specifies the alias of the device you want to be
+unloaded. This is the alias you've setted at the \method{LoadDevice} 
+methodcall.
+
+This method returns \code{True} on success and \code{False} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetFQDeviceName}{Alias}
+This method returns the full qualified device name of the device loaded as
+\var{Alias}.
+
+The attribute \var{Alias} specifies the alias of the loaded device. This is
+the alias you've setted at the \method{LoadDevice} method-call.
+
+This method returns a string containing the full qualified device name or non 
+if the alias if not a device or not loaded.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetDeviceParameters}{Alias}
+This method will return the parameters the device was loaded with. This method
+will return a dict on success or \code{None} on error.
+\end{methoddesc}
+
+
+\subsection{Server methods}
+This section describes all methods to hanle servers, like starting, stopping, ... 
+
+\begin{methoddesc}[System]{LoadServer}{ServerName, Alias, DefaultUser, Parameters\optional{, Root}}
+This method loads and setup a server. 
+
+The argument \var{ServerName} specifies the full qualified server name. Full 
+qualified means that all classes and the name are given, divided by a single 
+dot (like: \code{Web.PPLTWebServer}).
+
+The argument \var{Alias} specifies the alias the server will have after 
+beeing loaded. By this alias you will indentify the server later, for example 
+to unload this server.
+
+The argument \var{DefaultUser} specifies the the user, the server will run as. 
+By this option you can assign rights to a server, that doesn't know any 
+athentication. By default, a server should support a authentication but 
+sometimes the used protocol doesn't (for example JVisu). For this kind of 
+server this option is usefull.
+
+The argument \var{Parameters} specifies the parameters the server will be 
+loaded with. This should be a dict with the parameter name as key (string)
+and the parameter value as value (also a string!). If a server doesn't needs
+any parameters, please set \var{Parameters} to \code{None} or to and empty 
+dict (\code{\{\}}). 
+
+The optional argument \var{Root} specifies the server-root of this server. 
+By deafult (\var{Root}=\code{'/'}) the whole symboltree will be accessable
+by this server. But if you want to export only a specific folder of the 
+symboltree you can specify this folder with the \var{Root} argument. So
+if \var{Root}=\code{'/test'} only the content of the folder \code{'/test'}
+will be accessable by this server.
+
+This method retunrs \code{True} on success and \code{False} else.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{UnLoadServer}{Alias}
+This method will stop and destroy a server loded with \method{LoadServer}.
+
+The attribute \var{Alias} specifies the server you want to stop. This is the 
+alias you've defined on loading the server with \method{LoadServer}.
+
+This method will return \code{True} on success and \code{False} else.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetFQServerName}{Alias}
+This method will return the full qualified servername of the loaded server
+by his alias. 
+
+The argument \var{Alias} specifies the alias of the server. This is the alias
+you have defined on loading by the \method{LoadServer} method.
+
+This method returns a string on success or \code{None} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetServerParameters}{Alias}
+This method will return the dict of parameters the server was loaded with. 
+This is the parameter dict, you have defined on loading the server with 
+\method{LoadServer}.
+
+The argument \var{Alias} specifies the alias of the loaded server. This is
+the alias you have defined on loading the server with \method{LoadServer}.
+
+This method will return a dict or \code{None} on error. This method will
+return an empty dict even if you've loaded the server with no parameters.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetServerRoot}{Alias}
+This method will return the server root of a loaded server. This is the 
+server root you have defined on loading the server with \method{LoadServer}.
+
+The server root is the base folder in the symboltree the server can access. 
+Only folders and symbols laying under this folder are accessable by this 
+server.
+
+The argument \var{Alias} specifies the alias of the loded server. This is the
+alias you have defined on loading the server with \method{LoadServer}. 
+
+This method will return a string on success or \code{None} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetServerDefaultUser}{Alias}
+This methos will return the default-user the server is running with. This is
+the username you have defined on loading the server with \method{LoadServer}.
+
+If specified, the server will run with the rights of the default user. This is
+necessary, becaus ther are some servers which don't know any authentication!
+
+The argument \var{Alias} specifies the alias of the loaded server. This is the 
+alias you have defined for this server on loading with \method{LoadServer} 
+call.
+
+This method will return a string on success or \code{None} on error.
+\end{methoddesc}
+
+
+\subsection{Symboltree methods}
+In the following section I will describe all methods for handleing the symboltree. 
+Like createing folder and symbols, moveing them, ...
+
+All methods, that working with the access-rights of a symbol or folder
+are useing following cheme to encode the rights:
+
+\begin{center}
+\begin{tabular}{|c|cc||c|cc||c|cc|} \hline\hline
+\bf{Own} & $r$&$\not r$&\bf{Grp}&$r$ & $\not r$ & \bf{Any} & $r$ & $\not r$\\\hline
+$w$ & 6 & 2 & - & 6 & 2 & - & 6 & 2 \\
+$\not w$ & 4 & 0 & - & 4 & 0 & - & 4 & 0 \\\hline\hline
+\end{tabular}
+\end{center}
+The access-right is represented as a string of 3 numbers each number specifies 
+a access right. The first number specifies the right of the owner of the 
+symbol or folder. The scond specifies the right of the group assigned to the 
+symbol/folder.  The last numner specifies the right of everyone who not 
+belongs to the assigned group nor beeing the owner. To en/decode the 
+representation you can use the table above.
+
+
+\begin{methoddesc}[System]{CreateFolder}{Path\optional{, Modus}\optional{, Owner}\optional{, Group}}
+This method will crate a new folder (at \var{Path}) at the symboltree. 
+Optional you can set the rights of this folder by the arguments \var{Moadus}, 
+\var{Owner}, \var{Group}. If the folder was successfully created, the method 
+returns \code{True} else it returns \code{False}.
+
+The argument \var{Path} specifies the \textbf{complete} path of the folder, 
+you want to create. You cant create folders relative to an other because the 
+system don't know the relative.
+
+The argument \var{Modus} specifies the modus the folder will have. By this 
+argument you can set the access rights of this folder. The argument should be
+a string with an octal integer in it. Meaning something like this: \code{'600'}.
+Each number of the integre represents the encoded right. For the owner of the
+folder (1st number), the group assigned to the folder (2nd number), and any other
+(last number). For encoding you can use table above. 
+By default the modus will be \code{'600'}. This denotes that only the owner 
+of the folder have read/write access. (By default this will be the system adim.)
+
+The aregument \var{Owner} specifies the owner of the folder. This have to be 
+existing user-name. 
+
+The argument \var{Group} specifies the group, the folder will be assigned to. 
+This have to be an existing group-name.
+
+\begin{notice}
+You can reset the modus, owner and group later by calling 
+\method{ChangeModus}, \method{ChangeOwner} or \method{ChangeGroup}.
+\end{notice}
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{DeleteFolder}{Path}
+With this method you can delete an \textbf{empty} folder of the symboltree.
+
+The argument \var{Path} specifies the \textbf{full} path to the folder you want to
+delete. This is the path you've setted on create the folder by 
+\method{CreateFolder} method-call.
+
+This method returns \code{True} on success an \code{False} else.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{MoveFolder}{From, To}
+This method moves a folder to an other or to the root of the symbol-tree.
+
+The argument \var{From} specifies the \textbf{full} path of the folder you want
+to move. The argument \var{To} specifies the \textbf{full} path of the destination 
+folder you want the source folder to be moved to. Of cause, the destination folder
+can't be a subfolder of the source.
+
+This method returns \code{True} on success an \code{False} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{ListFolders}{Path}
+This method retuns the names of all folders in \var{Path}.
+
+The argument \var{Path} specifies the \textbf{full} path of the parentfolder
+you want to list it's subfolders. If you want to list the root path, please 
+set \var{Path}=\code{'/'}.
+
+The method returns a list of strings on success or \code{None} on error. 
+This method will return an empty list if the given folder doesn't contain 
+any subfolders.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{CreateSymbol}{Path, Slot, Type, \optional{, Modus}\optional{, Owner}\optional{, Group}}
+This method creates a new symbol on path \var{Path} connected to the slot \var{Slot} and associated with the type
+\var{Type}. Optional you can set the owner, group and access rights of the new symbol.
+
+The argument \var{Path} specifies the full path to the symbol that should be 
+created. \textbf{Note}: All folder on this path must exsist! 
+
+The argument \var{Slot} specifies the full qualified slot name of the slot you
+want the symbol to be connected to. Thy typical format of a slotname is 
+\code{DEVICEALIAS::NAMESPACE::SLOT}. Please substitute the alias of the device
+the symbol will be attached to with \code{DEVICEALIAS}. You can find the 
+namespaces and slot/slotranges the device provide at the Chapter 
+\emph{PPLT Modules}.
+
+The argument \var{Type} specifies the typename the symbol will associated 
+with. This should be one of \code{'Bool'}, \code{'Integer'}, 
+\code{'uInteger'}, \code{'Float'}, \code{'Double'}, \code{'String'}, 
+\code{'ArrayOfBool'}, \code{'ArrayOfInteger'}, \code{'ArrayOfuInteger'},
+\code{'ArrayOfFloat'}, \code{'ArrayOfDouble'}, \code{'ArrayOfString'} and
+\code{'Raw'}.
+
+The optional argument \var{Modus} specifies the accessright of the new symbol.
+This should be a string (i.e. \code{'600'}) containing an octal integer 
+representing the accessrights like descibed above.
+
+The optional argument \var{Owner} specifies the owner of the symbol. This
+should be a string containing a existing user-name. By default this will be
+the user marked as super-user.
+
+The optional argument \var{Group} specifies the group, the symbol will be 
+attached to. This should be a string containing the name of an existing 
+group. By default this will be the group of the super-user.
+
+This method will return \code{True} on success or \code{False} else.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{DeleteSymbol}{Path}
+This method will remove a symbol from the symbol tree.
+
+The argument \var{Path} specifies the \textbf{full} path
+to the symbol you want to remove. 
+
+This method will return \code{False} on error or \code{True} on success.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{MoveSymbol}{From, To}
+This method moves a symbol from path \var{From} into the folder specified by 
+\var{To}.
+
+The argument \var{Specifies} the symbol you want to move and the argument 
+\var{To} specifies the destination folder. The destination folder have to exist.
+
+This method return \code{False} on error or \code{True} on success.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{ListSymbols}{Path}
+This method will list all symbols of the folder specified by \var{Path}.
+
+The argument \var{Path} specifies the folder.
+
+This method will return a list of strings, even if the folder doesn't contain 
+any symbols (in this case the method will return an empty list). The method
+will return \code{None} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetValue}{Path}
+This method returns the value of the symbol specified by the argument 
+\var{Path}. 
+
+This method will return any value or a list of values on success or 
+\code{None} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{SetValue}{Path, Value}
+This method will set the value of the symbol specified by \var{Path} to 
+\var{Value}.
+
+The argument \var{Path} specifies the symbol, you want to set. The argument 
+\var{Value} specifies the value (or even the list of values) you want to set 
+to the symbol.
+
+This method will return \code{True} on success or \code{False} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetSymbolSlot}{Path}
+This method returns the slotname, a symbol is connected to. 
+
+The argument \var{Path} specifies the \textbf{full} path
+to the symbol.
+
+This method returns a string or \code{None} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetSymbolType}{Path}
+This method returns the typename of a symbol. The argument \var{Path} 
+specifies the \textbf{full} path to the symbol. This method returns 
+\code{True} on success or \code{None} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetSymbolTimeStamp}{Path}
+This method returns the timestamp of the value of a given symbol. The argument
+\var{Path} specifies the full path to the symbol. \textbf{Note}: This method
+will return the timestamp of the last update of the symbol-value. This is not 
+allways the timestamp of the last \emph{successfull} update. This method will 
+return a float (seconds since epoche) on success or \code{None} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetOwner}{Path}
+This method will return the owner-name of a symbol. The argument
+\var{Path} specifies the \textbf{full} path to the symbol. This method will
+return a string on success or \code{None} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{ChangeOwner}{Path, Owner}
+This method sets the owner of a symbol or folder. The argument \var{Path} 
+specifies the \textbf{full} path to the symbol/folder. The argument 
+\var{Owner} specifies the name of the new owner. This must be an exsisting 
+username! This method will return \code{True} on success or \code{False} on
+error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetGroup}{Path}
+This method will return the name of the group a symbol or folder is attached 
+to. The argument \var{Path} specifies the \textbf{full} path of the 
+symbol/folder. This method will return a string containing the groupname
+or \code{None} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{ChangeGroup}{Path, Group}
+This method sets the group a symbol or folder is attached to. The argument
+\var{Path} specifies the \textbf{full} path to the symbol/folder. The argument
+\var{Group} specifies the groupname, the folder/path will be attached to. This
+must be a existing group.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{GetModus}{Path}
+This method will return the access-rights of the given symbol or folder.
+The argument \var{Path} specifies the \textbf{full} path to the symbol/folder.
+This method will returns a string formated as described above or \code{None}
+on error. 
+
+To process this string by your script, I recommend you to convert this string 
+into a integer and then working with bit opperations on it like the following 
+example thats extract the rights of owner, group and other into a touple of 
+integers.
+\begin{verbatim}
+import PPLT
+import string
+
+pplt = PPLT.System()
+[...]
+tmp = pplt.GetModus("/Path/To/Symbol");
+if tmp:
+    tmp = string.atoi(tmp,8)    # convert string to int on base 8.
+    other = tmp & 0x7;
+    group = (tmp>>3) & 0x7;
+    owner = (tmp>>6) & 0x7;
+\end{verbatim}    
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{ChangeModus}{Path, Modus}
+This method will set the access rights of owner, group and other
+of a given symbol or folder. The argument \var{Path} specifies the 
+\textbf{full} path to the symbol/folder. The argument \var{Modus} specifies
+the accessrights. This should a strig containing the 3 octal numbers 
+specifieing the rights like described above. This method will return 
+\code{True} on success or \code{False} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{ClearSymbolTree}{\optional{Path}}
+This method will clear (remove all) elements from the whole symboltree or
+optional down from the given \var{Path}. This method will return 
+\code{True} on success or \code{False} on error.
+\end{methoddesc}
+
+
+
+
+\subsection{Misc. methods}
+\begin{methoddesc}[System]{LoadSession}{FileName}
+This method will load a complete session from the given file. Note, this file
+have to be in the PSF format described in the chapter 
+\emph{PSF --- PPLT Session File}. The argument \var{FileName} specifies the
+filename of the session file to load.
+\begin{notice} 
+The current session will be lost! 
+\end{notice}
+This method will return \code{True} on success and \code{False} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{SaveSession}{FileName}
+This method will save the current session to the given file. The used
+format is the PSF format described in the chapter 
+\emph{PSF --- PPLT Session File}. The argument \var{FileName} specifies
+the file to save the session to. The method will return \code{True} on 
+success an \code{False} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{StopAll}{}
+This method stops the whole PPLT system and reset it to the init state by calling  the 
+methods \method{ClearSymbolTree}, \method{StopDevices} and
+\method{StopServers}. This method will retrun \code{True} on success or
+\code{False} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{StopDevices}{}
+This method will stop and unload all loaded devices. The method can be used to
+shutdown the PPLT system. The method will return \code{True} on success or 
+\code{False} on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[System]{StopServers}{}
+This method will stop all loaded servers and unload them. This method can be used 
+to shutdown the PPLT system. This method will return \code{False} on error or 
+\code{True} on success.
+\end{methoddesc}
+

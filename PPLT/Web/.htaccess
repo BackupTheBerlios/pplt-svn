@@ -2,5 +2,5 @@ RewriteEngine On
 RewriteBase /
 
 
-RewriteRule	^(.+)/(.+)\.html$		/index.php?lang=$1&site=$2		[L] 
+RewriteRule	^[de|en]/(.+)\.html$		/index.php?lang=$1&site=$2		[L] 
 

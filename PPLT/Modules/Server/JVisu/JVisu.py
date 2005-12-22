@@ -41,19 +41,16 @@ class Object (pyDCPU.ExportObject):
         self.__Loop = True;
         #self.__ServSock.setblocking(0);
         while self.__Loop:
-            try:
-                (Client, CAddr) = self.__ServSock.accept();
-            except:
-                continue;
+            (Client, CAddr) = self.__ServSock.accept();
             self.Logger.debug("New Client at %s"%(str(CAddr)));
             try:
                 if not thread.start_new_thread(JVisuClientHandler.HandleClient,
                                            (Client, CAddr, self.SymbolTree, self)):
-                    self.Logger.error("Unable to create new client-handler");
+                    self.Logger.error("Unable to create new client-handler thread");
                     Client.close();
-            except:
-                self.Logger.error("Exception while thread creation");
-                traceback.print_exc();
+            except Exception, e:
+                self.Logger.error("Exception while thread creation: %s"%str(e));
+                #traceback.print_exc();
 
         return(True);
 

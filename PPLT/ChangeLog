@@ -1,4 +1,15 @@
-
+    * removed XML methods from core (for saveing the system state)
+    * changed concept of interface between modules and symbols, 
+      now the symbols are connected directly to the modules
+      no symbolslot are needed; the symbols are now auto-typed:
+        in pyDCPU/Core.py
+        in pyDCPU/Symbol.py
+        in pyDCPU/SymbolTree.py
+        in pyDCPU/MasterObject.py
+        removed pyDCPU/SymbolSlots.py
+    * added missed logging cleanup on del Core:
+        in pyDCPU/Core.py
+        in pyDCPU/Logging.py
     * Fixed in pyDCPU/UserDB/UserDB.py in CreateUserProxy():
         - possebility to create multible proxies of one user in 
         one group.

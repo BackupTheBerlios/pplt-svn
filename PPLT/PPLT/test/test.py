@@ -1,29 +1,13 @@
 #!/usr/bin/python
 import PPLT;
 import sys;
+import time;
 
 system = PPLT.System();
 
-if not system.LoadDevice("Debug.RandomGenerator", "rand", {}):
-	print "Error while load device \"random\".";
-	sys.exit();
+if not system.LoadDevice("PLC.S7-200", "S7", {"Port":"1","S7Addr":"2","PCAddr":"0"}): raise Exception("unable to load S7");
+if not system.CreateSymbol("/test", "S7::Marker::AB0", "uInteger"): raise Exception("unable to create symbol")
+if not system.LoadServer("Visu.JVisuServer", "JV", "admin", {"Address":"127.0.0.1", "Port":"2201"}): raise Exception("Unable to load server");
 
-if not system.CreateFolder("/test"):
-	print "Error while create folder";
-	sys.exit();
-
-if not system.CreateFolder("/test/test2"):
-	print "Error while create folder (2)";
-	sys.exit();
-
-if not system.CreateSymbol("/test/test2/r_bool","rand::Generator::Bool","Bool"):
-	print "Error while create symbol."
-	sys.exit();
-
-if not system.MoveFolder("/test/test2","/test/test"):
-	print "Error whil move folder";
-	sys.exit();
-
-print "ls /: %s"%str(system.ListFolders("/"));
-print "ls /test: %s"%str(system.ListFolders("/test"));
-print "ls /test/test: %s"%str(system.ListSymbols("/test/test"))
+while 1:
+    time.sleep(100.0);

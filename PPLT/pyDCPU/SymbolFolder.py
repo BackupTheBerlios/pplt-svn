@@ -136,19 +136,4 @@ class Folder:
     def GetPossession(self):
         return(self.Possession);
 
-    def ToXML(self, Document):
-        Node = Document.createElement("Folder");
-        
-        Node.setAttribute("name",self.Name);
-        Node.setAttribute("own",str(self.Possession.GetOwner()));
-        Node.setAttribute("grp",str(self.Possession.GetGroup()));
-        Node.setAttribute("mod",str(self.Possession.GetRight()));
 
-        for folder in self.FolderHash.values():
-            subnode = folder.ToXML(Document);
-            Node.appendChild(subnode);
-        for symbol in self.SymbolHash.values():
-            subnode = symbol.ToXML(Document);
-            Node.appendChild(subnode);
-
-        return(Node);

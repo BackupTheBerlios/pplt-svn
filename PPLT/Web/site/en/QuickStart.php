@@ -118,7 +118,7 @@
 		tab <i>SymbolTree</i>. To create a symbol inside an existing folder, please
 		right-click the folder where the new symbol or folder should be created.<br>
 		If you selected <i>Create symbol</i> at the context-menu, where all loaded 
-		devices are listed. If you double click the device you'll see all       <!-- Bitte guck dir ab hier nochmal den absatz an, du kannst nich n satz mit 'if' (wenn) anfangen, und nichts folgen lassen. schon gar ich drei sätze nacheinander//-->
+		devices are listed. If you double click the device you'll see all 
 		namespaces that the device provide. If you double-click a namespace
 		you'll see all slot that are in this namespace. At this moment, please
 		don't care about the namespaces and what they are, you do not need to know

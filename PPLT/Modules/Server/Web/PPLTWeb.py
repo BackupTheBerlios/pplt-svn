@@ -1,6 +1,6 @@
 import BaseHTTPServer;
 import pyDCPU;
-import PPLT;
+#import PPLT;
 import string;
 import base64;
 import sys;
@@ -108,7 +108,11 @@ class PPLTWebHandler(BaseHTTPServer.BaseHTTPRequestHandler):
 
 
 
+    def log_message(self, format, *args):
+        pass;
 
+
+        
 def PathAdd(path,folder):
     pl = path.split('/');
     npl = [''];

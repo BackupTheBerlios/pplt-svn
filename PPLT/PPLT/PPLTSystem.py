@@ -19,7 +19,7 @@
 # ############################################################################ # 
 
 import pyDCPU;
-import pyDCPU.pyDCPUSymbolTools as SymbolTools
+import pyDCPU.SymbolTools
 import Configuration;
 import Logging;
 import Install;

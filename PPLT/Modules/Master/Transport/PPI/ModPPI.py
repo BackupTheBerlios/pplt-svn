@@ -58,12 +58,12 @@ class Object(pyDCPU.MasterObject):
             RetryCount +=1;
         self.Logger.error("3 Errors: Connection broken???");
         raise(pyDCPU.IOModError);
-                    			
+
     def connect(self,Address):
         if not Address:
-            self.Logger.error("my child need a address");
+            self.Logger.error("my child needs a address");
             return(None);
-        Connection = pyDCPU.MasterConnection(self,int(Address));
+        Connection = pyDCPU.SequenceConnection(self,int(Address));
         return(Connection);
 	
     def close(self):

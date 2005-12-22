@@ -14,11 +14,13 @@ def JVisuProcess(CMD, VarHash, Sock, SymbolTree):
                                 Sock);
         ID = CMD.GetID();
         Logger.debug("register var %i"%ID);
+        Var.Start()
         VarHash.update( {ID:Var} );
         return(True);
     elif CMD.GetCMD() == JVISU_CMD_DELVAR:
         ID = CMD.GetID();
         if VarHash.has_key(ID):
+            VarHash[ID].Stop()
             del VarHash[ID];
             Logger.debug("Var %i removed"%ID);
             return(True);

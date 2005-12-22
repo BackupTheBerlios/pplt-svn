@@ -37,6 +37,7 @@ import Symbol;
 import SymbolTools;
 import SymbolFolder;
 import UserDB;
+import Exceptions;
 from Possession import Possession
 import logging;
 
@@ -65,7 +66,7 @@ class SymbolTree(SymbolFolder.Folder):
         PathList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PathList);
         if not isinstance(Element, Symbol.Symbol):
-            return(False);
+            raise Exceptions.ItemNotFound("Symbol %s not found!"%PathToSymbol);
         return(Element.GetValue(SessionID));
 
 
@@ -76,8 +77,7 @@ class SymbolTree(SymbolFolder.Folder):
         PathList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PathList);
         if not isinstance(Element, Symbol.Symbol):
-            self.Logger.error("%s doesn't exists!"%PathToSymbol);
-            return(False);
+            raise Exceptions.ItemNotFound("Symbol %s not found!"%PathToSymbol);
         return(Element.SetValue(Value, SessionID));
 
     def CheckFolder(self, PathToFolder):
@@ -104,7 +104,7 @@ class SymbolTree(SymbolFolder.Folder):
         PList = SymbolTools.SplitPath(PathToFolder);
         Element = self.__GetElementByPath(PList);
         if not isinstance(Element, SymbolFolder.Folder):
-            return(None);
+            raise Exceptions.ItemNotFound("%s is not a folder or doesn't exists!"%PathToFolder);
         return(Element.ListFolders(SessionID));
 
 
@@ -115,7 +115,7 @@ class SymbolTree(SymbolFolder.Folder):
         PList = SymbolTools.SplitPath(PathToFolder);
         Element = self.__GetElementByPath(PList);
         if not isinstance(Element, SymbolFolder.Folder):
-            return(None);
+            raise Exceptions.ItemNotFound("%s is not a folder or doesn't exists!"%PathToFolder);
         return(Element.ListSymbols(SessionID));
 
     
@@ -124,21 +124,24 @@ class SymbolTree(SymbolFolder.Folder):
         PList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PList);
         print "Typename of (%s)%s"%(PathToSymbol,Element);
-        if not isinstance(Element, Symbol.Symbol): return None;
+        if not isinstance(Element, Symbol.Symbol):
+            raise Exceptions.ItemNotFound("%s is not a symbol or doesn't exists!"%PathToSymbol);
         return Element.GetTypeName();
 
     def GetLastUpdate(self, PathToSymbol, SessionID):
         """ Return the timestamp of the symbol. """
         PList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PList);
-        if not isinstance(Element, Symbol.Symbol): return 0;
+        if not isinstance(Element, Symbol.Symbol):
+            raise Exceptions.ItemNotFound("%s is not a symbol or doesn't exists!"%PathToSymbol);
         return Element.GetLastUpdate();
          
     def GetQuality(self, PathToSymbol, SessionID):
         """ Returns the quality of the symbol. """
         PList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PList);
-        if not isinstance(Element, Symbol.Symbol): return None;
+        if not isinstance(Element, Symbol.Symbol): 
+            raise Exceptions.ItemNotFound("%s is not a symbol or doesn't exists!"%PathToSymbol);
         return Element.GetQuality();
 
     #
@@ -149,8 +152,7 @@ class SymbolTree(SymbolFolder.Folder):
     def CreateFolder(self, PathToFolder):
         """ """
         PList = SymbolTools.SplitPath(PathToFolder);
-        if len(PList) == 0:
-            return(False);
+        if len(PList) == 0: raise Exceptions.SymbolError("Can't create folder at %s"%PathToFolder);
         Name = PList[-1];
 
         Parent = self.__GetElementByPath(PList[:-1]);
@@ -161,16 +163,13 @@ class SymbolTree(SymbolFolder.Folder):
                                 self.__UserDB);
 
         newFolder = SymbolFolder.Folder(Name, possession);
-        if not newFolder:
-            self.Logger.error("Error while create Folder-Obj");
-            return(False);
+        if not newFolder: raise Exceptions.Error("Error while create folder instance: contact author!");
 
         if not Parent:
             self.AddFolder(Name,newFolder);
         else:
             if not Parent.AddFolder(Name, newFolder):
-                self.Logger.error("Error while add folder");
-                return(False);
+                raise Exceptions.SymbolError("Can't create folder %s in parentfolder: Mail author!"%Name);
         return(True);
 
     def MoveFolder(self, From, To):
@@ -185,16 +184,10 @@ class SymbolTree(SymbolFolder.Folder):
 
         #check if source exists:
         if not self.CheckFolder(From):
-            self.Logger.error("Can't move folder %s: Folder doesn't exists."%From);
-            return(False); 
+            raise Exceptions.ItemNotFound("Can't move folder %s to %s: source doesn't exists!"%(From,To));
         #check if destination is a symbol:
         if self.CheckSymbol(To):
-            self.Logger.error("Can't move folder %s: %s already exists."%(From,To));
-            return(False);
-        #check if destination is a folder:
-        if self.CheckFolder(To):    
-            self.Logger.error("Can't move folder %s: %s already exists."%(From,To));
-            return(False);
+            raise Exceptions.SymbolError("Can't move folder %s to %s: destination allready exists!"%(From,To));
 
         #remove folder from source:
         folder_obj = self.__GetElementByPath(OPList);
@@ -203,8 +196,7 @@ class SymbolTree(SymbolFolder.Folder):
         #check if dest-folder isn't in src-folder:
         if not self.CheckFolder(Dest):
             src_obj.AddFolder(OName, folder_obj);
-            self.Logger.error("Can't move folder %s to %s!"%(From,To));
-            return(None);
+            raise Exceptions.SymbolError("Can't move folder %s to %s: destination is part of the source!"%(From,To));
         #move folder
         dest_obj = self.__GetElementByPath(DPList);
         folder_obj.Rename(NName);
@@ -215,35 +207,32 @@ class SymbolTree(SymbolFolder.Folder):
     def DeleteFolder(self, PathToFolder):
         """ """
         PList = SymbolTools.SplitPath(PathToFolder);
-        if len(PList)==0:
-            return(False);
+        if len(PList)==0: raise Exceptions.SymbolError("Can't delete folder \"%s\"!"%PathToFolder);
 
         Name = PList[-1];
 
         if len(PList) == 1:
             if not self.FolderHash.has_key(Name):
-                return(False);
+                raise Exceptions.ItemNotFound("Can't delete folder %s: Folder not found!"%PathToFolder);
             if self.FolderHash[Name].IsEmpty():
                 del self.FolderHash[Name];
                 return(True);
-            return(False);
-
+            raise Exceptions.ItemBusy("Can't delete folder %s: folder not empty!"%PathToFolder);    
 
         Parent = self.__GetElementByPath(PList[:-1]);
 
         if not Parent:
-            return(False);
+            raise Exceptions.ItemNotFound("Can't delete folder %s: not found!"%PathToFolder);
         if not Parent.DeleteFolder(Name):
-            return(False);
+            raise Exceptions.Error("Can't delete folder %s: No reason: Mail author!"%PathToFolder);
         return(True);
 
 
 
-    def CreateSymbol(self, PathToSymbol, Connection):
+    def CreateSymbol(self, PathToSymbol, Connection, Address, Timeout):
         """ Create a new Symbol """
         PList = SymbolTools.SplitPath(PathToSymbol);
-        if len(PList) == 0:
-            return(False);
+        if len(PList) == 0: raise Exceptions.SymbolError("Unable to create symbol %s!"%PathToSymbol);
 
         Name = PList[-1];
         
@@ -253,7 +242,7 @@ class SymbolTree(SymbolFolder.Folder):
             
         Parent = self.__GetElementByPath(PList[:-1]);
         if not Parent:
-            return(False);
+            raise Exceptions.ItemNotFound("Unable to create symbol %s: Folder not found!"%PathToSymbol);
         
         possession = Possession(self.__DefaultUser,
                                 self.__DefaultGroup,
@@ -262,17 +251,19 @@ class SymbolTree(SymbolFolder.Folder):
 
         newSymbol = Symbol.Symbol(Name,
                                   Connection,
+                                  Address,
+                                  Timeout,
                                   possession);
         
         if not newSymbol.IsValid():
-            return(False);
+            raise Exceptions.Error("Unable to create valid symbol at %s! Mail author!"%PathToSymbol);
 
         if Parent:
             if not Parent.AddSymbol(Name, newSymbol):
-                return(False);
+                raise Exceptions.Error("Unable to add symbol (%s) to folder: Mail author!"%PathToSymbol);
         else:
             if not self.AddSymbol(Name, newSymbol):
-                return(False);
+                raise Exceptions.Error("Unable to add symbol (%s) to folder: Mail author!"%PathToSymbol);
             
         return(True);
 
@@ -283,24 +274,21 @@ class SymbolTree(SymbolFolder.Folder):
         NPList = SymbolTools.SplitPath(NewPath);
 
         if len(OPList)<1 or len(NPList)<1:
-            return(False);
+            raise Exceptions.ItemNotFound("Unable to move symbol %s to %s!"%(OldPath, NewPath));
         self.Logger.debug("Try to move symbol %s to %s"%(OldPath,NewPath));
         #check if source-symbol and destination-folder exists.
         if not self.CheckSymbol(OldPath):
-            self.Logger.error("Movesymbol: Source doesn't exists.");
-            return(False);
+            raise Exceptions.ItemNotFound("Can't move symbol %s to %s: source doesn't exists!"%(OldPath,NewPath));
         if len(NPList)>1:
             NParent = self.__GetElementByPath(NPList[:-1]);
             if not isinstance(NParent, SymbolFolder.Folder):
-                return(None);
+                raise Exceptions.ItemNotFound("Can't move symbols %s to %s: destiantion not found!"%(OldPath,NewPath));
             self.Logger.debug("Movesymbol: Destinationfolder is a folder.");
         #check if destinatino already exists
-        if self.CheckSymbol(NewPath):
-            self.Logger.error("Can't move symbol: Destination already exists (Symbol)");
-            return(False);
+        if self.CheckSymbol(NewPath): 
+            raise Exceptions.ItemNotFound("Can't move symbol %s to %s: destination allready exists!"%(OldPath,NewPath));
         if self.CheckFolder(NewPath):
-            self.Logger.error("Can't move symbol: Destination already exists (Folder)");
-            return(False);
+            raise Exceptions.ItemNotFound("Can't move symbol %s to %s: destination allready exists!"%(OldPath,NewPath));
 
         #self.Logger.debug("Seems all ok for moving symbol.");
 
@@ -309,41 +297,38 @@ class SymbolTree(SymbolFolder.Folder):
         
         #remove symbol from source folder
         if len(OPList) == 1:
-            Symbol = self.SymbolHash.get(OName);
-            if not Symbol:
-                self.Logger.error("Symbol %s not found in my list."%OName);
-                return(False);
+            SymbolObj = self.SymbolHash.get(OName);
+            if not SymbolObj:
+                raise Exceptions.ItemNotFound("Can't move symbol %s to %s: source not found!"%(OldPath,NewPath));
             del self.SymbolHash[OName];
         else:
-            Symbol = self.__GetElementByPath(OPList);
-            if not isinstance(Symbol, Symbol.Symbol):
-                self.Logger.error("Symbol %s not found."%OldPath);
-                return(False);
+            SymbolObj = self.__GetElementByPath(OPList);
+            if not isinstance(SymbolObj, Symbol.Symbol):
+                raise Exceptions.ItemNotFound("Can't move symbol %s to %s: Source not found!"%(OldPath,NewPath));
             OParent = self.__GetElementByPath(OPList[:-1]);
             OParent.RemoveSymbol(OName);
         
         #add symbol to destination
-        Symbol.Rename(NName);
+        SymbolObj.Rename(NName);
         if len(NPList)==1:
-            self.SymbolHash.update( {NName:Symbol} );
+            self.SymbolHash.update( {NName:SymbolObj} );
             return(True);
-        if not NParent.AddSymbol(NName, Symbol):
+        if not NParent.AddSymbol(NName, SymbolObj):
             #if symbol could not added to new folder 
             #    ->move it back where it comes from.
-            Symbol.Rename(OName);
+            SymbolObj.Rename(OName);
             if len(OPList)==1:
-                self.SymbolHash.update( {OName:Symbol} );
-                return(False);
-            OParent.AddSymbol(OName,Symbol);
-            return(False);
+                self.SymbolHash.update( {OName:SymbolObj} );
+                raise Exceptions.Error("Can't add symbol %s to new folder: Mail author!"%(OldPath));
+            OParent.AddSymbol(OName,SymbolObj);
+            raise Exceptions.Error("Can't add symbol %s to new folder: Mail author!"%(OldPath));
         return(True);
 
 
     def DeleteSymbol(self, PathToSymbol):
         """ Delete a Symbol """
         PList = SymbolTools.SplitPath(PathToSymbol);
-        if len(PList)==0:
-            return(False);
+        if len(PList)==0: raise Exceptions.ItemNotFound("Can't delete folder %s: item not found!"%PathToSymbol);
 
         Name = PList[-1];
 
@@ -352,13 +337,15 @@ class SymbolTree(SymbolFolder.Folder):
                 self.SymbolHash[Name].Unregister();
                 del self.SymbolHash[Name];
                 return(True);
-            return(False);
+            raise Exceptions.ItemNotFound("Can't delete symbol %s: item not found!"%PathToSymbolr);
                 
         Parent = self.__GetElementByPath(PList[:-1]);
             
         if not Parent:
+            raise Exceptions.Error("Can't delete symbol %s: Opps -> mail author!!!"%PathToSymbol);
             return(False);  # FIXME: ohoh..
         if not Parent.DeleteSymbol(Name):
+            raise Exceptions.Error("can't delete symbol %s: Can't remove symbol from parent."%PathToSymbol);
             return(False);
         return(True);
 
@@ -368,63 +355,55 @@ class SymbolTree(SymbolFolder.Folder):
         """ Set the Possession to a folder or symbol """
         PList = SymbolTools.SplitPath(PathToElement);
         Element = self.__GetElementByPath(PList);
-        if not Element:
-            return(False);
+        if not Element: raise Exceptions.ItemNotFound("Can't find item %s!"%PathToElement);
 
         Possession = Possession(User,
                                 Group,
                                 Permissions,
                                 self.__UserDB);
         if not Element.SetPossession(Possession):
-            return(False);
+            raise Exceptions.Error("Can't set possession: Opps -> mail author!");
         return(True);
         
     def GetPossession(self, PathToElement):
         PList = SymbolTools.SplitPath(PathToElement);
         Element = self.__GetElementByPath(PList);
-        if not Element:
-            return(None);
+        if not Element: raise Exceptions.ItemNotFound("Can't find %s!"%PathToElement);
         return(Element.GetPossession());
 
 
     def GetOwnerName(self, Path):
         pos = self.GetPossession(Path);
-        if not pos:
-            return(None);
+        if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
         return(pos.GetOwner());
 
     def SetOwnerName(self, Path, Name):
         pos = self.GetPossession(Path);
-        if not pos:
-            return(False);
+        if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
         if not self.__UserDB.UserExists(Name):
-            return(False);
+            raise Exceptions.ItemNotFound("Owner (%s) of %s not in user-db!"%(Name,Path));
         return(pos.chown(Name));
         
     def GetGroupName(self, Path):
         pos = self.GetPossession(Path);
-        if not pos:
-            return(None);
+        if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
         return(pos.GetGroup());
 
     def SetGroupName(self, Path, Name):
         pos = self.GetPossession(Path);
-        if not pos:
-            return(False);
+        if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
         if not self.__UserDB.GroupExists(Name):
-            return(False);
+            raise Exceptions.ItemNotFound("Group %s not in user-db!"%Name);
         return(pos.chgrp(Name));
 
     def GetRightString(self, Path):
         pos = self.GetPossession(Path);
-        if not pos:
-            return(None);
+        if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
         return(pos.GetRight());
 
     def SetRightString(self, Path, Right):
         pos = self.GetPossession(Path);
-        if not pos:
-            return(False);
+        if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
         return(pos.chmod(Right));
     
     def __GetElementByPath(self, PathList):
@@ -438,8 +417,7 @@ class SymbolTree(SymbolFolder.Folder):
                 return(self.FolderHash[PathList[0]]);
             elif self.SymbolHash.has_key(PathList[0]):
                 return(self.SymbolHash[PathList[0]]);
-            self.Logger.debug("Element \"%s\" not found."%PathList[0]);
-            return(None);
+            return None;
 
         FList = PathList[:-1];
         Item  = PathList[-1];
@@ -448,30 +426,15 @@ class SymbolTree(SymbolFolder.Folder):
         for folder in FList:
             SFolder = PFolder.FolderHash.get(folder);
             if not SFolder:
-                self.Logger.debug("Can't find subfolder %s\n"%folder);
-                return(None);
+                return None; 
             PFolder = SFolder;
 
         if SFolder.FolderHash.has_key(Item):
             return(SFolder.FolderHash.get(Item));
         elif SFolder.SymbolHash.has_key(Item):
             return(SFolder.SymbolHash.get(Item));
-        self.Logger.debug("Symbol/Folder \"%s\" not found"%Item);
-        return(None);
+        return None;
 
 
 
-    def ToXML(self, Document):
-        Node = Document.createElement("SymbolTree");
-        
-        #Node.setAttribute("own",str(self.__Possession.GetOwner()));
-        #Node.setAttribute("grp",str(self.__Possession.GetGroup()));
-        #Node.setAttribute("mod",str(self.__Possession.GetRight()));
 
-        for folder in self.FolderHash.values():
-            subnode = folder.ToXML(Document);
-            Node.appendChild(subnode);
-        for symbol in self.SymbolHash.values():
-            subnode = symbol.ToXML(Document);
-            Node.appendChild(subnode);
-        return(Node);

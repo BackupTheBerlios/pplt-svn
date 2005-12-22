@@ -45,6 +45,7 @@ class S7DataSet:
         elif DataString:
             if len(DataString) == 1:
                 self.__DataErrCode = ord(DataString[0]);
+                self.__DataString = None;
             elif len(DataString) > 4:
                 FMT = "!BBH";
                 (self.__DataErrCode,
@@ -112,7 +113,7 @@ class S7Message:
             
             self.__MsgSync      = 0x32;
             self.__MsgType      = S7MessageRW;
-            self.__MsgUKB1      = 0x00; #UKB == UnKnowByte (FIXME: find out sense)
+            self.__MsgUKB1      = 0x00; #UKB == UnKnowByte (FIXME: find out meaning)
             self.__MsgUKB2      = 0x00;
             self.__MsgNo        = 0x00;
             self.__MsgCommLen   = 0x00;

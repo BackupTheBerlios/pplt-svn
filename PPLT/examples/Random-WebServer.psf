@@ -1,20 +1,25 @@
 <?xml version="1.0" ?>
 <PPLTSession>
+    <!-- Servers section //-->
     <Servers>
+        <!-- Setup the web-server//-->
         <Server alias="web" fqsn="Web.PPLTWebServer" root="/" user="admin">
-            <Parameter name="Port">
-                8080
-            </Parameter>
-            <Parameter name="Address">
-                127.0.0.1
-            </Parameter>
+            <Parameter name="Port">8080</Parameter>
+            <Parameter name="Address">127.0.0.1</Parameter>
         </Server>
     </Servers>
+
+    <!-- Devices section //-->
     <Devices>
+        <!-- Setup the "random"-device //-->
         <Device alias="random" fqdn="Debug.RandomGenerator"/>
     </Devices>
+
+    <!-- Symboltree section //-->
     <SymbolTree>
+        <!-- create a folder named "rand"//-->
         <Folder group="Admin" modus="640" name="rand" owner="admin">
+            <!-- content of folder "rand" //--> 
             <Symbol group="Admin" modus="640" name="r_double" owner="admin" slot="random::Generator::Double" type="Double"/>
             <Symbol group="Admin" modus="640" name="r_bool" owner="admin" slot="random::Generator::Bool" type="Bool"/>
             <Symbol group="Admin" modus="640" name="r_byte" owner="admin" slot="random::Generator::Byte" type="Byte"/>

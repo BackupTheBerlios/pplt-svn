@@ -1,5 +1,66 @@
-\newcommand{\CoreModDesc}[1]{\subsection{#1}\indexii{Core Module}{#1}}
+\newcommand{\CoreModDesc}[1]{\subsection{#1}\index{Core Modules!#1}}
 \newcommand{\CoreMod}[1]{\code{#1}}
 
 \chapter{Coremodules Reference}
-In this chapter i will describe all core (\module{pyDCPU}) modules.
+In this chapter I will describe all core (\module{pyDCPU}) modules.
+A core module implements a new feature (protocol,device,...) to the
+PPLT system. This is the atomic element of the PPLT devices and servers.
+
+A core module is allways a small python script with a specific interface 
+ziped into an archive. This archive have to consists of at least two
+files. One named \texttt{meta.xml} containing the meta-info of the
+core-module. The second file have to be named \texttt{\_\_init\_\_.py}.
+This file should include or contain the python sourcecode of the core
+module.
+
+In the following sections I will descibe all core modules avaiable until
+now. Or all that I know of.
+
+
+
+\section{Master modules}
+Master mdodules are modules that are used in the PPLT devices. So this
+modules implement the features to access a device, like the interface,
+bus protocol, device commands, ...
+
+\CoreModDesc{Master.Interface.SendMail}
+This module implements the sending of e-mails via a
+specified SMTP host. \note{You have to have the permission 
+to send a e-mail of this host.} 
+
+
+
+\CoreModDesc{Master.Interface.Socket}
+This modules implements the basic TCP socket support for the
+PPLT system. With this module you can connect to other
+hosts over any tcp/ip based network (internet). This
+is used in the PPLT device \textit{PLC.FP-WEB} to
+connect to the tunneld ToolPort of a Panasoinc 
+PLC. 
+
+\subsection{Parameters}
+\subsection{Addresses}
+\subsection{Example}
+
+\CoreModDesc{Master.Interface.UniSerial}
+\CoreModDesc{Master.Interface.WGet}
+
+\CoreModDesc{Master.Transport.MEWCOM-TL}
+\CoreModDesc{Master.Transport.PPI}
+\CoreModDesc{Master.Transport.ReadLine}
+
+\CoreModDesc{Master.Device.5462X}
+\CoreModDesc{Master.Device.A200}
+\CoreModDesc{Master.Device.GSM}
+\CoreModDesc{Master.Device.MEWCOM-CL}
+\CoreModDesc{Master.Device.S7}
+
+\CoreModDesc{Master.Debug.HexDump}
+\CoreModDesc{Master.Debug.Random}
+\CoreModDesc{Master.Debug.Statistic}
+
+\section{Export modules}
+\CoreModDesc{Export.JVisu}
+\CoreModDesc{Export.SimpleExport}
+\CoreModDesc{Export.PPLTWeb}
+

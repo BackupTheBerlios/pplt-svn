@@ -90,7 +90,7 @@ ObjectID = Core.MasterTreeAttachSymbolSlot(ParentID,
 				<tr><td><b>Address</b></td>
 					<td>Like Address in <i>MasterTreeAdd()</i>.</td></tr>
 				<tr><td><b>TypeName</b></td>
-					<td>Interpret the data of the parent module a this type.</td></tr>  <!--statt 'a', 'as'?//-->
+					<td>Interpret the data of the parent module as this type.</td></tr>
 				<tr><td><b>TimeOut</b></td>
 					<td>Cache the value for this time. (default: 0.5s)</td></tr>
 				<tr><td><b>RETURN</b></td>

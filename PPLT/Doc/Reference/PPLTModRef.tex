@@ -1,30 +1,35 @@
-\newcommand{\PPLTModDesc}[1]{\subsection{#1}\indexii{PPLT Module}{#1}}
+\newcommand{\PPLTModDesc}[1]{\subsection{#1}\index{PPLT Modules!#1}}
 \newcommand{\PPLTMod}[1]{\code{#1}}
 \newcommand{\PPLTDev}[1]{\PPLTMod{#1}}
 \newcommand{\PPLTSrv}[1]{\PPLTMod{#1}}
 
 
 \chapter{PPLT Module Reference}
-In this chapter i will describe all avaiable PPLT modules. A PPLT module is server or device, that consists of one or more
-so called \textit{core modules}. The main idea of having an abstract device instead of many (more flexible) core modules, is the
-easy handleing of a (single) simple device insted of dealing with a couple of modules. 
+In this chapter i will describe all avaiable PPLT modules. A PPLT module is
+server or device, that consists of one or more so called 
+\textit{core modules}. The main idea of having an abstract device instead of
+many (more flexible) core modules, is the easy handleing of a (single) simple
+device insted of dealing with a couple of modules.
 
-Technical, a PPLT module is an XML file describing how to combine the coremodules to get the support for
-a special device or system. 
+Technical, a PPLT module is an XML file describing how to combine the 
+coremodules to get the support for a special device or system. 
 
 For example; If you want to access the markers of a Siemens SIMATIC S7-200 
-by the PPI bus you have to load the coremodule for the serial interface, the module for the PPI bus and
-at the end the module for the S7-200. Each of these module has a couple of parameters, to get the 
-system running. Sometimes you'll need to know a lot about the bus-system to know how to setup the 
-single core modules. Instead of this you can load a single PPLT module called \PPLTMod{'PLC.S7-200'}. This 
-module needs only 3 paremeters to setup the support for the S7. This would be much easier.
+by the PPI bus you have to load the coremodule for the serial interface, the 
+module for the PPI bus and at the end the module for the S7-200. Each of these
+modules has a couple of parameters, to get the system running. Sometimes you 
+will need to know a lot about the bus-system to know how to setup the single 
+core modules. Instead of this you can load a single PPLT module called 
+\PPLTMod{'PLC.S7-200'}. This module needs only 3 paremeters to setup the 
+support for the S7. This would be much easier.
 
 
 
 
 \section{Devices}
-This section describe all devices. All devices are grouped in classes. The name of the device consists of
-the full class path and the name of the specific device, devided by a singel dot. For example: 
+This section describe all devices. All devices are grouped in classes. The 
+name of the device consists of the full class path and the name of the 
+specific device, devided by a singel dot. For example: 
 \PPLTMod{Debug.RandomGenerator}.
 
 
@@ -33,16 +38,18 @@ the full class path and the name of the specific device, devided by a singel dot
 
 
 \PPLTModDesc{Debug.RandomGenerator}
-The PPLT module \PPLTMod{Debug.RandomGenrator} implements a simple random gererator, thats provide random
-value in different types. This is the simplest device. It needs no additional python libraries nor any 
-special hardware to run. So it can easiely be used to test the PPLT.
+The PPLT module \PPLTMod{Debug.RandomGenrator} implements a simple random 
+gererator, thats provide random value in different types. This is the 
+simplest device. It needs no additional python libraries nor any special 
+hardware to run. So it can easiely be used to test the PPLT.
 
 \subsubsection{Parameters}
 This device needs no parameters to be setted up. 
 
 \subsubsection{Namespaces and slots}
-This device provide only one namespace called \code{Generatior}. This namespace conatains
-4 slots. Each slot provide a random value for a different type. And different range.
+This device provide only one namespace called \code{Generatior}. This 
+namespace conatains 4 slots. Each slot provide a random value for a different
+type and different range.
 
 \paragraph{Slots of namespace \texttt{Generator}:}
 Each slot retuns a value of the type by his name.
@@ -69,8 +76,9 @@ pplt = PPLT.System();
 pplt.LoadDevice("Debug.RandomGenerator", "alias", {})
 \end{verbatim}
 
-This example loads the device as \code{"alias"}. This alias should be replaced by the alias you want to give to
-the loaded device-instance. You'll need this alias later to unload the device or to connect symbols to it.
+This example loads the device as \code{"alias"}. This alias should be replaced
+by the alias you want to give to the loaded device-instance. You'll need this 
+alias later to unload the device or to connect symbols to it.
 
 
 
@@ -81,13 +89,14 @@ the loaded device-instance. You'll need this alias later to unload the device or
 
 
 \PPLTModDesc{Mobile.GSMMobilePhone}
-This device can access a GSM compatible mobile phone by the serial interface. It can read out
-some status infromation  like batterielevel, signal quality, etc... In the near future this 
-device will also learn to send SMS. 
+This device can access a GSM compatible mobile phone by the serial interface. 
+It can read out some status infromation  like batterielevel, signal quality, 
+etc... In the near future this device will also learn to send SMS. 
 
 \begin{notice}
-Because this device uses the serial interface, you'll need to have the \module{pyserial} 
-python library installed. Please check this before you use this device.
+Because this device uses the serial interface, you'll need to have the 
+\module{pyserial} python library installed. Please check this before you use 
+this device.
 \end{notice}
 
 \subsubsection{Parameters}
@@ -97,7 +106,8 @@ the port (number of the serial interface) where the mobile phone is connected
 to the computer. Additional you can set the speed (in baud) of the interface.
 \begin{tableiii}{l|l|l}{textrm}{Parameter}{Description}{Default value}
 \lineiii{Port}
-        {Sets the number of the serial interface. Note: COM1 (ttyS0) = 0, COM2 = 1, ...} 
+        {Sets the number of the serial interface. Note: COM1 (ttyS0) = 0, 
+        COM2 = 1, ...} 
         {"0"}
 \lineiii{Speed}
         {Sets the speed in baud of the serial interface.}
@@ -105,7 +115,7 @@ to the computer. Additional you can set the speed (in baud) of the interface.
 \end{tableiii}
 
 \subsubsection{Namespaces and slots}
-This device provides only one namespace called \code{GSM}. This namespace 
+This device provides only one namespace called \code{GSM}. This namespace
 contains 6 slots. These slots provides status information about the 
 mobilephone.
 
@@ -134,8 +144,10 @@ There are several slots, each providing a status value of the mobile phone.
 
 
 \subsubsection{Example}
-This example loads the \PPLTDev{GSMMobilePhone} module on port 0 (COM1) with speed 9600 baud as the alias \code{'gsm'}. Then it creates a symbol \code{/manu}
-that will be connected with the \code{manufacturer} slot of the device. And at the end the symbol will be readed out.
+This example loads the \PPLTDev{GSMMobilePhone} module on port 0 (COM1) with 
+speed 9600 baud as the alias \code{'gsm'}. Then it creates a symbol 
+\code{/manu} that will be connected with the \code{manufacturer} slot of the 
+device. And at the end the symbol will be readed out.
 \begin{verbatim}
 import PPLT
 
@@ -168,7 +180,8 @@ All parameter-values have to be strings!
 
 \begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default value}
 \lineiii{Port}
-        {The number of the serial interface, where the PLC is connected to. (Note: COM1(ttyS0) = 0, COM2(ttyS1) = 1,...)}
+        {The number of the serial interface, where the PLC is connected to. 
+        (Note: COM1(ttyS0) = 0, COM2(ttyS1) = 1,...)}
         {}
 \lineiii{Address}
         {The Mewtocol-address of the PLC in the Mewtocol BUS. Note: If you use
@@ -179,7 +192,7 @@ All parameter-values have to be strings!
 
 \subsubsection{Namespaces and slots}
 Also this device provide only one namespace called \code{Marker}. This 
-namespace contains the slot \var{STATUS} and the slotrange \var{Marker}. A 
+namespace contains the slot \var{STATUS} and the slotrange \var{Marker}. A
 slotrange is a placeholder of a couple of slots. In this conectext it is a
 placeholder for all markers of the PLC. So if you want to access a marker,
 for example \code{Y0}\footnote{The first output pin.}, you should replace
@@ -237,7 +250,7 @@ pplt.SetValue("/y0",True);
 
 
 \PPLTModDesc{PLC.FPWEB}
-This device implements the access to a Panasonic FP0 or FP2 over the toolport 
+This device implements the access to a Panasonic FP0 or FP2 over the toolport
 tunneled by the Panasonic FP-WEB server. This device is quiet equal to the
 \PPLTDev{PLC.Panasonic-FPX} device. So it provides the same namespace with
 the same slots and slotranges.
@@ -264,7 +277,7 @@ address of the webserver and the Mewtocol address of the PLC.
 
 \subsubsection{Namespaces and slots}
 Also this device provide only one namespace called \code{Marker}. This 
-namespace contains the slot \var{STATUS} and the slotrange \var{Marker}. A 
+namespace contains the slot \var{STATUS} and the slotrange \var{Marker}. A
 slotrange is a placeholder of a couple of slots. In this conectext it is a
 placeholder for all markers of the PLC. So if you want to access a marker,
 for example \code{Y0}\footnote{The first output pin.}, you should replace
@@ -290,7 +303,7 @@ of the PLC like described above.
 \end{tableiii}
 
 \subsubsection{Example}
-In this example I will show you how to load the \PPLTDev{PLC.FPWEB} device. 
+In this example I will show you how to load the \PPLTDev{PLC.FPWEB} device.
 The script will then do the same like the example script of the 
 \PPLTDev{PLC.Panasonic-FPX} device. It will create 2 symbols, one for
 the status bit and one for the first output bit (Y0), then it will
@@ -348,7 +361,7 @@ interface used and the PPI address of the PC and the PLC.
 \end{tableiii}
 
 \subsubsection{Namespaces and slots}
-This device provides two namespaces. One called \code{PPIStatistic}, provides 
+This device provides two namespaces. One called \code{PPIStatistic}, provides
 slots for statistical values about the PPI BUS. The other one called 
 \code{Marker} provides a slotrange named \code{Merkers}.
 
@@ -358,6 +371,7 @@ marker, please replace the slotrange by the name of the marker you want
 to use. For example if you want to connect a symbol to the marker
 \code{SMB28} please use \code{"ALIAS::Marker::SMB28"} as the 
 slotname\footnote{Please use only uppercase letters for the merkername.}. 
+
 
 \paragraph{Slots of the namespace \texttt{PPIStatistic}:}
 This namespace contains some slot for statistical information about the 
@@ -377,12 +391,57 @@ underlaying PPI BUS.
         {Returns the number of bytes send per second.}
 \lineiii{error}
         {uInteger}
-        {Counts the transpor.......}
-        
+        {Counts the errors at the transportlayer.}
+\end{tableiii}
+
+
+\paragraph{Slots of the namespace \texttt{Marker}:}
+This namespace contains only on slot-range. This slotrange is a placeholder of
+all markers of the PLC. So if you want to connect a symbol with a marker of 
+the PLC you have to choose a slot name like 
+\code{'ALIAS::Marker::MARKERNAME'}. Please replace \code{ALIAS} by the alias 
+the device will have after being loaded and replace \code{MARKERNAME} by the 
+marker address of the one you want the symbol being connected to.
+
+Because the PPLT system can't know what type a specific marker has, you have 
+to set the type by your self. In this case you have to choose the type 
+\code{Bool} if it is a boolean value and the type \code{uInteger} if it is an 
+integer value.
+
+
 \subsubsection{Example}
+This example shows how to use the device \PPLTDev{PLC.S7-200}. At first the 
+device will be loaded. Then two folder will be created in the symboltree. The 
+first (\code{/S7}) contains two symbols of PLC markers and the secont folder
+(\code{/S7/PPI}) contains a symbol holding the read data.
 
+The value of the symbol \code{/S7/AB0} will be read and then the inverse of 
+this value will be written back into the symbol. Then the symbol 
+\code{/S7/SMB28} will be read. And at the end the number of recived bytes 
+will be read out of the symbol \code{/S7/PPI/read}.
+\begin{verbatim}
+import PPLT
 
+pplt = PPLT.System()
 
+pplt.LoadDevice("PLC.S7-200", "s7", {"Port":"0", "PCAddr":"0", "S7Addr":"2"});
+
+pplt.CreateFolder("/S7");
+pplt.CreateFolder("/S7/PPI");
+
+pplt.CreateSymbol("/S7/AB0", "s7::Marker::AB0", "uInteger");
+pplt.CreateSymbol("/S7/SMB28", "s7::Marker::SMB28", "uInteger");
+pplt.CreateSymbol("/S7/PPI/read", "s7::PPIStatistic::read_data", "uInteger");
+
+val = pplt.GetValue("/S7/AB0");
+print val;
+val = val ^ 0xff  #inverse
+pplt.SetValue("/S7/AB0",val);
+
+print pplt.GetValue("/S7/SMB28");
+
+print pplt.GetValue("/S7/PPI/read");
+\end{verbatim}
 
 
 
@@ -391,17 +450,89 @@ underlaying PPI BUS.
 This device implements the access to a Agilent oscilloscope of the 5462X 
 series. With this device you can contol the oscilloscope, for example you can
 measure the frequency of a signal. This device supports only the serial
-interface to the Agilent, GIPB or something like this is not supported.
+interface to the Agilent, GPIB or something like that is not supported.
+
+I have written this device more or less as a proove of concept. There are
+much more possebilities for measurements, but i had'n implemented them.
+So if you have some experiences in programming Python and access to such
+a device please contact me.
 
 \subsubsection{Parameters}
+This device needs only few parameters, but you may have to do some settings 
+at your oscilloscope. 
+
+\begin{notice} You may have to do some settings on your oscilloscope.
+At first set the interface to \code{serial}, then disable \code{parity},
+set the flowcontrol to \code{RTS/TSR} and set the speed to \code{57600} baud.
+\end{notice}
+
+Following parameters are needed to setup the device.
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default value}
+\lineiii{Port}
+        {This is the number of the serial interface. (COM1=0, COM2=1, ...)}
+        {0}
+\lineiii{Primary}
+        {This is the primary signal source to be used by the oscilloscop.
+        \code{A1} means the first analog input, \code{A2} means the second, 
+        ...}
+        {A1}
+\lineiii{Secondary}
+        {This is the secondary signal source. Needed, if you want to compare two signals.}
+        {A2}
+\end{tableiii}
+
 \subsubsection{Namespaces and slots}
+This device provides only one namespace with several slots in it. This namespace is called
+\code{Values}. Each slot starts a specific measurement if someone reads out of it.
+
+\paragraph{Slots of the namespace \texttt{Values}:} 
+\begin{tableiii}{l|l|l}{textrm}{Slot}{Type}{Description}
+\lineiii{amp}
+        {Double}
+        {The amplitude of the signal at the primary input.}
+\lineiii{freq}
+        {Double}
+        {The frequency of the signal at the primary input}
+\lineiii{phase}
+        {Double}
+        {Phasediff between the signals at the primarty and secondary input.}
+\lineiii{max}
+        {Double}
+        {Maximum of the signal at the primary input.}
+\lineiii{min}
+        {Double}
+        {Minimum of the signal at the primary input.}
+\lineiii{pp}
+        {Double}
+        {Peek-Peek value of the signal at the primary input.}
+\lineiii{width}
+        {Double}
+        {Pulse width of the signal at the primary input.}
+\end{tableiii}        
+
+
 \subsubsection{Example}
+In this example I will show you how to setup the device and make some measurements.
+\begin{verbatim}
+import PPLT
+
+pplt = PPLT.System()
+
+# COM1, Primary=Secondary=Analog1
+pplt.LoadDevice("Measure.AGILENT-5462X","agi",
+                {'Port':'0', 'Primary':'A1', 'Secondary':'A1'})
 
 
+#symbols:
+pplt.CreateSymbol("/amp","agi::Values::apm","Double");
+pplt.CreateSymbol("/freq","agi::Values::freq","Double");
+pplt.CreateSymbol("/phase","agi::Values::phase","Double");
 
+print pplt.GetValue("/amp");
+print pplt.GetValue("/freq");
+print pplt.GetValue("/phase"); #should be zero.
 
-
-
+\end{verbatim}
 
 
 
@@ -410,31 +541,242 @@ interface to the Agilent, GIPB or something like this is not supported.
 
 
 \section{Servers}
-In this section i'll describe all available servers for the PPLT system.
-(some more text...)
+In this section i'll describe all available servers for the PPLT system. 
+Server are resposibe to export the symoltree to other system like 
+visualisations or what ever. 
 
+Like devices servers are also grouped by classes. A full qualified servername
+consists of the whole classpath a the name divided by a single dot. For 
+example: \PPLTSrv{Web.PPLTWebServer}.
 
-
+All servers running in there own thread, so they can work while the 
+main-applcation blocks.
 
 
 \PPLTModDesc{Web.PPLTWebServer}
-\subsubsection{Parameters}
-\subsubsection{Example}
+This server exports the symboltree as a webserver so you can browse the 
+symboltree with your favorite FireFox. This server supports a basic 
+authentication so the \code{DefuatUser} attribute will be ignored.
 
+\subsubsection{Parameters}
+To setup the server you have to set at least the addess and the port, the 
+server will listen for new connections.
+\begin{tableiii}{l|l|l}{textrm}{Parameter}{Description}{Default value}
+\lineiii{Address}
+        {The addess the server will listen for new connections.}
+        {127.0.0.1}
+\lineiii{Port}
+        {The port the server will be listen on.}
+        {8080}
+\end{tableiii}
+
+\subsubsection{Example}
+This example needs no special hard- nor software. It loads the randomgenerator
+creates some symbols and starts the webserver. Now you can browse throught the
+symbol tree by going to the url \code{http://127.0.0.1:8080}.
+\begin{verbatim}
+import time
+import PPLT
+
+pplt = PPLT.System()
+
+# Load random
+pplt.LoadDevice("Debug.RandomGenerator", "rand", {})
+
+# create symbols
+pplt.CreateFolder("/rand")
+pplt.CreateSymbol("/rand/bool", "rand::Generator::Bool", "Bool")
+pplt.CreateSymbol("/rand/int", "rand::Generator::uInteger", "uInteger")
+pplt.CreateSymbol("/rand/float", "rand::Generator::Double", "Double")
+
+# load server
+pplt.LoadServer("Web.PPLTWebServer", "web", "admin", 
+                {"Address":"127.0.0.1", "Port":"8080"})
+
+# do nothing loop:
+while 1: time.sleep(1)
+    
+\end{verbatim}
 
 
 
 
 
 \PPLTModDesc{Visu.JVisuServer}
-\subsubsection{Parameters}
-\subsubsection{Example}
+This server exports the symboltree for the Java visualisation JVisu. 
+(\url{http://jvisu.sourceforge.net}). The protocol used by \code{JVisuSocket} 
+doesn't know any authentiaction so you need to set the \var{DefaultUser}
+\textbf{carefully}.
 
+\subsubsection{Parameters}
+You need to set at least the address and the port the server will listen on 
+for new connections.
+
+\begin{tableiii}{l|l|l}{textrm}{Parameter}{Description}{Default value}
+\lineiii{Address}
+        {The address the server will listen on for new connections.}
+        {127.0.0.1}
+\lineiii{Port}
+        {The port the server will listen on.}
+        {2200}
+\end{tableiii}        
+
+\subsubsection{Example}
+This example will do the same like the example of the 
+\PPLTSrv{Web.PPLTWebServer}. but in this case it will start a 
+JVisuSocketServer instead of a webserver.
+\begin{verbatim}
+import time
+import PPLT
+
+pplt = PPLT.System()
+
+# Load random
+pplt.LoadDevice("Debug.RandomGenerator", "rand", {})
+
+# create symbols
+pplt.CreateFolder("/rand")
+pplt.CreateSymbol("/rand/bool", "rand::Generator::Bool", "Bool")
+pplt.CreateSymbol("/rand/int", "rand::Generator::uInteger", "uInteger")
+pplt.CreateSymbol("/rand/float", "rand::Generator::Double", "Double")
+
+# load server
+pplt.LoadServer("Visu.JVisuServer", "jv", "admin", 
+                {"Address":"127.0.0.1", "Port":"2200"})
+
+# do nothing loop:
+while 1: time.sleep(1)
+    
+\end{verbatim}
 
 
 \PPLTModDesc{RPC.SimpleExport}
+\PPLTMod{RPC.SimpleExport} is an XML-RPC server, thats exports some functions 
+to access the symboltree. So you can access the symbols by nealry any 
+programminglanguage on any system. 
+
 \subsubsection{Parameters}
+You need to set at least the address and the port the server will listen on 
+for new connections. 
+\begin{tableiii}{l|l|l}{textrm}{Parameter}{Description}{Default value}
+\lineiii{Address}
+        {The address, the server will listen on for new connections.}
+        {127.0.0.1}
+\lineiii{Port}
+        {The port, the server will listen on.}
+        {4711}
+\end{tableiii}        
+
+\subsubsection{Functions}
+The \PPLTSrv{RPC.SimpleExport}-sever is an XML-RPC server, that exports 
+functions you can call from remote side. This section lists all available 
+functions and what attributes are needed. 
+
+\begin{funcdescni}{logon}{UserName, Passwd}
+This function returns a session ID you can use to authenticate yourself. This 
+ID will be used as an additional attribute for the \function{set}, 
+\function{get} \function{listsymbols}, \function{listfolders} and 
+\function{logoff} function calls.
+
+The attribute \var{UserName} specifies the name of the user. And
+the attribute \var{Passwd} specifies the password.
+\end{funcdescni}
+
+
+\begin{funcdescni}{logoff}{SessionID}
+This function closes a session opend by \function{logon}.
+The attribute \var{SessionID} is the id returned by the
+\function{logon}-functioncall.
+\end{funcdescni}
+
+
+\begin{funcdescni}{get}{SymbolPath,\optional{SessionID}}
+This function will return the value of the symbol pointed by \var{SymbolPath}.
+
+The attribute \var{SymbolPath} specifies the full path of the symbol you want 
+to read.
+The optional attribute \var{SessionID} specifies the session you may opend by 
+a \function{logon}-functioncall. If you missed the \var{SessionID}, the 
+rights of the default user are used to access the symbol. 
+
+The function returns \code{None} on error.
+\end{funcdescni}
+
+
+\begin{funcdescni}{set}{SymbolPath, Value, \optional{SessionID}}
+This function will set the value of the symbol pointed by \var{SymbolPath} to 
+\var{Value}.
+
+The attribute \var{SymbolPath} specifies the full path of the symbol you want 
+to read.
+
+The optional attribute \var{SessionID} specifies the session you may opend by 
+a \function{logon}-functioncall. If you missed the \var{SessionID}, the 
+rights of the default user are used to access the symbol. 
+
+The function returns \code{True} on success and \var{False} otherwise.
+\end{funcdescni}
+
+
+\begin{funcdescni}{listfolders}{Path, \optional{SessionID}}
+This function will list all folders at \var{Path}.
+\end{funcdescni}
+
+
+\begin{funcdescni}{listsymbols}{Path, \optional{SessionID}}
+This function will list all symbols at \var{Path}.
+\end{funcdescni}
+
+
 \subsubsection{Example}
+This example consists of two parts. The first is the server showning
+how to setup the server-module. The second part is a small script, that
+access the server ans reads some values.
+
+This is the server, it does nearly the same like the other server examples do.
+\begin{verbatim}
+import time
+import PPLT
+
+pplt = PPLT.System()
+
+# Load random
+pplt.LoadDevice("Debug.RandomGenerator", "rand", {})
+
+# create symbols
+pplt.CreateFolder("/rand")
+pplt.CreateSymbol("/rand/bool", "rand::Generator::Bool", "Bool")
+pplt.CreateSymbol("/rand/int", "rand::Generator::uInteger", "uInteger")
+pplt.CreateSymbol("/rand/float", "rand::Generator::Double", "Double")
+
+# load server
+pplt.LoadServer("RPC.SimpleExport", "sx", "admin", 
+                {"Address":"127.0.0.1", "Port":"4711"})
+
+# do nothing loop:
+while 1: time.sleep(1)
+    
+\end{verbatim}
 
 
+This is the client script:
+\begin{verbatim}
+import xmlrpclib
 
+srv = xmlrpclib.ServerProxy("http://127.0.0.1:4711")
+
+#logon:
+session = srv.logon("user","pass")     # YOU HAVE TO SET HERE REAL USER/PASS
+
+#list folders in /
+print srv.listfolders("/", session)
+
+#list symbols in /rand
+print srv.listsymbols("/rand", session)
+
+#value of /rand/bool
+print srv.get("/rand/bool", session)
+
+#produce an error (/rand/bool is read-only!):
+print srv.set("/rand/bool", True, session)
+\end{verbatim}

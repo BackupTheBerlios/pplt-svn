@@ -2,7 +2,8 @@ from JVisuTypes import *;
 import JVisuCMD;
 import logging;
 import time;
-
+import JVisuTimer;
+import struct;
 
 class JVisuVar:
     def __init__(self, Name, ID, Rate, Type, SymbolTree, Sock):
@@ -16,12 +17,21 @@ class JVisuVar:
         self.__Value = 1;
         self.__Logger = logging.getLogger('pyDCPU');
         self.__Logger.debug("Update start time %f"%self.__LastUpdate);
+        self.__Timer = JVisuTimer.Timer(self.__Rate/1000, self.Update);
 
     def NeedUpdate(self):
         diff = time.time()-self.__LastUpdate;
         if int(diff*1000) >= self.__Rate:
             return(True);
         return(False);
+
+    def Start(self):
+        #Start timer thread:
+        self.__Timer.start();
+
+    def Stop(self):
+        #stop the timer thread:
+        self.__Timer.cancel();
 
     def Update(self):
         self.__Logger.debug("Update %i"%self.__ID);

@@ -2,40 +2,31 @@
 [ALL]
     Do testing and testing and testing
 
+    Update README
+    
 [pyDCPU]
     Implement mounting of a remote symbol tree 
     maybe by using simple export (XML-RPC)
     (maybe very complex -> a task for 
     release 1.1.0)
 
-
-
-+++ BUGs BUGs BUGs +++
-[pyDCPU]
-    - It would be better if the call of setup() of a module will be inside 
-      a try/except pair.
-
-    - Symbolslots should keep there cached values if a error appears
-    
-    - Can create more than one user proxy for one user in the same group.
-	
-    - Implement module-compileing
-
-
-[PPLTCenter]
-    - SymbolTreePanel: Make all visible items visible after rebuild tree.
-
-    - SymbolTreePanel: Edit symbol or server-name is not cancelable under 
-      Win2000 but under Win98
-
-    - Fix filetypes in all fileselection-dialogs. (maybe fix translation)
-
-
 [CoreModule]
 	- Write a coremod to read/write to the parallel port (maybe with the option
 	 to control each pin of the port).
+    - Write a SNMP trap (and may be a UDDI servermodule).
 
-    - Write a SNMP trap and a UDDI servermodule.
++++ BUGs BUGs BUGs +++
+[pyDCPU]
+    - Symbolslots should keep there cached values if a error appears
+    - Implement module-compileing (pyDCPU/Compile.py exists now implement anywere)
+    - implement validating the coremod meta.xml files
+
+[PPLTCenter]
+    - SymbolTreePanel: Make all visible items visible after rebuild tree.
+    - Fix filetypes in all fileselection-dialogs. (maybe fix translation)
+    - Add help for ModuleManager GUI. Or maybe clear GUI to be more usable.
+
+
     
 
  

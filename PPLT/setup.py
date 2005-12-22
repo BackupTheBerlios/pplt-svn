@@ -3,14 +3,12 @@ from distutils.core import setup;
 
 setup(name = "PPLT",
       version="0.4.0",
-      description="PPLT a free framework for master-slave communication",
+      description="PPLT a free framework for master-slave communication.",
       author="Hannes Matuschek",
       author_email="hmatuschek@gmx.net",
       url='http://pplt.berlios.de',
 
       packages=['pyDCPU',
-                'pyDCPU.UserDB',
-                'pyDCPU.Modules',
                 'PPLT',
                 'PPLT.ModSrc',
                 'PPLT.Center'],

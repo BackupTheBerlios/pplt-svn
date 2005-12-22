@@ -54,54 +54,34 @@ class Importer:
         ModMeta = CoreModuleInfo.MetaData(os.path.normpath(self.__ModuleDataBase.ModDir(Name)));
         #check DCPUVersion;
         if not ModMeta.CheckDCPUVersion():
-            self.__Logger.error("Bad pyDCPU Version: please get the actual PPLT and Modules Package from pplt.berlios.de");
-            return(None);
+            raise Exceptions.ModuleRequirement("Bad pyDCPU version: get the actual version of PPLT from pplt.berlios.de")
 
         #check PythonVersion;
         if not ModMeta.CheckPythonVersion():
-            self.__Logger.error("Bad Python version, please update");
-            return(None);
+            raise Exceptions.ModuleRequirement("Bad python verion: update!");
         
         #check PythonModules;
         if not ModMeta.CheckPythonModules():
-            self.__Logger.error("One or more python packages missed!");
-            return(None);
+            raise Exceptions.ModuleRequirement("One or more python packages are missed!");
 
         #check Parameters;
         if not ModMeta.CheckParameters(Parameters.keys()):
-            self.__Logger.error("Parameter error");
-            return(None);
+            raise Exceptions.ModuleRequirement("Mad parameters: look at the module references!");
 
-        #extend Parameters;
+        #Automatic parameter extention.
         ModMeta.ExtendParameters(Parameters);
 
         #check if ROOT and Connection??? -> fail 
         if ModMeta.IsRootModule() and Connection:
-            self.__Logger.error("This module is an root-module");
-            return(None);
+            raise Exceptions.ModuleError("You can't connect a root-module to an other module!");
         
         Mod = self.__ModuleDataBase.GetModule(Name);
         if not Mod:
-            self.__Logger.error("Error while Load Module [%s]"%Name)
-            return(None);
+            raise Exceptions.ModuleError("Unable to load module \"%s\"!"%Name);
 
-        try:
-            Obj = Mod.Object(Fingerprint, Connection, Parameters, Name, self.__Logger);
-        except pyDCPU.SetupModError:
-            self.__Logger.error("Error while init instance of %s"%Name);
-            return(None);
-        except:
-            self.__Logger.error("Unknown error while init module %s"%Name);
-            traceback.print_exc();
-            return(None);
-
-        try:
-            if not Obj.setup():
-                self.__Logger.error("Error while setup object");
-                return(None);
-        except Exception, e:
-            self.__Logger.error("Exception while setup(): %s"%str(e));
-            return None;
+        Obj = Mod.Object(Fingerprint, Connection, Parameters, Name, self.__Logger);
+        if not Obj.setup():
+            raise Exceptions.ModuleSetup("Error while setup module \"%s\""%Name);
         return(Obj);
 
 
@@ -109,23 +89,19 @@ class Importer:
         ModMeta = CoreModuleInfo.MetaData(os.path.normpath(self.__ModuleDataBase.ModDir(Name)));
         #check DCPUVersion;
         if not ModMeta.CheckDCPUVersion():
-            self.__Logger.error("Bad pyDCPU Version: please get the actual PPLT and Modules Package from pplt.berlios.de");
-            return(None);
+            raise Exceptions.ModuleRequirement("Bad pyDCPU version! Please update.");
 
         #check PythonVersion;
         if not ModMeta.CheckPythonVersion():
-            self.__Logger.error("Bad Python version, please update");
-            return(None);
+            raise Exceptions.ModuleRequirement("Bad python version: please update.");
         
         #check PythonModules;
         if not ModMeta.CheckPythonModules():
-            self.__Logger.error("One or more python packages missed!");
-            return(None);
+            raise Exceptions.ModuleRequirement("One or more python packages missed!");
 
         #check Parameters;
         if not ModMeta.CheckParameters(Parameters.keys()):
-            self.__Logger.error("Parameter error");
-            return(None);
+            raise Exceptions.ModuleRequirement("Mad parameters for module \"%s\": refer mod-reference!"%Name);
 
         #extend Parameters;
         ModMeta.ExtendParameters(Parameters);
@@ -136,31 +112,14 @@ class Importer:
         
         Mod = self.__ModuleDataBase.GetModule(Name);
         if not Mod:
-            self.__Logger.error("Error while Load Module [%s]"%Name)
-            return(None);
+            raise Exceptions.ModuleError("Error while load module %s!"%Name);
 
-        try:
-            Obj = Mod.Object(Fingerprint, SymbolTree, Parameters, Name, self.__Logger);
-        except pyDCPU.SetupModError:
-            self.__Logger.error("Error while init instance of %s"%Name);
-            return(None);
-        except:
-            traceback.print_exc();
-            self.__Logger.error("Unkown error while create instance of %s"%Name);
-            return(None);
+        Obj = Mod.Object(Fingerprint, SymbolTree, Parameters, Name, self.__Logger);
 
         if not Obj.setup():
-            self.__Logger.error("Error while setup instance of %s"%Name);
-            return(None);
+            raise Exceptions.ModuleSetup("Error while setup module %s"%Name);
 
-        try:
-            thread.start_new_thread(Obj.start,());
-        except thread.error:
-            self.__Logger.error("Error while create new thread for %s"%Name);
-            return(None);
-        except:
-            self.__Logger.error("Error while start export module %s"%Name);
-            return(None);
+        thread.start_new_thread(Obj.start,());
         return(Obj);
 
 
@@ -211,21 +170,15 @@ class ModuleDB:
         tmp = Name.split(".");
         NName = string.join(tmp,'_');
 
-        try:
-            loader = zipimport.zipimporter(Path);
-        except zipimport.ZipImportError:
-            self.__Logger.error("Zip error while %s"%Path);
-            return(None);
+        loader = zipimport.zipimporter(Path);
 
         sys.path.insert(0,Path);
         if not loader.find_module("__init__"):
-            self.__Logger.error("Module has wrong format");
-            return(None);
+            raise Exceptions.BadModule("Module %s has wrong format: not __init__.py found in %s"%(Name,Path))
 
         ModObj = loader.load_module("__init__");
         if not ModObj:
-            self.__Logger.error("Error while load module '__init__.py'");
-            return(None);
+            raise Exceptions.ModuleError("Error while load __init__ from module %s"%Name);
 
         self.__ModuleHash.update( {Name:ModObj} );
         return(ModObj);

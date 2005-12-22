@@ -21,7 +21,7 @@
 
 		<li><b>Measure</b>
 		<ul>
-			<li><b><a href="#AGI">Agilent 5462x</a></b> - Measuring, using the oscilloscopes
+			<li><b><a href="#AGI">Agilent 5462x</a></b> - Measures while using the oscilloscopes
 			of the 5462x series by Agilent.</li>
 		</ul>
 		</li>
@@ -35,8 +35,6 @@
 	</ul>
 	</div>
 
-<!-- vielleicht solltest du dich beim verb auf eine verbform einigen, falls möglich. geht 
-vielleicht?: measures while using the os...//--> 
 
 
 
@@ -144,10 +142,7 @@ system.LoadDevice("PLC.S7-200", "alias", {"Port":"0", "PCAddr":"0", "S7Addr":"2"
 	Slotrange in the PPLT-Center application the program will ask for a
 	specific makername. Because the program can't determ the type of the
 	marker you need to set it in the symbol-property-dialog.<br>
-	Else if you use PPLT as a Python library type (to access marker 
-	<i>SMB28</i>):  
-
-<!--was soll beim letzten satz 'else' heißen? falls es 'ebenfalls' sein soll, sag lieber: If you use ..., do this aswell.//--> 
+	If you use PPLT as a Python library, simply type:
 
 <pre>
 import PPLT;
@@ -212,7 +207,7 @@ system.CreateSymbol("/PathToSymbol", "s7-200::Markers::SMB28", "Byte");
 	(COM1) is 0!<br>
 	The second parameter is the address of the PLC. Only if you
 	want to access the PLC over a MEWTOCOL-COM bus you need to
-	set this feeld. Otherwise you can set this to any number between     <!-- statt feeld, field? //-->
+	set this field. Otherwise you can set this to any number between   
 	1 and 254 (because the PLC ignores the destinationfield in the
 	message if you use the ToolPort).
  	<div style="text-align:center">
@@ -310,7 +305,7 @@ system.LoadDevice("PLC.Panasonic-FPWEB", "alias", {"NetAddr":"10.1.1.10:9094", "
 	<p>To load this device you need to set two parameters. The first
 	<i>Port</i> sets the number of the serial interface you'll use.
 	<br><b>Note:</b>The number of the first serial interface is 0!<br>
-	The second parameter sets the speed in baud to be used. 9600 baud       <!--ich weiß nich, was 'baud' is, aber 'to be used' erscheint mir unpassend, wenns ne einheit sein soll.//-->
+	The second parameter sets the speed in baud. 9600 baud 
 	should be a useable value.
 	<div style="text-align:center">
 		<img	src="/img/GSMDev01.png"
@@ -364,11 +359,11 @@ system.LoadDevice("Mobile.GSMMobilePhone", "alias", {"Port":"0", "Speed":"9600"}
 	before using this device.</p>
 
 	<p>This device needs 3 parameters to setup. The first parameter <i>Port</i>
-	is the number of the serial interface to be used.<br>                         <!-- statt 'to be used', 'which you use'? //-->
+	is the number of the serial interface which you use.<br> 
 	<b>Note:</b> The first serial interface has the number 0!<br>
 	The next parameter is the primary signal source <i>Primary</i> and
 	the last is the secondary signal source <i>Secondary</i>. You need
-	to set booth signal soreces if you want to do measurements that           <!--was ist 'soreces'? vielleicht 'sources'?//-->
+	to set booth signal sources if you want to do measurements that
 	compares two signals like the phase-difference. Else you only need 
 	to set the primary. (Set the secondary to the same value.)
 	<div style="text-align:center">
@@ -382,8 +377,8 @@ system = PPLT.System();
 system.LoadDevice("Measue.AGILENT-5462X", "alias",{"Port":"0", "Primary":"A1", "Secondary":"A2"});
 </pre></p>	
 
-	<p>This device provides only one namespace (<i>Values</i>). In this namespace
-	are all slots to measure a specific value (see the table). <!--statt diesem satz, der grammtikalisch falsch ist!!, vielleicht: All slots in this namespace measure...//-->
+	<p>This device provides only one namespace (<i>Values</i>).
+    All slots in this namespace measure a specific value.
 	<table align="center">
 		<tr><th>Slot</th> <th>Type</th> <th>Meaning</th></tr>
 		<tr>

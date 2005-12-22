@@ -46,8 +46,8 @@
 		<a href="#Server">server</a> consists of one ore more core modules.
 		so it is possible to reuse parts of other devices to create a new.
 		This concept of reuseable parts is the main design idea of the
-		PPLT system. But because of the core modules are hidden into 
-		abstract devices, the usability of the system keeps quite easy.</p>   <!--was willst tdo mit 'keeps qite easy' sagen?, ich glaub es is falsch//-->
+		PPLT system. Because of the core modules are hidden into 
+		abstract devices, the usability of the system keeps easy.</p> 
 	</div>
 
 
@@ -142,7 +142,7 @@ system.LoadDevice("Class.DeviceName", "Alias", {"Parameter":"Value",...});
 		<a href="#Server">servers</a>, manage <a href="#User">users</a>
 		and <a href="#Group">groups</a> and (un)install the modules.
 
-		<p>The PPLT Center has a really strange usability. Almost everything  <!--statt usability (benutzerfreundlichkeit, Brauchbarkeit) vielleicht 'interface'?//-->
+		<p>The PPLT Center has a really strange interface. Almost everything  
 		will be done over context-menus. To get the context-menu you have to
 		right-click something. This has two major advantages. At first the 
 		front end keeps clean and the second is that you will work really 

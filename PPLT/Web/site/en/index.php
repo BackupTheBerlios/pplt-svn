@@ -62,9 +62,7 @@
         title="Intoduction into the pyDCPU Core library.">introduction</a>.
 
     <p>The second part is called PPLT-Library. This library is built on the top
-    of pyDCPU. It is an abstraction-layer. This is necessary for providing a simple
-    to use interface to the pyDCPU core library.                                      <!-- hier statt 'a simple to use...' (falsch), vielleicht 'providing an interface ... which is easy to use.'//-->
-    </p>
+    of pyDCPU. It is an abstraction-layer. This is necessary for providing an 
     </div>
     
     <div class="Head">Supported Hardware/Sofware</div>

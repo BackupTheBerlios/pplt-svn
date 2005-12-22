@@ -34,9 +34,12 @@ import MasterObject
 
 
 class Symbol:
-    def __init__(self, Name, Connection, myPossession):
+    def __init__(self, Name, Connection, Address, Timeout, myPossession):
         self.__Logger = logging.getLogger("pyDCPU");
         self.__Valid = True;
+        self.__Timeout = Timeout;
+        self.__Address = Address;
+
         if not Name:
             self.__Logger.error("No symbolname given");
             self.__Valid = False;
@@ -105,18 +108,4 @@ class Symbol:
     def GetPossession(self):
         return(self.__Possession);
  
-# FIXME change to new concept 
-#    def ToXML(self, Document):
-#        """ This method will return a xmlNode contain all info needed
-#            to be rebuild """
-#        Node = Document.createElement("Symbol");
-#
-#        Node.setAttribute("name",self.__Name);
-#        #Node.setAttribute("type",self.__TypeName);
-#        Node.setAttribute("slot",str(self.__SymbolSlot._GetID()));
-#        Node.setAttribute("own",str(self.__Possession.GetOwner()));
-#        Node.setAttribute("grp",str(self.__Possession.GetGroup()));
-#        Node.setAttribute("mod",str(self.__Possession.GetRight()));
-#        
-#        return(Node);
 #END CLASS "SYMBOL"

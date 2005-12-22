@@ -31,24 +31,25 @@ class Error(Exception):
             system and modules """
     pass;
 
+# General exceptions:
+class ItemNotFound(Error): pass;            # if a objectid, foder, symbol, module doesn't exists
+class ItemBusy(Error): pass;                # if a module is busy (locked) or a object is still used 
 
 # Exceptions related to Modules:
 class ModuleError(Error): pass;             # general module error class
-class ModuleNotFound(ModuleError): pass;    # if a core-module is not known;
 class ModuleSetup(ModuleError): pass;       # if a module can't be setted up.
 class BadModule(ModuleError): pass;         # if a module mismatch the API or meta.xml is bad
 class ModuleRequirement(ModuleError): pass; # if a requirement of a module is missing.
-class ObjectNotFound(ModuleError): pass;    # if an object can't be found
-class ObjectBusy(ModuleError): pass;        # if an object is used by other one
-class ModuleLocked(ModuleError): pass;      # if you've tried to access a locked module
 
 #Exceptions related to the symboltree
 class SymbolError(Error): pass;             # general symboltree error class
-class ItemNotFound(SymbolError): pass;      # if a symbol/folder doesn't exists
 class AccessDenied(SymbolError): pass;      # if you don't have the permission to access a symbol/folder
-class FolderNotEmpty(SymbolError): pass;    # if you've tried to delete a non empty folder
 
 
+
+#
+# Old class exceptions:
+#
 class ModError(Error):
     """ Base class for all exceptions raised in a module. """
     pass;

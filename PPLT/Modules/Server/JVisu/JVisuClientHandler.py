@@ -1,4 +1,5 @@
 import socket;
+import thread;
 import logging;
 import JVisuCMD, JVisuProcess;
 
@@ -8,9 +9,11 @@ def HandleClient(Sock, CAddr, SymbolTree, Server):
     Logger = logging.getLogger('pyDCPU');
     Logger.debug("In ClientHander");
 
-    Sock.setblocking(0);
     VarHash = {};
     ClientLoop = True;
+
+    #start update-thread:
+    #thread.start_new_thread(UpdateThread,(VarHash,ClientLoop))
 
     while ClientLoop and Server.DoRun():
         # get and handle new commands from client
@@ -30,20 +33,25 @@ def HandleClient(Sock, CAddr, SymbolTree, Server):
                 ClientLoop = False;
 
 
-        #update variables if needed.
-        VarIDList = VarHash.keys();
-        for VarID in VarIDList:
-            Var = VarHash.get(VarID);
-            if Var.NeedUpdate():
-                try:
-                    if not Var.Update():
-                        Logger.warning("Error while update var");
-                    else:
-                        Logger.debug("Var Updated");
-                except:
-                    Logger.warning("Exception while update!, quit ClientHandler");
-                    ClientLoop = False;
     try:
         Sock.close();
     except:
         pass;
+
+
+#def UpdateThread(VarHash, DoRun):
+#    Logger = logging.getLogger("pyDCPU");
+#    while DoRun:
+#        VarIDList = VarHash.keys();
+#        for VarID in VarIDList:
+#            Var = VarHash.get(VarID);
+#            if Var.NeedUpdate():
+#                try:
+#                    if not Var.Update():
+#                        Logger.warning("Error while update var");
+#                    else:
+#                        Logger.debug("Var Updated");
+#                except:
+#                    Logger.warning("Exception while update!, quit ClientHandler");
+#                    DoRun = False;
+   

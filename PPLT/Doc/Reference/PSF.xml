@@ -31,12 +31,12 @@
             <Symbol group="Users" modus="640" name="SMB28" 
                     owner="Hannes" slot="s7::Marker::SMB28" type="uInteger"/>
             <Folder group="Admin" modus="640" name="PPI" owner="Hannes">
-                <Symbol group="Users" modus="640" name="read_data" 
-                        owner="Hannes" slot="s7::PPIStatistic::read_data" type="uInteger"/>
-                <Symbol group="Users" modus="600" name="write_data" 
-                        owner="Hannes" slot="s7::PPIStatistic::write_data" type="uInteger"/>
-                <Symbol group="Users" modus="640" name="error_count" 
-                        owner="Hannes" slot="s7::PPIStatistic::error" type="uInteger"/>
+                <Symbol group="Users" modus="640" name="read_data" owner="Hannes" 
+                        slot="s7::PPIStatistic::read_data" type="uInteger"/>
+                <Symbol group="Users" modus="600" name="write_data" owner="Hannes" 
+                        slot="s7::PPIStatistic::write_data" type="uInteger"/>
+                <Symbol group="Users" modus="640" name="error_count" owner="Hannes" 
+                        slot="s7::PPIStatistic::error" type="uInteger"/>
             </Folder>
         </Folder>
     </SymbolTree>

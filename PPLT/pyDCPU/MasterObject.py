@@ -220,8 +220,16 @@ class ValueConnection(SequenceConnection):
             self.Cache = tmp;
             self.LastUpdate = time.time();
         return tmp;
+
+    # only ValueConnections has timeout:
+    def SetTimeout(self, Timeout): self.Timeout = Timeout;
         
 
+
+
+
+
+        
 
 class MasterObject:
     """ This is the Class of the Master-Object

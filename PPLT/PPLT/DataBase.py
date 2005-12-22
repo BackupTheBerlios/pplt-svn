@@ -31,7 +31,7 @@
 # 2005-06-19:
 #   Initial.
 
-import pyDCPU.Modules;
+import pyDCPU;
 import ServerMeta;
 import DeviceMeta;
 import os.path;
@@ -629,7 +629,7 @@ class BaseItem:
 class CoreModItem(BaseItem):
     def __init__(self, FileName):
         self.__FilePath = FileName;
-        self.__Meta = pyDCPU.Modules.MetaData(FileName);
+        self.__Meta = pyDCPU.MetaData(FileName);
         (tmp,FileName) = os.path.split(FileName);
         tmp = FileName.split(".");
         BaseItem.__init__(self, tmp[0], self.__Meta);
