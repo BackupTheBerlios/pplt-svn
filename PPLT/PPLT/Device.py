@@ -70,15 +70,15 @@ class Device:
             return(None);
 
         # create symbol slot:
-        SlotID = self.__CoreObject.MasterTreeAttachSymbolSlot(ObjID, Address, Type, TimeOut);
-        if not SlotID:
-            self.__Logger.error("Error while create SymbolSlot for %s"%Address);
-            return(None);
+        #SlotID = self.__CoreObject.MasterTreeAttachSymbolSlot(ObjID, Address, Type, TimeOut);
+        #if not SlotID:
+        #    self.__Logger.error("Error while create SymbolSlot for %s"%Address);
+        #    return(None);
         
         # save in Address->SySl Table
-        if not self.__SlotTable.has_key(SlotID):
-            self.__SlotTable.update( {SlotID:0} );
-        self.__SlotTable[SlotID] = self.__SlotTable[SlotID]+1;
+        #if not self.__SlotTable.has_key(SlotID):
+        #    self.__SlotTable.update( {SlotID:0} );
+        ##self.__SlotTable[SlotID] = self.__SlotTable[SlotID]+1;
         return(SlotID);
     
 

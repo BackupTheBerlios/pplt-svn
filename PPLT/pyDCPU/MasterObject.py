@@ -42,8 +42,11 @@ class MasterConnection:
         self.AddrStr = None;
         self.Logger = logging.getLogger('pyDCPU');
         self.Buffer = None;
+        self.Parent.inc_usage();
 
-    def close(self): return(self.Parent.close());
+    def close(self): 
+        self.Parent.dec_usage();
+        return(self.Parent.close());
 
     def read_seq(self): return self.Parent.read(self);
     def write_seq(self, Data): return self.Parent.write(self, Data);
@@ -254,23 +257,27 @@ class MasterObject:
         self.Logger = logging.getLogger("pyDCPU");
         self.Lock   = False;
 
-    def setup(self):
-        pass;
-
-    def destroy(self):
+    def tear_down(self): 
         if self.Connection: self.Connection.close();
-        return(True);
 
     def inc_usage(self):
         self.Counter += 1;
         return(True);
-    
+    def dec_usage(self):
+        self.Counter -= 1;
+
+
+    def setup(self):
+        pass;
+
+    def destroy(self):
+        return(True);
+        
     def connect(self,Address):
         Connection = MasterConnection(self, Address);
         return(Connection);
 
     def close(self,Connection=None): 
-        self.Counter -= 1;
         return(True);
 
     def read(self, Connection, Len): pass;

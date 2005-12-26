@@ -5,12 +5,13 @@ class TestSymbolTree(unittest.TestCase):
     """ Tests the symbol tree """
 
     def setUp(self):
-        self.core = pyDCPU.Core("/usr/PPLT/", LogFile="./pyDCPU.log");
+        self.core = pyDCPU.Core(LogLevel="debug", LogFile="./pyDCPU.log");
 
     def tearDown(self):
         del self.core;
         self.core = None;
-    
+   
+
     def testTypes(self):
         """ Test symbol types """
         # load random-module:
@@ -77,36 +78,55 @@ class TestSymbolTree(unittest.TestCase):
         ID = self.core.MasterTreeAdd(None, "Master.Debug.Random", None, None); 
         
         #create folder:
-        self.core.SymbolTreeCreateFolder("/test1");
+        self.core.SymbolTreeCreateFolder("/test");
         
         #create symbols:
-        self.core.SymbolTreeCreateSymbol("/test1/bool", ID, Address="Bool");
-        self.core.SymbolTreeCreateSymbol("/test1/int", ID, Address="Integer");
+        self.core.SymbolTreeCreateSymbol("/test/bool", ID, Address="Bool");
+        self.core.SymbolTreeCreateSymbol("/test/int", ID, Address="Integer");
 
         #move a symbol 
-        self.core.SymbolTreeMoveSymbol("/test1/bool","/test1/bool1");
-        self.core.SymbolTreeMoveSymbol("/test1/bool1","/bool");
+        self.core.SymbolTreeMoveSymbol("/test/bool","/test/bool1");
+        self.core.SymbolTreeMoveSymbol("/test/bool1","/test/bool");
         
         #move/rename folder
-        self.core.SymbolTreeMoveFolder("/test1","/test");
+        self.core.SymbolTreeMoveFolder("/test","/test1");
         
         # try to access symbols:
-        tmp = self.core.SymbolTreeGetValue("/test/int");
+        tmp = self.core.SymbolTreeGetValue("/test1/int");
         self.failUnless( isinstance(tmp, int) );
-        tmp = self.core.SymbolTreeGetValue("/bool");
+        tmp = self.core.SymbolTreeGetValue("/test1/bool");
         self.failUnless( isinstance(tmp, bool) );
         
+        # try to read renamed symbol:
+        self.failUnlessRaises(pyDCPU.Exceptions.ItemNotFound, self.core.SymbolTreeGetValue, Path="/test1/bool1");
+
         #try to remove not empty folder:
-        self.failUnlessRaises(pyDCPU.Exceptions.ItemBusy, self.core.SymbolTreeDeleteFolder, Path="/test");
+        self.failUnlessRaises(pyDCPU.Exceptions.ItemBusy, self.core.SymbolTreeDeleteFolder, Path="/test1");
         
         #remove symbols and folder
-        self.core.SymbolTreeDeleteSymbol("/test/int");
-        self.core.SymbolTreeDeleteFolder("/test");
+        self.core.SymbolTreeDeleteSymbol("/test1/int");
+        self.core.SymbolTreeMoveSymbol("/test1/bool","/bool");
+        self.core.SymbolTreeDeleteFolder("/test1");
         
         #try to unload used module:
         self.failUnlessRaises(pyDCPU.Exceptions.ItemBusy, self.core.MasterTreeDel, ID);
-
+        
         self.core.SymbolTreeDeleteSymbol("/bool");
         self.core.MasterTreeDel(ID);
 
-        
+
+    def testRefCounter(self):
+        """ Test reference-counter for symbol-connections """
+        ID = self.core.MasterTreeAdd(None, "Master.Debug.Random", None, None);
+
+        self.core.SymbolTreeCreateSymbol("/bool1", ID, Address="Bool");
+        self.core.SymbolTreeCreateSymbol("/bool2", ID, Address="Bool");
+        self.core.SymbolTreeCreateSymbol("/bool3", ID, Address="Bool");
+
+        self.failUnlessRaises(pyDCPU.Exceptions.ItemBusy, self.core.MasterTreeDel, ObjectID=ID);
+        self.core.SymbolTreeDeleteSymbol("/bool1");
+        self.failUnlessRaises(pyDCPU.Exceptions.ItemBusy, self.core.MasterTreeDel, ObjectID=ID);
+        self.core.SymbolTreeDeleteSymbol("/bool2");
+        self.failUnlessRaises(pyDCPU.Exceptions.ItemBusy, self.core.MasterTreeDel, ObjectID=ID);
+        self.core.SymbolTreeDeleteSymbol("/bool3");
+        self.core.MasterTreeDel(ID); 

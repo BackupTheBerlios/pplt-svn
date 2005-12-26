@@ -40,6 +40,7 @@ import NameCheck;
 import Fingerprint;
 import MasterObject;
 import Exceptions;
+import sys;
 
 # ############################################################################ #
 # The CoreClass:                                                               #
@@ -67,9 +68,9 @@ class Core:
         """ This Function will set the Runtime-Options """
         # Save Parameter
         if ModulePath: self.__ModuleBase   = ModulePath;
-        else: self.__ModuleBase = sys.exec_prefix+"/PPLT/";         #if path is not given: default /usr/PPLT, ...
+        else: self.__ModuleBase = sys.exec_prefix+"/PPLT/CoreMods/";         #if path is not given: default /usr/CoreMods/PPLT, ...
         if UserDBFile: self.__UserDBFile   = UserDBFile;
-        else: self.__UserDBFile = self.__ModuleBase+"/UserDB.xml";  #if not given -> default: /usr/PPLT/UserDB.xml
+        else: self.__UserDBFile = sys.exec_prefix+"/PPLT/UserDB.xml";             #if not given -> default: /usr/PPLT/UserDB.xml
 
         self.__LoggingLevel = LogLevel;
         self.__LoggingFile  = LogFile;
@@ -158,7 +159,7 @@ class Core:
             Object.destroy();
             del Object;
             raise Exceptions.Error("Can't add object to MasterTree! This should allways work: Mail author!")
-
+       
         self.__ObjectHash.update({Object._GetID():Object});
         self.Logger.debug("Object Added to Tree...");
         self.__ObjectRefCount.update( {Object._GetID():1} );
@@ -186,7 +187,8 @@ class Core:
             return;
 
         # check if object has no children:
-        if Object.Counter != 0:  raise Exceptions.ItemBusy("Can't remove object (ID:%s): Item is used by others.");
+        if Object.Counter != 0:  
+            raise Exceptions.ItemBusy("Can't remove object %s(ID:%s): Item is used by others. Count: %i"%(self.GetObjectClass(ObjectID),ObjectID,Object.Counter));
         # destroy object:
         if not Object.destroy(): 
             raise Exceptions.Error("FATAL: Can't destroy object (ID:%s): error while call destroy() method! (MasterTree will be inconsistent)");
@@ -194,7 +196,8 @@ class Core:
         if not self.__MasterObjTree.Del(ObjectID):
             raise Exception.Error("FATAL: Can't remove object (ID:%s) from MasterTree! MasterTree may inconsistend! Mail author!");
 
-        del Object;                             #destroy object
+        
+        Object.tear_down();
         del self.__ObjectRefCount[ObjectID];    #remove from ref-count table
         self.Logger.debug("Obj ref count should be None: %s"%str(self.__ObjectRefCount.get(ObjectID)));
         del self.__ObjectHash[ObjectID];        #remove from object hash
@@ -287,8 +290,6 @@ class Core:
 
     # ######################################################################## #
     # SymbolTreeHandler                                                        # 
-    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #  
-    #   +                                                                      # 
     # ######################################################################## #
     def SymbolTreeCheckPath(self, Path):
         """ Checks if the path exists """
@@ -342,10 +343,11 @@ class Core:
         if isinstance(Connection, MasterObject.ValueConnection):
             if Timeout: Connection.SetTimeout(Timeout);
 
-    # store in symboltree: (also Address and timeout for rebuild):   
-        if not self.__SymbolTree.CreateSymbol(Path, Connection, Address, Timeout):
-            raise Exceptions.SymbolError("Error while create symbol \"%s\"!"%Path);
-        Obj.inc_usage();   #FIXME: may be this can be handled by connection-object! 
+        # store in symboltree: (also Address and timeout for rebuild):   
+        try: self.__SymbolTree.CreateSymbol(Path, Connection, Address, Timeout);
+        except Exception,e:
+            Connection.close();
+            raise Exceptions.SymbolError("Error while create symbol \"%s\": %s"%(Path,str(e)));
         return(True);
 
     
@@ -400,21 +402,12 @@ class Core:
 
 
     # ######################################################################## #
-    # Return the instance know by ID (private)                                 # 
-    # ++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++ #  
-    #   + return the instance or None on error                                 #
+    # Private methods!                                                         #
     # ######################################################################## #
     def __GetObjectByID(self,ID):
         self.Logger.debug("Search for %s"%ID);
         return(self.__ObjectHash.get(ID));
 
-
-
-
-
-    # ######################################################################## #
-    # Methods for User/Group handling                                          #
-    # ######################################################################## #
     def __GetSystemSession(self):
         return(self.__UserDataBase.OpenSystemSession());
 
@@ -441,7 +434,6 @@ class Core:
     # ######################################################################## #
     # Methods for object access                                                #
     # ######################################################################## #
-    # will may be removed
     def GetAConnection(self, ObjectID, Address):
         """ This method will return a connection object.
   NOTE: Please use this method only if you use pyDCPU as a library. For example if you
@@ -450,7 +442,10 @@ class Core:
         if not Obj: raise Exceptions.ItemNotFound("No module with ID %s found!"%ObjectID);
         if not hasattr(Obj,"connect"):
             raise Exceptions.BadModule("Can't connect to Obj(%s): no connect() method, may bad API!"%ObjectID);
-        return(Obj.connect(Address));
+        Con = Obj.connect(Address);
+        if not Con: raise Exceptions.Error("Unable to connect to Module %s"%ObjectID);
+        return Con;
+        
 
     # will be removed
     def GetObjectClass(self, ObjectID):

@@ -5,7 +5,7 @@ class TestDCPUMasterTree(unittest.TestCase):
     """ Test the mastertree of the pyDCPU-Core class """
 
     def setUp(self):
-        self.core = pyDCPU.Core("/usr/PPLT/", LogFile="./pyDCPU.log");
+        self.core = pyDCPU.Core(LogLevel="debug", LogFile="./pyDCPU.log");
 
     def tearDown(self):
         del self.core;

@@ -81,8 +81,8 @@ class System:
                  Lang="en", AltLang="en"):
         if not BasePath: BasePath = os.path.normpath(sys.exec_prefix+"/PPLT/");
 
-        CoreModPath = os.path.normpath(BasePath);
-        PPLTModPath = os.path.normpath(BasePath+"/Mods/");
+        CoreModPath = os.path.normpath(BasePath+"/CoreMods/");
+        PPLTModPath = os.path.normpath(BasePath+"/PPLTMods/");
         PPLTUserDB  = os.path.normpath(BasePath+"/UserDB.xml");
         CoreLL = CoreLogLevel;
         PPLTLL = PPLTLogLevel;
@@ -474,40 +474,24 @@ Return a list of strings. """
     def LoadDevice(self, DeviceName, Alias, Parameters):
         """ Load and init device DeviceName as Alias with Parameters. Return
  True on success."""
-        #check DeviceName:
-        print DeviceName
-        DeviceName = NameCheck.CheckDevice(DeviceName);
-        if not DeviceName:
-            self.__Logger.error("Invalid format for a FQ deivcename.");
-            return(False);
-
         #check Alias:
         Alias = NameCheck.CheckAlias(Alias);
         if not Alias:
-            self.__Logger.error("Invalid format for an alias. Aliasnames should only contain (a-z,A-Z,0-9,-,_)");
-            return(False);
+            raise pyDCPU.Exceptions.Error("Invalid fromat for alias \"%s\": Should only contain (a-z,A-Z,0-9,-,_)"%Alias);
 
         #check alias:
         if self.__DeviceHash.has_key(Alias):
-            self.__Logger.error("Alias %s already exists"%Alias);
-            return(False);
+            raise pyDCPU.Exceptions.ItemBusy("Alias \"%s\" already used."%Alias);
 
         # try to find out file name of DeviceName
         devFileName = self.__DataBase.GetDevicePath(DeviceName);
         if not devFileName:
-            self.__Logger.error("Can't load Device %s: not known!"%DeviceName);
-            return(False);
+            raise pyDCPU.Exceptions.ItemNotFound("Can't load device \"%s\": Associated file [%s] not found!"%(DeviceName, devFileName));
 
         # load and init device
-        try:
-            device = Device.Device(self.__Core, devFileName, DeviceName, Parameters);
-        except:
-            self.__Logger.error("Error while load Device \"%s\""%DeviceName);
-            return(False);
+        device = Device.Device(self.__Core, devFileName, DeviceName, Parameters);
 
-        if not device:
-            self.__Logger.error("Error while load device %s"%DeviceName);
-            return(False);
+        if not device: raise pyDCPU.Exceptions.Error("At first this should not happened! And the device can't be loaded!");
 
         #add device to table
         self.__DeviceHash.update( {Alias:device} );
@@ -517,18 +501,11 @@ Return a list of strings. """
 
     def UnLoadDevice(self, Alias):
         """ Unload and destroy the given device. Return True on success. """
-        #get device from table
-        device = self.__DeviceHash.get(Alias);
-        if not device:
-            self.__Logger.warning("No device found named %s"%Alias);
-            return(False);
+        if not self.__DeviceHash.has_key(Alias):
+            raise pyDCPU.Exceptions.ItemNotFound("No device with alias \"%s\" known!"%Alias);
+        
+        self.__DeviceHash[Alias].destroy();
 
-        #try to destroy
-        if not device.destroy():
-            self.__Logger.warning("Can't destroy device %s"%Alias);
-            return(False);
-
-        #remove from table
         del self.__DeviceHash[Alias];
         return(True);
 

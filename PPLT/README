@@ -20,8 +20,8 @@ extention.
 
 Note: Some plugins (here called: modules) need additional libraries. So you
 should get and install the pyserial library from 
-http://pyserial.sourceforge.net to get all modules useing the serial 
-interface running.
+http://pyserial.sourceforge.net to get all modules, useing the serial 
+interface, running.
 
 Now you should install the modules/software in following order:
 	1.) Python
@@ -36,17 +36,6 @@ For more information please look at the "Installing Python Modules" section
 of the Python documentation or at the README/INSTALL files of the specific
 library.
 
-
-INSTALL PLUGINS(Modules):
-=========================
-The best (simple) way to install the PPLT modules is to use the PPLT Center
-GUI application. Now, get the Modules-?.?.?.zip arcive from 
-http://pplt.berlios.de and unpack it. There are a lot of zip and xml files in it.
-Do not unpack the zip files!. 
-Now start the PPLT Center and click at the "Install modules" button on the left
-tool-bar. Now select the "Setup.idf" file you extracted from the modules arcive.
-Now all modules should be installed. 
-To use the modules you need to restart the PPLT Center.
 
 
 HELP WANTED:

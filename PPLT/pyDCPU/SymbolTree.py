@@ -337,15 +337,15 @@ class SymbolTree(SymbolFolder.Folder):
                 self.SymbolHash[Name].Unregister();
                 del self.SymbolHash[Name];
                 return(True);
-            raise Exceptions.ItemNotFound("Can't delete symbol %s: item not found!"%PathToSymbolr);
+            raise Exceptions.ItemNotFound("Can't delete symbol %s: item not found!"%PathToSymbol);
                 
         Parent = self.__GetElementByPath(PList[:-1]);
             
         if not Parent:
-            raise Exceptions.Error("Can't delete symbol %s: Opps -> mail author!!!"%PathToSymbol);
+            raise Exceptions.ItemNotFound("Can't delete symbol %s: Symbol not found!"%PathToSymbol);
             return(False);  # FIXME: ohoh..
         if not Parent.DeleteSymbol(Name):
-            raise Exceptions.Error("can't delete symbol %s: Can't remove symbol from parent."%PathToSymbol);
+            raise Exceptions.Error("Can't delete symbol %s: Can't remove symbol from parent. (contact author)"%PathToSymbol);
             return(False);
         return(True);
 

@@ -29,6 +29,7 @@
 
 import pyDCPU;
 import CoreModuleInfo;
+import Exceptions;
 import xml.dom.minidom;
 import traceback;
 import zipimport;
@@ -80,8 +81,9 @@ class Importer:
             raise Exceptions.ModuleError("Unable to load module \"%s\"!"%Name);
 
         Obj = Mod.Object(Fingerprint, Connection, Parameters, Name, self.__Logger);
-        if not Obj.setup():
-            raise Exceptions.ModuleSetup("Error while setup module \"%s\""%Name);
+        try: Obj.setup();
+        except Exception, e:
+            raise Exceptions.ModuleSetup("Error while setup module \"%s\": \"%s\""%(Name,str(e)));
         return(Obj);
 
 

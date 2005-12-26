@@ -37,7 +37,7 @@ class Object(pyDCPU.ExportObject):
 
     def stop(self):
         self.__Loop = False;
-
+        return(True);
 
 
 class SimpleExport:

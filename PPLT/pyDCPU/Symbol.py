@@ -56,7 +56,6 @@ class Symbol:
         self.__Possession = myPossession;
         self.__Connection = Connection;
 
-
     def IsValid(self): return(self.__Valid);
 
     def Rename(self, Name):
