@@ -1,6 +1,6 @@
 +++ general Tasks +++
 [ALL]
-    Do testing and testing and testing
+    Do testing and testing and testing ...
 
     Update README
     
@@ -17,7 +17,6 @@
 
 +++ BUGs BUGs BUGs +++
 [pyDCPU]
-    - Symbolslots should keep there cached values if a error appears
     - Implement module-compileing (pyDCPU/Compile.py exists now implement anywere)
     - implement validating the coremod meta.xml files
 

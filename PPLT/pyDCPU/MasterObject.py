@@ -19,11 +19,14 @@
 # ############################################################################ #
 
 # CHANGELOG:
+# 2006-01-14:
+#   + fixed locking (should be now clear)
 # 2005-12-08:
 #   + added ValueConnection class
 
 import xml.dom.minidom;
 import pyDCPU;
+from pyDCPU.Exceptions import *;    #import all Exceptions
 import logging;
 import traceback;
 import sys;
@@ -48,10 +51,29 @@ class MasterConnection:
         self.Parent.dec_usage();
         return(self.Parent.close());
 
-    def read_seq(self): return self.Parent.read(self);
-    def write_seq(self, Data): return self.Parent.write(self, Data);
-    def read(self, Len=None): return self.Parent.read(self, Len);
-    def write(self, Data): return self.Parent.write(self, Data);
+    def read_seq(self): 
+        if self.Parent.islocked(): raise ItemBusy("Can't read_seq() from Parent: is locked!");
+        self.Parent.lock();
+        try: return self.Parent.read(self);     # finaly will be exec anyway
+        finally: self.Parent.unlock();
+        
+    def write_seq(self, Data): 
+        if self.Parent.islocked(): raise ItemBusy("Can't write_seq() to Parent: is locked!");
+        self.Parent.lock();
+        try: return self.Parent.write(self, Data);
+        finally: self.Parent.unlock();
+        
+    def read(self, Len=None): 
+        if self.Parent.islocked(): raise ItemBusy("Can't read() from parent: is locked!");
+        self.Parent.lock();
+        try: return self.Parent.read(self, Len);
+        finally: self.Parent.unlock();
+
+    def write(self, Data):
+        if self.Parent.islocked(): raise ItemBusy("Can't write() to parent: is locked!");
+        self.Parent.lock();
+        try: return self.Parent.write(self, Data);
+        finally: self.Parent.unlock();
 
     def b_read(self,Len=None):
         while(self.Parent.islocked()): pass;
@@ -70,7 +92,7 @@ class MasterConnection:
         #del self.Buffer;
         self.Buffer = None;
         self.Parent.lock();
-        self.Parent.flush();
+        self.Parent.flush();    #FIXME: maybe a bad idea
         self.Parent.unlock();
         return(True);
 
@@ -87,47 +109,29 @@ class MasterConnection:
    
 
 class StreamConnection(MasterConnection):
+    """ CLASS: StreamConnection 
+  This class implements the connection to or between modules that implements 
+  streams. """
     def read_seq(self):
         self.Logger.warning("Trying to read a sequence out of a stream: will return only 1 byte.");
-        if self.Parent.islocked(): raise pyDCPU.LockModError;
+        if self.Parent.islocked(): raise ItemBusy("Unable to read_seq() from parent: is locked!");
         self.Parent.lock();
-        try:
-            data = self.Parent.read(1);
-        except pyDCPU.LockModError:
-            raise pyDCPULockModError;
-        except Exception, e:
-            self.Parent.unlock();
-            raise Exception(str(e));
-        self.Parent.unlock();
-        return Data;
+        try: return self.Parent.read(1);
+        finally: self.Parent.unlock();
 
     def write_seq(self, Data): return self.write(Data);
 
     def read(self, Len=None):
-        if self.Parent.islocked(): raise pyDCPULockModError;
+        if self.Parent.islocked(): raise ItemBusy("Can't read() from parent: is locked!");
         self.Parent.lock();
-
-        try: Data = self.Parent.read(self, Len);
-        except pyDCPU.LockModError:
-            raise pyDCPULockModError;
-        except Exception, e:
-            self.Parent.unlock();
-            raise Exception(str(e));
-        self.Parent.unlock();
-        return Data;
+        try: return self.Parent.read(self, Len);
+        finally: self.Parent.unlock();
 
     def write(self, Data):
-        if self.Parent.islocked(): raise pyDCPU.LockModError;
+        if self.Parent.islocked(): raise ItemBusy("Unable to write to parent: is locked!");
         self.Parent.lock();
-
-        try: Len = self.Parent.write(self, Data);
-        except pyDCPU.LockModError:
-            raise pyDCPULockModError;
-        except Exception, e:
-            self.Parent.unlock();
-            raise Exception(str(e));
-        self.Parent.unlock();
-        return Len;
+        try: return self.Parent.write(self, Data);
+        finally: self.Parent.unlock();
 
 
 
@@ -136,71 +140,51 @@ class StreamConnection(MasterConnection):
     
 class SequenceConnection(MasterConnection):
     def read_seq(self):
-        if self.Parent.islocked(): raise pyDCPU.LockModError;
-        self.Parent.lock();
-
         if self.Buffer:
             tmp = self.Buffer;
             self.Buffer=None;
             return tmp;
-
-        try: Data = self.Parent.read(self);
-        except pyDCPU.LockModError:
-            raise pyDCPULockModError;
-        except Exception, e:
-            self.Parent.unlock();
-            raise Exception(str(e));
-        self.Parent.unlock();
-        return Data;
+        # check if parent is locked:
+        if self.Parent.islocked(): raise ItemBusy("Unable to read_seq() from parent: is locked!");
+        self.Parent.lock();
+        # get data:
+        try: return self.Parent.read(self);
+        finally: self.Parent.unlock();
 
     def write_seq(self, Data): return self.write(Data);
 
     def read(self, Len=None):
-        if self.Parent.islocked(): raise(pyDCPU.LockModError);
-        
-        if not self.Buffer:     #if buffer is empty -> fill up
+        if self.Buffer==None:     #if buffer is empty -> fill up
+            if self.Parent.islocked(): raise ItemBusy("Unable to read() from parent: item locked.");
             self.Parent.lock();
             try: self.Buffer = self.Parent.read(self, Len);
-            except pyDCPU.LockModError:
-                raise pyDCPULockModError;
-            except Exception, e:
-                self.Parent.unlock();
-                raise Exception(str(e));
-            self.Parent.unlock();
-
-        if not Len:                 # if Len is not given
+            finally: self.Parent.unlock();
+        # if Len is not given:
+        if not Len:                 
             tmp = self.Buffer;
             self.Buffer = None;
             return tmp;
-            
-        if Len >= len(self.Buffer): # if Len > len(Buffer)
+        # if Len > len(Buffer): 
+        if Len >= len(self.Buffer): 
             tmp = self.Buffer;
             self.Buffer = None;
             return tmp;
-        else:                                           # else:
+        else:                                           
             tmp = self.Buffer[:Len];
             self.Buffer = self.Buffer[Len:];
             return tmp;
        
         
     def write(self, Data):
-        if self.Parent.islocked(): raise(pyDCPU.LockModError);
+        if self.Parent.islocked(): raise ItemBusy("Unable to write() to parent: is locked!");
         self.Parent.lock();
-
-        try: Len = self.Parent.write(self, Data);
-        except pyDCPU.LockModError:
-            raise pyDCPULockModError;
-        except Exception, e:
-            self.Parent.unlock();
-            raise Exception(str(e));
-        self.Parent.unlock();
-        return(Len);
+        try: return self.Parent.write(self, Data);
+        finally: self.Parent.unlock();
 
 
 
 class ValueConnection(SequenceConnection):
     """ A ValueConnection is the glue between the MasterObejcts and the symbols. """
-
     def __init__(self, Parent, Type, Address=None, Timeout = 0.5):
         SequenceConnection.__init__(self, Parent, Address);
         if not Type: raise Exception("A ValueConnection have to be typed!");
@@ -215,10 +199,7 @@ class ValueConnection(SequenceConnection):
             now = time.time();
             # if the cached value is still fresh:            
             if (now - self.LastUpdate) < self.Timeout: return self.Cache;
-        try: tmp = self.read();
-        except Exception, e: 
-            self.Logger.error("Error while get value from %s: %s");
-            return None;
+        tmp = SequenceConnection.read_seq(self);
         if tmp: 
             self.Cache = tmp;
             self.LastUpdate = time.time();
@@ -236,16 +217,15 @@ class ValueConnection(SequenceConnection):
 
 class MasterObject:
     """ This is the Class of the Master-Object
-        There are following functions:
-            - __init__(Parameter)
-            - destroy()
+  There are following functions:
+      - __init__(Parameter)
+      - destroy()
 
-            - connect(Address)
-            - close()
+      - connect(Address)
+      - close()
 
-            - read(Connection, Data, Len)
-            - write(Conection, Data, Len)
-    """
+      - read(Connection, Data, Len)
+      - write(Conection, Data, Len) """
     
     def __init__(self,ID, Connection, Parameters, Class, Logger):
         self.ID = ID;

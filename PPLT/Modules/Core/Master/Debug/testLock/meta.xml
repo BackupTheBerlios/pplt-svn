@@ -1,0 +1,21 @@
+<?xml version="1.0"?>
+
+<pyDCPUModuleMeta>
+    <Author>Hannes Matuschek &lt;hmatuschek@gmx.net&gt;</Author>
+    <LastUpdate>2006-01-14</LastUpdate>
+    <URL>http://pplt.berlios.de/Modules/CoreModules</URL>
+
+    <Description lang="de">Dieses Modul kann zu testen des Locking-Systems 
+    verwendet werden.</Description>
+    <Description lang="en">This module can be used to test the locking system.
+    </Description>
+
+    <Require>
+        <ChildAddress>True</ChildAddress>
+        <pyDCPUVersion>0.9.0</pyDCPUVersion>
+        <PythonVersion>2.3.0</PythonVersion>
+
+        <PythonModule>time</PythonModule>
+    </Require>
+
+</pyDCPUModuleMeta>    
