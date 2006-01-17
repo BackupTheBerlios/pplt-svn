@@ -63,16 +63,16 @@ def Install():
     create_shortcut(BAT_FILE, "PPLT Center (debug-mode)", SHORTCUT, "", ".", ICONPATH);
     file_created(SHORTCUT);
 
-    BAT_FILE  = os.path.normpath(SCRIPTDIR+'\PPLTMOD.BAT');
-    BATCHCODE = "@echo off \n%s %s %%1\n"%(PYTHONWEXE,PPLTModPy);
-    fp = file(BAT_FILE, 'w');
-    fp.write(BATCHCODE);
-    fp.flush();
-    fp.close();
-    file_created(BAT_FILE);
-    SHORTCUT  = os.path.normpath(FOLDER+"\PPLTModuleManager.lnk");
-    create_shortcut(BAT_FILE, "PPLT Module Manager", SHORTCUT, "", ".", ICONPATH);
-    file_created(SHORTCUT);
+#    BAT_FILE  = os.path.normpath(SCRIPTDIR+'\PPLTMOD.BAT');
+#    BATCHCODE = "@echo off \n%s %s %%1\n"%(PYTHONWEXE,PPLTModPy);
+#    fp = file(BAT_FILE, 'w');
+#    fp.write(BATCHCODE);
+#    fp.flush();
+#    fp.close();
+#    file_created(BAT_FILE);
+#    SHORTCUT  = os.path.normpath(FOLDER+"\PPLTModuleManager.lnk");
+#    create_shortcut(BAT_FILE, "PPLT Module Manager", SHORTCUT, "", ".", ICONPATH);
+#    file_created(SHORTCUT);
 
 
 

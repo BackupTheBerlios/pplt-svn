@@ -127,4 +127,6 @@ WHATSNEW=whatsnew24
 references-pdf:	
 		$(MKPDF) Reference/Reference.tex
 		
+references-html:
+		$(MKHTML) Reference/Reference.tex
 

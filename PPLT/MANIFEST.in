@@ -1,9 +1,11 @@
 include ChangeLog TODO LICENSE MANIFEST.in
-include UserDB.xml PPLT.conf PPLT.bmp
+include UserDB.xml PPLT.conf
 include icons/*.xpm
 include icons/*.ico
 include *.chm
 include *.htb
 recursive-include I18N *.po *.mo
+recursive-include Modules/ftp *.zip *.xml
+recursive-include test/ *.py
 graft examples
 

@@ -29,42 +29,34 @@ class Object(pyDCPU.MasterObject):
         self.__myAddress = self.Parameters.get('Address');
         self.Logger.info("Setup ModPPI");
         
-        if not self.__myAddress:
-            self.Logger.warning("No Address");
-            return(False);
+        if not self.__myAddress: raise pyDCPU.ModuleSetup("No PPI address given!");
+
         self.PPIAddress = int(self.__myAddress);
         return(True);
         
-    def read(self, Connection, Len):
+    def read(self, Connection, Len=None):
         RetryCount = 0;
         while RetryCount<3:
-            Ret = PPIRead(self.Connection, Connection.Address, self.PPIAddress, Len, self.Logger);
-            if Ret:
-                return(Ret);
-            self.Logger.error("Error while read from parent: flush & retry (%i retrys left)"%(3-RetryCount));
-            self.Connection.flush();
-            RetryCount +=1;
-        self.Logger.error("3 Errors: Connection broken???");
-        raise(pyDCPU.IOModError);
+            try: return PPIRead(self.Connection, Connection.Address, self.PPIAddress, Len, self.Logger);
+            except pyDCPU.ModuleError, e:
+                self.Logger.debug("Error while read from parent: %s [%i retrys left]"%(str(e),3-RetryCount));
+                self.Connection.flush();
+                RetryCount +=1;
+        raise e;    # if no retrys left -> reraise exception!
     
     def write(self, Connection, Data):
         RetryCount = 0;
         while RetryCount<3:
-            Ret = PPIWrite(self.Connection, Connection.Address, self.PPIAddress, Data, self.Logger);
-            if Ret:
-                return(Ret);
-            self.Logger.error("Error while write to parent: flush & retry (%i retrys left)"%(3-RetryCount));
-            self.Connection.flush();
-            RetryCount +=1;
-        self.Logger.error("3 Errors: Connection broken???");
-        raise(pyDCPU.IOModError);
+            try: return PPIWrite(self.Connection, Connection.Address, self.PPIAddress, Data, self.Logger);
+            except pyDCPU.ModuleError, e:
+                self.Logger.debug("Error while write to parent: %s [%i retrys left]"%(str(e), 3-RetryCount));
+                self.Connection.flush();
+                RetryCount +=1;
+        raise e;    # if no retrys left -> reraise exception!
 
     def connect(self,Address):
-        if not Address:
-            self.Logger.error("my child needs a address");
-            return(None);
-        Connection = pyDCPU.SequenceConnection(self,int(Address));
-        return(Connection);
+        if not Address: raise pyDCPU.ModuleError("My child needs a address");
+        return pyDCPU.SequenceConnection(self,int(Address));
 	
     def close(self):
         self.Logger.debug("closed");
@@ -98,104 +90,53 @@ def PPIWrite(Connection, Dest, Src, Data, Logger):
     # Write Packet...
     #
     Logger.debug("Send Packet");
-    try:
-        Connection.write(Mesg);
-    except:
-        Logger.error("Error while write to BUS");
-        return(None);
+    Connection.write(Mesg);
     
     #
     # Read Back Reception-Ack
     #
-    try:
-        ACK = Connection.read(1);
-    except:
-        Logger.error("BUSIO Error: flushing bus");
-        return(None);
-    
-    if not ACK:
-        Logger.warning("Error while read from parent");
-        return(None);
+    ACK = Connection.read(1);
     
     #
     # Check Ack
     #
-    if len(ACK) == 1:
-        if ord(ACK[0]) == 229:
-            return(len(Data));
-        else:
-            Logger.warning("Transmission Error...(at ACK)(%x != e5)"%ord(ACK[0]));
-            return(None);
-    else:
-        Logger.warning("Error while read...");
-        return(None);
-    return(None);
-
+    if len(ACK) == 1: 
+        if ord(ACK[0]) == 229: return(len(Data));
+    raise pyDCPU.ModuleError("Transmission Error...(at ACK)(%x != e5)"%ord(ACK[0]));
 
 def PPIRead(Connection, Src, Dest, Len, Logger):
 
     SD1Pack = ModPPISD1Packet(Src,Dest);
     Packet = SD1Pack.GetPacket();
         
-    if Connection.write(Packet) != len(Packet):
-        Logger.warning("Error while send SD1");
-        return(None);
+    Connection.write(Packet);
 
     Logger.debug("SD1 Send...");
 
-    try:
-        PPIHead = Connection.read(7);
-    except:
-        Logger.error("IO Error");
-        return(None);
     
-    if len(PPIHead) != 7:
-        Logger.warning("Error while get PPI-Packet-Header");
-        return(None);
+    PPIHead = Connection.read(7);
+    
+    if len(PPIHead) != 7: raise pyDCPU.ModuleError("Bad packed!");
 
-    if ord(PPIHead[1]) != ord(PPIHead[2]):
-        Logger.warning("Transmission error...");
-        #FIXME: wait for some bytes and then:
-        return(None);
+    if ord(PPIHead[1]) != ord(PPIHead[2]): raise pyDCPU.ModuleError("Realy bad packet!");
 
     DataLen = ord(PPIHead[1]);
     Logger.debug("Got %i Octs data..."%(DataLen-3));
 
-    if ord(PPIHead[4]) != Dest:
-        Logger.warning("BUS error.(packet for %i recived...)"%ord(PPIHead[4]));
-        return(None);
+    if ord(PPIHead[4]) != Dest: raise pyDCPU.ModuleError("BUS error.(packet for %i recived...)"%ord(PPIHead[4]));
 
-    if ord(PPIHead[5]) != Src:
-        Logger.warining("BUS error. (packet from %i recived...)"%ord(PPIHead[5]));
-        return(None);
+    if ord(PPIHead[5]) != Src: raise pyDCPU.ModuleError("BUS error. (packet from %i recived...)"%ord(PPIHead[5]));
 
-    if ord(PPIHead[6]) != 8:
-        Logger.warning("Bad FCS (%x)"%ord(PPIHead[6]));
-        return(None);
+    if ord(PPIHead[6]) != 8: raise pyDCPU.ModuleError("Bad FCS (%x)"%ord(PPIHead[6]));
 
-    try:
-        Data  = Connection.read(DataLen-3);
-    except:
-        Logger.warning("Error while read from Parent");
-        return(None);
+    Data  = Connection.read(DataLen-3);
     
-    if len(Data) != DataLen-3:
-        Logger.warning("Invalid DataLen (read error)");
-        return(None);
+    if len(Data) != DataLen-3: raise pyDCPU.ModuleError("Invalid DataLen (read error)");
 
-    try:
-        Footer = Connection.read(2);
-    except:
-        Logger.warning("Error while read from Parent");
-        return(None);
+    Footer = Connection.read(2);
     
-    if len(Footer) != 2:
-        Logger.warning("Invalid FooterLen (read error)");
-        return(None);
+    if len(Footer) != 2: raise pyDCPU.ModuleError("Invalid FooterLen (read error)");
 
     FCS = ModPPICalcFCS(ord(PPIHead[4]),ord(PPIHead[5]),ord(PPIHead[6]),Data);
-    if ord(Footer[0]) != FCS:
-        Logger.warning("Transmisstion error (Bad FCS)");
-        return(None);
-    
+    if ord(Footer[0]) != FCS: raise pyDCPU.ModuleError("Transmisstion error (Bad FCS)");
     return(Data);

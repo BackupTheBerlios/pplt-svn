@@ -20,15 +20,7 @@
 					<Description lang="de">Boolscher Zufallswert</Description>
 					<Description lang="en">Boolean random value</Description>
 				</Slot>
-				<Slot name="Byte" type="Byte" mode="r">
-					<Description lang="de">Zufallswert zischen 0-100</Description>
-					<Description lang="en">Random value (0-100)</Description>
-				</Slot>
-				<Slot name="Word" type="Word" mode="r">
-					<Description lang="de">Zufallswert zischen 0-100</Description>
-					<Description lang="en">Random value (0-100)</Description>
-				</Slot>
-				<Slot name="DWord" type="DWord" mode="r">
+				<Slot name="Integer" type="Integer" mode="r">
 					<Description lang="de">Zufallswert zischen 0-100</Description>
 					<Description lang="en">Random value (0-100)</Description>
 				</Slot>

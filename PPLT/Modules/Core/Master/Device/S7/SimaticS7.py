@@ -32,40 +32,34 @@ class Object(pyDCPU.MasterObject):
         return(True);
 
     def connect(self,AddrStr):
-        self.Logger.debug("MkConnect for %s"%(AddrStr));
         RegAddr = S7Register.S7Register(AddrStr);
+        self.Logger.debug("MkConnect for %s(%s)"%(AddrStr, str(RegAddr)));
         if not RegAddr:
-            self.Logger.waring("Can't split Address \"%s\""%AddrStr);
-            return(None);
-        Connection = pyDCPU.ValueConnection(self,RegAddr);
+            raise pyDCPU.ModuleError("Can't split Address \"%s\", my wrong format or not supported address range."%AddrStr);
+
+        #map s7-types to pplt-type-names:
+        if RegAddr.GetType() in (S7Register.S7Bit,): Type = pyDCPU.TBool;
+        elif RegAddr.GetType() in (S7Register.S7Byte, S7Register.S7Word, S7Register.S7DWord): Type = pyDCPU.TInteger;
+
+        Connection = pyDCPU.ValueConnection(self, Type, RegAddr);
         return(Connection);
 
     def write(self, Connection, Value):
-        if Value == None:
-            self.Logger.error("No value given!");
-            return None;
+        if Value == None: raise pyDCPU.ModuleError("No value give to write!");
 
         Data = Value2Raw(Value, Connection.Address.GetType());          # convert Value to raw byte-data
         DataSet = S7Message.S7DataSet(Data, Connection.Address);        # assamble dataset
         CommSet = S7Message.S7CommandSet(S7Message.S7FunctionWrite, Connection.Address);    # assamble command set
         Message = S7Message.S7Message(CommSet, DataSet);                # assamble message
 
-        self.Logger.debug("Will send %i bytes message"%len(Message.GetString()));
+        self.Logger.debug("Will send a %i byte message."%len(Message.GetString()));
         
         self.Connection.flush()
         # write cmd-message: 
-        try: ret = self.Connection.write(Message.GetString());
-        except:
-            self.Logger.warning("Error while read");
-            raise(pyDCPU.IOModError);
+        self.Connection.write(Message.GetString());
         
-        self.Logger.debug("write ret: %i"%ret);
-
         # read response:
-        try: MsgString = self.Connection.read_seq();
-        except:
-            self.Logger.warning("Error while read..");
-            raise(pyDCPU.IOModError);
+        MsgString = self.Connection.read_seq();
         
         Message = S7Message.S7Message(MsgString = MsgString);
         CommSet = Message.GetCommandSet();
@@ -73,39 +67,29 @@ class Object(pyDCPU.MasterObject):
         if DataSet.GetErrCode() == 0xff:        # 0xff means: all ok.
             return(True);
 
-        self.Logger.error("S7 returned error...");
-        raise(pyDCPU.IOModError);
+        self.Logger.error("S7 returned error code: %x"%ord(DataSet.GetErrCode()));
+        raise pyDCPU.ModuleError("S7 returned error code: %x"%ord(DataSet.GetErrCode()));
 
 
     def read(self, Connection, Len=None):
+        self.Logger.debug("Read... Function %s, Addr: %s"%(str(S7Message.S7FunctionRead),str(Connection.Address)));
         CommSet = S7Message.S7CommandSet(S7Message.S7FunctionRead, Connection.Address);
         Message = S7Message.S7Message(CommSet);
         
         self.Connection.flush();
-        try: ret = self.Connection.write(Message.GetString());
-        except:
-            self.Logger.warning("Error while read...");
-            raise(pyDCPU.IOModError);
+        ret = self.Connection.write(Message.GetString());
 
-        try: MsgString = self.Connection.read_seq();
-        except:
-            self.Logger.warning("Error while read...");
-            raise(pyDCPU.IOModError);
+        MsgString = self.Connection.read_seq();
         
         Message = S7Message.S7Message(MsgString = MsgString);
         CommSet = Message.GetCommandSet();
         DataSet = Message.GetDataSet();
         
         if DataSet.GetErrCode() == 0xff:
-            try: ret = Raw2Value(DataSet.GetDataString(), Connection.Address.GetType());
-            except Exception, e:
-                self.Logger.error("Error while convert data->Value! (invalid format? wrong type?): %s"%e);
-                return None;
-            return ret;
+            return Raw2Value(DataSet.GetDataString(), Connection.Address.GetType());
 
         self.Logger.error("S7 returned error-code: %x"%ord(DataSetGetErrorCode()));
-        raise(pyDCPU.IOModError);
-
+        raise pyDCPU.ModuleError("S7 returned error-code: %x"%ord(DataSetGetErrorCode()));
 
 
 def Raw2Value(Data, Type):

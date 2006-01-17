@@ -4,25 +4,25 @@
 
 \chapter{PSF Reference --- \textbf{P}PLT \textbf{S}ession \textbf{F}ile}
 
-This section descibes the file-format of the PPLT session files. Such 
+This section describes the file-format of the PPLT session files. Such 
 files contain the information about the state of the system. 
 So the file contains information about the loaded devices and servers and
-also the layout of the symboltree.
+also the layout of the symbol-tree.
 
 Files formatted in the PSF format can be created from a running PPLT system by 
 a call of the method \method{SaveSession()} and can then be loaded by a 
-\method{LoadSession()} methodcall.
+\method{LoadSession()} method-call.
 
-By this way you can easily implement a simlple daemon or service, that reads 
+By this way you can easily implement a simple daemon or service, that reads 
 such a PSF file and setup a whole PPLT system. Meaning loading all devices, 
 creating all symbols and folders and at the end loading all servers.
 
-All you need to know is a basic knowlage of XML formats, and a little idea of 
+All you need to know is a basic knowledge of XML formats, and a little idea of 
 what PPLT is and what the system needs to save (or even needs to know to setup
 the PPLT system). 
 
-\section{Refrence}
-In the following section i'll list all keyword of the PSF format. These are only few
+\section{Reference}
+In the following section I'll list all keyword of the PSF format. These are only few
 because the format stills easy. 
 
 At first: The PSF format is an XML format!
@@ -30,7 +30,7 @@ At first: The PSF format is an XML format!
 \subsection{\keyword{PPLTSession}}
 \PSFTag{PPLTSession}
 The PPLTSession tags surround the PPLT session document. Containing all 
-information about the devices, servers and symboltree. This tag must
+information about the devices, servers and symbol-tree. This tag must
 (directly) contain the elements (tags) \keyword{Servers}, \keyword{Devices}
 and \keyword{SymbolTree}. But each elements can only occur once.
 This also defines the basic layout of the PPLT session document. Each document
@@ -53,9 +53,9 @@ should look like:
 
 \subsection{\keyword{Servers}}
 \PSFTag{Servers}
-The tag \keyword{Servers} contains the descriptiuon of all loaded servers. This tag can onyl 
-contain any occurance of the tag \keyword{Server}. Each \keyword{Server}-tag describe a 
-singe server to load. For more details see at the describption of the \keyword{Server}-tag.
+The tag \keyword{Servers} contains the description of all loaded servers. This tag can only 
+contain any occurrence of the tag \keyword{Server}. Each \keyword{Server}-tag describe a 
+singe server to load. For more details see at the description of the \keyword{Server}-tag.
 
 \begin{verbatim}
 [...]
@@ -71,12 +71,12 @@ singe server to load. For more details see at the describption of the \keyword{S
 
 \subsection{\keyword{Server}}
 \PSFTag{Server}
-The tag \keyword{Server} describes a server to load. The tag can only contain any occurance of the tag
-\keyword{Parameter}. Each \keyword{Parameter} tag specifies a paramter needed to load the server.
+The tag \keyword{Server} describes a server to load. The tag can only contain any occurrence of the tag
+\keyword{Parameter}. Each \keyword{Parameter} tag specifies a parameter needed to load the server.
 Also the \keyword{Server} needs some attributes. The attribute \var{alias} specifies the alias the
-server will get after it was loaded. The attribute \var{fqsn} specifies the fulle-qualified-server-name. 
+server will get after it was loaded. The attribute \var{fqsn} specifies the full-qualified-server-name. 
 This unique name specifies the server to be loaded. The Attribute \var{root} specifies the server root.
-\note{The given serverroot but exist else the loading of the server will fail.} The attribute 
+\note{The given server-root but exist else the loading of the server will fail.} The attribute 
 \var{user} specifies the default user. The server will run with the rights of this user, if the 
 server doesn't know any authentication. 
 
@@ -90,25 +90,25 @@ A simple example will can be:
 [...]
 \end{verbatim}
 This example will start a JVisu server with the rights of the user \code{admin} and
-with the server root \code{'/'}. JVisu is a opensource visualisation written in Java.
+with the server root \code{'/'}. JVisu is a open source visualization written in Java.
 You can get it from \url{http://jvisu.sourceforge.net}.
 
 \subsection{\keyword{Parameter}}
 \PSFTag{Parameter}
 The \keyword{Parameter}-tag specifies a parameter, the system will use to setup
 a \keyword{Server} or \keyword{Device}. The \keyword{Parameter}-tag can only 
-contain CDATA, meaning it can onlay contain a string. The content will be 
+contain CDATA, meaning it can only contain a string. The content will be 
 interpreted as the value of the parameter. The \keyword{Parameter}-tag
 knows also a attribute. The attribute \var{name} specifies the name
 of the parameter. To find out what parameters are needed to setup
-a specifiec server, please consult the Device and Server reference.
+a specific server, please consult the Device and Server reference.
 
 
 \subsection{\keyword{Devices}}
 \PSFTag{Devices}
 Like the \keyword{Servers}-tag this tag contains the description of
 all devices needed to be loaded. So this tag can only contain any
-occurence of the tag \keyword{Device}. For example:
+occurrence of the tag \keyword{Device}. For example:
 \begin{verbatim}
 [...]
     <Devices>
@@ -142,20 +142,20 @@ For example, a \keyword{Devices}-section can be:
     </Devices>
 [...]
 \end{verbatim}
-This example will load a randomgenerator as \code{'rand'}  and the support for the Siemens SIMATIC S7-200 
+This example will load a random-generator as \code{'rand'}  and the support for the Siemens SIMATIC S7-200 
 as \code{'S7'}.
 
 
 \subsection{\keyword{SymbolTree}}
 \PSFTag{SymbolTree}
-The \keyword{SymbolTree}-section describes the content of the symboltree. So this tag can only contain
-any occurance of \keyword{Symbol} and \keyword{Folder} tags. This tag don't take any attributes.
+The \keyword{SymbolTree}-section describes the content of the symbol-tree. So this tag can only contain
+any occurrence of \keyword{Symbol} and \keyword{Folder} tags. This tag don't take any attributes.
 
-\subsubsection{How the symboltree is depiced}
-The symboltree works like a small filesystem, with folders, subfolder and symbols. The root of this filesystem is the
-symboltree itself. Now you need to know how to depic the hierarchy of the symboltree to an XML file.
+\subsubsection{How the symbol-tree is depicted}
+The symbol-tree works like a small filesystem, with folders, sub-folder and symbols. The root of this filesystem is the
+symbol-tree itself. Now you need to know how to depict the hierarchy of the symbol-tree to an XML file.
 
-Ich think the best way to describe is to give an example. The follwoing symboltree hierarchy
+I think the best way to describe is to give an example. The following symbol-tree hierarchy
 \begin{verbatim}
 /
 /FOLDER1/
@@ -167,7 +167,7 @@ Ich think the best way to describe is to give an example. The follwoing symboltr
 /FOLDER3/Symbol4
 /Symbol5
 \end{verbatim}
-will be depiced as something like:
+will be depicted as something like:
 \begin{verbatim}
 <SymbolTree>
     <Folder name="FOLDER1">
@@ -190,13 +190,13 @@ in detail in the following sections.
 
 \subsection{\keyword{Symbol}}
 \PSFTag{Symbol}
-The \keyword{Symbol}-tag describes a symbol of the symboltree. Such a symbol is a kind of a variable that can hold values.
-Each symbol is connected to a so called "symbolslot"\footnote{A symbolslot allways belongs to a device, so if you want to know 
+The \keyword{Symbol}-tag describes a symbol of the symbol-tree. Such a symbol is a kind of a variable that can hold values.
+Each symbol is connected to a so called "symbol-slot"\footnote{A symbol-slot always belongs to a device, so if you want to know 
 what slots are provided by a specific device, pleas look at the documentation of the device.}. So you need to specify the 
-symbolslot the symbol will be connected to by the attribute \var{slot}. The slotname must be provided in the format 
+symbol-slot the symbol will be connected to by the attribute \var{slot}. The slot-name must be provided in the format 
 \code{'DEVICE\_ALIAS::NAMESPACE::SLOT\_NAME'}. The \code{DEVICE\_ALIAS} specifies the device you want the symbol to be
 connected to. It should be the string you give to the \keyword{Device}-attribute \var{alias}. The \code{NAMESPACE}s and
-\code{SLOT\_NAME}s are provieded by the devices. To find out what namespaces are avaiable, look at the documentation of 
+\code{SLOT\_NAME}s are provided by the devices. To find out what namespaces are available, look at the documentation of 
 each device.
 
 In this context you also need to define the type of the symbol by the attribute \var{type}. The type is defined by the
@@ -205,7 +205,7 @@ slot you use. So please take a look at the documentation of the specific device.
 Now your symbol can get and (maybe) set values. But a major feature of the PPLT is, that you can control the
 access to the symbol by setting rights to it. To do so, you need to set a \var{owner}, \var{group} and
 \var{modus} to the symbol (and also to the folder). So a complete example for a symbol that is connected to
-a randomgrenerator loaded as \code{'rand'} could be:
+a random-generator loaded as \code{'rand'} could be:
 \begin{verbatim}
 [...]
     <SymbolTree>
@@ -215,23 +215,23 @@ a randomgrenerator loaded as \code{'rand'} could be:
     </SymbolTree>
 [...]
 \end{verbatim}
-You see the attribute \var{modus} contains a 3-digit integer. This integer is calulated like the Linux modus integer. Pleas look
-at the \manpage{chmod}{} manpage to get more information. Buzt sofar the number \code{600} says that only the owner has the right to 
+You see the attribute \var{modus} contains a 3-digit integer. This integer is calculated like the Linux modus integer. Pleas look
+at the \manpage{chmod}{} man-page to get more information. But sofar the number \code{600} says that only the owner has the right to 
 read/write to the symbol and the group and any other has no rights.
 
 
 \subsection{\keyword{Folder}}
 \PSFTag{Folder}
-The \keyword{Folder}-tag describes a folder in the symboltree. The name of the folder will be specified by the
+The \keyword{Folder}-tag describes a folder in the symbol-tree. The name of the folder will be specified by the
 attribute \var{name}. Like the symbols a folder also owned by a user and attached to a group. So you also need 
 to set the \var{owner}, \var{group} and \var{modus} attributes. 
 
 \newpage
 \section{A complete Example}
-In the following section i'll show you a complete example of a PSF. The file descibes two devices, a random generator and
-a Siemens SIMATIC S7-200. The symboltree conatains two folders one, named 'Rand', will contain some symbols connected
-to the randomgenerator and the other, named 'S7' will contains the symbols connected to the S7. And a webserver will be loaded, 
-that exports the whole symboltree. 
+In the following section I'll show you a complete example of a PSF. The file describes two devices, a random generator and
+a Siemens SIMATIC S7-200. The symbol-tree contains two folders one, named 'Rand', will contain some symbols connected
+to the random-generator and the other, named 'S7' will contains the symbols connected to the S7. And a web-server will be loaded, 
+that exports the whole symbol-tree. 
 
 \verbatiminput{PSF.xml}
 

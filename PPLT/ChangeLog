@@ -1,7 +1,13 @@
-    * removed XML methods from core (for saveing the system state)
+    * fixed PPLT_postinstall.py: do not create shortcut for Module-Manager
+    * fixed setup.py and MANIFEST.in: install all core-modules and PPLT-modules 
+    * added module testLock for testing lock-mechanics
+    * completed tests for S7 modules
+    * Fixed modules S7, UniSerial, PPI for new concept and Execptions
+    * Commit: Revision 31
+    * removed XML methods from core (for saving the system state)
     * changed concept of interface between modules and symbols, 
       now the symbols are connected directly to the modules
-      no symbolslot are needed; the symbols are now auto-typed:
+      no symbol-slot are needed; the symbols are now auto-typed:
         in pyDCPU/Core.py
         in pyDCPU/Symbol.py
         in pyDCPU/SymbolTree.py
@@ -11,60 +17,60 @@
         in pyDCPU/Core.py
         in pyDCPU/Logging.py
     * Fixed in pyDCPU/UserDB/UserDB.py in CreateUserProxy():
-        - possebility to create multible proxies of one user in 
+        - possibility to create multiple proxies of one user in 
         one group.
     * Added usable output for a parse-error.:
         - PPLT/Setup.py
         - pyDCPU/Modules/CoreModInfo.py
     * Added SetValueDialog to SymbolTreePanel in PPLT/Center
     * Improved type-coding for symbol-slots:
-        Now the symbolslots using XDR type codeing to provide 
+        Now the symbol-slots using XDR type coding to provide 
         values to symbols: So all types of the XDR standard RFC-1832
         are supported including array types.
-    * SymbolTree and ExportableSymboltree has now methods to get the timestamp
-      and typename of a symbol
+    * SymbolTree and Exportable-SymbolTree has now methods to get the timestamp
+      and type name of a symbol
     * Made all dialogs to look uniform
     * Changed GUI of PPLT Center:
         removed toolbar
         added menu
-    * Added usable modulemanager for (un-)install/update modules:
+    * Added usable module manager for (un-)install/update modules:
         So added Script/PPLTMod.py PPLT/ModSrc/*.py
-    * changed config file entrys: 
-	    now you only need to set the BasePath of the PPLT dir.
+    * changed config file entries: 
+	    now you only need to set the base path of the PPLT directory.
 	    So fixed (PPLTC, ...)
 	* removed ConfigFile option from PPLT.System().__init__();
     + added (Un)InstallServer(), (Un)InstallDevice() and (Un)InstallCoreMod() to 
-        DataBase class in PPLT/DataBase.py:
+        database class in PPLT/DataBase.py:
         added this methods to provide a usable interface for un/install
         and update modules. 
-    * fixed buggy GetDescription() methos in CoreModItem class in 
+    * fixed buggy GetDescription() methods in CoreModItem class in 
         PPLT/DataBase.py
-    * fixed sorting funktion in PPLT/Center/UserDBPanel.py:
-        - now user-proxies are sortet as users.
+    * fixed sorting function in PPLT/Center/UserDBPanel.py:
+        - now user-proxies are sorted as users.
         - now sorting ignore case
     * added in PPLT/Center/SymbolTreePanel.py:
-        - add moveing folders by drag'n'drop.
+        - add moving folders by drag'n'drop.
     * added README file
 
 Version 0.3.1 (Rev: 23) - 2005-08-28:
     * fixed bug in PPLT/Version.py and pyDCPU/Version.py
     * added examples for the PPLT Center
     * fixed PPLT_PostInstall.py:
-        - BATCH file code: the window will be keeped open
-          afer PPLTC stopped.
+        - BATCH file code: the window will be kept open
+          after PPLTC stopped.
     * fixed PPLT/PPLTSystem.py ChangeModus():
         - unicode strings are now accepted as string
     * updated project description in setup.py
-    * add move/renameing folders
+    * add move/renaming folders
 
     * Commit: (Revision 22)
 
     * fixed MANIFEST.in
     * fixed in PPLT/DataBase.py:
-        fixed crash if module-requrement it not meet
+        fixed crash if module-requirement it not meet
     * add short help text to DeviceSelectionDialog.
     * add wildcard for load/save PPLTCenter session (*.psf)
-    * add post-install-scpript for the win32 installer:
+    * add post-install-script for the win32 installer:
         Now there are some items created in your start-menu.
         And the *.psf is associated with the PPLTCenter.
     * add setup.cfg
@@ -80,7 +86,7 @@ Version 0.3.1 (Rev: 23) - 2005-08-28:
         - fixed edit-label problem (under Win32)
     * fixed in PPLT-Center:
         - add association between press return 
-          and cklick OK at all dialogs
+          and click OK at all dialogs
     * fixed in Modules/Server/Web/PPLTWeb.py:
         - Problem with base64 module and python 
           versions < 2.4
@@ -97,20 +103,20 @@ Version 0.3.1 (Rev: 23) - 2005-08-28:
     * Commit: (Revision 20) 
     
     * added in PPLT/Center/SymbolTreePanel.py:
-        Add renameing and moveing of symbols.
+        Add renaming and moving of symbols.
         
     * add in pyDCPU/pyDCPUCore.py, pyDCPUSymbolTree.py, 
         pyDCPUSymolFolder.py and pyDCPUSymbol.py:
-        Add renameing or moveing of symbols.
+        Add renaming or moving of symbols.
 
-    * add also namecheck in pyDCPU/pyDCPUCore.py.
+    * add also name-check in pyDCPU/pyDCPUCore.py.
         
-    * add namechek in PPLT/PPLTSystem for:
+    * add name-check in PPLT/PPLTSystem for:
         aliases, slots, user-, group-, device-
-        and servernames.
+        and server-names.
 
     * fixed PPLT/Center/AddSymbolDialog.py:
-        help-window will now be cleaned if no helptext
+        help-window will now be cleaned if no help text
         is available for an item.
  
     * fixed pyDCPU/pyDCPUCore.py in ExporterAdd():
@@ -119,11 +125,11 @@ Version 0.3.1 (Rev: 23) - 2005-08-28:
         also added methods CheckFolder() and CheckSymbol()
         to SymbolTree class in pyDCPU/pyDCPUSymbolTree.py
 
-    * layoutfix in PPLT/Center/UserDBDialogs.py:
+    * layout-fix in PPLT/Center/UserDBDialogs.py:
         fixed layout of CreateMemberDialog, CreateGroupDialog
         and PasswdDialog
 
-    * fixed comboboxes: 
+    * fixed combo-boxes: 
         The boxes for User, Goupe and Type selection
         were editable
     * fixed PPLT/Center/ServerPropertyDialog.py:
@@ -133,7 +139,7 @@ Version 0.3.1 (Rev: 23) - 2005-08-28:
         fixed bug in SymbolTree.SetPossession();
 
     * fixed in pyDCPU/pyDCPUSymbolFolder.py:
-        fixed ident error in Folder.DeleteSymbol()
+        fixed indent error in Folder.DeleteSymbol()
     * fixed in pyDCPU/pyDCPUSymbol.py:
         error in Symbol.ToXML() method. The method tries
         to save a attribute that doesn't exists anymore.
@@ -156,10 +162,10 @@ Version 0.3.1 (Rev: 23) - 2005-08-28:
             in PPLT/Center/UserDBPanel.py
         - add proxy.xpm (icon) to /icons (changed setup.py and MANIFEST)    
 
-    * excanged print() by logging: 
-        in allmost every method of UserDB class in pyDCPU/UserDB/UserDB.py
+    * exchanged print() by logging: 
+        in almost every method of UserDB class in pyDCPU/UserDB/UserDB.py
 
-    * fixed in Srcipts/PPLTC.py (PPLT Center):
+    * fixed in Scripts/PPLTC.py (PPLT Center):
         Under Linux the "save session as" 
         file selection dialog was a "open only" dialog.
         
@@ -169,10 +175,10 @@ Version 0.3.1 (Rev: 23) - 2005-08-28:
         Modules/Server/Web/PPLTWeb.py
 
 Version 0.3.0 (Rev: 19) - 2005-08-20: 
-    * Fixed crash if no module, devices or servers are presend:
+    * Fixed crash if no module, devices or servers are present:
         PPLT/DataBase.py
 
-    * Fixed missing exception raise if load of a core module failds:
+    * Fixed missing exception raise if load of a core module fails:
         PPLT/PPLTSystem.py
         PPLT/Device.py
         PPLT/Server.py
@@ -185,7 +191,7 @@ Version 0.3.0 (Rev: 19) - 2005-08-20:
         Modules/Server/OPCXML
 
     + Reimplement Server/Device setup:
-        PPLT/Setup.py   (ugly midnighthack)
+        PPLT/Setup.py   (ugly midnight-hack)
         PPLT/Device.py
         PPLT/Server.py
 
@@ -227,7 +233,7 @@ Version 0.3.0 (Rev: 19) - 2005-08-20:
         the requirements for loading a Core-Module, for example: Python version, Python-modules,... 
         will be checked before loading.
 
-    + Add managment for CoreModules to PPLT/DataBase.py
+    + Add management for CoreModules to PPLT/DataBase.py
     
     * Fix PPLT/DataBase.py: 
         now the requirements for loading a Device or Server will be checked.
@@ -235,7 +241,7 @@ Version 0.3.0 (Rev: 19) - 2005-08-20:
 
 Version 0.2.2   - 2005-06-03:
     * Fix in Scripts/PPLTC.py:
-        set windowsize of PPLTC to 400/300
+        set window-size of PPLTC to 400/300
     * Fix in PPLT/Center SymbolTreePanel.py and UserDBPanel.py:
         Tree-items now expand if a sub-item is added
     + Add in PPLT LoadSession.py:
@@ -250,28 +256,28 @@ Version 0.2.2   - 2005-06-03:
         method SaveSession() to save the current session to a file and
         method LoadSession() to reload a saved session.
     + Add in Scrips/PPLTC.py:
-        toolmenu-items for "save" and "save as"...
+        tool menu-items for "save" and "save as"...
         and callbacks for them
     + Add info-methods to:
         PPLT/Server.py (getParameters(), getDefaultUser())
         PPLT/Device.py (getParameters())
-    + Add info methos to PPLT/PPLTSystem class System:
+    + Add info methods to PPLT/PPLTSystem class System:
         GetServerParameters(), GetServerDefaultUser(), GetDeviceParameters(),
         GetSymbolType(), GetSymbolSlot()
     + Add methods:
          Build(), Clean() to PPLT/Center/DevicePanel.py,
          Build(), Clean() to PPLT/Center/SymbolTreePanel.py,
          Build(), Clean() to PPLT/Center/ServerPanel.py to prepare new/load sessions
-    + Add menuitems and callbacks:
+    + Add menu-items and callbacks:
         "new" (clean all Panels and shutdown PPLTSystem)
         "load" (load a session (meaning clean and load))
     * Fix in PPLT/Center/I18N.py:
         InitI18N() cause an exception if requested lang was not found,
-        now it installs a NullTranslations
+        now it installs a Null-Translations
     
 Version 0.2.1   - 2005-05-28:
     + Add gettext support for PPLT-Center application (PPLT/Center/I18N.py): 
-        fixed setup.py and MANIFEST to install language support, add translation for german.
+        fixed setup.py and MANIFEST to install language support, add translation for merman.
     * Fix bug in PPLT/Center/SymbolTreePanel.py in SymbolTreePanel.OnAddSymbol():
         ignored cancel of SymbolProperty dialog
     * Fix in PPLT/Setup.py SetupStepLoad.Load():
@@ -280,17 +286,17 @@ Version 0.2.1   - 2005-05-28:
         missing unloading all core-modules of a device if one core-mod
         could not be loaded in PPLT/Setup.py [Setup.DoSetup()]
     + Add PPLT/Center/: 
-        infoframe for PPLTC application.
+        info-frame for PPLTC application.
     * Fix in PPLT/PPLTSystem.py:
-        wrong Symbol<->DeviceAlias association
+        wrong Symbol<->Device-Alias association
     * Fix in PPLT/Device.py:
         Devce.unregister() generated inconsistent Object-Ref.-Counter in pyDCPU.Core.
     * Fix in Modules/Server/Web/PPLTWeb.py:
         problem with blocking sockets
     * Fix bug in Server.__load() (PPLT/Server.py):
-        missed to remove stop exsisting Core-Exporter on exception while load a new
+        missed to remove stop existing Core-Exporter on exception while load a new
     * Fix bug in Server.destroy() (PPLT/Server.py):
-        method is now error-sensitiv        
+        method is now error-sensitive        
     * Fix PPLT/Server.py Server.__init__():
         missing exception raise in Server.__init__() if server load fails.
 

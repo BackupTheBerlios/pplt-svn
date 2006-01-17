@@ -5,7 +5,7 @@
 = ============================================================================ =
 
 The PPLT is a framework for master-slave communication. An interface between 
-devices (like PLCs) and applications like visualisations. 
+devices (like PLCs) and applications like visualizations. 
 
 INSTALL:
 ========
@@ -20,9 +20,9 @@ http://pywin32.sourceforge.net. Please check if the version of pywin32 fits to
 your Python version. But if you use a Posix OS you'll don't need this 
 extention.
 
-Note: Some plugins (here called: modules) need additional libraries. So you
+Note: Some plug-ins (here called: modules) need additional libraries. So you
 should get and install the pyserial library from 
-http://pyserial.sourceforge.net to get all modules, useing the serial 
+http://pyserial.sourceforge.net to get all modules, using the serial 
 interface, running.
 
 Now you should install the modules/software in following order:

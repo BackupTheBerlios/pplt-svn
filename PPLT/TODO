@@ -11,20 +11,20 @@
     release 1.1.0)
 
 [CoreModule]
-	- Write a coremod to read/write to the parallel port (maybe with the option
+	- Write a core-mod to read/write to the parallel port (maybe with the option
 	 to control each pin of the port).
-    - Write a SNMP trap (and may be a UDDI servermodule).
+    - Write a SNMP trap (and may be a UDDI server-module).
 
 +++ BUGs BUGs BUGs +++
 [pyDCPU]
-    - Implement module-compileing (pyDCPU/Compile.py exists now implement anywere)
-    - implement validating the coremod meta.xml files
+    - Implement module-compiling (pyDCPU/Compile.py exists now implement anywhere)
+    - implement validating the core-mod meta.xml files
 
 [PPLTCenter]
     - SymbolTreePanel: Make all visible items visible after rebuild tree.
-    - Fix filetypes in all fileselection-dialogs. (maybe fix translation)
-    - Add help for ModuleManager GUI. Or maybe clear GUI to be more usable.
-
+    - Fix file-types in all file-selection-dialogs. (maybe fix translation)
+    - Remove the Module-Manager and use smart PM instead. (Need to implement a 
+      new package-chanel.
 
     
 

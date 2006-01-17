@@ -77,21 +77,4 @@ class TestDCPUMasterTree(unittest.TestCase):
         self.core.SymbolTreeDeleteSymbol("/test01");
         self.core.MasterTreeDel(ID);
 
-    def test04ItemLocking(self):
-        """ Test item-locking (access lock) """
-
-        rand_id = self.core.MasterTreeAdd(None, "Master.Debug.Random", None, None);
-        lock_id = self.core.MasterTreeAdd(rand_id, "Master.Debug.testLock", "Bool", None);
-
-        self.core.SymbolTreeCreateSymbol("/test", lock_id);
-
-        tmp = self.core.SymbolTreeGetValue("/test");
-        self.failUnless( isinstance(tmp, bool) );
-
-        self.failUnlessRaises( pyDCPU.Exceptions.ItemBusy, self.core.SymbolTreeGetValue, Path="/test");
-
-        self.core.SymbolTreeDeleteSymbol("/test");
-        self.core.MasterTreeDel(lock_id);
-        self.core.MasterTreeDel(rand_id);
-
-        
+       

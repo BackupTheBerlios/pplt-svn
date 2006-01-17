@@ -39,16 +39,12 @@ class Object(pyDCPU.MasterObject):
         # Init SerialInterface
         #
         self.Logger.info("Setup Serial Port");
-        if not self.Parameters.has_key('Port'):
-            self.Logger.error("Can't setup SerialPort! No Port Number/Name");
-            return(False);
+        if not self.Parameters.has_key('Port'): raise pyDCPU.ModuleSetup("Can't setup SerialPort! No Port Number/Name");
         
         Port = self.Parameters['Port'];
         self.Logger.debug("Set Port to %s"%Port);
             
-        if not self.Parameters.has_key('Speed'):
-            self.Logger.error("Can't setup SerialPort! No Speed");
-            return(False);
+        if not self.Parameters.has_key('Speed'): raise pyDCPU.ModuleSetup("Can't setup SerialPort! No Speed");
 
         Speed = int(self.Parameters['Speed']);
         self.Logger.debug("Set Baudrate to %i"%Speed);
@@ -78,9 +74,7 @@ class Object(pyDCPU.MasterObject):
                                     parity = Parity,
                                     timeout = TimeOut);
                                     
-        if not self.SerObj:
-            self.Logger.error("Error while setup Port...");
-            return(False);
+        if not self.SerObj: raise pyDCPU.ModuleSetup("Error while setup Port...");
 
         self.SerObj.flush();
         return(True);
@@ -90,38 +84,26 @@ class Object(pyDCPU.MasterObject):
 
     def read(self, Connection, Len):
         Data = self.SerObj.read(Len);
-        if Data == '':
-            self.Logger.error("Timeout");
-            raise pyDCPU.IOModError('TimeOut');
+        if Data == '': raise pyDCPU.ModuleError("Timeout...");
         return(Data);
 
     def write(self, Connection, Data):
-        try:
-            self.SerObj.write(Data);
-        except:
-            self.Logger.warning("Error while write...");
-            raise(pyDCPU.IOModError);
+        try: self.SerObj.write(Data);
+        except Exception, e: raise pyDCPU.ModuleError("Unable to write to serial port: %s"%str(e));
         return(len(Data));
     
     def connect(self,Address):
-        if Address:
-            self.Logger.warning("I don't a connection with a address...");
+        if Address: self.Logger.warning("I don't a connection with a address...");
         Connection = pyDCPU.StreamConnection(self,None);
         return(Connection);
 
 
     def flush(self):
         self.Logger.debug("Flushing serial device");
-        try:
-            self.SerObj.flush();
-            return(None);
-        except:
-            self.Logger.waring("Error while flush serial device");
-            raise(pyDCPU.IOModError);
+        try: self.SerObj.flush();
+        except Exception,e : raise pyDCPU.ModuleError("Error while flush device: %s"%str(e));
 
     def destroy(self):
-        try:
-            self.SerObj.close();
-        except:
-            return(False);
+        try: self.SerObj.close();
+        except: raise pyDCPU.ModuleError("Error while flush device: %s"%str(e));
         return(True);

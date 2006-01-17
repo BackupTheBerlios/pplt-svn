@@ -1,4 +1,4 @@
-In this file I will comment the conecpts of the PPLT system parts. This will 
+In this file I will comment the concepts of the PPLT system parts. This will 
 never be an complete documentation. For more information look at the Core-Docs
 or at pplt.berlios.de.
 
@@ -6,13 +6,13 @@ or at pplt.berlios.de.
 I.) Core
 
 
-I.1) MasterTree
+I.1) Master-Tree
 
 
-I.1.1) MasterObeject Locking
+I.1.1) Master-Object Locking
     There are two types of Object locking. The access-lock, to prevent 
-    simultan access to a MasterObject and the remove-lock, to prevent the
-    destruction of an used MasterObject.
+    simultaneous access to a Master-Object and the remove-lock, to prevent the
+    destruction of an used Master-Object.
     ALL LOCKING WILL BE DONE BY THE CONNECTION-OBJECT (access-lock) OR BY THE CORE (remove-lock)!
 
 
@@ -24,17 +24,17 @@ I.1.1.a) Access lock:
             -> lock parent
 
     2.) access (read/write) to/from Parent
-    3.) Anyway: UNLOCK PARENT even an exception is reased! 
+    3.) Anyway: UNLOCK PARENT even an exception is raised! 
     (4.) return value)
     
 
 I.1.1.b) Remove lock:
-    Eeach MasterObject handles a kind of useage counter, that counts the 
+    Each Master-Object handles a kind of usage counter, that counts the 
     number of open connections to the object. You can only remove an 
-    MasterObject if this counter reaches zero! By this, you're unable to 
+    Master-Object if this counter reaches zero! By this, you're unable to 
     remove objects, that are used by other modules or symbols.
     
-    If you write a new CoreModule, you don't have to care about this counter.
+    If you write a new Core-Module, you don't have to care about this counter.
     The counter will be inc/dec by the inc_usage() and dec_usage() methods.
-    Please don't overload this methods unless you realy know what you're 
+    Please don't overload this methods unless you really know what you're 
     doing! 

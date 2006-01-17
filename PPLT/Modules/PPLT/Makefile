@@ -1,2 +1,2 @@
 all:
-	cp *.xml ../
+	cp *.xml ../ftp/PPLTModules/

@@ -1,5 +1,6 @@
 import unittest;
 import pyDCPU;
+import time;
 
 class TestLockMod(unittest.TestCase):
     """ Testes the \"testLock\" module """
@@ -25,3 +26,28 @@ class TestLockMod(unittest.TestCase):
         self.core.MasterTreeDel(lock_id);
         self.core.MasterTreeDel(rand_id);
 
+
+    def test02ItemLocking(self):
+        """ Test item-locking (access lock) """
+
+        rand_id = self.core.MasterTreeAdd(None, "Master.Debug.Random", None, None);
+        lock_id = self.core.MasterTreeAdd(rand_id, "Master.Debug.testLock", "Bool", None);
+
+        self.core.SymbolTreeCreateSymbol("/test", lock_id);
+
+        tmp = self.core.SymbolTreeGetValue("/test");
+        self.failUnless( isinstance(tmp, bool) );
+
+        self.failUnlessRaises( pyDCPU.Exceptions.ItemBusy, self.core.SymbolTreeGetValue, Path="/test");
+
+        print "Wait for item-release: ";
+        for n in range(6): time.sleep(1);
+        
+        tmp = self.core.SymbolTreeGetValue("/test");
+        self.failUnless( isinstance(tmp, bool) );
+      
+        self.core.SymbolTreeDeleteSymbol("/test");
+        self.core.MasterTreeDel(lock_id);
+        self.core.MasterTreeDel(rand_id);
+
+ 
