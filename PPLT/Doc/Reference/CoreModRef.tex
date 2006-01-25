@@ -23,41 +23,488 @@ Master modules are modules that are used in the PPLT devices. So this
 modules implement the features to access a device, like the interface,
 bus protocol, device commands, ...
 
-\CoreModDesc{Master.Interface.SendMail}
-This module implements the sending of e-mails via a
-specified SMTP host. \note{You have to have the permission 
-to send a e-mail of this host.} 
+
+
+%\CoreModDesc{Master.Interface.SendMail}
+%This module implements the sending of e-mails via a
+%specified SMTP host. \note{You have to have the permission 
+%to send a e-mail of this host.} 
 
 
 
 \CoreModDesc{Master.Interface.Socket}
-This modules implements the basic TCP socket support for the
-PPLT system. With this module you can connect to other
-hosts over any tcp/ip based network (Internet). This
-is used in the PPLT device \textit{PLC.FP-WEB} to
-connect to the tunneled ToolPort of a Panasoinc 
-PLC. 
+This modules implements the basic TCP socket support for the PPLT system. 
+With this module you can connect to other hosts over any tcp/ip based network
+(Internet). This is used in the PPLT device \textit{PLC.FP-WEB} to connect to 
+the tunneled ToolPort of a Panasoinc PLC. This module is able to hanle 
+multible connections, so you don't need to load a 
+\CoreMod{Master.Interface.Socket}-module for each connection you want.
 
 \subsubsection{Parameters}
+This module needs only one parameter:
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default value}
+\lineiii{TimeOut}
+        {This parameter specifies the read-timeout for the socket 
+         connection(s) in seconds. This should be a string with a floating 
+         point number in it like '0.5' for a timeout of an half second.}
+        {'0.0'}
+\end{tableiii}
+
 \subsubsection{Addresses}
+This module need a address, thats specifies the host and port of the TCP 
+connection. So if you connect to this module with an address "10.1.1.1:100"
+a connection to the host "10.1.1.1" at the port 100 will be opend. See 
+example for more details. \notice{If the connection to the host fails
+the first time, it will be retryed each time you read/write from/to the 
+module until the connection can be etablished.} 
+
 \subsubsection{Example}
+This example opens two connection to different hosts and ports:
+\verbatiminput{coremod02.py}
 
+
+
+%
+% Serial interface module:
+%
 \CoreModDesc{Master.Interface.UniSerial}
-\CoreModDesc{Master.Interface.WGet}
+The \CoreMod{Master.Interface.UniSerial} core module implements the serial
+interface for the PPLT system. This module needs the Python library 
+\code{pySerial}. You can get this library from the URL 
+\url{http://serial.sourceforge.net}. 
 
+The settings of this module can be changed at runtime by symbols connected to
+the addresses \emph{speed}, \emph{parity} \emph{timeout}.
+
+\subsubsection{Parameters}
+This module 4 parameters to setup. 
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default value}
+\lineiii{Port}
+        {This is the number of the serial interface, the moudle should use. 0 
+         means \code{ttyS0} or \code{COM1}, 1 means \code{ttyS1} etc. This
+         parameter is not optional!}
+        {---}
+\lineiii{Speed}        
+        {This is the speed in Baud the serial interface will be set to. This
+         parameter is not optional!} 
+        {---}
+\lineiii{Parity}
+        {This parameter specifies the parity check (settings) of the serial 
+         inteface. 'Odd', 'Even', 'None' are valid values. This parameter
+         is optional.}
+        {'None'}
+\lineiii{TimeOut}
+        {This parameter sets the timeout for reading from the serial 
+         interface in seconds. All floatingpoint numbers are valid an
+         \code{None} means blocking-read.}
+        {\code{None}}
+\end{tableiii}
+\notice{Some parameters can be reset at runtime by symbols connected to this 
+module at special addresses. See next paragraph for details.}
+
+\subsubsection{Addresses}
+\begin{tableiii}{l|l|p{10cm}}{testrm}{Address}{Type}{Description}
+\lineiii{---}
+        {\code{TStream}}
+        {This is the \emph{data-channel} to the serial-interface. Meaning 
+         reading from this will read from the serial interface and writeing
+         into a connection to this will write into the serial-interface.}
+\lineiii{speed}
+        {\code{TInteger}}
+        {By this connector you'll be able to change the settings of the serial
+         interface at runtime. Write an integer to a connection to this address
+         will (try) to reset the baudrate to the value. See example for details.}
+\lineiii{parity}
+        {\code{TString}}
+        {Writing strings like 'even', 'odd' or 'none' into this connector, will
+         reset the setting of the serial interface. Reading from the connector
+         will infrom you about the current setting.}
+\lineiii{timeout}
+        {\code{TFloat}}
+        {Writing to this connector will reset the timeout for reading from 
+         the serial interface.}
+\end{tableiii}
+
+\subsubsection{Example}
+This example shows how to setup the \CoreMod{UniSerial} and how to change the 
+settings at runtime:
+\verbatiminput{coremod01.py}
+
+
+
+
+
+
+
+
+%\CoreModDesc{Master.Interface.WGet}
+
+
+
+
+%
+% Transport layer of the Mewtocol:
+%
 \CoreModDesc{Master.Transport.MEWCOM-TL}
+
+
+
+%
+% PPI module:
+%
 \CoreModDesc{Master.Transport.PPI}
+This Core-Module implements the PPI protocol. It can be used to access the Siemens
+SIMATIC S7 series PLCs. In this state of developing this module can't assable an
+dispatch fragmentated packages. But in the most cases this is not needed. 
+
+\subsubsection{Parameters}
+This module needs only one parameter:
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default}
+\lineiii{Address}
+        {This parameter specifies the PPI address of the PC. This is in the 
+         most cases 0. But you have to set a value for this parameter!}
+        {}
+\end{tableiii}
+
+\subsubsection{Addresses}
+If you connect other modules or symbols to this module you'll need to specify
+an address. This address is a number between 0 and 255. 
+\begin{tableiii}{l|l|p{10cm}}{textrm}{Address}{Type}{Description}
+\lineiii{0-255}{\code{Sequence}}
+        {This address specifies the address of the device in the PPI BUS. 
+         Writeing into the connection will cause a packet send to the device
+         addressed by this address. Also reading from the connection will only
+         return the content addressd to the setted Parameter \var{Address} and
+         from the device addressd by this address.}
+\end{tableiii}
+
+\subsubsection{Example}
+This example shows how to tunnel the PPI bus by the symbol tree. For an more
+usefull example please look the the Example for the \CoreMod{S7} core-module.
+\verbatiminput{coremod07.py}
+
+
+
+%
+% ReadLine module.
+%
 \CoreModDesc{Master.Transport.ReadLine}
+This module can be used if you want to do some line-orientated communication.
 
+This is often used for simple protocols for the serial interface. For example
+the AT commands for modems but also the Mewtocol by Panasonic (FP0 and FP1) 
+uses a line-orientated protocol to send or recive commands to/from the PLC.  
+
+So this module have to be used as a child of a module that provides
+\code{TStream} or \code{TSequence} connections.
+
+\subsubsection{Parameters}
+This module needs a parameter to specify the \emph{line-end} character(s).
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Paramter}{Description}{Default}
+\lineiii{LineEnd}
+        {A hex-encoded string that the module will use as a sign for the 
+         line-end. And also all data send over this module will be extended
+         with this string.}
+        {0A0D} 
+\end{tableiii}
+
+\subsubsection{Addresses}
+This module knows only one address: no address.
+\begin{tableiii}{l|l|p{10cm}}{textrm}{Address}{Type}{Description}
+\lineiii{---}
+        {\code{TSequence}}
+        {All data written into this connector will be extended by the set 
+         line-end. And also if you read from this connector it will block 
+         until the set line-end character(s) appear in the data-stream.
+         \textbf{Note:} The whole line will be then returned!}
+\end{tableiii}
+
+\subsubsection{Example}
+This example shows on the one hand the usage of the \CoreMod{ReadLine} module.
+On the other hand it is a quite good test for the \CoreMod{Echo} module. 
+This example write a string into \CoreMod{ReadLine} that extends the string 
+with the line-end. Then it will send this message to the \CoreMod{Echo} module.
+Then it trys to read from \CoreMod{ReadLine} that trys to read a complete 
+line from his parent (\CoreMod{Echo}) strips the line-end characters and
+return the string. If all goes well the same string will be returned. To see
+what's going on a \CoreMod{HexDump} module will be plugged between the 
+\CoreMod{Echo} and \CoreMod{ReadLine} modules.
+\verbatiminput{coremod10.py}
+
+
+
+%
+% Agilent 5462x series oscilloscopes 
+%
 \CoreModDesc{Master.Device.5462X}
-\CoreModDesc{Master.Device.A200}
-\CoreModDesc{Master.Device.GSM}
-\CoreModDesc{Master.Device.MEWCOM-CL}
-\CoreModDesc{Master.Device.S7}
 
+
+
+%
+% Panasonic A200 Imagechecker
+%
+%\CoreModDesc{Master.Device.A200}
+
+
+
+%
+% GSM compatible mobile-phone.
+%
+\CoreModDesc{Master.Device.GSM}
+
+
+
+%
+% Command-messages for the Panasonic FP0 and FP1
+%
+\CoreModDesc{Master.Device.MEWCOM-CL}
+
+
+
+%
+%
+%
+\CoreModDesc{Master.Device.S7}
+This module implements the command-messages of the Siemens SIMATIC S7(-200). 
+With this module and the \CoreMod{Master.Transport.PPI} and 
+\CoreMod{Master.Interface.UniSerial} it is possible to access the S7 over the 
+PPI bus. To do this you must configure the serial interface in a special way. 
+Look at the example to find out how. This module can generate messages that 
+cause the S7 to send the value of the requested marker. To specify the marker 
+you want to get you have to connect a symbol with this module with the name of
+the marker as address. It could be possible that not all availabe marker can be
+read. If you know some of them please let me know.
+
+\subsubsection{Parameters}
+This module needs no parameters to be set up.
+
+\subsubsection{Addresses}
+The address you have to specify to connect a symbol to this module should be 
+the name of the marker you want to get/set.
+\begin{tableiii}{l|p{2cm}|p{10cm}}{textrm}{Address}{Type}{Description}
+\lineiii{\emph{Marker}}
+        {\code{TBool}, \code{TInteger}}
+        {With the address you specify the marker you'll access. So the type 
+         of the values you'll get depends on the marker you'll set. So if you 
+         access an boolean marker you'll get values typed \code{TBool} if you
+         access byte,word and double word Markers you'll get values types
+         \code{TInteger}.}
+\end{tableiii}
+
+\subsubsection{Example}
+In this example I'll access (read/write) the markers SM0.5 (special marker 0 bit 5) and AB0
+(output byte 0).
+\verbatiminput{coremod08.py}
+
+
+
+%
+% ECHO module
+%
+\CoreModDesc{Master.Debug.Echo}
+This module echoes all data writte to it at reading from it. It can be used to
+debug other modules. This is a so called \emph{root}-module. It can't be 
+loaded as a child of an other module!
+
+\subsubsection{Parameters}
+This module needs no parameters!
+
+\subsubsection{Addresses}
+This module has only one addresses: no address.
+\begin{tableiii}{l|l|p{10cm}}{textrm}{Address}{Type}{Description}
+\lineiii{---}
+        {\code{TStream}}
+        {If you write into a symbol connected to this module, the data will be
+         buffered and the next time you read from it the buffer (or a part of 
+         it) will be returned.}
+\end{tableiii}
+
+\subsubsection{Example}
+This is a simple echo-example... ... the classic.
+\verbatiminput{coremod06.py}
+
+
+
+%
+% HexDump Module 
+%
 \CoreModDesc{Master.Debug.HexDump}
+This module is a simple trafic dumper. It dumps all data going throught it
+into the logging-system with loglevel \emph{debug}. So you can read it from
+your logfile or \code{stderr}. Simply plug this module between two modules
+to record all trafic.
+
+\subsubsection{Parameters}
+This module needs no parameters!
+
+\subsubsection{Addresses}
+This module has only one address: no address! 
+\begin{tableiii}{l|p{2cm}|p{10cm}}{textrm}{Address}{Type}{Description}
+\lineiii{---}
+        {\code{TStream} or \code{TSequence}}
+        {All data written to this module will be written to the parent and 
+         read vica versa. So the type of the connection will depend on the
+         type of the parent-connection.}
+\end{tableiii}
+
+\subsubsection{Example}
+This module uses the echo module to show how the trafic in read and write 
+direction will be dumped:
+\verbatiminput{coremod05.py}
+
+
+
+%
+% Null module (the black hole)
+%
+\CoreModDesc{Master.Debug.Null}
+This is a very simple module, that works like the /dev/null device file on 
+Linux. If you read from this module, you'll get a string with zero-bits and
+if you write into this module nothing will happens. This module swallow all
+you write into it.
+
+\subsubsection{Parameters}
+This module needs no parameters to be set up.
+
+\subsubsection{Addresses}
+This module has only one valid address: no address.
+\begin{tableiii}{l|l|p{10cm}}{textrm}{Address}{Type}{Description}
+\lineiii{---}
+        {\code{TStream}}
+        {This will be the connection to the \CoreMod{Null} module. Id you
+         write into this connection the module will swallow all data and
+         nothing will happen. If you read from this module you'll get a 
+         stream of zero-bits.}
+\end{tableiii}
+
+\subsubsection{Example}
+This example shows a configuration to debug a non \emph{root} module. In this 
+case it is the \CoreMod{Master.Transport.PPI} core-module. To get some 
+information about the packages the PPI module sends the core-module 
+\CoreMod{Master.Debug.HexDump} is used.  \notice{This example raises an 
+exception, because the PPI module expect a correct answer from the 
+\emph{virtual} device (in this case the core-module 
+\CoreMod{Master.Debug.Null}).
+\verbatiminput{coremod09.py}
+
+
+
+%
+% Random-generator module
+%
 \CoreModDesc{Master.Debug.Random}
+This module implements a random-generator, that can generate data for every 
+symbol-type supported by the \module{pyDCPU}. So this module can be used to 
+test almost all facilities of the system. 
+
+\subsubsection{Parameters}
+This module needs no parameters. 
+
+\subsubsection{Addresses}
+\begin{tableiii}{l|l|p{10cm}}{testrm}{Address}{Type}{Description}
+\lineiii{Bool}
+        {\code{TBool}}
+        {Provide a random boolean value.}
+\lineiii{Integer}
+        {\code{TInteger}}
+        {Provide a random integer value between 0 and 100.}
+\lineiii{Float}
+        {\code{TFloat}}
+        {Provide a random floating point number between 0 and 1.}
+\lineiii{String}
+        {\code{TString}}
+        {Provide a random string of a random length between 1 and 79 containg 
+         printable characters.}
+\lineiii{ArrayBool}
+        {\code{TArrayOfBool}}
+        {The name tells everything. The length of the array is randomly 
+         between 1 and 3.}
+\lineiii{ArrayInteger}
+        {\code{TArrayOfInteger}}
+        {Array of integer of random length between 1 and 3.}
+\lineiii{ArrayFloat}
+        {\code{TArrayOfFloat}}
+        {Array of floating point numbers with variable length between 1 and 
+         3.}
+\lineiii{ArrayString}
+        {\code{TArrayOfString}}
+        {Array of string with variable length (of array) between 1 and 3.}
+\lineiii{Stream}
+        {\code{TStream}}
+        {Provides an random data string. The data are printable character.
+         The number of bytes returned is less than equeal the number you 
+         wanted to read. To read from a symbol connected to this address,
+         please use the method \method{SymbolTreeRead().}}
+\lineiii{Sequence}
+        {\code{TSequence}}
+        {A sequence of random data. The data contains only printable 
+         characters and the length varies between 1 and 79.}
+\end{tableiii}
+
+\subsubsection{Example}
+This is a simple example that uses all types:
+\verbatiminput{coremod03.py}
+
+
+
+%
+% Statistic module
+%
 \CoreModDesc{Master.Debug.Statistic}
+This module collects statistical values of the data flowing through it. You 
+can use this module to improve or debug your own modules or even to observe
+the PPLT system. This module is quite easy to use: simply plug this between 
+two other modules and you are able to observe the trafic between them.
+\notice{You can only observe modules that provides a \code{TStream} or 
+\code {TSequence} connection.}
+
+\subsubsection{Parameters}
+This module needs no parameters!
+
+\subsubsection{Addresses}
+There are several addresses provideing the statistical data. If you use no 
+address to connect to this module a \code{TStream} or \code{TSequence} 
+connection to the parent will be returned. This connection to the parent will
+be used to collect the statistical data. 
+
+\begin{tableiii}{l|p{2cm}|p{10cm}}{textrm}{Address}{Type}{Description}
+\lineiii{---}
+        {\code{TStream} or \code{TSequence}}
+        {This is the data-tunnel to the parent of the 
+         \CoreMod{Statistic}-module. The type of the connection depends on
+         the type of the connection to the parent module. You see, it is only
+         possible to connect the \CoreMod{Statistic}-module to a parent that
+         provides a \code{TStream} or \code{TSequence} connection.}
+\lineiii{read\_data}
+        {\code{TInteger}}
+        {Returns the number of bytes read from the parent.}
+\lineiii{write\_data}
+        {\code{TInteger}}
+        {Returns the number of bytes written to the parent.}
+\lineiii{read\_speed}
+        {\code{TFloat}}
+        {Returns the number of bytes per second read from parent since 
+         module-loading. This value is the average of the whole time since
+         module-loading.}
+\lineiii{write\_speed}
+        {\code{TFloat}}
+        {Returns the number of bytes written to the parent since the module 
+        was loaded. This value is the average of the whole time.}
+\lineiii{error}
+        {\code{TInteger}}
+        {Returns the number of read/write-errors since the module was loaded.
+         This must not be an indicatior for bugs in the parent modules because
+         also timeouts will be recorded.}
+\end{tableiii}
+
+\subsubsection{Example}
+In this example the serial interface will be exported by the symbol tree.
+The \CoreMod{Statistic}-module records the trafic throught the serial 
+interface.
+\verbatiminput{coremod04.py}
+
+
+
 
 \section{Export modules}
 \CoreModDesc{Export.JVisu}

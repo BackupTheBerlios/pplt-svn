@@ -202,9 +202,8 @@ class MetaData:
             try:
                 if not imp.find_module(mod):
                     return(False);
-            except:
-                return(False);
-            return(True);
+            except: return(False);
+        return(True);
 
     def CheckParameters(self, Names):
         for para in self.__Parameters.keys():

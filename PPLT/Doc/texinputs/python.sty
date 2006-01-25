@@ -395,6 +395,7 @@
 \newcommand{\declaremodule}[3][\py@modulebadkey]{
   \py@openModSynopsisFile
   \renewcommand{\py@thismoduletype}{#2}
+  \renewcommand{\py@thismodule}{#3}         %FIXME Hannes
   \ifx\py@modulebadkey#1
     \renewcommand{\py@thismodulekey}{#3}
   \else

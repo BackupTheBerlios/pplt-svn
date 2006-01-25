@@ -1,7 +1,7 @@
 # ############################################################################ #
 # This is part of the PPLT project.                                            #
 #                                                                              #
-# Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                #
+# Copyright (C) 2003-2006 Hannes Matuschek <hmatuschek@gmx.net>                #
 #                                                                              #
 # This library is free software; you can redistribute it and/or                #
 # modify it under the terms of the GNU Lesser General Public                   #
@@ -30,9 +30,7 @@ class Object(pyDCPU.MasterObject):
         self.Logger.info("Setup ModPPI");
         
         if not self.__myAddress: raise pyDCPU.ModuleSetup("No PPI address given!");
-
         self.PPIAddress = int(self.__myAddress);
-        return(True);
         
     def read(self, Connection, Len=None):
         RetryCount = 0;
@@ -100,9 +98,11 @@ def PPIWrite(Connection, Dest, Src, Data, Logger):
     #
     # Check Ack
     #
-    if len(ACK) == 1: 
+    if len(ACK) == 1:
         if ord(ACK[0]) == 229: return(len(Data));
     raise pyDCPU.ModuleError("Transmission Error...(at ACK)(%x != e5)"%ord(ACK[0]));
+
+
 
 def PPIRead(Connection, Src, Dest, Len, Logger):
 

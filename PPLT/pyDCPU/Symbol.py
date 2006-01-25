@@ -30,7 +30,7 @@
 import logging;
 from Possession import Possession
 import MasterObject
-
+import Exceptions;
 
 
 class Symbol:
@@ -40,27 +40,15 @@ class Symbol:
         self.__Timeout = Timeout;
         self.__Address = Address;
 
-        if not Name:
-            self.__Logger.error("No symbolname given");
-            self.__Valid = False;
-        if not isinstance(Connection, (MasterObject.StreamConnection, 
-                                       MasterObject.SequenceConnection, 
-                                       MasterObject.ValueConnection) ):
-            self.__Logger.error("No symbolslot given");
-            self.__Valid = False;
-        if not isinstance(myPossession, Possession):
-            self.__Logger.error("No PossessionObj given");
-            self.__Valid = False;
-            
+        if not Name: raise Exceptions.Error("No name given!");
+        #if not isinstance(Connection, (MasterObject.StreamConnection, MasterObject.SequenceConnection, MasterObject.ValueConnection) ): 
+        #    raise Exceptions.Error("Invalid connection given: %s"%str(Connection));
+        if not isinstance(myPossession, Possession): raise Exceptions.Error("No possesion object given.");
         self.__Name = Name;
         self.__Possession = myPossession;
         self.__Connection = Connection;
 
-    def IsValid(self): return(self.__Valid);
-
-    def Rename(self, Name):
-        self.__Name = Name;
-        return(True);
+    def Rename(self, Name): self.__Name = Name;
 
     def Unregister(self): return(self.__Connection.close());
 
@@ -71,40 +59,30 @@ class Symbol:
     def GetQuality(self): return self.__Connection.GetQuality();
 
     def GetValue(self, SessionID):
-        if not self.__Possession.CanRead(SessionID):
-            self.__Logger.warning("Session %s: Access denied"%SessionID);
-            return(None);
+        self.__Logger.debug("Get value from (%s) ..."%self.__Name);
+        if not self.__Possession.CanRead(SessionID): raise Exceptions.AccessDenied("Access denied for symbol %s"%self.__Name);
         return(self.__Connection.read_seq());
 
     def SetValue(self, Value, SessionID):
-        if not self.__Possession.CanWrite(SessionID):
-            self.__Logger.warning("Session %s: Access denied"%SessionID);
-            return(False);
+        self.__Logger.debug("Set value of (%s) to %s."%(self.__Name, str(Value)));
+        if not self.__Possession.CanWrite(SessionID): raise Exceptions.AccessDenied("Access denied for symbol %s"%self.__Name);
         return(self.__Connection.write_seq(Value));
 
     def Read(self, Length, SessionID):
-        if not self.__Possession.CanRead(SessionID):
-            self.__Logger.warning("Session %s: Access denied"%SessionID);
-            return None;
+        if not self.__Possession.CanRead(SessionID): raise Exceptions.AccessDenied("Access denied for symbl %s"%self.__Name);
+        self.__Logger.debug("Try to read %s bytes."%str(Length));
         if isinstance(self.__Connection, MasterObject.SequenceConnection): return self.__Connection.read_seq();
         elif isinstance(self.__Connection, MasterObject.StreamConnection): return self.__Connection.read(Length);
-        self.__Logger.warning("Can't read from connection: used Get/SetValue instead.");
-        return None;
+        raise Exceptions.Error("Can't read from connection (%s): use Get/SetValue instead."%str(self.__Connection));
 
     def Write(self, Data, SessionID):
-        if not self.__Possession.CanWrite(SessionID):
-            self.__Logger.warning("Session %s: Access denied"%SessionID);
-            return None;
-        if isinstance(self.__Connection, MasterObject.SequenceConnection, MasterObject.StreamConnection): 
-            return self.__Connection.write(Data);
-        self.__Logger.warning("Can't read from connection: used Get/SetValue instead.");
-        return None;
+        if not self.__Possession.CanWrite(SessionID): raise Exceptions.AccessDenied("Access denied for symbol %s"%self.__Name);
+        if isinstance(self.__Connection,MasterObject.ValueConnection):
+            raise Exceptions.Error("Can't read from connection: used Get/SetValue instead.");
+        return self.__Connection.write(Data);
             
-    def SetPossession(self, Possession):
-        self.__Possession = Possession;
-        return(True);
+    def SetPossession(self, Possession): self.__Possession = Possession;
 
-    def GetPossession(self):
-        return(self.__Possession);
+    def GetPossession(self): return(self.__Possession);
  
 #END CLASS "SYMBOL"

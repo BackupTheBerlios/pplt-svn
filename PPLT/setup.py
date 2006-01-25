@@ -48,7 +48,10 @@ CoreDevice    = ["Modules/ftp/CoreModules/5462X.zip",
 
 CoreDebug     = ["Modules/ftp/CoreModules/HexDump.zip",
                  "Modules/ftp/CoreModules/Random.zip",
-                 "Modules/ftp/CoreModules/Statistic.zip"];
+                 "Modules/ftp/CoreModules/Statistic.zip",
+                 "Modules/ftp/CoreModules/Echo.zip",
+                 "Modules/ftp/CoreModules/testLock.zip",
+                 "Modules/ftp/CoreModules/Null.zip"];
 
 CoreExport    = ["Modules/ftp/CoreModules/JVisu.zip",
                  "Modules/ftp/CoreModules/PPLTWeb.zip",

@@ -23,32 +23,10 @@ from INetSocket import Object;
 
 
 ### REVISION
-# 2005-02-07:
-#   Initial.
+# 2006-01-21:
+#   + changed to new exceptions
 # 2005-03-07:
 #   Add complete description.
+# 2005-02-07:
+#   Initial.
 
-
-
-
-DCPUVERSION     = 0x000100;     #HEX version-number of pyDCPU-package this module was written for
-VERSION         = 0x000100;     #HEX version-number of this package.
-
-AUTHOR          = "Hannes Matuschek <hmatuschek[AT]gmx.net>";
-DATE            = "2005-03-07"; #Last update.
-
-
-#a description in multible lang.
-DESCRIPTION     = {'en': """read/write into/out of a inet socket. (tcp)""",
-                   'de': """Lesen und Schreiben in/aus einer INet Verbindung (tcp)"""};
-
-PARAMETERS      = {'TimeOut':{'duty':False,
-                              'default':'0.0',
-                              'help':{'en':'The timeout.',
-                                      'de':'Die Time-Out'},
-                              }
-                   };
-
-
-IS_ROOT_MODULE  = True;
-CHILD_NEED_ADDR = True;

@@ -1,3 +1,11 @@
+    * added new core-mod "Master.Debug.Null"
+    * added new core-mod "Master.Debug.Echo"
+    * fixed bug in pyDCPU/CoreModuleInfo: 
+        module-loading fails if no needed Python-modules are given in meta.xml
+    * updated Master.Interface.Socket to new exceptions
+    * updates Master.Interface.UniSerial and added "Addresses" to 
+      reset the settings at runtime
+    * Commmit: Revison 32
     * fixed PPLT_postinstall.py: do not create shortcut for Module-Manager
     * fixed setup.py and MANIFEST.in: install all core-modules and PPLT-modules 
     * added module testLock for testing lock-mechanics

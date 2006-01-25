@@ -2,7 +2,7 @@
 \section{\module{pyDCPU} --- 
         \textbf{Py}thon \textbf{D}ata \textbf{C}ollect and \textbf{P}rocess \textbf{U}nit}
 
-\declaremodule{standard}{pyDCPU}       
+\declaremodule[pyDCPU]{}{pyDCPU}       
 
 \moduleauthor{Hannes Matuschek}{hmatuschek@gmx.net}
 
@@ -16,7 +16,7 @@ loading modules (Master/Exporter), managing the symbol-tree
 data base. Usually the \module{pyDCPU} library provides all the functionality
 of the PPLT system. 
 
-\subsection{Concept} 
+%\subsection{Concept} 
 The core of the PPLT system have to provide all the functionality to access devices
 by master-slave based communication channels and handle the values read back into
 a central place. Also these values should be served to other applications, independent
@@ -35,7 +35,7 @@ hierarchy. The last part, the \textit{Exporters}, serves the symbol-tree to othe
 applications like a visualization. This concept is very common for this kind of 
 problems. 
 
-\subsubsection{The Master-Tree}
+\subsection{The Master-Tree}
 To access the devices a master-slave based communication is often used. This are 
 for example the common BUSes and also TCP/IP like networks. All these protocols
 have one basic concept; they are separable into layers. Each layer encapsulate 
@@ -82,7 +82,7 @@ To get the all module work together a clear API between the modules have
 to be defined, so that you don't have to adjust the modules to work together
 with other/new modules. 
 
-\subsubsection{The Symbol-Tree}
+\subsection{The Symbol-Tree}
 Once the access to the devices is set up, you need to care about what values 
 should be served. Each device will be able to provide a lot of different values
 and a user or application don't know how to get a specific value. So you'll 
@@ -103,7 +103,7 @@ into the BUS. But be careful with exporting the BUS to other networks, you
 can't control what messages are sent over the BUS!
 
 
-\subsubsection{Exporter}
+\subsection{Exporter}
 The last part of the core exports the symbol-tree, or maybe a part of it, to
 other applications. So the PPLT system is able to support a wide range of 
 applications, independent of the protocol or interface the application
@@ -226,7 +226,7 @@ class.
 This method loads an instance of a core-module and adds it to the master-tree. 
 The method returns the ID of the loaded module. This ID is unique but if you 
 load the same module with the same parameters, address and at the same parent, 
-the ID of the already loaded module will be returned.
+the ID of the ID of the already loaded module will be returned.
 
 The argument \var{ParentID} specifies the parent-module (ID), the new loaded 
 module will be attached to. If you set \var{ParentID} to \code{None} the 
@@ -249,8 +249,13 @@ names (all strings) and the values are the values of the singe parameter.
 please set \var{Parameter} to \code{None} or to an empty dict \code{\{\}}.
 
 This method raises an exception derived from base-exception \exception{Error} 
-on Error. So an \exception{ItemNotFound}-exception will be raised if 
-\ver{ParentID}
+on error. So an \exception{ItemNotFound}-exception will be raised if no 
+matching object for \var{ParentID} or if no module named \var{ModName} can be 
+found. A \exception{ModuleSetup} will be raised if the setup of the module
+fails. 
+
+An example for loading all modules to access an Siemens SIEMATIC S7-200:
+\verbatiminput{core02.py}
 \end{methoddesc}
 
 
@@ -262,14 +267,19 @@ are connected to this object.}
 The argument \var{ObjectID} specifies the object you want to remove. This 
 object ID is the ID you got by the \function{MasterTreeAdd()} method-call.
 
-The method will return \code{True} if the object could be removed and destroyed 
-and \code{False} otherwise.
+If no loaded module can be found with id \var{ObjectID}, a 
+\exception{ItemBusy}-exception will be raised! May an other
+exception, derived from the \exception{Error}-exception, will be
+raised if the unload fails.
 \end{methoddesc}
 
 
 \begin{methoddesc}[Core]{MasterTreeList}{ParentID}
 This method will list the IDs of all children of the given module-instance. The argument \var{ParentID} specifies the 
-ID of the module-instance, that children will be listed. 
+ID of the module-instance, that children will be listed. If \code{None} is given, all \emph{root} 
+module-instances \footnote{Root module-instances are all modules, that have no children.}
+were listed. This method will raise an \exception{ItemNotFound} if no object can be found for
+\var{ParentID}.
 \end{methoddesc}
 
 
@@ -286,8 +296,7 @@ This method creates a folder.
 The argument \var{Path} specifies the full path to the folder, that will be created. \note{The path should have the 
 standard Linux format like: \code{'/path/to/new\_folder'}.}
 
-This method will return \code{Ture} if the folder was successfully created and 
-\code{False} otherwise.
+This method will raise an exception derived from the \exception{Error}-exception-class on error. 
 \end{methoddesc}
 
 
@@ -324,7 +333,8 @@ This method will remove the given folder. This folder should be empty before rem
 
 The argument \var{Path} specifies the path of the folder that will be removed. 
 
-This method returns \code{True} on success and \code{False} on error.
+This method will raise an \exception{ItemBusy} exception if the folder you 
+want to delete is not empty.
 \end{methoddesc}
 
 
@@ -333,8 +343,6 @@ This method will remove a symbol from the symbol-tree.
 
 The argument \var{Path} specifies the full path to the symbol, that will be removed.
 This path should be in the standard Linux format like: \code{'/path/to/symbol'}.
-
-This method will return \code{True} on success and \code{False} otherwise.
 \end{methoddesc}
 
 
@@ -346,8 +354,7 @@ will be listed.
 \note{If you want to list all folders at the 
 root-folder, you should use \code{'/'} as path.}
 
-The method returns a list of strings or \code{None} if the path doesn't exists. The method will
-return an empty list if the folder has no sub-folders.
+The method returns a list of subfolders or an empty list if the folder has no sub-folders.
 \end{methoddesc}
 
 
@@ -360,7 +367,7 @@ will be listed.
 \note{If you want to list all symbols at the 
 root-folder, you should set \var{Path} to \code{'/'}.}
 
-The method will return a list of strings or \code{None} if there are no 
+The method will return a list of strings or an empty list if there are no 
 symbols in the folder.
 \end{methoddesc}
 
@@ -369,6 +376,9 @@ symbols in the folder.
 This method will return the owner, group and access-rights of the given folder or symbol.
 
 The argument \var{Path} specifies the path of the folder or symbol.
+
+This method will raise an \exception{ItemNotFound} if the given \var{Path} 
+doesn't exists.
 \end{methoddesc}
 
 
@@ -382,7 +392,7 @@ argument \var{Group} specifies the group the symbol/folder will belong to.
 At least the argument \var{Modus} specifies the access-rights of the
 symbol/folder.
 
-This method will return \code{True} on success and \code{False} otherwise.
+This method will raise an exception derived from \exception{Error} base-exception on error.
 \end{methoddesc}
 
 
@@ -402,7 +412,26 @@ The argument \var{Path} specifies the full path to the symbol, that value will b
 
 The argument \var{Value} specifies the value(s) the symbol will be set to.
 
-The method will return \code{True} on success or \code{False} else.
+This method will raise an exception derived from \exception{Error}-exception. 
+\notice{Please contatct the author if you notice the raise of an other (not 
+\exception{Error} based) exception. This is regulary an error in a module.}
+\end{methoddesc}
+
+
+\begin{methoddesc}[Core]{SymbolTreeRead}{Path, \optional{Length}}
+This method will read (\var{Length}) bytes from symbol given by \var{Path}. 
+The argument \var{Length} is optional, and means (if missed) that you want
+to read a sequence out of the symbol. If the symbol is connected to a stream,
+you will get only one by back from stream. Otherwise you'll read \var{Length} 
+bytes from stream or sequence symbol. This method will may raise an exception 
+derived form \exception{Error} base-exception on error.
+\end{methoddesc}
+
+
+\begin{methoddesc}[Core]{SymbolTreeWrite}{Path, Data}
+This method will write the data given by \var{Data} into the
+symbol given by \var{Path}. This method works like the method
+\method{SymbolTreeSetValue}.
 \end{methoddesc}
 
 
@@ -435,8 +464,8 @@ If you miss this argument or set it to \code{'/'}, the whole symbol-tree
 will be exported by this server. Otherwise only the symbols and sub-folders of
 the given folder were be exported.
 
-The method returns the ID of the exporter instance on success or \code{None}
-on error.
+This method will return the ID of the new loaded exporter. On error an 
+exception derived from the \exception{Error} exception will be raised.
 \end{methoddesc}
 
 
@@ -453,5 +482,4 @@ This method will stop and remove the exporter pointed by the given ID.
 The argument \var{ObjectID} specifies the exporter, that should be removed.
 This is the ID you got by the \function{ExporterAdd} method-call.
 
-The method return \code{True} on success or \code{False} on error.
 \end{methoddesc}

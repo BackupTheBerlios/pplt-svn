@@ -26,7 +26,9 @@ class TestSymbolTree(unittest.TestCase):
         self.core.SymbolTreeCreateSymbol("/a_bool", ID, Address="ArrayBool");
         self.core.SymbolTreeCreateSymbol("/a_int", ID, Address="ArrayInteger");
         self.core.SymbolTreeCreateSymbol("/a_float", ID, Address="ArrayFloat");
-        
+        self.core.SymbolTreeCreateSymbol("/stream", ID, Address="Stream");
+        self.core.SymbolTreeCreateSymbol("/sequence", ID, Address="Sequence");
+
         #check returned types:
         self.failUnless( isinstance(self.core.SymbolTreeGetValue("/bool"), bool) );
         self.failUnless( isinstance(self.core.SymbolTreeGetValue("/int"), int) );
@@ -35,6 +37,10 @@ class TestSymbolTree(unittest.TestCase):
         self.failUnless( isinstance(self.core.SymbolTreeGetValue("/a_bool"), list) );
         self.failUnless( isinstance(self.core.SymbolTreeGetValue("/a_int"), list) );
         self.failUnless( isinstance(self.core.SymbolTreeGetValue("/a_float"), list) );
+        tmp = self.core.SymbolTreeRead("/stream",3);
+        self.failUnless( isinstance(tmp, str));
+        self.failUnless( len(tmp) <= 3);
+        self.failUnless( isinstance(self.core.SymbolTreeRead("/sequence"), str) );
         tmp = self.core.SymbolTreeGetValue("/a_bool");
         self.failUnless( isinstance(tmp[0], bool) );
         tmp = self.core.SymbolTreeGetValue("/a_int");
@@ -43,6 +49,8 @@ class TestSymbolTree(unittest.TestCase):
         self.failUnless( isinstance(tmp[0], float) );
 
         #cleanup:
+        self.core.SymbolTreeDeleteSymbol("/sequence");
+        self.core.SymbolTreeDeleteSymbol("/stream");
         self.core.SymbolTreeDeleteSymbol("/a_float");
         self.core.SymbolTreeDeleteSymbol("/a_int");
         self.core.SymbolTreeDeleteSymbol("/a_bool");

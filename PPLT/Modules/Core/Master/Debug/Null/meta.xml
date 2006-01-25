@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+
+<pyDCPUModuleMeta version="0.1.0" root="True">
+	<Author>Hannes Matuschek &lt;hmatuschek@gmx.net&gt;</Author>
+	<LastUpdate>2006-01-22</LastUpdate>
+	<URL>http://pplt.berlios.de</URL>
+	
+	<Description lang="de">Dieses Kern-Modul entspricht der funktionalität 
+        des /dev/null</Description>
+	<Description lang="en">This module is like /dev/null.</Description>
+	
+	<Require>
+		<ChildAddress>False</ChildAddress>
+		<pyDCPUVersion>0.9.0</pyDCPUVersion>
+		<PythonVersion>2.3.0</PythonVersion>
+	</Require>	
+</pyDCPUModuleMeta>

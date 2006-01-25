@@ -80,6 +80,22 @@ class SymbolTree(SymbolFolder.Folder):
             raise Exceptions.ItemNotFound("Symbol %s not found!"%PathToSymbol);
         return(Element.SetValue(Value, SessionID));
 
+    def Read(self, PathToSymbol, Length, SessionID):
+        """ Read from symbol (for stream an sequence symbols) """
+        PathList = SymbolTools.SplitPath(PathToSymbol);
+        Element = self.__GetElementByPath(PathList);
+        if not isinstance(Element, Symbol.Symbol):
+            raise Exceptions.ItemNotFound("Symbol %s not found!"%PathToSymbol);
+        return(Element.Read(Length, SessionID));
+
+    def Write(self, PathToSymbol, Data, SessionID):
+        """ Read from symbol (for stream an sequence symbols) """
+        PathList = SymbolTools.SplitPath(PathToSymbol);
+        Element = self.__GetElementByPath(PathList);
+        if not isinstance(Element, Symbol.Symbol):
+            raise Exceptions.ItemNotFound("Symbol %s not found!"%PathToSymbol);
+        return(Element.Write(Data, SessionID));
+
     def CheckFolder(self, PathToFolder):
         """ Check if folder exists. """
         PathList = SymbolTools.SplitPath(PathToFolder);
@@ -170,7 +186,6 @@ class SymbolTree(SymbolFolder.Folder):
         else:
             if not Parent.AddFolder(Name, newFolder):
                 raise Exceptions.SymbolError("Can't create folder %s in parentfolder: Mail author!"%Name);
-        return(True);
 
     def MoveFolder(self, From, To):
         OPList = SymbolTools.SplitPath(From);
@@ -201,7 +216,6 @@ class SymbolTree(SymbolFolder.Folder):
         dest_obj = self.__GetElementByPath(DPList);
         folder_obj.Rename(NName);
         dest_obj.AddFolder(NName, folder_obj);
-        return(True);
 
 
     def DeleteFolder(self, PathToFolder):
@@ -225,7 +239,6 @@ class SymbolTree(SymbolFolder.Folder):
             raise Exceptions.ItemNotFound("Can't delete folder %s: not found!"%PathToFolder);
         if not Parent.DeleteFolder(Name):
             raise Exceptions.Error("Can't delete folder %s: No reason: Mail author!"%PathToFolder);
-        return(True);
 
 
 
@@ -255,9 +268,6 @@ class SymbolTree(SymbolFolder.Folder):
                                   Timeout,
                                   possession);
         
-        if not newSymbol.IsValid():
-            raise Exceptions.Error("Unable to create valid symbol at %s! Mail author!"%PathToSymbol);
-
         if Parent:
             if not Parent.AddSymbol(Name, newSymbol):
                 raise Exceptions.Error("Unable to add symbol (%s) to folder: Mail author!"%PathToSymbol);
@@ -265,7 +275,6 @@ class SymbolTree(SymbolFolder.Folder):
             if not self.AddSymbol(Name, newSymbol):
                 raise Exceptions.Error("Unable to add symbol (%s) to folder: Mail author!"%PathToSymbol);
             
-        return(True);
 
 
     def MoveSymbol(self, OldPath, NewPath):
@@ -322,7 +331,6 @@ class SymbolTree(SymbolFolder.Folder):
                 raise Exceptions.Error("Can't add symbol %s to new folder: Mail author!"%(OldPath));
             OParent.AddSymbol(OName,SymbolObj);
             raise Exceptions.Error("Can't add symbol %s to new folder: Mail author!"%(OldPath));
-        return(True);
 
 
     def DeleteSymbol(self, PathToSymbol):
@@ -347,7 +355,6 @@ class SymbolTree(SymbolFolder.Folder):
         if not Parent.DeleteSymbol(Name):
             raise Exceptions.Error("Can't delete symbol %s: Can't remove symbol from parent. (contact author)"%PathToSymbol);
             return(False);
-        return(True);
 
 
 
@@ -363,7 +370,6 @@ class SymbolTree(SymbolFolder.Folder):
                                 self.__UserDB);
         if not Element.SetPossession(Possession):
             raise Exceptions.Error("Can't set possession: Opps -> mail author!");
-        return(True);
         
     def GetPossession(self, PathToElement):
         PList = SymbolTools.SplitPath(PathToElement);
@@ -382,7 +388,6 @@ class SymbolTree(SymbolFolder.Folder):
         if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
         if not self.__UserDB.UserExists(Name):
             raise Exceptions.ItemNotFound("Owner (%s) of %s not in user-db!"%(Name,Path));
-        return(pos.chown(Name));
         
     def GetGroupName(self, Path):
         pos = self.GetPossession(Path);
@@ -394,7 +399,6 @@ class SymbolTree(SymbolFolder.Folder):
         if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
         if not self.__UserDB.GroupExists(Name):
             raise Exceptions.ItemNotFound("Group %s not in user-db!"%Name);
-        return(pos.chgrp(Name));
 
     def GetRightString(self, Path):
         pos = self.GetPossession(Path);
@@ -404,7 +408,6 @@ class SymbolTree(SymbolFolder.Folder):
     def SetRightString(self, Path, Right):
         pos = self.GetPossession(Path);
         if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
-        return(pos.chmod(Right));
     
     def __GetElementByPath(self, PathList):
         """ Get a element from tree by Path """

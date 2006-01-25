@@ -20,32 +20,3 @@
 # ############################################################################ # 
 
 from ReadLine import Object;
-
-
-# ***
-# It follows a complete description of this pyDCPU module.
-# (for more information see at the documentation)
-#
-
-DCPUVERSION     = 0x000100;     #HEX version-number of pyDCPU-package this module was written for
-VERSION         = 0x000001;     #HEX version-number of this package.
-
-AUTHOR          = "Hannes Matuschek <hmatuschek[AT]gmx.net>";       
-DATE            = "2005-02-04";                                     #Last update.
-
-
-#a description in multible lang.
-DESCRIPTION     = {'en': """ """,
-                   'de': """ """};
-
-#THE PARAMETERS YOU NEED TO RUN UNISERIAL
-PARAMETERS      = {'LineEnd':{'duty':True,
-                           'default':'0A',
-                           'help':{'en':'The line ending string in hex',
-                                   'de':'Das Zeilenende als HEX-String'}
-                           }
-                    };
-
-
-IS_ROOT_MODULE  = False;
-CHILD_NEED_ADDR = False;

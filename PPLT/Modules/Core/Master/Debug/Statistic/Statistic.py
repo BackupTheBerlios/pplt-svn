@@ -19,14 +19,11 @@
 # ############################################################################ # 
 
 # CHANGELOG:
-# 2005-09-23: 
-#   Changed value conversion to XDR
-
+# 2005-01-22:
+#   changed to new connection-types and exceptions
 
 import pyDCPU;
 import time;
-import struct;
-import xdrlib;
 
 """
     This module collects statistic information about the data
@@ -34,7 +31,7 @@ import xdrlib;
     The module that wants to access the underlaying modules have
     to be connected to this module with the address "tunnel".
     Addresses and meaning:
-    'tunnel'                =>  the data tunnel
+    '' or None              =>  the data tunnel
     'read_data'             =>  the number of bytes readed
     'write_data'            =>  the number of bytes written
     'read_speed'            =>  the abr. bytes per second by reading 
@@ -52,102 +49,70 @@ CHANEL_E        = 10;
 class Object(pyDCPU.MasterObject):
     def setup(self):
         self.Logger.debug('Setup statistic module')
-        if not isinstance(self.Connection, pyDCPU.MasterConnection):
-            self.Logger.error('This is not a root module -> no connection to parent');
-            return(False);
+        if not isinstance(self.Connection, (pyDCPU.StreamConnection, pyDCPU.SequenceConnection)):
+            raise pyDCPU.ModuleError("This module needs a Stream or Sequence connection from parent!");
         self.__ReadCount = 0;
         self.__WriteCount = 0;
-        self.__StartTime = int(time.time());
+        self.__StartTime = int(time.time()-1);
         self.__ErrorCounter = 0;
-        return(True);
         
     def connect(self, AddrStr):
-        if AddrStr == 'tunnel':
-            Con = pyDCPU.MasterConnection(self, CHANEL_DATA);
+        if AddrStr == '' or AddrStr == None:
+            if isinstance(self.Connection, pyDCPU.StreamConnection):
+                Con = pyDCPU.StreamConnection(self, CHANEL_DATA);
+            else: Con = pyDCPU.SequenceConnection(self, CHANEL_DATA);
             self.Logger.debug("Connect to data tunnel");
             return(Con);
         elif AddrStr == 'read_data':
-            Con = pyDCPU.MasterConnection(self, CHANEL_RD);
+            Con = pyDCPU.ValueConnection(self, pyDCPU.TInteger, CHANEL_RD);
             self.Logger.debug("Connected to read bytes counter");
             return(Con);
         elif AddrStr == 'write_data':
-            Con = pyDCPU.MasterConnection(self, CHANEL_WD);
+            Con = pyDCPU.ValueConnection(self, pyDCPU.TInteger, CHANEL_WD);
             self.Logger.debug("Connected to write bytes counter");
             return(Con);
         elif AddrStr == 'read_speed':
-            Con = pyDCPU.MasterConnection(self, CHANEL_RS);
+            Con = pyDCPU.ValueConnection(self, pyDCPU.TFloat, CHANEL_RS);
             self.Logger.debug("Connected to abr. read speed-o-meter");
             return(Con);
         elif AddrStr == 'write_speed':
-            Con = pyDCPU.MasterConnection(self, CHANEL_WS);
+            Con = pyDCPU.ValueConnection(self, pyDCPU.TFloat, CHANEL_WS);
             self.Logger.debug("Connected to write speed-o-meter");
             return(Con);
         elif AddrStr == 'error':
-            Con = pyDCPU.MasterConnection(self, CHANEL_E);
+            Con = pyDCPU.ValueConnection(self, pyDCPU.TInteger, CHANEL_E);
             self.Logger.debug('Connected to error counter');
             return(Con);
-        else:
-            self.Logger.error("Address \"%s\" unknown!"%str(AddrStr));
-            return(None);
-        return(None);
+        raise pyDCPU.ModuleError("Unknown address: %s"%AddrStr);
     
 
-    def read(self, Connection, Length):
-        if not isinstance(Connection, pyDCPU.MasterConnection):
-            self.Logger.error("FATAL: Bad connection!!!");
-            raise(pyDCPU.FatIOError);
+    def read(self, Connection, Length=None):
         Chanel = Connection.Address;
 
         if Chanel == CHANEL_DATA:
-            try:
-                Data = self.Connection.read(Length);
-            except pyDCPU.IOModError:
+            try: Data = self.Connection.read(Length);
+            except Exception, e:
                 self.__ErrorCounter += 1;
-                self.Logger.error("IO Error");
-                raise(pyDCPU.IOModError);
-            except:
-                self.Logger.error("Fat IO Error");
-                raise(pyDCPU.FatIOError);
-            if Data:
-                self.__ReadCount += len(Data);
+                raise e;
+            self.__ReadCount += len(Data);
             return(Data);
-        elif Chanel == CHANEL_RD:
-            return(ConvToRaw(self.__ReadCount));
-        elif Chanel == CHANEL_WD:
-            return(ConvToRaw(self.__WriteCount));
-        elif Chanel == CHANEL_RS:
-            return( ConvToRaw(int( self.__ReadCount/(int(time.time())-self.__StartTime) )));
-        elif Chanel == CHANEL_WS:
-            return( ConvToRaw(int( self.__ReadCount/(int(time.time())-self.__StartTime) )));
-        elif Chanel == CHANEL_E:
-            return( ConvToRaw(self.__ErrorCounter) );
-        else:
-            self.Logger.error('Invalid chanel-number!!!');
-            raise(pyDCPU.FatIOError);
-        
+        elif Chanel == CHANEL_RD: return self.__ReadCount;
+        elif Chanel == CHANEL_WD: return self.__WriteCount;
+        elif Chanel == CHANEL_RS: return (self.__ReadCount/(int(time.time())-self.__StartTime) );
+        elif Chanel == CHANEL_WS: return (self.__WriteCount/(int(time.time())-self.__StartTime) );
+        elif Chanel == CHANEL_E:  return self.__ErrorCounter;
+        pyDCPU.ModuleError("Invalid Chanel number!");
+
     def write(self, Connection, Data):
         if Connection.Address == CHANEL_DATA:
-            try:
-                Ret = self.Connection.write(Data);
-            except pyDCPU.IOModError:
-                self.Logger.error("IO Error");
-                raise(pyDCPU.IOModError);
-            except:
-                self.Logger.error("Fat IO Error");
-                raise(pyDCPU.FatIOError);
-            if Data:
-                self.__WriteCount += len(Data);
+            try: Ret = self.Connection.write(Data);
+            except Exception, e:
+                self.__ErrorCounter += 1;
+                raise e;
+            self.__WriteCount += len(Data);
             return(Ret);
-        else:
-            self.Logger.error("Statistic chanels are read only!");
-            raise(pyDCPU.ReadOnlyModError);
+        else: raise pyDCPU.ModuleError("Statistical values are read-only");
         
-    def flush(self):
-        return(self.Connection.flush());
+    def flush(self): return(self.Connection.flush());
 
 
-def ConvToRaw(Value):
-    """ This function converts a integer value to it's memory representation """
-    packer = xdrlib.Packer();
-    packer.pack_int(Value);
-    return(packer.get_buffer());

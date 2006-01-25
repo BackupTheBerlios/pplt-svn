@@ -18,15 +18,12 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
 # ############################################################################ # 
 
-#TODO:
-#   + find out if it is an fatal io-error or simply a timeout, if
-#       the underlaying uspp raise an error.
-#
-
 
 # Revision:
-#   2005-02-04:
-#       + raise execptions on io errors...
+# 2006-01-21:
+#   + added "slots" to change settings at runtime
+# 2005-02-04:
+#   + raise execptions on io errors...
 #
 
 import serial;
@@ -83,18 +80,51 @@ class Object(pyDCPU.MasterObject):
         
 
     def read(self, Connection, Len):
-        Data = self.SerObj.read(Len);
-        if Data == '': raise pyDCPU.ModuleError("Timeout...");
-        return(Data);
+        if Connection.Address == 'speed':
+            return self.SerObj.getBaudrate();
+        elif Connection.Address == 'parity':
+            par = self.SerObj.getParity();
+            if par == 'N': return 'none';
+            elif par == 'E': return 'even';
+            return 'odd';
+        elif Connection.Address == 'timeout':
+            return self.SerObj.getTimeout();
+        elif Connection.Address == None:    
+            Data = self.SerObj.read(Len);
+            if Data == '': raise pyDCPU.ModuleError("Timeout...");
+            return(Data);
+        raise pyDCPU.ModuleError("Unknown connection address: %s!!!"%Connection.Address);    
+
 
     def write(self, Connection, Data):
-        try: self.SerObj.write(Data);
-        except Exception, e: raise pyDCPU.ModuleError("Unable to write to serial port: %s"%str(e));
-        return(len(Data));
+        if Connection.Address == 'speed':
+            self.SerObj.setBaudrate(Data);
+            return(1);
+        elif Connection.Address == 'parity':
+            if Data == 'even': self.SerObj.setParity('E');
+            elif Data == 'odd': self.SerObj.setParity('O');
+            elif Data == 'none': self.SerObj.setParity('N');
+            return(1);
+        elif Connection.Address == 'timeout':
+            self.SerObj.setTimeout(Data);
+            return(1);
+        elif Connection.Address == None:    
+            try: self.SerObj.write(Data);
+            except Exception, e: raise pyDCPU.ModuleError("Unable to write to serial port: %s"%str(e));
+            return(len(Data));
+        raise pyDCPU.ModuleError("Unknown address: %s!!!"%Connection.Address);    
     
+
     def connect(self,Address):
-        if Address: self.Logger.warning("I don't a connection with a address...");
-        Connection = pyDCPU.StreamConnection(self,None);
+        if Address == 'speed':
+            Connection = pyDCPU.ValueConnection(self, pyDCPU.TInteger, 'speed');
+        elif Address == 'parity':
+            Connection = pyDCPU.ValueConnection(self, pyDCPU.TString, 'parity');
+        elif Address == 'timeout':
+            Connection = pyDCPU.ValueConnection(self, pyDCPU.TFloat, 'timeout');
+        elif Address == '' or Address==None:
+            Connection = pyDCPU.StreamConnection(self,None);
+        else: raise pyDCPU.ModuleError("Address %s not known to connect to UniSerial!"%Address);     
         return(Connection);
 
 

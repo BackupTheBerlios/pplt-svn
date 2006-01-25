@@ -4,21 +4,16 @@ import string;
 
 class Object(pyDCPU.MasterObject):
     def setup(self):
-        self.Logger.info("Setup ReadLine")
+        self.Logger.info("Setup ReadLine");
+        if not self.Parameters.has_key("LineEnd"): raise pyDCPU.ModuleSetup("Need lineend!");
         tmp = self.Parameters.get('LineEnd');
         self.__LineEnd = binascii.a2b_hex(tmp);
-        if len(self.__LineEnd)<1:
-            return(False);
-        return(True);
     
-    def connect(self,AddrStr):
-        Connection = pyDCPU.MasterConnection(self, None);
-        return(Connection);
+    def connect(self,AddrStr): return pyDCPU.SequenceConnection(self, None);
 
-    def read(self, Connection, Len):
+    def read(self, Connection, Len=None):
         lineend = False;
-        if Len == 0:
-            lineend = True;
+        if Len == 0: lineend = True;
         buff = '';
         
         while not lineend:

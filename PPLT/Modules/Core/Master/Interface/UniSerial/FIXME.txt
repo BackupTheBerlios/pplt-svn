@@ -1,3 +1,0 @@
-TODO:
-	* Make it realy platformindipendent!!!
-		Error in uspp.__init__(): Different params formats are needed for diff. platforms!!!

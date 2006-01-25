@@ -305,26 +305,20 @@ class Core:
         Path = NameCheck.CheckPath(Path);
         if not Path: raise Exceptions.Error("Invalid format for folder-path \"%s\"!"%Path);
 
-        if not self.__SymbolTree.CreateFolder(Path):
-            raise Exceptions.Error("Error while create folder: \"%s\"!"%Path);
+        self.__SymbolTree.CreateFolder(Path);
         self.Logger.debug("Folder created");
-        return(True);
 
     def SymbolTreeMoveFolder(self, From, To):
         """ This method moves a folder from (From) to (To)."""
         #check path of destination:
         To = NameCheck.CheckPath(To);
         if not To: raise Exceptions.Error("Invalid path \"%s\" for new destination!"%To);
-        if not self.__SymbolTree.MoveFolder(From, To):
-            raise Exceptions.Error("Error while move folder \"%s\" to \"%s\"!"%(From,To));
-        return(True);
+        self.__SymbolTree.MoveFolder(From, To);
 
     def SymbolTreeDeleteFolder(self,  Path):
         """ This method will delete folder Path """
-        if not self.__SymbolTree.DeleteFolder(Path):
-            raise Exceptions.Error("Error while delete folder \"%s\"!"%Path);
+        self.__SymbolTree.DeleteFolder(Path);
         self.Logger.debug("Folder %s deleted"%Path);
-        return(True);
     
 
     def SymbolTreeCreateSymbol(self, Path, ObjectID, Address=None, Timeout=0.5):
@@ -337,8 +331,7 @@ class Core:
         if not Obj: raise Exception.ItemNotFound("No module with ID %s found!"%ObjectID);
 
         Connection = Obj.connect(Address);
-        if not Connection: 
-            raise Exceptions.Error("Can't connect to module %s!"%ObjectID);
+        if not Connection: raise Exceptions.Error("Can't connect to module %s!"%ObjectID);
         # if connection is connection to a value: set timeout
         if isinstance(Connection, MasterObject.ValueConnection):
             if Timeout: Connection.SetTimeout(Timeout);
@@ -355,23 +348,22 @@ class Core:
         """ This method moves a symbol From -> To. """
         To = NameCheck.CheckPath(To);
         if not To: raise Exceptions.Error("Destination \"%s\" isn't a valid path!"%To);
-        if not self.__SymbolTree.MoveSymbol(From,To):
-            raise Exceptions.SymbolError("Error while move symbol from %s to %s!"%(From,To));
-        return(True);
+        self.__SymbolTree.MoveSymbol(From,To);
 
 
     def SymbolTreeDeleteSymbol(self, Path):
         """ This method will del symbol Path """
-        if not self.__SymbolTree.DeleteSymbol(Path):
-            raise Exceptions.SymbolError("Unable to remove symbol \"%s\"!"%Path);
-        self.Logger.debug("Symbol %s deleted"%Path);
-        return(True);
+        self.__SymbolTree.DeleteSymbol(Path);
     
 
     def SymbolTreeGetValue(self, Path):
         return(self.__SymbolTree.GetValue(Path, self.__GetSystemSession()));
     def SymbolTreeSetValue(self, Path, Value):
         return(self.__SymbolTree.SetValue(Path, Value, self.__GetSystemSession()));
+    def SymbolTreeRead(self, Path, Length=None):
+        return(self.__SymbolTree.Read(Path, Length, self.__GetSystemSession()));
+    def SymbolTreeWrite(self, Path, Data):
+        return(self.__SymbolTree.Write(Path, Data, self.__GetSystemSession()));
     def SymbolTreeListSymbols(self, Path):
         return(self.__SymbolTree.ListSymbols(Path, self.__GetSystemSession()));
     def SymbolTreeListFolders(self, Path):
@@ -389,13 +381,9 @@ class Core:
         return( (owner, group, modus) );
 
     def SymbolTreeSetAccess(self, Path, Owner, Group, Modus):
-        if not self.__SymbolTree.SetOwnerName(Path, Owner):
-            return(False);
-        if not self.__SymbolTree.SetGroupName(Path, Group):
-            return(False);
-        if not self.__SymbolTree.SetRightString(Path, Modus):
-            return(False);
-        return(True);
+        self.__SymbolTree.SetOwnerName(Path, Owner);
+        self.__SymbolTree.SetGroupName(Path, Group);
+        self.__SymbolTree.SetRightString(Path, Modus);
 
 
 

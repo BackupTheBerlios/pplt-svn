@@ -10,74 +10,45 @@ class Object(pyDCPU.MasterObject):
         if not tmp:
             self.Logger.debug("No TimeOut: set to 0.0");
             self.__TimeOut = 0.0;
-        try:
-            self.__TimeOut = float(tmp);
+        try: self.__TimeOut = float(tmp);
         except:
             self.Logger.warning("TimeOut in wrong format: set to 0.0");
             self.__TimeOut = 0.0;
-        return(True);
-
 
     def connect(self, AddrStr):
         hp = AddrStr.split(':');
         if not len(hp) == 2:
-            self.Logger.warning("Address: Host:Port");
-            return(None);
+            raise pyDCPU.ModuleError("Mad format for address: %s! Should be: \"host:port\""%str(AddrStr));
         Addr = hp[0];
-        try:
-            Port = int(hp[1]);
-        except:
-            self.Logger.warning("Port is not a number");
-            return(None);
+        try: Port = int(hp[1]);
+        except: raise pyDCPU.ModueError("Port %s is not a number"%str(hp[1]));
+
         SCon = SocketConnection(Addr,Port,self.__TimeOut);
-        if not SCon:
-            self.Logger.warning("Unable to connect: try later");
+        if not SCon: self.Logger.warning("Unable to connect: try later");
         return(pyDCPU.MasterConnection(self, SCon));
 
 
     def read(self, Con, Len):
         SCon = Con.Address;
-        if not SCon.GetState():
-            SCon.ReConnect();
+        if not SCon.GetState(): SCon.ReConnect();
 
-        try:
-            return(SCon.Read(Len));
-        except socket.error (errno, txt):
-            self.Logger.warning("Error while read: %s(%i)"%(errno, txt));
-            raise(pyDCPU.IOModError);
-            return(None);
-        except socket.timeout:
-            self.Logger.warning("Timeout");
-            raise(pyDCPU.TimeOutError);
-            return(None);
-        except:
-            self.Logger.warning("Error while read");
-            raise(pyDCPU.FatIOModError);
-        return(None);
+        try: return(SCon.Read(Len));
+        except socket.error (errno, txt): raise(pyDCPU.ModuleError("Unable to read from connection: %s"%str(txt)));
+        except socket.timeout: raise pyDCPU.ModuleError("Timeout!");
 
 
     def write(self, Con, Data):
         SCon = Con.Address;
-        if not SCon.GetState():
-            SCon.ReConnect();
+        if not SCon.GetState(): SCon.ReConnect();
 
-        try:
-            return(SCon.Write(Data));
-        except socket.error (errno, txt):
-            self.Logger.warning("Error while write: %s(%i)"%(errno, txt));
-            raise(pyDCPU.IOModError);
-            return(None);
-        except socket.timeout:
-            self.Logger.warning("Timeout!?!");
-            raise(pyDCPU.TimeOutError);
-            return(None);
-        except:
-            self.Logger.warning("Error while write");
-            raise(pyDCPU.FatIOModError);
-        return(None);
+        try: return(SCon.Write(Data));
+        except socket.error, e: raise pyDCPU.ModuleError("Unable to write: %s"%str(e));
+        except socket.timeout: raise pyDCPU.ModuleError("Timeout");
 
 
 
+
+#
 # A simple Socket-Connection-Class:
 #
 class SocketConnection:

@@ -12,13 +12,12 @@ RAND_ARRAYBOOL = 5;
 RAND_ARRAYINTEGER = 6;
 RAND_ARRAYFLOAT = 7;
 RAND_ARRAYSTRING = 8;
-
+RAND_STREAM = 9;
+RAND_SEQUENCE = 10;
 
 
 class Object(pyDCPU.MasterObject):
-    def setup(self):
-        self.Logger.info("Setup Random Module");
-        return(True);
+    def setup(self): self.Logger.info("Setup Random Module");
 
     def connect(self, AddrStr):
         if AddrStr == 'Bool':
@@ -37,12 +36,15 @@ class Object(pyDCPU.MasterObject):
             ADDR = RAND_ARRAYFLOAT;
         elif AddrStr == 'ArrayString':
             ADDR = RAND_ARRAYSTRING;
-        else:
-            self.Logger.error("Unknown type %s"%AddrStr);
-            return(None);
+        elif AddrStr == 'Stream':
+            ADDR = RAND_STREAM;
+        elif AddrStr == 'Sequence':
+            ADDR = RAND_SEQUENCE;
+        else: raise pyDCPU.ModuleError("Unknown address: %s"%AddrStr);
+        if ADDR == RAND_STREAM: return pyDCPU.StreamConnection(self, ADDR);
         return( pyDCPU.ValueConnection(self, AddrStr, ADDR) );
 
-    def read(self, Con, lengt=None):
+    def read(self, Con, length=None):
         if Con.Address == RAND_BOOL:
             return(GetRandBool());
         elif Con.Address == RAND_INTEGER:
@@ -59,6 +61,10 @@ class Object(pyDCPU.MasterObject):
             return(GetRandArrayOfFloat());
         elif Con.Address == RAND_ARRAYSTRING:
             return(GetRandArrayOfString());
+        elif Con.Address == RAND_STREAM:
+            return(GetRandString(length));
+        elif Con.Address == RAND_SEQUENCE:
+            return(GetRandString());
         else:
             self.Logger.error("Invalid Address!!!");
             raise pyDCPU.FatIOModError;
@@ -79,8 +85,8 @@ def GetRandInt():
 def GetRandFloat():
     return random.random();
 
-def GetRandString():
-    length = random.randint(1,79);
+def GetRandString(length = 79):
+    length = random.randint(1,length);
     buff = str();
     for n in range(length): buff += random.choice(string.printable);
     return buff;

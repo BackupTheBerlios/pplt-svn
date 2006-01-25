@@ -1,7 +1,7 @@
 # ############################################################################ #
 # This is part of the PPLT project.                                            #
 #                                                                              #
-# Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                #
+# Copyright (C) 2003-2006 Hannes Matuschek <hmatuschek@gmx.net>                #
 #                                                                              #
 # This library is free software; you can redistribute it and/or                #
 # modify it under the terms of the GNU Lesser General Public                   #
@@ -45,7 +45,7 @@ class Object(pyDCPU.MasterObject):
         return(Connection);
 
     def write(self, Connection, Value):
-        if Value == None: raise pyDCPU.ModuleError("No value give to write!");
+        if Value == None: raise pyDCPU.ModuleError("No value given to write!");
 
         Data = Value2Raw(Value, Connection.Address.GetType());          # convert Value to raw byte-data
         DataSet = S7Message.S7DataSet(Data, Connection.Address);        # assamble dataset
@@ -64,8 +64,7 @@ class Object(pyDCPU.MasterObject):
         Message = S7Message.S7Message(MsgString = MsgString);
         CommSet = Message.GetCommandSet();
         DataSet = Message.GetDataSet();
-        if DataSet.GetErrCode() == 0xff:        # 0xff means: all ok.
-            return(True);
+        if DataSet.GetErrCode() == 0xff: return(True);       # 0xff means: all ok.
 
         self.Logger.error("S7 returned error code: %x"%ord(DataSet.GetErrCode()));
         raise pyDCPU.ModuleError("S7 returned error code: %x"%ord(DataSet.GetErrCode()));

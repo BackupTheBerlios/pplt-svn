@@ -46,6 +46,7 @@ class MasterConnection:
         self.Logger = logging.getLogger('pyDCPU');
         self.Buffer = None;
         self.Parent.inc_usage();
+        self.TypeName = "undef";
 
     def close(self): 
         self.Parent.dec_usage();
@@ -92,7 +93,7 @@ class MasterConnection:
         #del self.Buffer;
         self.Buffer = None;
         self.Parent.lock();
-        self.Parent.flush();    #FIXME: maybe a bad idea
+        #self.Parent.flush();    #FIXME: maybe a bad idea
         self.Parent.unlock();
         return(True);
 
@@ -103,7 +104,9 @@ class MasterConnection:
         ParentID = str(self.Parent._GetID());
         AddrStr  = str(self._GetAddrStr());
         return(md5.new(ParentID+AddrStr).hexdigest());  #uhh...
-
+    def GetTypeName(self): return self.TypeName;
+    def GetQuality(self): return "good";
+    def GetLastUpdate(self): return time.now();
 
 
    
@@ -112,6 +115,10 @@ class StreamConnection(MasterConnection):
     """ CLASS: StreamConnection 
   This class implements the connection to or between modules that implements 
   streams. """
+    def __init__(self, Parent, Address=None):
+        MasterConnection.__init__(self, Parent, Address);
+        self.TypeName = "Stream";
+
     def read_seq(self):
         self.Logger.warning("Trying to read a sequence out of a stream: will return only 1 byte.");
         if self.Parent.islocked(): raise ItemBusy("Unable to read_seq() from parent: is locked!");
@@ -139,6 +146,10 @@ class StreamConnection(MasterConnection):
 
     
 class SequenceConnection(MasterConnection):
+    def __init__(self, Parent, Address = None):
+        MasterConnection.__init__(self, Parent, Address);
+        self.TypeName = "Sequence";
+
     def read_seq(self):
         if self.Buffer:
             tmp = self.Buffer;
@@ -193,14 +204,14 @@ class ValueConnection(SequenceConnection):
         self.Cache = None;
         self.Timeout = Timeout;
         
-    def read_seq(self):    
+    def read_seq(self):
         # if a cache-time is set:
         if self.Timeout:
             now = time.time();
             # if the cached value is still fresh:            
             if (now - self.LastUpdate) < self.Timeout: return self.Cache;
         tmp = SequenceConnection.read_seq(self);
-        if tmp: 
+        if tmp:
             self.Cache = tmp;
             self.LastUpdate = time.time();
         return tmp;
