@@ -1,6 +1,8 @@
 \documentclass{manual}
 
 \usepackage{graphicx}
+\usepackage{listings}
+\usepackage[svgnames]{xcolor}
 
 \title{PPLT References}
 \author{Hannes Matuschek\\\texttt{<hmatuschek@gmx.net>}}
@@ -10,7 +12,16 @@
 
 
  \begin{document}
-   
+ \lstset{language=python, frame=tb, 
+         showspaces=false, showstringspaces=false,
+         morekeywords=None,
+         basicstyle={\footnotesize \ttfamily},
+         identifierstyle=\color{Black},
+         commentstyle={\itshape \color{Gray}},
+         stringstyle=\color{DarkRed},
+         keywordstyle={\bf \color{DarkBlue}},
+         numbers=none}
+
     \maketitle
     \begin{abstract}
     This document summarize the references of the PPLT system. Including Core-Library reference, reference

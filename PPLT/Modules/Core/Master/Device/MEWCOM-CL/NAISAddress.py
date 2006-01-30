@@ -35,76 +35,56 @@ class NAIS_Address:
         if AddrStr == 'STATUS':
             self.__Area = NAIS_STATUS;
             self.__Size = NAIS_BOOL;
+            self.__Type = NAIS_BOOL;
             self.__Segment = 0;
             self.__Offset = 0;
             return;
 
         m = re.compile(RE).match(AddrStr);
         if not m:
-            #logger
-            print ("Invalid: %s"%AddrStr);
             self.__Valid = False;
+            return;
 
-        if self.__Valid:
-            t = m.group(1);
-            if t == '':
-                self.__Size = NAIS_BOOL;
-            elif t == 'W':
-                self.__Size = NAIS_WORD;
+        t = m.group(1);
+        if t == '': self.__Size = NAIS_BOOL;
+        elif t == 'W': self.__Size = NAIS_WORD;
 
-            t = m.group(4);
-            if t == '':
-                self.__Size = NAIS_WORD;
-            elif t == 'D':
-                self.__Size = NAIS_DWORD;
+        t = m.group(4);
+        if t == '': self.__Size = NAIS_WORD;
+        elif t == 'D': self.__Size = NAIS_DWORD;
 
 
-            a = m.group(2);
-            if a == 'X':
-                self.__Area = NAIS_INPUT;
-            elif a == 'Y':
-                self.__Area = NAIS_OUTPUT;
-            elif a == 'R':
-                self.__Area = NAIS_MERKER;
-            elif a == 'L':
-                self.__Area = NAIS_LINK;
+        a = m.group(2);
+        if a == 'X': self.__Area = NAIS_INPUT;
+        elif a == 'Y': self.__Area = NAIS_OUTPUT;
+        elif a == 'R': self.__Area = NAIS_MERKER;
+        elif a == 'L': self.__Area = NAIS_LINK;
 
-            a = m.group(5);
-            if a == 'DT':
-                self.__Area = NAIS_DATA;
-            elif a == 'FL':
-                self.__Area = NAIS_FILE;
-            elif a == 'LD':
-                self.__Area = NAIS_LINKREG;
+        a = m.group(5);
+        if a == 'DT': self.__Area = NAIS_DATA;
+        elif a == 'FL': self.__Area = NAIS_FILE;
+        elif a == 'LD': self.__Area = NAIS_LINKREG;
 
-            if self.__Size == NAIS_BOOL:
-                s = m.group(3);
-                if len(s) == 1:
-                    self.__Segment = 0;
-                    self.__Offset  = int(s,16);
-                else:
-                    self.__Segment = int(s[:-1]);
-                    self.__Offset  = int(s[-1:],16);
-            elif m.group(3):
-                s = m.group(3);
-                try:
-                    self.__Segment = int(s);
-                except:
-                    self.__Valid = False;
-                self.__Offset  = 0;
-            elif m.group(6):
-                s = m.group(6);
-                self.__Segment = int(s);
-                self.__Offset  = 0;
+        if self.__Size == NAIS_BOOL: s = m.group(3);
+        if len(s) == 1:
+            self.__Segment = 0;
+            self.__Offset  = int(s,16);
+        else:
+            self.__Segment = int(s[:-1]);
+            self.__Offset  = int(s[-1:],16);
+        elif m.group(3):
+            s = m.group(3);
+            try: self.__Segment = int(s);
+            except: self.__Valid = False;
+            self.__Offset  = 0;
+        elif m.group(6):
+            s = m.group(6);
+            self.__Segment = int(s);
+            self.__Offset  = 0;
 
-    def IsValid(self):
-        return(self.__Valid);
-    def GetArea(self):
-        return(self.__Area);
-    def GetSegment(self):
-        return(self.__Segment);
-    def GetOffset(self):
-        return(self.__Offset);
-    def GetSize(self):
-        return(self.__Size);
-    
+    def IsValid(self): return(self.__Valid);
+    def GetArea(self): return(self.__Area);
+    def GetSegment(self): return(self.__Segment);
+    def GetOffset(self): return(self.__Offset);
+    def GetSize(self): return(self.__Size);
+    def GetType(self): return self.__Size;

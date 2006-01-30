@@ -28,5 +28,5 @@
 </div>
 <!-- To help a friend //-->
 <div style="display:none;">
-	<a href="www.23inch.de">23 Inch</a>
+	<a href="http://www.23inch.de">23 Inch</a>
 </div>

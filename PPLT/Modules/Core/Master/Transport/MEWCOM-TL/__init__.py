@@ -18,29 +18,8 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    #
 # ############################################################################ #
 
-
-#TODO:
-
-#REVISION:
-
-
-
+# ChangeLog:
+# 2006-01-29:
+#   - update to new exception and connection classes!
 
 from MEWCOM import Object;
-
-DCPUVERSION     = 0x000100;
-VERSION         = 0x000001;
-AUTHOR          = "Hannes Matuschek <hmatuschek[at]gmx.net>";
-DATE            = "UNIXTIMESTAMP";
-
-DESCRIPTION     = {'en': """ """,
-                   'de': """ """};
-
-PARAMETERS      = {'BCC':{'duty':False,
-                          'help':{'de':'',
-                                  'en':''},
-                          'default':'True'}
-                   };
-
-IS_ROOT_MODULE  = False;
-CHILD_NEED_ADDR = True;

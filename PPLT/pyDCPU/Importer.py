@@ -118,8 +118,7 @@ class Importer:
 
         Obj = Mod.Object(Fingerprint, SymbolTree, Parameters, Name, self.__Logger);
 
-        if not Obj.setup():
-            raise Exceptions.ModuleSetup("Error while setup module %s"%Name);
+        Obj.setup();
 
         thread.start_new_thread(Obj.start,());
         return(Obj);

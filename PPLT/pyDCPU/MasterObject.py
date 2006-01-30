@@ -171,16 +171,16 @@ class SequenceConnection(MasterConnection):
             try: self.Buffer = self.Parent.read(self, Len);
             finally: self.Parent.unlock();
         # if Len is not given:
-        if not Len:                 
+        if not Len:
             tmp = self.Buffer;
             self.Buffer = None;
             return tmp;
         # if Len > len(Buffer): 
-        if Len >= len(self.Buffer): 
+        if Len >= len(self.Buffer):
             tmp = self.Buffer;
             self.Buffer = None;
             return tmp;
-        else:                                           
+        else:
             tmp = self.Buffer[:Len];
             self.Buffer = self.Buffer[Len:];
             return tmp;
@@ -196,7 +196,7 @@ class SequenceConnection(MasterConnection):
 
 class ValueConnection(SequenceConnection):
     """ A ValueConnection is the glue between the MasterObejcts and the symbols. """
-    def __init__(self, Parent, Type, Address=None, Timeout = 0.5):
+    def __init__(self, Parent, Type, Address=None, Timeout = 0.0):
         SequenceConnection.__init__(self, Parent, Address);
         if not Type: raise Exception("A ValueConnection have to be typed!");
         self.TypeID = Type;

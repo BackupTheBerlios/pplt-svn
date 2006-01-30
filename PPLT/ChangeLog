@@ -1,3 +1,7 @@
+    * work on documentation
+    * update Master.Trasfer.MEWCOM-TL and Master.Device.MEWCOM-CL to new
+      connection objects and exceptions!
+    * Commit: Revision 33
     * added new core-mod "Master.Debug.Null"
     * added new core-mod "Master.Debug.Echo"
     * fixed bug in pyDCPU/CoreModuleInfo: 

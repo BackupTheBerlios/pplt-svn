@@ -1,4 +1,4 @@
-\newcommand{\CoreModDesc}[1]{\subsection{#1}\index{Core Modules!#1}}
+\newcommand{\CoreModDesc}[1]{\newpage\subsection{#1}\index{Core Modules!#1}}
 \newcommand{\CoreMod}[1]{\code{#1}}
 
 \chapter{Core-modules Reference}
@@ -59,8 +59,14 @@ the first time, it will be retryed each time you read/write from/to the
 module until the connection can be etablished.} 
 
 \subsubsection{Example}
+\begin{figure}[ht]
+    \label{fig:coremod02}
+    \centering
+    \includegraphics[scale=1]{coremod02.png}
+    \caption{This figure shows the module-map of the socket-example.}
+\end{figure}    
 This example opens two connection to different hosts and ports:
-\verbatiminput{coremod02.py}
+\lstinputlisting{coremod02.py}
 
 
 
@@ -126,9 +132,15 @@ module at special addresses. See next paragraph for details.}
 \end{tableiii}
 
 \subsubsection{Example}
+\begin{figure}[ht]
+    \label{fig:coremod01}
+    \centering
+    \includegraphics{coremod01.png}
+    \caption{This figure shows the module-map of the UniSerial-example.}
+\end{figure}    
 This example shows how to setup the \CoreMod{UniSerial} and how to change the 
 settings at runtime:
-\verbatiminput{coremod01.py}
+\lstinputlisting{coremod01.py}
 
 
 
@@ -146,6 +158,41 @@ settings at runtime:
 % Transport layer of the Mewtocol:
 %
 \CoreModDesc{Master.Transport.MEWCOM-TL}
+This module implements the transport-layer of the MEWTOCOL. The MEWTOCOL 
+normally doesn't distinguish between the tansport and command layer. So
+this module is only usfull in combination with the \CoreMod{MEWCOM-CL}
+core-module that implements the command messages of the MEWTOCOL.
+
+\subsubsection{Parameters}
+This module needs only one parameter that specifies if a cecksum should
+be calculated and adde to the MEWTOCOL message. By defualt this parameter
+is set to \code{"True"}
+
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default}
+\lineiii{BCC}
+        {This parameter specifies if a bcc (checksum) should be claculated
+         for each packet send. This parameter doesn't contol the if the
+         checksum of a recived packet will be checked. This will allways be 
+         done (if the packet contains a checksum)\footnote{The MEWTOCOL 
+         protocol allows that a packet doesn't contain a checksum. In this 
+         case the checksum 'XX' will be set to indicate that the checksum
+         should not be checked.}.  
+        }{'True'}
+\end{tableiii}       
+
+\subsubsection{Addresses}
+Each module or symbol have to set a address for the connection to this 
+module. This address specifies the address of the destination the 
+MEWTOCOL messages are send to. 
+\begin{tableiii}{l|l|p{10cm}}{textrm}{Address}{Type}{Description}
+\lineiii{0..255}
+        {\code{TSequence}}
+        {This address specifies the destination of the messages send.}
+\end{tableiii}
+
+\subsubsection{Example}
+Because of this module is not usefull alone, please look at the example for 
+the \CoreMod{MEWCOM-CL} core module.
 
 
 
@@ -179,9 +226,15 @@ an address. This address is a number between 0 and 255.
 \end{tableiii}
 
 \subsubsection{Example}
+\begin{figure}[ht]
+    \label{fig:coremod07}
+    \centering
+    \includegraphics{coremod07.png}
+    \caption{This figure shows the module-map of the PPI-example.}
+\end{figure}    
 This example shows how to tunnel the PPI bus by the symbol tree. For an more
 usefull example please look the the Example for the \CoreMod{S7} core-module.
-\verbatiminput{coremod07.py}
+\lstinputlisting{coremod07.py}
 
 
 
@@ -220,6 +273,12 @@ This module knows only one address: no address.
 \end{tableiii}
 
 \subsubsection{Example}
+\begin{figure}[ht]
+    \label{fig:coremod10}
+    \centering
+    \includegraphics{coremod10.png}
+    \caption{This figure shows the module-map of the ReadLine-example.}
+\end{figure}    
 This example shows on the one hand the usage of the \CoreMod{ReadLine} module.
 On the other hand it is a quite good test for the \CoreMod{Echo} module. 
 This example write a string into \CoreMod{ReadLine} that extends the string 
@@ -229,7 +288,7 @@ line from his parent (\CoreMod{Echo}) strips the line-end characters and
 return the string. If all goes well the same string will be returned. To see
 what's going on a \CoreMod{HexDump} module will be plugged between the 
 \CoreMod{Echo} and \CoreMod{ReadLine} modules.
-\verbatiminput{coremod10.py}
+\lstinputlisting{coremod10.py}
 
 
 
@@ -258,7 +317,41 @@ what's going on a \CoreMod{HexDump} module will be plugged between the
 % Command-messages for the Panasonic FP0 and FP1
 %
 \CoreModDesc{Master.Device.MEWCOM-CL}
+This core-module implements the command messages of the MEWTOCOL. This 
+protocol is used to access the Panasonic FP0 FP2 PLCs. So you can access
+the markers of these PLCs using the \CoreMod{Master.Transport.MEWCOM-TL},
+\CoreMod{Master.Device.MEWCOM-CL} core-modules and a interface module like 
+\CoreMod{Master.Interface.UniSerial} or \CoreMod{Master.Interface.Socket}.
 
+\subsubsection{Parameters}
+This module needs no parameters to be set up.
+
+\subsubsection{Addresses}
+You have to set a address to connect a symbol to this module! With this 
+address you specify the marker you want to get/set. Additional there is a
+address called \code{"STATUS"} that controls the state of the PLC 
+(\emph{run}/\emph{stop}).
+\begin{tableiii}{l|p{2cm}|p{10cm}}{textrm}{Address}{Type}{Description}
+\lineiii{STATUS}
+        {\code{TBool}}
+        {By this address you can control the state of the PLC. If it is 
+         \code{True} then the PLC is in the \emph{Run} mode. You can also
+         get the state of the PLC by reading this value.}
+\lineiii{\emph{Marker}}
+        {\code{TBool} or
+         \code{TInteger}}
+        {By setting a marker-address as the address for the connection to this 
+         module, you are able to access (read/write) this marker. So the type 
+         of the connection you'll get depends on the marker-address you set.} 
+\end{tableiii}
+
+\subsubsection{Example}
+There are two example to show how to access a FPx PLC. The first shows how to 
+setup if you want to use the \emph{ToolPort} (serial interface) and the second
+shows how to setup if you want to access the PLC by the tunneled 
+\emph{ToolPort} of a FP-WEB server.
+
+\lstinputlisting{coremod11.py}
 
 
 %
@@ -292,9 +385,16 @@ the name of the marker you want to get/set.
 \end{tableiii}
 
 \subsubsection{Example}
+\begin{figure}[ht]
+    \label{fig:coremod08}
+    \centering
+    \includegraphics{coremod08.png}
+    \caption{This figure shows the module-map of the S7-example.}
+\end{figure}    
 In this example I'll access (read/write) the markers SM0.5 (special marker 0 bit 5) and AB0
 (output byte 0).
-\verbatiminput{coremod08.py}
+
+\lstinputlisting{coremod08.py}
 
 
 
@@ -320,8 +420,15 @@ This module has only one addresses: no address.
 \end{tableiii}
 
 \subsubsection{Example}
+\begin{figure}[ht]
+    \label{coremod06}
+    \centering
+    \includegraphics{coremod06.png}
+    \caption{This figure shows the module-map of the Echo-example.}
+\end{figure}    
 This is a simple echo-example... ... the classic.
-\verbatiminput{coremod06.py}
+
+\lstinputlisting{coremod06.py}
 
 
 
@@ -348,9 +455,15 @@ This module has only one address: no address!
 \end{tableiii}
 
 \subsubsection{Example}
+\begin{figure}[ht]
+    \label{fig:coremod05.py}
+    \centering
+    \includegraphics{coremod05.png}
+    \caption{This figure shows the module-map of the HexDump-example.}
+\end{figure}    
 This module uses the echo module to show how the trafic in read and write 
 direction will be dumped:
-\verbatiminput{coremod05.py}
+\lstinputlisting{coremod05.py}
 
 
 
@@ -378,6 +491,12 @@ This module has only one valid address: no address.
 \end{tableiii}
 
 \subsubsection{Example}
+\begin{figure}[ht]
+    \label{fig:coremod09}
+    \centering
+    \includegraphics{coremod09.png}
+    \caption{This figure shows the module-map of the Null-Example.}
+\end{figure}    
 This example shows a configuration to debug a non \emph{root} module. In this 
 case it is the \CoreMod{Master.Transport.PPI} core-module. To get some 
 information about the packages the PPI module sends the core-module 
@@ -385,7 +504,7 @@ information about the packages the PPI module sends the core-module
 exception, because the PPI module expect a correct answer from the 
 \emph{virtual} device (in this case the core-module 
 \CoreMod{Master.Debug.Null}).
-\verbatiminput{coremod09.py}
+\lstinputlisting{coremod09.py}
 
 
 
@@ -443,7 +562,7 @@ This module needs no parameters.
 
 \subsubsection{Example}
 This is a simple example that uses all types:
-\verbatiminput{coremod03.py}
+\lstinputlisting{coremod03.py}
 
 
 
@@ -501,11 +620,11 @@ be used to collect the statistical data.
 In this example the serial interface will be exported by the symbol tree.
 The \CoreMod{Statistic}-module records the trafic throught the serial 
 interface.
-\verbatiminput{coremod04.py}
+\lstinputlisting{coremod04.py}
 
 
 
-
+\newpage
 \section{Export modules}
 \CoreModDesc{Export.JVisu}
 \CoreModDesc{Export.SimpleExport}

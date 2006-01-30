@@ -38,10 +38,10 @@ class TestLockMod(unittest.TestCase):
         tmp = self.core.SymbolTreeGetValue("/test");
         self.failUnless( isinstance(tmp, bool) );
 
-        self.failUnlessRaises( pyDCPU.Exceptions.ItemBusy, self.core.SymbolTreeGetValue, Path="/test");
-
+#        self.failUnlessRaises( pyDCPU.Exceptions.ItemBusy, self.core.SymbolTreeGetValue, Path="/test");
+        self.core.SymbolTreeGetValue("/test");
         print "Wait for item-release: ";
-        for n in range(6): time.sleep(1);
+        time.sleep(6);
         
         tmp = self.core.SymbolTreeGetValue("/test");
         self.failUnless( isinstance(tmp, bool) );

@@ -16,11 +16,13 @@ I18N/de/PPLT.mo
 I18N/de/PPLT.po
 Modules/ftp/CoreModules/5462X.zip
 Modules/ftp/CoreModules/A200.zip
+Modules/ftp/CoreModules/Echo.zip
 Modules/ftp/CoreModules/GSM.zip
 Modules/ftp/CoreModules/HexDump.zip
 Modules/ftp/CoreModules/JVisu.zip
 Modules/ftp/CoreModules/MEWCOM-CL.zip
 Modules/ftp/CoreModules/MEWCOM-TL.zip
+Modules/ftp/CoreModules/Null.zip
 Modules/ftp/CoreModules/PPI.zip
 Modules/ftp/CoreModules/PPLTWeb.zip
 Modules/ftp/CoreModules/Random.zip

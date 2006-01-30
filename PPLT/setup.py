@@ -80,9 +80,9 @@ setup(name = "PPLT",
                     ('PPLT/PPLTMods', PPLTMods),
                     ('PPLT/CoreMods/Master/Interface', CoreInterface),
                     ('PPLT/CoreMods/Master/Transport', CoreTransport),
-                    ('PPLT/CodeMods/Master/Device',    CoreDevice),
+                    ('PPLT/CoreMods/Master/Device',    CoreDevice),
                     ('PPLT/CoreMods/Master/Debug',     CoreDebug),
-                    ('PPLT/CodeMods/Export',           CoreExport)],
+                    ('PPLT/CoreMods/Export',           CoreExport)],
 
       long_description="""
 PPLT is a framework for master-slave based communication.

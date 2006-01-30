@@ -4,45 +4,18 @@ import logging;
 
 
 def WCS(Connection, Address, Data):
-    Logger = logging.getLogger('pyDCPU');
-
-    if not isinstance(Address, NAISAddress.NAIS_Address):
-        return(None);
-
     Segment = Address.GetSegment();
-    if Segment > 9999:
-        return(None);
+    if Segment > 9999: raise pyDCPU.ModuleError("Mad segment %i > 9999!"%Segment);
 
     Offset = Address.GetOffset();
-    if Offset > 15:
-        return(None);
+    if Offset > 15: pyDCPU.ModuleError("Mad offset %i > 15"%Offset);
 
-    AreaCode = NAISAddress.AreaCode.get(Address.GetArea());
-    if not AreaCode:
-        return(None);
-
-    if MEWBoolUnpack(Data):
-        Value = 1;
-    else:
-        Value = 0;
-        
+    AreaCode = NAISAddress.AreaCode[Address.GetArea()];
     
-    CMD = "WCS%s%03i%X%X"%(AreaCode,Segment,Offset,Value);
+    CMD = "WCS%s%03i%X%X"%(AreaCode,Segment,Offset,int(Data));
     
-    try:
-        Connection.write(CMD);
-    except:
-        Logger.error("Error while send command");
-        raise pyDCPU.ModIOError;
+    Connection.write(CMD);
 
-    try:
-        buff = Connection.read(100);
-    except:
-        Logger.error("Error while read: maybe a bad Marker-Address???");
-        raise pyDCPU.ModIOError;
-
-    if buff == 'WC':
-        return(1);
-
-    Logger.error("SPS returned ERROR");
-    return(None);
+    buff = Connection.read_seq();
+    if buff == 'WC': return(1);
+    raise pyDCPU.ModuleError("SPS returned ERROR");

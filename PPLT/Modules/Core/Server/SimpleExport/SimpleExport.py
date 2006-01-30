@@ -1,42 +1,35 @@
 import pyDCPU;
 import SimpleXMLRPCServer;
 import logging;
-
+import socket;
 
 class Object(pyDCPU.ExportObject):
     def setup(self):
-        if self.Parameters.get('Address'):
-            self.__BindAddress = self.Parameters['Address'];
-        else:
-            self.__BindAddress = '127.0.0.1';
+        if self.Parameters.get('Address'): self.__BindAddress = self.Parameters['Address'];
+        else: self.__BindAddress = '127.0.0.1';
         self.Logger.debug("Will bind to addr %s"%self.__BindAddress);
 
-        try:
-            self.__Port = int(self.Parameters['Port']);
-        except:
-            self.__Port = 8080;
+        if self.Parameters.has_key("Port"): self.__Port = int(self.Parameters['Port']);
+        else: self.__Port = 8080;
         self.Logger.debug("Will bind to port %i"%self.__Port);
         
         self.__ExporterInstance = SimpleExport(self.SymbolTree);
 
-        try:
-            self.__Server = SimpleXMLRPCServer.SimpleXMLRPCServer((self.__BindAddress,
-                                                                   self.__Port));
-        except:
-            self.Logger.error("Error while setup Server");
-            return(False);
+        try: self.__Server = SimpleXMLRPCServer.SimpleXMLRPCServer((self.__BindAddress, self.__Port), logRequests=0);
+        except Exception,e: raise pyDCPU.ModuleSetup("Unable to setup SimpleExport: %s"%str(e));
 
         self.__Server.register_introspection_functions();
         self.__Server.register_instance(self.__ExporterInstance);
         self.__Loop = True;
-        return(True);
 
     def start(self):
-        while self.__Loop:
-            self.__Server.handle_request();
+        while self.__Loop: self.__Server.handle_request();
 
     def stop(self):
         self.__Loop = False;
+        tmpSock = socket.socket(socket.AF_INET, socket.SOCK_STREAM);
+        try: tmpSock.connect( (Addr, Port) );
+        except: pass;
         return(True);
 
 

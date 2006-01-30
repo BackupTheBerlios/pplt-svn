@@ -5,50 +5,21 @@ import MEWConvert;
 
 
 def WD(Connection, Address, Data):
-    Logger = logging.getLogger('pyDCPU');
-
-    if not isinstance(Address, NAISAddress.NAIS_Address):
-        return(None);
-
     Segment = Address.GetSegment();
-    if Segment > 99999:
-        Logger.error("Segment to big");
-        return(None);
+    if Segment > 99999: raise pyDCPU.ModuleError("Mad segment %i > 9999!"%Segment);
 
-    AreaCode = NAISAddress.AreaCode.get(Address.GetArea());
-    if not AreaCode:
-        Logger.error("Unknown AreaCode");
-        return(None);
+    AreaCode = NAISAddress.AreaCode[Address.GetArea()];
 
-    if Address.GetSize()==NAISAddress.NAIS_WORD:
-        Count = 0;
-    elif Address.GetSize() == NAISAddress.NAIS_DWORD:
-        Count = 1;
-    else:
-        Logger.error("Bad Format of Data");
-        return(None);
-    Value = MEWConvert.UIntUnpack(Data);
-    txtValue = MEWConvert.HexPack(Value, Address.GetSize());
-    if not txtValue:
-        Logger.error("Data in wrong format");
-        return(None);
+    if Address.GetSize()==NAISAddress.NAIS_WORD: Count = 0;
+    elif Address.GetSize() == NAISAddress.NAIS_DWORD: Count = 1;
+    else: raise pyDCPU.ModuleError("Bad format of data!");
+    
+    txtValue = MEWConvert.HexPack(Data, Address.GetSize());
     
     CMD = "WD%s%05i%05i%s"%(AreaCode,Segment,Segment+Count,txtValue);
     
-    try:
-        Connection.write(CMD);
-    except:
-        Logger.error("Error while send command");
-        raise pyDCPU.ModIOError;
+    Connection.write(CMD);
 
-    try:
-        buff = Connection.read(100);
-    except:
-        Logger.error("Error while read: maybe a bad Marker-Address???");
-        raise pyDCPU.ModIOError;
-
-    if buff == 'WD':
-        return(1);
-
-    Logger.error("SPS returned ERROR");
-    return(None);
+    buff = Connection.read_seq();
+    if buff == 'WD': return(1);
+    raise pyDCPU.ModuleError("SPS returned ERROR");

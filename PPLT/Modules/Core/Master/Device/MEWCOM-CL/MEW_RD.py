@@ -4,38 +4,18 @@ import NAISAddress;
 import logging;
 
 def RD(Connection, Address):
-    Logger = logging.getLogger('pyDCPU');
-
-    if not isinstance(Address, NAISAddress.NAIS_Address):
-        return(None);
-
     Segment = Address.GetSegment();
-    if Segment > 9999:
-        return(None);
+    if Segment > 9999: raise pyDCPU.ModuleError("Segmen %i to big (>9999)!"%Segment);
 
-    AreaCode = NAISAddress.AreaCode.get(Address.GetArea());
-    if not AreaCode:
-        return(None);
+    AreaCode = NAISAddress.AreaCode[Address.GetArea()];
 
-    if Address.GetSize()==NAISAddress.NAIS_WORD:
-        Count = 0;  # start and stop address are the same
-    elif Address.GetSize() == NAISAddress.NAIS_DWORD:
-        Count = 1;
-    else:
-        return(None);
+    if Address.GetSize()==NAISAddress.NAIS_WORD: Count = 0;  # start and stop address are the same
+    elif Address.GetSize() == NAISAddress.NAIS_DWORD: Count = 1;
+    else: raise pyDCPU.ModuleError("Mad word count (size) %i!"%Address.GetSize());
     
     CMD = "RD%s%05i%05i"%(AreaCode,Segment,Segment+Count);
     
-    try:
-        Connection.write(CMD);
-    except:
-        Logger.error("Error while send command");
-        raise pyDCPU.ModIOError;
-
-    try:
-        buff = Connection.read(100);
-    except:
-        Logger.error("Error while read: maybe a bad Marker-Address???");
-        raise pyDCPU.ModIOErrZr;
-    Value = MEWConvert.HexUnpack(buff[2:]);
-    return(MEWConvert.UIntPack(Value));
+    Connection.write(CMD);
+        
+    buff = Connection.read_seq();
+    return MEWConvert.HexUnpack(buff[2:]);

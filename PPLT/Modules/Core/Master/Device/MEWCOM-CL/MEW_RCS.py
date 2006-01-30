@@ -5,36 +5,18 @@ import MEWConvert;
 
 
 def RCS(Connection, Address):
-    Logger = logging.getLogger('pyDCPU');
-
-    if not isinstance(Address, NAISAddress.NAIS_Address):
-        return(None);
-
     Segment = Address.GetSegment();
-    if Segment > 9999:
-        return(None);
+    if Segment > 9999: raise pyDCPU.ModuleError("Segment %i to big (>9999)!"%Segment);
 
     Offset = Address.GetOffset();
-    if Offset > 15:
-        return(None);
+    if Offset > 15: raise pyDCPU.ModuleError("Offset %i to big (>15)!"%Offset);
 
-    AreaCode = NAISAddress.AreaCode.get(Address.GetArea());
-    if not AreaCode:
-        return(None);
+    AreaCode = NAISAddress.AreaCode[Address.GetArea()];
 
     CMD = "RCS%s%03i%X"%(AreaCode,Segment,Offset,);
     
-    try:
-        Connection.write(CMD);
-    except:
-        Logger.error("Error while send command");
-        raise pyDCPU.IOModError;
+    Connection.write(CMD);
 
-    try:
-        buff = Connection.read(100);
-    except:
-        Logger.error("Error while read: maybe a bad Marker-Address???");
-        raise pyDCPU.IOModError;
+    buff = Connection.read_seq();
         
-    Value = MEWConvert.HexUnpack(buff[2]);
-    return(MEWConvert.BoolPack(Value));
+    return MEWConvert.HexUnpack(buff[2]);
