@@ -1,0 +1,7 @@
+- Jedes Modul besitzt zwei Queries für Events, die es abarbeiten muss. Ein 
+  Query für Ereignisse, die vom Elternmodul stammen und ein Query für 
+  Ereignisse, die vom Kindmodul stammen.
+
+- Jedes Event hat eine Erzeugungszeit und einen TTL (Time To Life).
+- Jedes Event hat ein Datenfeld.
+- Ein Event kann eine Aktion oder eine Arwartungshaltung ausdrücken!

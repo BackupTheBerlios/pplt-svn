@@ -1,0 +1,10 @@
+# Eventdirection
+EVENT_TYPE_UP = 1;
+EVENT_TYPE_DOWN = 2;
+
+#Event priorities:
+EVENT_PRI_HIGEST = 10;
+EVENT_PRI_HIGHT  = 5;
+EVENT_PRI_NORMAL = 0;
+EVENT_PRI_LOW    = -5;
+EVENT_PRI_LOWEST = -10;
