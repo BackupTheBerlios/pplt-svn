@@ -1,21 +1,26 @@
 <div class="TextBody">
 	<div class="Head">News 2005</div>
     <div class="NewsItem">
-	<b>2005-08-20 - Bugfix Release of PPLT Version 0.3.1</b><br>
-	I've done a lot of testing and debugging. Also i've wrote
+    <b>2006-02-04 - Website update and bug-tracking</b><br>
+    There were now an open <a href="/bugs/" target="_blank">bug-tracking</a>
+    system and two <a href="/en/Contact.html">mailing-lists</a>.  You can 
+    simply report bugs and feature-requests by the bug-track without register 
+    your self using the predefined <i>guest-account</i>.<br><br>
+	<b>2005-08-20 - Bug-fix Release of PPLT Version 0.3.1</b><br>
+	I've done a lot of testing and debugging. Also I've wrote
 	a post-install script for the windows-installer, that creates
 	a folder in the start menu.<br>
 	<u>Please update!</u><br><br> 
 	<b>2005-08-20 - Release of PPLT Version 0.3.0</b><br>
 	I've done a lot of debugging and (sometimes) rewriting
-	wide parts of the PPLT library. Will stop now developping
-	to focus on debugging to reach the stabil state.
+	wide parts of the PPLT library. Will stop now developing
+	to focus on debugging to reach the stable state.
 	<u>Note:</u> Please also update the Modules!<br><br>
 	<b>2005-06-03 - Release of PPLT Version 0.2.2</b><br>
 	I've added some features to the library and the PPLTC application.
 	You can now save a session and load it later. Also I've fixed
-	some bugs and the german translation of PPLTC.<br><br>
-	<b>2005-05-28 - Bugfix Release for PPLT (Version 0.2.1)</b><br>
+	some bugs and the German translation of PPLTC.<br><br>
+	<b>2005-05-28 - Bug fix Release for PPLT (Version 0.2.1)</b><br>
 	I've fixed some annoying bugs in libraries and in the application.
 	I recommend you to <u>update</u>.<br><br>
 	<b>2005-05-27 - 2nd Alpharelease of PPLT(Version 0.2.0)</b><br>
@@ -37,6 +42,6 @@
             title="Link to released files.">released</a>
     a prealpha version of the PPLT library. The
     <span title="This core library is called pyDCPU">Core-Library</span> is
-    quite useable but the abstraction-layer is completely missing.
+    quite usable but the abstraction-layer is completely missing.
     </div>
 </div>	

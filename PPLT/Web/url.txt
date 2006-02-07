@@ -8,3 +8,7 @@
 * https://developer.berlios.de/feature/?func=addfeature&group_id=3237 [feature-request]
 * https://developer.berlios.de/forum/forum.php?forum_id=9875 [help-forum]
 * https://developer.berlios.de/forum/forum.php?forum_id=9876 [dev-forum]
+
+* svn checkout http://svn.berlios.de/srvroot/repos/pplt/PPLT [svn-repos]
+* svn checkout svn://svn.berlios.de/pplt/PPLT
+* http://svn.berlios.de/wsvn/pplt

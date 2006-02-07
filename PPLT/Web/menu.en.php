@@ -14,6 +14,7 @@
 				</ul></li>
 			<li><a href="/<?=$lang?>/Download.html">Download</a></li>
 			<li><a href="/<?=$lang?>/Contact.html">Contact</a></li>
+            <li id="last"><a href="/bugs/" target="_blank">Bugtrack</a></li>
 		</ul>
 	<?
 	}

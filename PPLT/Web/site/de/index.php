@@ -3,7 +3,14 @@
 		<a href="/de/NewsHistory.html" style="font-size:0.5em;">[Archiv]</a>
 	</div>
     <div class="NewsItem">
-	<b>2005-08-28 - Bugfixrelease 0.3.1</b><br>
+    <b>2006-01-04 - Aktualisierung der Website (Bugtrack)</b><br>
+    Ab jetzt stehen ein offenes 
+    <a href="bugs/" target="_blank">Fehlerverfolgungssystem</a> und zwei 
+    offene <a href="/de/Contact.html">Mailinglisten</a> zur Verf&uuml;gung. 
+    Sie k&ouml;nnen jetzt ohne Anmeldung Fehlerberichte oder W&uuml;nsche 
+    stellen. Nutzten sie einfach den vordefinierten 
+    <i>G&auml;ste-Account</i>.<br><br>
+    <b>2005-08-28 - Bugfixrelease 0.3.1</b><br>
 	Ich habe die Software weiter getestet und 
 	debuged. Des weiteren erzeugt der 
 	Windows-Installer jetzt ein Verzeichnis
@@ -12,7 +19,7 @@
 	<u>Bitte laden sie sich die neue Version
 	herunter!</u>.<br><br> 
 	<b>2005-08-20 - PPLT Version 0.3.0</b><br>
-	Ich habe weite Teile der PPLT bibliothek 
+	Ich habe weite Teile der PPLT Bibliothek 
 	debugged und auch streckenweise neu geschrieben.
 	Ich beende nun die Entwicklung um mich auf
 	das Entfernen von Fehlern zu konzentrieren.
@@ -20,8 +27,8 @@
 	die neuen Module herunter!<br><br>
 	<b>2005-06-03 - PPLT Version 0.2.2</b><br>
 	Ich habe einige nette Kleinigkeiten erweitert.
-	So k&ouml;nnen sie jetzt eine Sitztung im PPLTC speichern
-	und sp&auml;ter fortsetzen. Desweiteren habe ich einige
+	So k&ouml;nnen sie jetzt eine Sitzung im PPLTC speichern
+	und sp&auml;ter fortsetzen. Des weiteren habe ich einige
 	Fehler der Vorversion behoben, vor allem in der 
 	deutschen &Uuml;bersetzung. Ich w&uuml;rde ihnen also
 	raten diese zu nutzten.</br><br>
@@ -29,27 +36,27 @@
 
     
 	<div class="Head">Hilfe gesucht.</div>
-	<div class="Text">Ich such Leute, die mich bei meiner Arbeit 
+	<div class="Text">Ich suche Leute, die mich bei meiner Arbeit 
 	an der PPLT unterst&uuml;tzen. Das betrifft vor allem das Testen
 	und Debuggen der PPLT. Es w&auml;re nett, wenn sie die PPLT
-	auf iher Platform testen und mir alle Fehler, die auftreten 
+	auf iher Plattform testen und mir alle Fehler, die auftreten 
 	<a href="/de/Contact.html">melden</a>.
 	
 	<p>Ebenso k&ouml;nnen sie mir alle Probleme mitteilen, die sie
-	im Umgang mit der grafischen Oberl&auml;che haben, damit ich diese 
+	im Umgang mit der grafischen Oberfl&auml;che haben, damit ich diese 
 	verbessern kann.</p>
 	</div>
 	<div class="Head">Was ist PPLT</div>
     <div class="Text">
     PPLT ist ein quell-offenes Framework f&uuml;r die industrielle Kommunikation.
-    Es wurde in Python geschrieben und ist unter der GNU LGPL lizensiert.
+    Es wurde in Python geschrieben und ist unter der GNU LGPL lizenziert.
     Es ist als Python-Bibliothek gedacht, so dass sie es in ihren eigenen
     Applikationen nutzen k&ouml;nnen. Des Weiteren ist es modular aufgebaut,
     so dass die Anzahl der unterst&uuml;tzten Ger&auml;te von den verwendeten Modulen
     abh&auml;ngt.
     
     <p>Das Hauptziel ist es, Daten von unterschiedlichen Systemen, wie zum Beispiel
-    Industrie-Steuerungen, zu importieren, diese Daten dann in einem dateisystem
+    Industrie-Steuerungen, zu importieren, diese Daten dann in einem Dateisystem
     &auml;hnlichen <i>Symbol-Baum</i> zu verwalten und anderen Systemen, wie zum Beispiel
     Visualisierungen, zur Verf&uuml;gung zu stellen. Es kann so zum Beispiel f&uuml;r die
     Datenerfassung genutzt werden.</p>
@@ -93,8 +100,8 @@
         <li><b>Siemens S55</b> Mobiltelefon. Ich bin mir sicher, dass auch andere
         GSM konforme Telefone abgefragt werden k&ouml;nnen.</li>
     	
-		<li><b>Agilent 5462X</b> Ozilloskope. Sie k&ouml;nnen die Frequenz, 
-		Aplitude, u.s.w der anliegenden Signale messen.</li>
+		<li><b>Agilent 5462X</b> Oszilloskope. Sie k&ouml;nnen die Frequenz, 
+		Amplitude, u.s.w der anliegenden Signale messen.</li>
 	
 		<li><b>JVisu</b> ist eine in Java geschriebene (freie) Visualisierung. Mit dem
 		Servermodul k&ouml;nnen sie den Symbolbaum zu JVisu exportieren.</li>

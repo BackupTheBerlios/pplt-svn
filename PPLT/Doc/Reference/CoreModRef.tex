@@ -296,8 +296,25 @@ what's going on a \CoreMod{HexDump} module will be plugged between the
 % Agilent 5462x series oscilloscopes 
 %
 \CoreModDesc{Master.Device.5462X}
+This module implements the command messages to access an Agilent 
+oscilloscopes. This module only supports the message format used 
+by the serial interface of the oscilloscope. So you need to connect
+this module (indirect) to the \CoreMod{Master.Interface.UniSerial}
+core-module.
 
-
+\subsubsection{Parameters}
+This module need two parameters to be set up. These parameters specify the
+primary and secondary signal source. If you only want to use the primary
+source you should set the secondary to the same source like the primary.
+\begin{tableiii}{l|p{10}|l}{textrm}{Parameter}{Description}{Default}
+\lineiii{PSource}
+        {This specifies the primary source. This can be one of A0 (analog \#1),
+         A1 (analog \#2), M (math) or F (form).}{---}
+\lineiii{SSource}
+        {This specifies the secondaray source. Look at \var{PSource} for more
+         details}{---}
+\end{tableiii}         
+\bf{To be continued}\bf{To be continued}
 
 %
 % Panasonic A200 Imagechecker
@@ -346,12 +363,16 @@ address called \code{"STATUS"} that controls the state of the PLC
 \end{tableiii}
 
 \subsubsection{Example}
-There are two example to show how to access a FPx PLC. The first shows how to 
-setup if you want to use the \emph{ToolPort} (serial interface) and the second
-shows how to setup if you want to access the PLC by the tunneled 
-\emph{ToolPort} of a FP-WEB server.
+\begin{figure}[ht]
+    \label{fig:coremod11}
+    \centering
+    \includegraphics{coremod11.png}
+    \caption{This figure shows the module-map of the MEWCOM-CL example.}
+\end{figure}    
+This example shows how to access a FPx using the \emph{ToolPort} (serial interface).
 
 \lstinputlisting{coremod11.py}
+
 
 
 %

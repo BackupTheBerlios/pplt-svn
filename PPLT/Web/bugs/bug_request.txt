@@ -1,0 +1,32 @@
+Serious:
+    By default everyone can read the files in /xml.
+    
+    By default is is easy to access the users.xml by requesting
+    http://www.example-host.com/codetrack/xml/users.xml. 
+
+    I don't know if it is a serious security problem but it isn't 
+    nice.
+
+    A simple work-around for the Apache web-server could be to 
+    add a .htaccess file to this and optional to the backup/ 
+    directory. The .htaccess file should contain:
+----
+Order Deny,Allow
+Deny from all
+----
+
+
+Feature:
+    Anonymous account?
+
+    Would it be possible to create a anonymous (Guest) account
+    so that someone can post new issues without getting his own 
+    account?
+
+
+Feature:
+    Translation to other languages?
+
+    Would it be possible to translate codetrack to other languages?
+    (May be with gettext()?)
+    I would do the German translation if you want to do.

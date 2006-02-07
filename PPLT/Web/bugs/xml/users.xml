@@ -1,0 +1,40 @@
+<?xml version="1.0" ?>
+<!--  Users database for CodeTrack.  Edit at your own risk.    -->
+<!--  Meaning: re-check for XML well-formedness and validity!  -->
+<!DOCTYPE users SYSTEM "users.dtd">
+<users>
+	<user>
+		<ID>0000</ID>
+		<First_Name>System</First_Name>
+		<Last_Name>Admin</Last_Name>
+		<Full_Name>System Admin</Full_Name>
+		<Initials>SA</Initials>
+		<Username>admin</Username>
+		<Email>hmatuschek@gmx.net</Email>
+		<Phone></Phone>
+		<Role>Admin</Role>
+		<Password>FDv7lsGxKNdOI</Password>
+	</user>
+	<user>
+		<ID>0001</ID>
+		<First_Name>Hannes</First_Name>
+		<Last_Name>Matuschek</Last_Name>
+		<Full_Name>Hannes Matuschek</Full_Name>
+		<Initials>HM</Initials>
+		<Username>hmatuschek</Username>
+		<Email>hmatuschek@gmx.net</Email>
+		<Role>Developer</Role>
+		<Password>2iDTr2xfUyHoM</Password>
+	</user>
+	<user>
+		<ID>0003</ID>
+		<First_Name>Gerhard</First_Name>
+		<Last_Name>Guest</Last_Name>
+		<Full_Name>Gerhard Guest</Full_Name>
+		<Initials>GG</Initials>
+		<Username>guest</Username>
+		<Email>hmatuschek@gmx.net</Email>
+		<Role>Guest</Role>
+		<Password>hGS5d39BhR8ak</Password>
+	</user>
+</users>

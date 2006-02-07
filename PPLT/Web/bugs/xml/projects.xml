@@ -1,0 +1,20 @@
+<?xml version="1.0" ?>
+<!--	Project Database for CodeTrack.  Edit at your own risk (read: re-check for well-formedness!) -->
+<projects>
+	<project>
+		<ID>01</ID>
+		<Title>PPLT</Title>
+		<Test_Lead>Hannes</Test_Lead>
+		<Description>Potsdamer Prozess LeitTechnik</Description>
+		<Project_Type>Data Analysis</Project_Type>
+		<Preferred_Title>Developer</Preferred_Title>
+	</project>
+	<project>
+		<ID>02</ID>
+		<Title>PPLT2</Title>
+		<Test_Lead>Hannes</Test_Lead>
+		<Description>The second (event driven) version of the PPLT</Description>
+		<Project_Type>Data Analysis</Project_Type>
+		<Preferred_Title>Developer</Preferred_Title>
+	</project>
+</projects>

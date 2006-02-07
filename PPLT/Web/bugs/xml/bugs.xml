@@ -1,0 +1,44 @@
+<?xml version="1.0" ?>
+<!--  Bugs database for CodeTrack.  Edit at your own risk.     -->
+<!--  Meaning: re-check for XML well-formedness and validity!  -->
+<!DOCTYPE bugs SYSTEM "bugs.dtd">
+<bugs>
+	<bug>
+		<ID>0001</ID>
+		<Submit_Time>3-Feb-2006 9:26 PM</Submit_Time>
+		<Project>PPLT</Project>
+		<Severity>Fatal</Severity>
+		<Summary>test issue</Summary>
+		<Description>***test***</Description>
+		<Submitted_By>Gerhard Guest</Submitted_By>
+		<Status>Open</Status>
+		<Last_Updated>3-Feb-2006 9:26 PM</Last_Updated>
+	</bug>
+	<bug>
+		<ID>0001</ID>
+		<Submit_Time>3-Feb-2006 9:26 PM</Submit_Time>
+		<Project>PPLT</Project>
+		<Severity>Fatal</Severity>
+		<Summary>test issue</Summary>
+		<Description>***test***</Description>
+		<Delete_Bug>Y</Delete_Bug>
+		<Submitted_By>Gerhard Guest</Submitted_By>
+		<Status>Open</Status>
+		<Last_Updated>3-Feb-2006 9:34 PM</Last_Updated>
+		<Updated_By>Hannes Matuschek</Updated_By>
+	</bug>
+	<bug>
+		<ID>0002</ID>
+		<Submit_Time>3-Feb-2006 11:13 PM</Submit_Time>
+		<Project>PPLT</Project>
+		<Module>PPLT Center</Module>
+		<Version>0.3.1</Version>
+		<Severity>Cosmetic</Severity>
+		<Summary>Items are hidden after symbol-tree rebuild</Summary>
+		<Description>Visible items of the symbol-tree are hidden after the tree was rebuild. (i.e. after moveing a folder)</Description>
+		<Submitted_By>Gerhard Guest</Submitted_By>
+		<Status>Open</Status>
+		<Assign_To>Hannes Matuschek</Assign_To>
+		<Last_Updated>3-Feb-2006 11:13 PM</Last_Updated>
+	</bug>
+</bugs>

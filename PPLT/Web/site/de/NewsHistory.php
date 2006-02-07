@@ -1,6 +1,13 @@
 <div class="TextBody">
 	<div class="Head">News 2005</div>
     <div class="NewsItem">
+    <b>2006-01-04 - Aktualisierung der Website (Bugtrack)</b><br>
+    Ab jetzt stehen ein offenes 
+    <a href="bugs/" target="_blank">Fehlerverfolgungssystem</a> und zwei 
+    offene <a href="/de/Contact.html">Mailinglisten</a> zur Verf&uuml;gung. 
+    Sie k&ouml;nnen jetzt ohne Anmeldung Fehlerberichte oder W&uuml;nsche 
+    stellen. Nutzten sie einfach den vordefinierten 
+    <i>G&auml;ste-Account</i>.<br><br>
 	<b>2005-08-28 - Bugfixrelease 0.3.1</b><br>
 	Ich habe die Software weiter getestet und 
 	debuged. Des weiteren erzeugt der 
@@ -10,7 +17,7 @@
 	<u>Bitte laden sie sich die neue Version
 	herunter!</u>.<br><br> 
 	<b>2005-08-20 - PPLT Version 0.3.0</b><br>
-	Ich habe weite Teile der PPLT bibliothek 
+	Ich habe weite Teile der PPLT Bibliothek 
 	debuged und auch streckenweise neu geschrieben.
 	Ich beende nun die Entwicklung um mich auf
 	das Entfernen von Fehlern zu konzentrieren.
@@ -18,17 +25,17 @@
 	die neuen Module herunter!<br><br>
 	<b>2005-06-03 - PPLT Version 0.2.2</b><br>
 	Ich habe einige nette Kleinigkeiten erweitert.
-	So k&ouml;nnen sie jetzt eine Sitztung im PPLTC speichern
-	und sp&auml;ter fortsetzen. Desweiteren habe ich einige
+	So k&ouml;nnen sie jetzt eine Sitzung im PPLTC speichern
+	und sp&auml;ter fortsetzen. Des weiteren habe ich einige
 	Fehler der Vorversion behoben, vor allem in der 
 	deutschen &Uuml;bersetzung. Ich w&uuml;rde ihnen also
 	raten diese zu nutzten.</br><br>
 	<b>2005-05-28 - BugfixRelease (Version 0.2.1)</b><br>
 	Ich habe einige unangenehme Fehler in der Bibliothek
 	sowie in der Applikation entfernt. Ich empfehle ihnen
-	auf diese Version zu aktualisieren. Des weitren habe
+	auf diese Version zu aktualisieren. Des weiteren habe
 	ich den <i>gettext</i> Support in das PPLT Center
-	eingepflegt.<br><br>
+	ein gepflegt.<br><br>
     <b>2005-05-27 - Zweite Alpha Release (0.2.0)</b><br>
 	Ich habe eine die zweite alpha Version der PPLT freigegeben. Die
 	gr&ouml;ste Neuerung ist die grafische Applikation <i>PPLT Center</i>,
