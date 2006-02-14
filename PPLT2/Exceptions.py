@@ -18,5 +18,32 @@
 # Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA   #
 # ########################################################################### #
 
-from Enums import *;
 
+class Error (Exception):
+    """ This is the general base-exception for the PPLT2 project.
+ all PPLT-code and modules will raised (should raise) this or a
+ exception derived from this. """
+
+
+
+class InternalError (Error):
+    """ This is the base-exception for all internal errors.
+ If this exception or one derived from this will indicated an serious
+ internal error. Mostly an indicatior for mad code!"""
+
+
+
+class ModuleError (Error):
+    """ This is the base-exception for all module related errors."""
+
+
+
+class ItemNotFound (Error):
+    """ This exception will be raised if an item (symbol, module, ...) can't 
+ be found."""
+
+
+
+class ItemBusy (Error):
+    """ This exception will be raised if an item (module) is busy. Also it 
+    will be used for a time-out-error."""
