@@ -1,6 +1,9 @@
 # -*- encoding: utf-8 -*-
 import binascii;
 
+#
+# GSM encoding table!
+#
 GSM_ENCODING = {u'@':0x00, u'£':0x01, u'$':0x02, u'¥':0x03, u'è':0x04, u'é':0x05, u'ù':0x06, u'ì':0x07,
                 u'ò':0x08, u'Ç':0x09, "\n":0x0A, u'Ø':0x0B, u'ø':0x0C, "\r":0x0D, u'Å':0x0E, u'å':0x0F,
                 u'Δ':0x10, u'_':0x11, u'Φ':0x12, u'Γ':0x13, u'Λ':0x14, u'Π':0x15, u'Ψ':0x16, u'Σ':0x17,
@@ -26,24 +29,19 @@ def String2GSMList(str):
     for char in str:
         # map char to GSM-Code or to 0x20(' ') if not known
         code = GSM_ENCODING.get(char,0x20);
-        if code <= 127:
-            Liste.append(code);
+        if code <= 127: Liste.append(code);
         else:
             Liste.append( (code&0xff00)>>8);
             Liste.append( (code&0x00ff));
     return(Liste);
 
 def IsInternational(Number):
-    if len(Number)<2:
-        return(False);
-    if Number[0] == '+':
-        return(True);
-    else:
-        return(False);
+    if len(Number)<2: return(False);
+    if Number[0] == '+': return(True);
+    else: return(False);
 
 def EncodeNumber(Number):
-    if not Number or Number=='':
-        return(None);
+    if not Number or Number=='': return(None);
 
     inter = IsInternational(Number);
 
@@ -57,13 +55,11 @@ def EncodeNumber(Number):
 
     nibble = 0;
     byte = 0x00;
-    len = 0;
+    length = 0;
     for digit in Number[pos:]:
-        len +=1;
-        if nibble:
-            byte |= (int(digit)&0x0F)<<4;
-        else:
-            byte |= (int(digit)&0x0F);
+        length +=1;
+        if nibble: byte |= (int(digit)&0x0F)<<4;
+        else: byte |= (int(digit)&0x0F);
         nibble = (nibble+1)%2;
         if nibble == 0:
             BCD.append(byte);
@@ -73,9 +69,8 @@ def EncodeNumber(Number):
         byte |= 0xF0;
         BCD.append(byte);
 
-    if len > 255:
-        return(None);
-    BCD.insert(0,len);
+    if length > 255: raise Exception("Encoding of number \"%s\" to long (>255)"%str(BCD));
+    BCD.insert(0,length);
     return(BCD);
 
 
@@ -85,8 +80,7 @@ def GSMPack(MSG):
     byte  = 0x00;
     buff  = [];
     for item in List:
-        if shift == 0:
-            byte = (int(item)&0x7F);
+        if shift == 0: byte = (int(item)&0x7F);
         elif shift == 1:
             byte |= (int(item)&0x01)<<7
             buff.append(byte);
@@ -116,11 +110,9 @@ def GSMPack(MSG):
             buff.append(byte);
         shift = (shift+1)%8;
 
-    if shift:
-        buff.append(byte);
+    if shift: buff.append(byte);
 
-    if len(List)>255:
-        return(None);
+    if len(List)>255: raise Exception("Message (\"%s\") to long to pack!"%str(List));
     buff.insert(0,len(List));
     return(buff);
 
@@ -148,19 +140,16 @@ class PDUSMS:
         sms += chr(self.__SMSCLen);
         sms += chr(self.__MsgFlag);
         sms += chr(self.__MsgRefNum);
-        for char in self.__DestBCD:
-            sms += chr(char);
+        for char in self.__DestBCD: sms += chr(char);
         sms += chr(self.__ProtoID);
         sms += chr(self.__DCodeScheme);
         sms += chr(self.__UKB);
-        for char in self.__MsgData:
-            sms += chr(char);
+        for char in self.__MsgData: sms += chr(char);
         return(sms);
 
     def SMSToHex(self):
         data = self.SMSToData();
         hexdata = '';
-        for char in data:
-            hexdata += "%02X"%ord(char);
+        for char in data: hexdata += "%02X"%ord(char);
         return(hexdata);
     

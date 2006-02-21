@@ -41,9 +41,7 @@ class Server:
         self.__Parameters = Parameters;
         self.__Root = Root;
         self.__Context = Setup.Context(Parameters, CoreObject, DefaultUser, Root);
-        if not Setup.Setup(self.__Context, FileName):
-            self.__Logger.error("Unable to load server %s."%ServerName);
-            raise Exception("Unable to load server %s."%ServerName);
+        Setup.Setup(self.__Context, FileName);
 
     
     def destroy(self):

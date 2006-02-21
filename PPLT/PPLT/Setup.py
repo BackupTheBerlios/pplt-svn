@@ -30,21 +30,15 @@
 
 import xml.dom.minidom;
 import logging;
-
+import pyDCPU;
 
 
 def Setup(CTX, FileName):
-    logger = logging.getLogger("PPLT");
-    try: doc = xml.dom.minidom.parse(FileName);
-    except Exception, e: 
-        logger.error("Error while parse \"%s\": %s"%(FileName, str(e)));
-        return False;
+    doc = xml.dom.minidom.parse(FileName);
     try: DocWalker(doc.documentElement, CTX, None);
     except Exception, e:
-        logger.error("Unable to setup %s: %s"%(FileName, str(e)));
         CTX.Unload();
-        return(False);
-    return(True);
+        raise pyDCPU.Error("Can't setup device: %s"%str(e));
 
 
 class Context:
@@ -64,27 +58,23 @@ class Context:
 
 
 
-    def GetValue(self, Of):
-        return(self.__Vars.get(Of));
+    def GetValue(self, Of): return(self.__Vars.get(Of));
+    def SetValue(self, Of, Value):
+        if not self.__Vars.has_key(Of): self.__Vars[Of]=Value;
 
-    def SetSwitch(self, VarName):
-        self.__SwitchFor = VarName;
+    def SetSwitch(self, VarName): self.__SwitchFor = VarName;
 
-    def GetSwitch(self):
-        return(self.__Vars.get(self.__SwitchFor));
+    def GetSwitch(self): return(self.__Vars.get(self.__SwitchFor));
 
     def Load(self, Name, Paras, Parent = None, Addr=None, NameSpace=None):
         self.__Logger.info("Load %s with %s"%(str(Name),str(Paras)));
 
         if self.__IsServer:
             # LOAD A SERVER
-            ID = self.__Core.ExporterAdd(   Name,
-                                            Paras,
-                                            self.__DefaultUser,
-                                            self.__SrvRoot);
-            if not ID:
-                self.__Logger.error("Error while load a core module: Abort");
-                return(None);
+            ID = self.__Core.ExporterAdd(Name,
+                                         Paras,
+                                         self.__DefaultUser,
+                                         self.__SrvRoot);
             self.__CoreModules.AddChild( CoreMods(ID,self.__Core,True) );
         else:
             #LOAD A DEVICE:
@@ -92,22 +82,19 @@ class Context:
                                             Name,
                                             Addr,
                                             Paras);
-            if not ID:
-                self.__Logger.error("Error while load a core module: Abort");
-                return(None);
-            if Parent:
-                ParMod = self.__CoreModules.Find(Parent);
-            else:
-                ParMod = self.__CoreModules;
+            if Parent: ParMod = self.__CoreModules.Find(Parent);
+            else: ParMod = self.__CoreModules;
             ParMod.AddChild( CoreMods(ID, self.__Core, False) );
-            self.__Logger.debug("Add Namespace %s for %s"%(NameSpace,Name));
-            self.__NameSpaceMap.update( {NameSpace:ID} );
+            if NameSpace:
+                self.__Logger.debug("Add Namespace %s for %s"%(NameSpace,Name));
+                self.__NameSpaceMap.update( {NameSpace:ID} );
         return(ID);
 
-    def Unload(self):
-        return(self.__CoreModules.Destroy());
+    def Unload(self): return(self.__CoreModules.Destroy());
 
     def GetObjByNameSpace(self, NS):
+        if not self.__NameSpaceMap.has_key(NS):
+            raise pyDCPU.ItemNotFound("Unkown namespace \"%s\"!"%NS);
         return(self.__NameSpaceMap.get(NS));
 
     def SetServer(self):
@@ -135,36 +122,29 @@ class CoreMods:
         self.__IsServer = IsServer;
 
     def HasChildren(self):
-        if len(self.__Children)>0:
-            return(True);
+        if len(self.__Children)>0: return(True);
         return(False);
 
-    def AddChild(self, Child):
-        self.__Children.append(Child);
+    def AddChild(self, Child): self.__Children.append(Child);
 
     def Destroy(self):
         for child in self.__Children:
-            if not child.Destroy():
-                return(False);
+            child.Destroy();
             self.__Children.remove(child);
         if self.__ID:
-            if self.__IsServer:
-                return(self.__Core.ExporterDel(self.__ID));
-            return(self.__Core.MasterTreeDel(self.__ID));
+            if self.__IsServer: self.__Core.ExporterDel(self.__ID);
+            else: self.__Core.MasterTreeDel(self.__ID);
         return(True);
 
-    def GetID(self):
-        return(self.__ID);
+    def GetID(self): return(self.__ID);
                 
     def Find(self, ID):
-        if self.__ID == ID:
-            return(self);
+        if self.__ID == ID: return(self);
 
         for child in self.__Children:
             mod = child.Find(ID);
-            if mod:
-                return(mod);
-        return(None);
+            if mod: return(mod);
+        raise pyDCPU.ItemNotFound("No coremod found with id %s"%ID);
 
 
 
@@ -179,8 +159,7 @@ class CoreMods:
 
 
 def DocWalker(Node, CTX, ParentID=None):
-    if not Node:
-        return(None);
+    if not Node: return;
 
     if Node.nodeType == Node.ELEMENT_NODE:
         if Node.localName == "PPLTDevice":
@@ -189,6 +168,12 @@ def DocWalker(Node, CTX, ParentID=None):
         elif Node.localName == "PPLTServer":
             CTX.SetServer();
             DocWalker(Node.firstChild, CTX);
+
+        elif Node.localName == "Head":
+            DocWalker(Node.firstChild, CTX);
+            
+        elif Node.localName == "Require":
+            RequireWalker(Node.firstChild, CTX);
 
         elif Node.localName == "Setup":
             DocWalker(Node.firstChild, CTX);
@@ -202,15 +187,10 @@ def DocWalker(Node, CTX, ParentID=None):
             name  = str(Node.getAttribute("name"));
             (paras,addr) = ParameterWalker(Node.firstChild, CTX, {}, None);
 
-            if Node.hasAttribute("namespace"):
-                NS = str(Node.getAttribute("namespace"));
-            else:
-                NS = None;
+            if Node.hasAttribute("namespace"): NS = str(Node.getAttribute("namespace"));
+            else: NS = None;
             myID = CTX.Load(name, paras, Parent=ParentID, Addr=addr, NameSpace=NS); #if load success:
-            if myID:
-                DocWalker(Node.firstChild, CTX, myID);
-            else:   #error while loading
-                raise Exception("Error while load \"%s\""%name);
+            DocWalker(Node.firstChild, CTX, myID);
 
         elif Node.localName == "DebugInfo":
             print "DEBUG: %s"%str(TextWalker(Node.firstChild,None));
@@ -225,19 +205,28 @@ def DocWalker(Node, CTX, ParentID=None):
     return(DocWalker(Node.nextSibling, CTX, ParentID));
 
 
+
+def RequireWalker(Node, CTX):
+    if Node==None: return;
+    if Node.nodeType == Node.ELEMENT_NODE:
+        if Node.localName == 'Variable':
+            name = str(Node.getAttribute('name'));
+            if Node.hasAttribute('default'):
+                CTX.SetValue(name, str(Node.getAttribute('default')));
+    return RequireWalker(Node.nextSibling, CTX);
+
+
 def TextWalker(Node, CTX, txt=""):
-    if not Node:
-        return(txt);
+    if not Node: return(txt);
 
     if Node.nodeType == Node.TEXT_NODE:
         txt += str(Node.data);
 
     elif Node.nodeType == Node.ELEMENT_NODE:
         if Node.localName == "Variable":
-            txt += VarWalker(Node, CTX);
-        else:
-            print "ignore tag: %s"%Node.localName;
-
+            tmp = VarWalker(Node, CTX);
+            if tmp: txt+=tmp;
+        else: print "ignore tag: %s"%Node.localName;
     return(TextWalker(Node.nextSibling, CTX, txt));
 
 

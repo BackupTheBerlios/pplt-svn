@@ -18,11 +18,11 @@ class TestDCPUMasterTree(unittest.TestCase):
         self.failUnless(isinstance(ID1, (str, unicode) ), "Wrong type of return code");
         
         # try to load a not existing module and check type of raised exception:
-        self.failUnlessRaises(pyDCPU.Exceptions.ItemNotFound, self.core.MasterTreeAdd, 
+        self.failUnlessRaises(pyDCPU.Exceptions.ItemNotFound, self.core.MasterTreeAdd,
                               ParentID=None, ModName="Master.NotKnown", Address=None, Parameter=None);
 
         # try to remove a not existing object and check type of raised exception:
-        self.failUnlessRaises(pyDCPU.Exceptions.ItemNotFound, self.core.MasterTreeDel, ObjectID="");                              
+        self.failUnlessRaises(pyDCPU.Exceptions.ItemNotFound, self.core.MasterTreeDel, ObjectID="");
 
         # try to create a symbol:
         self.core.SymbolTreeCreateSymbol("/test",ID1, Address="Bool");
@@ -77,4 +77,17 @@ class TestDCPUMasterTree(unittest.TestCase):
         self.core.SymbolTreeDeleteSymbol("/test01");
         self.core.MasterTreeDel(ID);
 
-       
+
+    def test04ItemLockOnFail(self):
+        """ Test usagecounter on faild loading """
+        ID1 = self.core.MasterTreeAdd(None, "Master.Interface.UniSerial", None,
+                                      {'Port':'0', 'Speed':'9600'});
+        
+        # this now will fail:
+        self.failUnlessRaises(pyDCPU.ModuleRequirement, self.core.MasterTreeAdd,
+                              ParentID=ID1, ModName="Master.Transport.PPI",
+                              Address=None, Parameter={});
+
+        #unload serial-interface:
+        self.core.MasterTreeDel(ID1);
+

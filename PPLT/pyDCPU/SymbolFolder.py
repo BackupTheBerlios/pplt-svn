@@ -28,7 +28,7 @@
 #   fixed ident error in Folder.DeleteSymbol(Folder.DeleteSymbol())
 import SymbolTools;
 import Symbol;
-
+import Exceptions;
 
 
 class Folder:
@@ -42,17 +42,15 @@ class Folder:
         self.SymbolHash = {};
 
 
-    def Rename(self, Name):
-        self.Name = Name;
-        return(True);
+    def Rename(self, Name): self.Name = Name;
 
     def ListSymbols(self, SessionID):
         if not self.Possession.CanRead(SessionID):
-            return(None);
+            raise Exceptions.AccessDenied("Session (%s) is not allowed to read from this folder."%SessionID);
         return(self.SymbolHash.keys());
     def ListFolders(self, SessionID):
         if not self.Possession.CanRead(SessionID):
-            return(None);
+            raise Exceptions.AccessDenied("Session (%s) is not allowed to read from this folder."%SessionID);
         return(self.FolderHash.keys());
 
     def IsEmpty(self):
@@ -63,48 +61,45 @@ class Folder:
     
     def AddSymbol(self, Name, Symb):
         if self.FolderHash.has_key(Name) or self.SymbolHash.has_key(Name):
-            return(False);
+            raise Exceptions.ItemBusy("There is allready a folder or symbol named \"%s\"."%Name);
         if not isinstance(Symb, Symbol.Symbol):
-            return(False);
+            raise Exceptions.Error("Oops: Given instance is not a symbol! (%s)"%type(Symb));
         
         self.SymbolHash.update( {Name:Symb} );
-        return(True);
         
     def RemoveSymbol(self, Name):
         if self.SymbolHash.has_key(Name):
             del self.SymbolHash[Name];
-            return(True);
-        return(False);
+            return;
+        raise Exceptions.ItemNotFound("There is no symbol named \"%s\" in this folder."%Name);
 
     def DeleteSymbol(self, Name):
         if self.SymbolHash.has_key(Name):
             self.SymbolHash[Name].Unregister();
             del self.SymbolHash[Name];
-            return(True);
-        return(False);
+            return;
+        raise Exceptions.ItemNotFound("There is no symbol named \"%s\" in this folder."%Name);
 
 
     def AddFolder(self, Name, FolderObj):
         if self.FolderHash.has_key(Name) or self.SymbolHash.has_key(Name):
-            return(False);
+            raise Exceptions.ItemBusy("There is allready a folder or symbol named \"%s\"."%Name);
         if not isinstance(FolderObj, Folder):
-            return(None);
+            raise Exceptions.Error("Oops: Given instance is not a symbol! (%s)"%type(Symb));
         self.FolderHash.update( {Name: FolderObj} );
-        return(True);
 
     def RemoveFolder(self, Name):
         if self.FolderHash.has_key(Name):
             del self.FolderHash[Name];
             return(True);
-        return(False);
+        raise Exceptions.ItemNotFound("There is no symbol named \"%s\" in this folder."%Name);
 
     def DeleteFolder(self, Name):
         if not self.FolderHash.has_key(Name):
-            return(False);
+            raise Exceptions.ItemNotFound("There is no symbol named \"%s\" in this folder."%Name);
         if not self.FolderHash[Name].IsEmpty():
-            return(False);
+            raise Exceptions.ItemBusy("Unable to remove the folder: is not empty!");
         del self.FolderHash[Name];
-        return(True);
 
 
     def GetElementByPath(self, PathToElement):
@@ -116,24 +111,16 @@ class Folder:
                 return(self.SymbolHash.get(Item));
             elif self.FolderHash.has_key(Item):
                 return(self.FolderHash.get(Item));
-            else:
-                return(None);
+            else: raise Exceptions.ItemNotFound("No symbol or folder named \"%s\" found!"%Item);
         elif Item and Path:
             if self.FolderHash.has_key(Item):
                 return(self.FolderHash[Item].GetElementByPath(Path));
-            else:
-                return(None);
-        else:
-            return(None);
-        return(None);
+            else: raise Exceptions.ItemNotFound("No folder named \"%s\" found!"%Item);
+        raise Exceptions.Error("Ooops!");
 
 
+    def SetPossession(self, Possession): self.Possession = Possession;
 
-    def SetPossession(self, Possession):
-        self.Possession = Possession;
-        return(True);
-
-    def GetPossession(self):
-        return(self.Possession);
+    def GetPossession(self): return(self.Possession);
 
 

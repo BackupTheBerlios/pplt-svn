@@ -32,6 +32,7 @@ class ModusBox(wx.BoxSizer):
 
         if not usr:
             self.__UserName = self.__PPLTSys.GetSuperUser();
+            print "SuperUser: %s"%self.__UserName;
         else:
             self.__UserName = usr;
         

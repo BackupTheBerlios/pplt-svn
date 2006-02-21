@@ -1,6 +1,6 @@
 <?xml version="1.0"?>
 <!DOCTYPE PPLTDevice SYSTEM "PPLT-Device-0.1.dtd">
-<PPLTDevice name="RandomGenerator" class="Debug" version="0.3.0">
+<PPLTDevice name="RandomGenerator" class="Debug" version="0.4.0">
 	<Head>
 		<Description lang="de">
 			Der Generator erzeugt Zufallswerte in verschiedenen Type,

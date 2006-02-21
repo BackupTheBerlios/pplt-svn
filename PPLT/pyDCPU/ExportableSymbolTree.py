@@ -37,10 +37,8 @@ class ExportableSymbolTree:
     def __init__(self, SymbolTree, UserDB, DefaultUser, Root = '/'):
         self.__Logger = logging.getLogger('pyDCPU');
 
-        if not isinstance(SymbolTree, pyDCPU.SymbolTree):
-            raise pyDCPU.Error;
-        if not isinstance(UserDB, pyDCPU.UserDB):
-            raise pyDCPU.Error;
+        if not isinstance(SymbolTree, pyDCPU.SymbolTree): raise pyDCPU.Error("Symbol-tree instance isn't one.");
+        if not isinstance(UserDB, pyDCPU.UserDB): raise pyDCPU.Error("UserDB instance isn't one.");
 
         self.__SymbolTree = SymbolTree;
         self.__UserDB = UserDB;
@@ -81,7 +79,7 @@ class ExportableSymbolTree:
     def GetLastUpdate(self, PathToSymbol, SessionID):
         Path = Normpath(self.__Root+"/"+PathToSymbol);
         if not SessionID: SessionID = self.__DefaultSession;
-        return self.__SymbolTree.ListSymbols(Path, SessionID);
+        return self.__SymbolTree.GetLastUpdate(Path, SessionID);
 
     def GetTypeName(self, PathToSymbol, SessionID):
         Path = Normpath(self.__Root+"/"+PathToSymbol);
@@ -93,10 +91,11 @@ class ExportableSymbolTree:
         if not SessionID: SessionID = self.__DefaultSession;
         return self.__SymbolTree.GetQuality(Path, SessionID);
 
+
+
 def Normpath(Path):
     tmp = Path.split('/');
     ntmp = []
     for item in tmp:
-        if item != '':
-            ntmp.append(item);
+        if item != '': ntmp.append(item);
     return("/"+string.join(ntmp,"/"));

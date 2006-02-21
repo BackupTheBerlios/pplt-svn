@@ -20,6 +20,8 @@
 
 import wx;
 import time;
+import Messages;
+import PPLT;
 
 class SetValueDialog(wx.Dialog):
     def __init__(self, Parent, Path, PPLTSys):
@@ -27,9 +29,12 @@ class SetValueDialog(wx.Dialog):
         self.__Path = Path;
 
         wx.Dialog.__init__(self, Parent, -1, _("Set Value"));
-        Value = str(PPLTSys.GetValue(Path));
-
-
+        try:Value = str(PPLTSys.GetValue(Path));
+        except PPLT.AccessDenied, e: Value = "";
+        except Exception,e:
+            err = _("Unable to get value from %s.\n\nMesssage: %s"%(Path,str(e)));
+            Messages.ErrorMessage(self, err, _("Unable to get value."));
+            return;
         VBox = wx.BoxSizer(wx.VERTICAL);
 
         hbox = wx.BoxSizer(wx.HORIZONTAL);
@@ -42,13 +47,6 @@ class SetValueDialog(wx.Dialog):
         hbox.Add(self.__Set, 0, wx.ALIGN_CENTER, 0);
         VBox.Add(hbox, 0, wx.ALL|wx.GROW, 5);
        
-        hbox = wx.BoxSizer(wx.HORIZONTAL);
-        label = wx.StaticText(self, -1, _("Type: "));
-        t = wx.StaticText(self, -1, PPLTSys.GetSymbolType(Path));
-        hbox.Add(label, 0, wx.ALIGN_CENTER|wx.RIGHT, 10);
-        hbox.Add(t, 1, wx.ALIGN_CENTER,0);
-        VBox.Add(hbox, 0, wx.GROW|wx.LEFT|wx.RIGHT, 5);
-        
         hbox = wx.BoxSizer(wx.HORIZONTAL);
         label = wx.StaticText(self, -1, _("Time: "));
         txt = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(PPLTSys.GetSymbolTimeStamp(Path)));
@@ -69,20 +67,33 @@ class SetValueDialog(wx.Dialog):
         self.SetSizer(VBox);
         VBox.Fit(self);
 
+
+
     def OnSet(self, event):
         Val = self.__Value.GetValue();
         
         Type = self.__PPLTSys.GetSymbolType(self.__Path);
-        
-        if Type in ("Bool", "Integer", "uInteger", "uLong", "Long"): Val = int(Val);
-        elif Type in ("Float","Double"): Val = float(Val);
+       
+        print "set to \"%s\""%Val;
+        if Type == "Bool":
+            if str(Val).lower() == "true": Val = True;
+            elif str(Val).lower() == "false": Val = False;
+            else:
+                errMsg = _("Error while set value of symbol %s\n Type of symbol is bool but no boolean value given!")%self.__Path;
+                Messages.ErrorMessage(self, errMsg, _("Error while set value."));
+                return;
+        elif Type == "Integer": Val = int(Val);
+        elif Type == "Float": Val = float(Val);
         elif Type == "String": Val = str(Val);
-        else: return None;
+        else:
+            errMsg = _("Error while set value of symbol %s.\n %s is not a atomic type!")%(self.__Path,str(Type));
+            Messages.ErrorMessage(self, errMsg, _("Error while set value."));
+            return;
 
-        if not self.__PPLTSys.SetValue(self.__Path, Val):
-            dlg = wx.MessageDialog(self, _("Error while set value of symbol ")+self.__Path, _("Error while set value"), wx.OK|wx.ICON_ERROR);
-            dlg.ShowModal();
-            dlg.Destroy();
+        try: self.__PPLTSys.SetValue(self.__Path, Val);
+        except Exception, e:
+            errMsg = _("Error while set value of symbol %s\n Message: %s")%(self.__Path, str(e));
+            Messages.ErrorMessage(self, errMsg, _("Error while set value."));
             return
         Val = self.__PPLTSys.GetValue(self.__Path);
         self.__Value.SetValue(str(Val));

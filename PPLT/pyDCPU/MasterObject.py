@@ -106,7 +106,7 @@ class MasterConnection:
         return(md5.new(ParentID+AddrStr).hexdigest());  #uhh...
     def GetTypeName(self): return self.TypeName;
     def GetQuality(self): return "good";
-    def GetLastUpdate(self): return time.now();
+    def GetLastUpdate(self): return time.time();
 
 
    
@@ -196,20 +196,24 @@ class SequenceConnection(MasterConnection):
 
 class ValueConnection(SequenceConnection):
     """ A ValueConnection is the glue between the MasterObejcts and the symbols. """
-    def __init__(self, Parent, Type, Address=None, Timeout = 0.0):
+    def __init__(self, Parent, Type, Address=None, Refresh = 0.0):
         SequenceConnection.__init__(self, Parent, Address);
         if not Type: raise Exception("A ValueConnection have to be typed!");
-        self.TypeID = Type;
-        self.LastUpdate = 0;
+        self.Logger.debug("Init value-connection with ref.:%f and type: %s"%(float(Refresh),Type));
+        self.TypeName = Type;
+        self.LastUpdate = 0.0;
         self.Cache = None;
-        self.Timeout = Timeout;
-        
+        self.Refresh = float(Refresh);
+    
     def read_seq(self):
         # if a cache-time is set:
-        if self.Timeout:
-            now = time.time();
+        if (self.Refresh > 0.0 and self.Cache != None):
             # if the cached value is still fresh:            
-            if (now - self.LastUpdate) < self.Timeout: return self.Cache;
+            if (time.time() - self.LastUpdate) < self.Refresh:
+                self.Logger.debug("%f - %f < %f"%(time.time(), self.LastUpdate, self.Refresh));
+                self.Logger.debug("Returning cached value(s). (Cachetime: %s)"%str(self.Refresh));
+                return self.Cache;
+        self.Logger.debug("Read \"new\" value(s) from module.");
         tmp = SequenceConnection.read_seq(self);
         if tmp:
             self.Cache = tmp;
@@ -217,7 +221,7 @@ class ValueConnection(SequenceConnection):
         return tmp;
 
     # only ValueConnections has timeout:
-    def SetTimeout(self, Timeout): self.Timeout = Timeout;
+    def SetRefresh(self, Refresh): self.Refresh = float(Refresh);
         
 
 
@@ -250,10 +254,10 @@ class MasterObject:
 
     def tear_down(self): 
         if self.Connection: self.Connection.close();
+        self.destroy();
 
     def inc_usage(self):
         self.Counter += 1;
-        return(True);
     def dec_usage(self):
         self.Counter -= 1;
 

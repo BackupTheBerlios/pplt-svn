@@ -50,7 +50,7 @@ class Importer:
     
     def NewMaster(self, Name, Connection, Parameters, Fingerprint):
         """ This Method create a object from the module [Name] with [Parameters] """
-        
+        self.__Logger.debug("Create new master object from %s with %s"%(Name, str(Parameters)));
         # get meta data
         ModMeta = CoreModuleInfo.MetaData(os.path.normpath(self.__ModuleDataBase.ModDir(Name)));
         #check DCPUVersion;
@@ -81,9 +81,7 @@ class Importer:
             raise Exceptions.ModuleError("Unable to load module \"%s\"!"%Name);
 
         Obj = Mod.Object(Fingerprint, Connection, Parameters, Name, self.__Logger);
-        try: Obj.setup();
-        except Exception, e:
-            raise Exceptions.ModuleSetup("Error while setup module \"%s\": \"%s\""%(Name,str(e)));
+        Obj.setup();
         return(Obj);
 
 

@@ -26,7 +26,7 @@
 
 
 import re;
-
+import PPLT;
 
 
 RE_SLOT     = "^[a-z|A-Z|0-9|_|\-|]+::[a-z|A-Z|0-9|_|\-]+::([a-z|A-Z|0-9|_|\-|\.]+:?)+$";
@@ -41,25 +41,21 @@ def CheckSlot(Name):
     exp = re.compile(RE_SLOT);
     Name = Name.strip();
     if not re.match(exp, Name):
-        return(None);
-    return(Name);
+        raise PPLT.Error("Invalid slot-name \"%s\"! Valid: DEVICE::NAMESPACE::SLOT ");
 
 def CheckDevice(Name):
     exp = re.compile(RE_DEV_SRV);
     Name = Name.strip();
     if not re.match(exp, Name):
-        return(None);
-    return(Name);
+        raise PPLT.Error("Invalid device-name \"%s\"."%Name);
 
-def CheckServer(Name):
-    return(CheckDevice(Name));
+def CheckServer(Name): CheckDevice(Name);
 
 def CheckUser(Name):
     exp = re.compile(RE_USR_GRP);
     Name = Name.strip();
     if not re.match(exp, Name):
-        return(None);
-    return(Name);
+        raise PPLT.Error("Invalid user-name \"%s\"."%Name);
 
 def CheckGroup(Name):
     return(CheckUser(Name));
@@ -73,16 +69,10 @@ def CheckPath(Name):
     if len(Name)>1 and Name[-1]=='/':   #remove tailing slash
         Name = Name[:-1];
     if not re.match(exp, Name):
-        return(None);
-    return(Name);
-
+        raise PPLT.Error("Ivalid path-format \"%s\"!"%Name);
 
 
 
 if __name__ == "__main__":
     name = "/folder/";
     name = CheckPath(name);
-    if not name:
-        print "Invalid format.";
-    else:
-        print "Ok"

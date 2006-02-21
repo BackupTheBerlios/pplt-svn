@@ -143,20 +143,22 @@ class Core:
                 raise ItemNotFound("ParentID ($s) not known! Can't connect new object."%ParentID);
             ParentObj = self.__ObjectHash[ParentID];
             Connection = ParentObj.connect(Address);
-            if not Connection:
+            if not Connection:  #should be obsolet
                 raise Exceptions.ModuleError("Error while connect to parent (%s)!"%ParentID);
             Connection._SetAddrStr(Address);
         else:
             Connection = None;
             pass;
 
-        Object = self.__ModuleManager.NewMaster(ModName, Connection, Parameter, fingerprint);
-        if not Object: raise Exceptions.ItemNotFound("Unknown module $s! Check module path."%ModName);
+        try: Object = self.__ModuleManager.NewMaster(ModName, Connection, Parameter, fingerprint);
+        except Exception,e:
+            if Connection: Connection.close();
+            raise e;
 
         self.Logger.debug("Obj from %s with ID:%s created"%(ModName,Object._GetID()));
                
         if not self.__MasterObjTree.Add(ParentID,Object._GetID()):
-            Object.destroy();
+            Object.tear_down();
             del Object;
             raise Exceptions.Error("Can't add object to MasterTree! This should allways work: Mail author!")
        
@@ -187,7 +189,7 @@ class Core:
             return;
 
         # check if object has no children:
-        if Object.Counter != 0:  
+        if Object.Counter > 0:
             raise Exceptions.ItemBusy("Can't remove object %s(ID:%s): Item is used by others. Count: %i"%(self.GetObjectClass(ObjectID),ObjectID,Object.Counter));
         # destroy object:
         if not Object.destroy(): 
@@ -221,16 +223,11 @@ class Core:
         """ This method load an export-module """
 
         # check export-module-name:
-        ExportModule = NameCheck.CheckServer(ExportModule);
-        if not ExportModule: raise Exceptions.Error("Invalid format for ExportModuleName \"%s\"!"%ExportModule); 
-
+        NameCheck.CheckServer(ExportModule);
         # check DefaultUserName:
-        DefaultUser = NameCheck.CheckUser(DefaultUser);
-        if not DefaultUser: raise Exceptions.Error("Invalid user name \"%s\" for default user!"%DefaultUser);
-
+        NameCheck.CheckUser(DefaultUser);
         # check server-root:
-        Root = NameCheck.CheckPath(Root);
-        if not Root: raise Exceptions.Error("Invalid path \"%s\" for server-root!"%Root);
+        NameCheck.CheckPath(Root);
 
         if (not self.__SymbolTree.CheckFolder(Root)) and (Root!="/"):
             raise Exceptions.ItemNotFound("Server-root \"%s\" doesn't exists!"%Root);
@@ -302,17 +299,14 @@ class Core:
                 All folders on the path to 'Path' must exist!
         """
         #check folder-path:
-        Path = NameCheck.CheckPath(Path);
-        if not Path: raise Exceptions.Error("Invalid format for folder-path \"%s\"!"%Path);
-
+        NameCheck.CheckPath(Path);
         self.__SymbolTree.CreateFolder(Path);
-        self.Logger.debug("Folder created");
+        self.Logger.debug("Folder \"%s\" created"%Path);
 
     def SymbolTreeMoveFolder(self, From, To):
         """ This method moves a folder from (From) to (To)."""
         #check path of destination:
-        To = NameCheck.CheckPath(To);
-        if not To: raise Exceptions.Error("Invalid path \"%s\" for new destination!"%To);
+        NameCheck.CheckPath(To);
         self.__SymbolTree.MoveFolder(From, To);
 
     def SymbolTreeDeleteFolder(self,  Path):
@@ -321,33 +315,27 @@ class Core:
         self.Logger.debug("Folder %s deleted"%Path);
     
 
-    def SymbolTreeCreateSymbol(self, Path, ObjectID, Address=None, Timeout=0.5):
+    def SymbolTreeCreateSymbol(self, Path, ObjectID, Address=None, Refresh=0.5):
         """ This method create a new symbol in the symbol-tree. """
         #check symbol-path:
-        Path = NameCheck.CheckPath(Path);
-        if not Path: raise Exceptions.Error("Invalid path \"%s\" for a symbol!"%Path);
+        NameCheck.CheckPath(Path);
 
         Obj = self.__ObjectHash.get(ObjectID);
-        if not Obj: raise Exception.ItemNotFound("No module with ID %s found!"%ObjectID);
+        if not Obj: raise Exceptions.ItemNotFound("No module with ID %s found!"%ObjectID);
 
         Connection = Obj.connect(Address);
         if not Connection: raise Exceptions.Error("Can't connect to module %s!"%ObjectID);
-        # if connection is connection to a value: set timeout
-        if isinstance(Connection, MasterObject.ValueConnection):
-            if Timeout: Connection.SetTimeout(Timeout);
 
         # store in symboltree: (also Address and timeout for rebuild):   
-        try: self.__SymbolTree.CreateSymbol(Path, Connection, Address, Timeout);
+        try: self.__SymbolTree.CreateSymbol(Path, Connection, Address, Refresh);
         except Exception,e:
             Connection.close();
-            raise Exceptions.SymbolError("Error while create symbol \"%s\": %s"%(Path,str(e)));
-        return(True);
+            raise e;
 
     
     def SymbolTreeMoveSymbol(self, From, To):
         """ This method moves a symbol From -> To. """
-        To = NameCheck.CheckPath(To);
-        if not To: raise Exceptions.Error("Destination \"%s\" isn't a valid path!"%To);
+        NameCheck.CheckPath(To);
         self.__SymbolTree.MoveSymbol(From,To);
 
 
@@ -369,10 +357,16 @@ class Core:
     def SymbolTreeListFolders(self, Path):
         return(self.__SymbolTree.ListFolders(Path, self.__GetSystemSession()));
 
+    def SymbolTreeGetRefresh(self, Path):
+        return self.__SymbolTree.GetSymbolRefresh(Path);
+    def SymbolTreeSetTimeout(self, Path, Refresh):
+        self.__SymbolTree.SetSymbolRefresh(Path, Refresh);
+
+    def SymbolTreeGetTypeName(self, Path):
+        return self.__SymbolTree.GetTypeName(Path, self.__GetSystemSession());
 
     def SymbolTreeGetTimeStamp(self, Path):
         return self.__SymbolTree.GetLastUpdate(Path, self.__GetSystemSession());
-
 
     def SymbolTreeGetAccess(self, Path):
         owner = self.__SymbolTree.GetOwnerName(Path);

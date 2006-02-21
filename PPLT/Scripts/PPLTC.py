@@ -29,13 +29,14 @@ class MainFrame(wx.Frame):
                             size = (565,400),
                             style = wx.DEFAULT_FRAME_STYLE);
         
+        self.__Logger = logging.getLogger("PPLT");
 
         self.__PPLTSys = PPLTSys;
         self.__SessionFileName = SFile;
+        self.__Logger.debug("Initial session-file:%s"%self.__SessionFileName);
         if self.__SessionFileName:
             self.SetTitle("PPLT Center (%s)"%os.path.basename(self.__SessionFileName));
 
-        self.__Logger = logging.getLogger("PPLT");
 
         bmplst = LoadBitmaps(PPLT.Config().GetBasePath()+"/icons/");
 
@@ -144,30 +145,22 @@ class MainFrame(wx.Frame):
             return(None);
         self.__Logger.info("Clear Session");
         self.OnNewSession(None);
-        if not self.__PPLTSys.LoadSession(path):
-            self.__Logger.warning("Can't load %s"%path);
-            return(None);
+        self.__PPLTSys.LoadSession(path);
         self.__NoteBook.Build();
         self.__SessionFileName = path;
         self.SetTitle("PPLT Center (%s)"%os.path.basename(path));
 
     def OnSave(self, event):
-        if not self.__SessionFileName:
-            return(self.OnSaveAs(None));
-        if not self.__PPLTSys.SaveSession(self.__SessionFileName):
-            self.__Logger.error("Error while save session to file %s"%self.__SessionFileName);
-            return(None);
+        if not self.__SessionFileName: return(self.OnSaveAs(None));
+        self.__PPLTSys.SaveSession(self.__SessionFileName);
         self.__Logger.info("Session Saved");
 
     def OnSaveAs(self, event):
         dlg = wx.FileDialog(self, _("Save Session as..."), style=wx.SAVE, wildcard=_("PPLT Session File (*.psf)|*.psf"));
-        if not dlg.ShowModal() == wx.ID_OK:
-            return(None);
+        if not dlg.ShowModal() == wx.ID_OK: return(None);
         path = dlg.GetPath();
         dlg.Destroy();
-        if not self.__PPLTSys.SaveSession(path):
-            self.__Logger.error("Error while save session to file %s"%path);
-            return(None);
+        self.__PPLTSys.SaveSession(path);
         self.__SessionFileName = path;
         self.SetTitle("PPLT Center (%s)"%os.path.basename(self.__SessionFileName));
         self.__Logger.info("Session saved as %s"%os.path.basename(self.__SessionFileName));
@@ -235,7 +228,6 @@ if __name__ == '__main__':
 
     for opt in ops:
         (arg, value) = opt;
-        print "process %s"%arg
         if arg == "-v":
             CoreLL = "debug";
             PPLTLL = "debug";
@@ -255,8 +247,8 @@ if __name__ == '__main__':
         if not os.path.isfile(args[0]):
             print "Can't open file %s"%args[0];
             sys.exit();
-        if ps.LoadSession(args[0]):
-            SessionFile = args[0];
+        ps.LoadSession(args[0]);
+        SessionFile = args[0];
 
     app = Application(ps, SessionFile, Config.GetBasePath(), Config.GetLang(), Config.GetAltLang());
     app.MainLoop();

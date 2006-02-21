@@ -17,7 +17,7 @@ Icons = ['icons/help.xpm', 'icons/device_add.xpm', 'icons/server_add.xpm',
          'icons/info.xpm', 'icons/new.xpm', 'icons/load.xpm', 
          'icons/saveas.xpm', 'icons/save.xpm'];
 
-Examples = ['examples/Random-JVisuServer.psf','examples/Random-WebServer.psf'];
+Examples = [];
 
 
 # --- Modulelists ---
@@ -27,7 +27,7 @@ PPLTMods      = ["Modules/ftp/PPLTModules/AGILENT_5462X-0.3.xml",
                  "Modules/ftp/PPLTModules/Panasonic_FPWEB-0.3.xml",
                  "Modules/ftp/PPLTModules/Panasonic_FPX-0.3.xml",
                  "Modules/ftp/PPLTModules/PPLTWebServer-0.3.xml",
-                 "Modules/ftp/PPLTModules/RandomGenerator-0.3.xml",
+                 "Modules/ftp/PPLTModules/RandomGenerator-0.4.xml",
                  "Modules/ftp/PPLTModules/SIMATIC_S7_200-0.3.xml",
                  "Modules/ftp/PPLTModules/SimpleExportServer-0.3.xml"];
 

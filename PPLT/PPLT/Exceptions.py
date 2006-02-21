@@ -22,3 +22,5 @@
 # 2005-05-27:
 #	Release as version 0.2.0
 
+
+from pyDCPU.Exceptions import *;    #get all exceptions from core!

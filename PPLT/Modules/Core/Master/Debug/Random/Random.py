@@ -65,13 +65,10 @@ class Object(pyDCPU.MasterObject):
             return(GetRandString(length));
         elif Con.Address == RAND_SEQUENCE:
             return(GetRandString());
-        else:
-            self.Logger.error("Invalid Address!!!");
-            raise pyDCPU.FatIOModError;
+        raise pyDCPU.Error("Unknown address \"%i\"."%Con.Addess);
 
     def write(self, Con, Data):
-        self.Logger.error("This is a read only module!!!");
-        raise pyDCPU.IOModError;
+        raise pyDCPU.AccessDenied("This module is read-only!");
 
 
 

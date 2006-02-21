@@ -189,9 +189,7 @@ class UserDBPanel(wx.TreeCtrl):
         if not pass1 == pass2:
             self.__Logger.warning("Passwords are not equial");
             return(None);
-        if not self.__PPLTSys.CreateMember(Name, user, pass1, ""):
-            self.__Logger.warning("Error while create member %s in %s"%(user,Name));
-            return(None);
+        self.__PPLTSys.CreateMember(Name, user, pass1, "");
         nitem = self.AppendItem(item, user);
         self.SetItemImage(nitem, self.__UserIcon, wx.TreeItemIcon_Normal);
         self.SetPyData(nitem, (False,False));
@@ -210,11 +208,12 @@ class UserDBPanel(wx.TreeCtrl):
         if IsGroup or IsSuperUser:
             self.__Logger.warning("Can't del SuperUser");
             return(None);
-        if self.__PPLTSys.DeleteMember(Name):
-            self.Delete(item);
-            self.__RemoveProxys(Name);          #Remove all proxys of this user
-        else:
-            self.__Logger.warning("Error while Del User %s"%Name);
+        try: self.__PPLTSys.DeleteMember(Name);
+        except Exception, e:
+            self.__Logger.error("Unable to del user %s: %s"%(Name, str(e)));
+            return;
+        self.Delete(item);
+        self.__RemoveProxys(Name);          #Remove all proxys of this user
 
 
     def OnAddProxy(self, Event):
@@ -235,9 +234,10 @@ class UserDBPanel(wx.TreeCtrl):
         User = Dlg.Name;
         Dlg.Destroy();
     
-        if not self.__PPLTSys.CreateProxy(GrpName, User):
+        try:self.__PPLTSys.CreateProxy(GrpName, User);
+        except:
             self.__Logger.error("Error while create a new proxy for %s"%User);
-            return(None);
+            return;
         
         nitem = self.AppendItem(item, User);
         self.SetItemImage(nitem, self.__ProxyIcon, wx.TreeItemIcon_Normal);
@@ -257,9 +257,10 @@ class UserDBPanel(wx.TreeCtrl):
         GrpName = self.GetItemText(pitem);
         Name = self.GetItemText(item);
 
-        if not self.__PPLTSys.DeleteProxy(GrpName, Name):
+        try: self.__PPLTSys.DeleteProxy(GrpName, Name);
+        except:
             self.__Logger.error("Error while delete proxy for user %s"%Name);
-            return(None);
+            return;
         self.Delete(item);
         
     def OnAddGroup(self, Event):
@@ -287,9 +288,10 @@ class UserDBPanel(wx.TreeCtrl):
         grp = dlg.Name;
         dlg.Destroy();
 
-        if not self.__PPLTSys.CreateGroup(Name,grp):
+        try: self.__PPLTSys.CreateGroup(Name,grp);
+        except:
             self.__Logger.warning("Error while create group %s"%grp);
-            return(None);
+            return;
         
         nitem = self.AppendItem(item,grp);
         self.SetItemImage(nitem, self.__GroupIcon, wx.TreeItemIcon_Normal);
@@ -311,7 +313,8 @@ class UserDBPanel(wx.TreeCtrl):
         Name = self.GetItemText(item);
         if not IsGroup:
             return(None);
-        if not self.__PPLTSys.DeleteGroup(Name):
+        try: self.__PPLTSys.DeleteGroup(Name);
+        except:
             self.__Logger.warning("Error while delete group %s"%Name);
             return(None);
         self.Delete(item);
@@ -329,9 +332,10 @@ class UserDBPanel(wx.TreeCtrl):
 
         sitem = self.__GetSuperUserItem();
 
-        if not self.__PPLTSys.SetSuperUser(Name):
+        try: self.__PPLTSys.SetSuperUser(Name);
+        except:
             self.__Logger.warning("Error while set SuperUser to %s"%Name);
-            return(None);
+            return;
         
         self.SetPyData(sitem, (False,False));
         self.SetPyData(item, (False, True));
@@ -360,7 +364,8 @@ class UserDBPanel(wx.TreeCtrl):
         if not pass1 == pass2:
             self.__Logger.warning("Passwords are not equeal");
             return(None);
-        if not self.__PPLTSys.ChangePassword(Name,pass1):
+        try: self.__PPLTSys.ChangePassword(Name,pass1);
+        except:
             self.__Logger.warning("Error while change passwd");
     
     

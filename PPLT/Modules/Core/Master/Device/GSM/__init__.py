@@ -21,24 +21,3 @@
 
 from GSM import Object;
 
-
-# ***
-# It follows a complete description of this pyDCPU module.
-# (for more information see at the documentation)
-#
-
-DCPUVERSION     = 0x000100;     #HEX version-number of pyDCPU-package this module was written for
-VERSION         = 0x000001;     #HEX version-number of this package.
-
-AUTHOR          = "Hannes Matuschek <hmatuschek[AT]gmx.net>";       
-DATE            = "2005-02-04";                                     #Last update.
-
-
-#a description in multible lang.
-DESCRIPTION     = {'en': """ """,
-                   'de': """ """};
-
-PARAMETERS      = None; 
-
-IS_ROOT_MODULE  = False;
-CHILD_NEED_ADDR = True;

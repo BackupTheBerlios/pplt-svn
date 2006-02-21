@@ -28,11 +28,7 @@ import logging;
 def LoadSession(system, FileName):
     Logger = logging.getLogger("PPLT");
     Logger.debug("Try to load Session from %s"%FileName);
-    try:
-        doc = xml.dom.minidom.parse(FileName);
-    except:
-        Logger.error("Error while load Session from %s"%FileName);
-        return(False);
+    doc = xml.dom.minidom.parse(FileName);
 
     dev_tag = doc.getElementsByTagName("Devices")[0];
     sym_tag = doc.getElementsByTagName("SymbolTree")[0];
@@ -41,7 +37,6 @@ def LoadSession(system, FileName):
     LoadDevices(system, dev_tag);
     LoadSymTree(system, sym_tag.firstChild);
     LoadServers(system, srv_tag);
-    return(True);
 
 def LoadDevices(system, Tag):
     devlst = Tag.getElementsByTagName("Device");
@@ -71,12 +66,12 @@ def LoadSymTree(system, Tag, PathList=[]):
     if Tag.localName == "Symbol":
         Name    = Tag.getAttribute("name");
         Slot    = Tag.getAttribute("slot");
-        Type    = Tag.getAttribute("type");
+        Refresh = Tag.getAttribute("refresh");
         Group   = Tag.getAttribute("group");
         Owner   = Tag.getAttribute("owner");
         Modus   = str(Tag.getAttribute("modus"));
         Path    = PathList2Str(PathList+[Name]);
-        system.CreateSymbol(Path, Slot, Type, Modus, Owner, Group);
+        system.CreateSymbol(Path, Slot, Refresh, Modus, Owner, Group);
     if Tag.localName == "Folder":
         Name    = Tag.getAttribute("name");
         Group   = Tag.getAttribute("group");

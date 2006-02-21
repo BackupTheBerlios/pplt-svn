@@ -189,7 +189,8 @@ class SymbolTreePanel(wx.TreeCtrl):
         NPath = "/"+string.join(NPList,"/");
         if IsFolder:
             NLabel = NName;
-            if not self.__PPLTSys.MoveFolder(OPath, NPath):
+            try: self.__PPLTSys.MoveFolder(OPath, NPath);
+            except:
                 event.SetEditCanceled(True);
                 self.SetItemText(NewItem, OName);
                 self.SetPyData(NewItem, (IsFolder, OName));
@@ -197,7 +198,8 @@ class SymbolTreePanel(wx.TreeCtrl):
         else:
             Slot = str(self.__PPLTSys.GetSymbolSlot(OPath))
             NLabel = "%s  @ %s"%(NName, Slot);
-            if not self.__PPLTSys.MoveSymbol(OPath, NPath):
+            try: self.__PPLTSys.MoveSymbol(OPath, NPath);
+            except:
                 event.SetEditCanceled(True);
                 txt = "%s  @ %s"%(OName, Slot);
                 self.SetItemText(NewItem,txt);
@@ -271,12 +273,8 @@ class SymbolTreePanel(wx.TreeCtrl):
         if NPath == OPath:
             return(None);
 
-        if IsDragItemFolder:
-            if not self.__PPLTSys.MoveFolder(OPath, NPath):
-                return(None);
-        else:
-            if not self.__PPLTSys.MoveSymbol(OPath,NPath):
-                return(None);
+        if IsDragItemFolder: self.__PPLTSys.MoveFolder(OPath, NPath);
+        else: self.__PPLTSys.MoveSymbol(OPath,NPath);
 
         # rebuild tree
         self.Clean();
@@ -338,7 +336,6 @@ class SymbolTreePanel(wx.TreeCtrl):
             dlg.Destroy();
             return(None);
         name = dlg.GetName();
-        stype= dlg.GetType();
         rate = dlg.GetRate();
         modus= dlg.GetModus();
         owner= dlg.GetOwner();
@@ -350,9 +347,7 @@ class SymbolTreePanel(wx.TreeCtrl):
         else:
             npath = "/"+name;
 
-        if not self.__PPLTSys.CreateSymbol(npath,slot, stype, modus, owner, group):
-            self.__Logger.error("Error while create symbol");
-            return(None);
+        self.__PPLTSys.CreateSymbol(npath, slot, rate, modus, owner, group);
         nitem = self.AppendItem(item, "%s  @ %s"%(name,slot));
         self.SetPyData(nitem, (False, str(name)));
         self.SetItemImage(nitem, self.__SymbolIcon, wx.TreeItemIcon_Normal);
@@ -384,8 +379,7 @@ class SymbolTreePanel(wx.TreeCtrl):
             npath = Path+"/"+name;
         else:
             npath = Path+name;
-        if not self.__PPLTSys.CreateFolder(npath, "%o"%mod, owner, group):
-            return(None);
+        self.__PPLTSys.CreateFolder(npath, "%o"%mod, owner, group);
         nitem = self.AppendItem(item, "%s"%name);
         self.SetPyData(nitem, (True, str(name)));
         self.SetItemImage(nitem, self.__FolderIcon, wx.TreeItemIcon_Normal);
@@ -409,9 +403,7 @@ class SymbolTreePanel(wx.TreeCtrl):
             return(None);
         (ItemIsFolder, Name) = self.GetPyData(item);
         Path = self._FindPathByItem(item);
-        if not self.__PPLTSys.DeleteSymbol(Path):
-            self.__Logger.error("Can't del symbol %s"%Path);
-            return(None);
+        self.__PPLTSys.DeleteSymbol(Path);
         self.Delete(item);
 
 
@@ -422,9 +414,7 @@ class SymbolTreePanel(wx.TreeCtrl):
             return(None);
         (IsFolder, Name) = self.GetPyData(item);
         path = self._FindPathByItem(item);
-        if not self.__PPLTSys.DeleteFolder(path):
-            self.__Logger.warning("Can't del Folder %s (is it empty)"%path);
-            return(None);
+        self.__PPLTSys.DeleteFolder(path);
         self.Delete(item);
 
 

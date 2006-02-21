@@ -1,3 +1,3 @@
 pack:
-	make -s -C Core pack
-	make -s -C PPLT 
+	make -C Core pack
+	make -C PPLT 

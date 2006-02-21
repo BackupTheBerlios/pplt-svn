@@ -6,7 +6,7 @@ from testDCPU import TestDCPUMasterTree;
 from testDCPU import TestSymbolTree;
 from testDCPU import TestExporter;
 from testMods import TestS7;
-from testPPLT import TestDevices;
+from testPPLT import TestDevices, TestSymbols;
 from testMods import TestLockMod;
 
 HELP_TEXT = """
@@ -17,6 +17,7 @@ usage: test.py [--help|-h] [--with-S7] [--with-SExp]
  --with-Lock\t Enables the testLock module test.
  --without-MT\t Disables the MasterTree test.
  --without-ST\t Disables the SymbolTree test.
+ --with-Dev\t Enables the tests for PPLT devices.
  """;
 
 
@@ -27,13 +28,17 @@ if __name__ == "__main__":
                    "SymbolTree":unittest.makeSuite(TestSymbolTree),
                    "SimpleExport":unittest.makeSuite(TestExporter),
                    "Devices":unittest.makeSuite(TestDevices),
+                   "Symbols":unittest.makeSuite(TestSymbols),
                    "S7":unittest.makeSuite(TestS7),
                    "testLock": unittest.makeSuite(TestLockMod)};
     # List of enabled Tests               
     Tests = ["MasterTree", "SymbolTree"];
     
     # Parse options:
-    (opts, args) = getopt.getopt(sys.argv[1:], ["h"], ["with-S7","with-SExp","help","without-MT","without-ST","with-Lock"]);
+    (opts, args) = getopt.getopt(sys.argv[1:], ["h"],
+                                 ["with-S7", "with-SExp", "help",
+                                  "without-MT", "without-ST","with-Lock",
+                                  "with-Dev", "with-Sym"]);
 
     # check for --help / -h option -> print help, exit
     if (("--help","") in opts) or (("-h","") in opts):
@@ -49,7 +54,9 @@ if __name__ == "__main__":
     if ("--with-Lock", "") in opts: Tests.append("testLock");
     if ("--without-MT","") in opts: Tests.remove("MasterTree");
     if ("--without-ST","") in opts: Tests.remove("SymbolTree");
-    
+    if ("--with-Dev","") in opts: Tests.append("Devices");
+    if ("--with-Sym","") in opts: Tests.append("Symbols");
+
     # add selected tests to suite:
     for Item in Tests:
         print "Adding Test \"%s\"..."%Item;

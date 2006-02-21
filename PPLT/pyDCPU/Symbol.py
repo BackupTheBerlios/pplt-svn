@@ -20,6 +20,8 @@
 
 
 # ChangeLog:
+# 2006-02-09:
+#   add cache-functionality
 # 2005-12-09:
 #   removed slots
 # 2005-08-26:
@@ -34,10 +36,10 @@ import Exceptions;
 
 
 class Symbol:
-    def __init__(self, Name, Connection, Address, Timeout, myPossession):
+    def __init__(self, Name, Connection, Address, Refresh, myPossession):
         self.__Logger = logging.getLogger("pyDCPU");
         self.__Valid = True;
-        self.__Timeout = Timeout;
+        self.__Refresh = Refresh;
         self.__Address = Address;
 
         if not Name: raise Exceptions.Error("No name given!");
@@ -47,6 +49,8 @@ class Symbol:
         self.__Name = Name;
         self.__Possession = myPossession;
         self.__Connection = Connection;
+        if isinstance(self.__Connection, MasterObject.ValueConnection):
+            self.__Connection.SetRefresh(Refresh);
 
     def Rename(self, Name): self.__Name = Name;
 
@@ -58,10 +62,17 @@ class Symbol:
 
     def GetQuality(self): return self.__Connection.GetQuality();
 
+    def GetRefresh(self): return self.__Refresh;
+    def SetRefresh(self, Refresh):
+        self.__Refresh = Refresh;
+        self.__Connection.SetRefresh(Refresh);
+
     def GetValue(self, SessionID):
         self.__Logger.debug("Get value from (%s) ..."%self.__Name);
         if not self.__Possession.CanRead(SessionID): raise Exceptions.AccessDenied("Access denied for symbol %s"%self.__Name);
-        return(self.__Connection.read_seq());
+        tmp = self.__Connection.read_seq();
+        self.__Logger.debug("Returned: %s"%str(tmp));
+        return tmp;
 
     def SetValue(self, Value, SessionID):
         self.__Logger.debug("Set value of (%s) to %s."%(self.__Name, str(Value)));

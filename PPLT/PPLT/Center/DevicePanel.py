@@ -30,6 +30,7 @@ from DeviceSelectionDialog import DeviceSelectionDialog;
 from DeviceParameterDialog import DeviceParameterDialog;
 import PPLT;
 import os;
+import Messages;
 
 class DevicePanel(wx.ListCtrl):
     def __init__(self, parent, PPLTSys):
@@ -84,8 +85,11 @@ class DevicePanel(wx.ListCtrl):
     def OnDelDevice(self,event):
         item = self.GetFocusedItem();
         alias = self.GetItemText(item);
-        if not self.__PPLTSys.UnLoadDevice(alias):
-            return(None);
+        try: self.__PPLTSys.UnLoadDevice(alias);
+        except Exception,e:
+            err = _("Unable to unload device %s.\n Message: %s")%(alias, str(e));
+            Messages.ErrorMessage(self, err, _("Unable to unload device."));
+            return;
         self.DeleteItem(item);
 
     def OnRightClick(self, event):
@@ -105,32 +109,32 @@ class DevicePanel(wx.ListCtrl):
 def LoadADevice(parent, PPLTSys):
     dlg = DeviceSelectionDialog(parent, PPLTSys);
     ret = dlg.ShowModal();
-    if ret != wx.ID_OK:
-        return(None);
+    if ret != wx.ID_OK: return(None);
     DevName = dlg.SelectedDevice;
     dlg.Destroy();
     #print "Selected Device: %s"%DevName;
     
     dlg = DeviceParameterDialog(parent, DevName, PPLTSys);
     ret = dlg.ShowModal();
-    if not ret == wx.ID_OK:
-        return(None);
+    if not ret == wx.ID_OK: return(None);
     Alias = dlg.Alias.GetValue();
     Vals  = dlg.Values;
     dlg.Destroy();
 
     #print "%s as %s : %s"%(DevName, Alias, str(vals))
-    if PPLTSys.LoadDevice(DevName, Alias, Vals):
-        return( (Alias, DevName, ParaToString(Vals)) );
-    return(None);
+    try:PPLTSys.LoadDevice(DevName, Alias, Vals);
+    except Exception, e:
+        err = _("Error while load device %s.\n Message: %s")%(DevName,str(e));
+        Messages.ErrorMessage(parent, err, _("Unable to load device."));
+        return None;
+    return( (Alias, DevName, ParaToString(Vals)) );
 
 
 def ParaToString(para):
     keys = para.keys();
     keys.sort();
     lst = [];
-    for key in keys:
-        lst.append("%s=%s"%(key,para[key]));
+    for key in keys: lst.append("%s=%s"%(key,para[key]));
     return(string.join(lst, ", "));
 
 

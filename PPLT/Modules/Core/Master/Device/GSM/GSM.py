@@ -1,7 +1,35 @@
+# ############################################################################ # 
+# This is part of the PPLT project.                                            # 
+#                                                                              # 
+# Copyright (C) 2003-2005 Hannes Matuschek <hmatuschek@gmx.net>                # 
+#                                                                              # 
+# This library is free software; you can redistribute it and/or                # 
+# modify it under the terms of the GNU Lesser General Public                   # 
+# License as published by the Free Software Foundation; either                 # 
+# version 2.1 of the License, or (at your option) any later version.           # 
+#                                                                              # 
+# This library is distributed in the hope that it will be useful,              # 
+# but WITHOUT ANY WARRANTY; without even the implied warranty of               # 
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the GNU             # 
+# Lesser General Public License for more details.                              # 
+#                                                                              # 
+# You should have received a copy of the GNU Lesser General Public             # 
+# License along with this library; if not, write to the Free Software          # 
+# Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA    # 
+# ############################################################################ # 
+
 import GSMUtils;
 import pyDCPU;
 import struct;
 import xdrlib;
+
+
+
+# Changelog:
+# 2006-02-08:
+#   Updated to new exceptions.
+
+
 
 class GSMAddress:
     def __init__(self, Type, Value):
@@ -28,161 +56,60 @@ ADDRHASH        = {'network':NETWORK,
 
 
 class Object(pyDCPU.MasterObject):
-    def setup(self):
-        self.Logger.info("Setup GSM")
-        #try:
-        #    if not GSMUtils.Reset(self.Connection):
-        #        self.Logger.error("Error while reset mobile");
-        #        return(False);
-        return(True);
-        #except:
-        #    self.Logger.error("Error while reset mobile");
-        #    return(False);
-        #return(False);
+    def setup(self): self.Logger.info("Setup GSM")
 
 
     def connect(self, AddrStr):
-        if not AddrStr:
-            self.Logger.error("Need Address for connection");
-            return(None);
+        if not AddrStr: raise pyDCPU.ModuleError("Need address for connection!");
 
-        if AddrStr.find('sms:')==0:
+        if AddrStr.find('sms:')==0:     #if addr-str begins with "sms:"
             tmp = AddrStr.split(':');
             if not len(tmp) == 2:
-                self.Logger.error("InvalidFormat: %s"%AddrStr);
-                return(None);
+                raise pyDCPU.ModuleError("Invalid format: \"%s\" should be \"sms:0123456789\"!"%AddrStr);
             Addr = GSMAddress(SMS, tmp[1]);
-            Con = pyDCPU.MasterConnection(self, Addr);
+            Con = pyDCPU.ValueConnection(self, pyDCPU.TString, Addr);
             self.Logger.debug("SMS destination: %s"%str(tmp[1]));
         elif ADDRHASH.has_key(AddrStr):
             Addr = GSMAddress(ADDRHASH[AddrStr],None);
-            Con = pyDCPU.MasterConnection(self, Addr);
-        else:
-            self.Logger.error("Invalid Addressformat %s"%AddrStr);
-            Con = None;
+            if Addr.GetType() in (NETWORK, BATTERY, QUALITY, ERRORRATE):
+                Type = pyDCPU.TInteger;
+            else: Type = pyDCPU.TString;
+            Con = pyDCPU.ValueConnection(self, Type, Addr);
+        else: raise pyDCPU.ModuleError("Invalid addrformat: \"%s\" ;look at the documentation."%AddrStr);
         return(Con);
 
 
 
-    def read(self, Connection, Len):
-        if not isinstance(Connection, pyDCPU.MasterConnection):
-            self.Logger.error("No connection to me???");
-            raise pyDCPU.FatIOModError;
-
+    def read(self, Connection, Len=None):
         if Connection.Address.GetType() == BATTERY:
-            try:
-                s = GSMUtils.GetBattery(self.Connection);
-            except:
-                self.Logger.error("IO Error while get battery")
-                raise pyDCPU.IOModError;
-
-            if not s:
-                self.Logger.error("Error while get battery status");
-                raise pyDCPU.IOModError;
-            self.Logger.debug("Battery: %s"%s);
-            packer = xdrlib.Packer();
-            packer.pack_uint(int(s));
-            return packer.get_buffer();
-
+            return int(GSMUtils.GetBattery(self.Connection));
         elif Connection.Address.GetType() == NETWORK:
-            try:
-                s = GSMUtils.GetNetwork(self.Connection);
-            except:
-                self.Logger.error("Error while get network status");
-                raise pyDCPU.IOModError;
-            if not s:
-                self.Logger.error("GetNetwork returned NULL");
-                raise pyDCPU.IOModError;
-            if len(s)<2:
-                self.Logger.error("invalid format");
-                raise pyDCPU.IOModError;
+            s = GSMUtils.GetNetwork(self.Connection);
+            if len(s)<2: raise pyDCPU.Error("Invalid format returned from device!");
             self.Logger.debug("Network status %s"%s[1]);
-            packer = xdrlib.Packer();
-            packer.pack_uint(int(s[1]));
-            return packer.get_buffer();
-        
+            return int(s[1]);
         elif Connection.Address.GetType() == QUALITY:
-            self.Logger.debug("Get quality of service");
-            try:
-                s = GSMUtils.GetQuality(self.Connection);
-            except:
-                self.Logger.error("Error while get quality");
-                raise pyDCPU.IOModError;
-            if not s:
-                self.Logger.error("GetQuality returned NULL");
-                raise IOModError;
-            self.Logger.debug("Quality %s"%str(s));
-            if len(s) != 2:
-                self.Logger.error("Invalid format returned: %s"%s);
-                raise IOModError;
-            packer = xdrlib.Packer();
-            packer.pack_uint(int(s[0]));
-            return packer.get_buffer();
-        
+            s = GSMUtils.GetQuality(self.Connection);
+            if len(s) != 2: raise pyDCPU.Error("Invalid format returned from deivce!");
+            return int(s[0]);
         elif Connection.Address.GetType() == ERRORRATE:
-            try:
-                s = GSMUtils.GetQuality(self.Connection);
-            except:
-                self.Logger.error("Error while get quality");
-                raise pyDCPU.IOModError;
-            if not s:
-                self.Logger.error("GetQuality returned NULL");
-                raise IOModError;
-            if len(s) != 2:
-                self.Logger.error("Invalid format returned");
-                raise IOModError;
-            packer = xdrlib.Packer();
-            packer.pack_uint(int(s[1]));
-            return packer.get_buffer();
-        
+            s = GSMUtils.GetQuality(self.Connection);
+            if len(s) != 2: raise pyDCPU.Error("Invalid format returned form device!");
+            return int(s[1]);
         elif Connection.Address.GetType() == MANUFACTURER:
-            try:
-                s = GSMUtils.GetManufacturer(self.Connection);
-                packer = xdrlib.Packer();
-                packer.pack_string(s);
-                return packer.get_buffer();
-            except Exception, e:
-                self.Logger.error("Error while get manufacturer string: %s"%str(e));
-                raise pyDCPU.IOModError;
-        
+            return GSMUtils.GetManufacturer(self.Connection);
         elif Connection.Address.GetType() == MODEL:
-            try:
-                s = GSMUtils.GetModel(self.Connection);
-                packer = xdrlib.Packer();
-                packer.pack_string(s);
-                return packer.get_buffer();
-            except:
-                self.Logger.error("Error while get model name");
-                raise IOModError;
-        
+            return GSMUtils.GetModel(self.Connection);
         elif Connection.Address.GetType() == SMS:
-            self.Logger.error("Send SMS is Write-Only");
-            raise pyDCPU.IOModError;
-        
-        else:
-            self.Logger.error("Invalid chanel address %s"%str(Connection.Address.GetType()));
-            raise pyDCPU.FatIOModError;
+            raise pyDCPU.AccessDenied("SMS can't be read! You can only send some!");
+        raise pyDCPU.ItemNotFound("Ivalid chanel address \"%s\"!"%str(Connection.Address.GetType()));
         
 
 
     def write(self, Connection, Data):
-        self.Logger.debug("write...");
-        unpacker = xdrlib.Unpacker(Data);
-        Msg = unpacker.unpack_string();
-        unpacker.done()
         self.Logger.debug("Send sms...");
         if Connection.Address.GetType() == SMS:
             Dest = Connection.Address.GetValue();
-            try:
-                ret = GSMUtils.SendSMS(self.Connection, Dest, Msg);
-            except:
-                self.Logger.error("Error while send SMS");
-                raise pyDCPU.IOModError;
-            if not ret:
-                self.Logger.error("Error while send SMS (errorcode returned by phone)");
-                raise(pyDCPU.IOModError);
+            ret = GSMUtils.SendSMS(self.Connection, Dest, Data);
             return(len(Data));
-        else:
-            self.Logger.error("Invalid chanel Address");
-            raise pyDCPU.IOModError;
-        return(None);
+        raise pyDCPU.ItemNotFound("Invalid chanel \"%s\"!"%str(Connection.Address.GetType()));

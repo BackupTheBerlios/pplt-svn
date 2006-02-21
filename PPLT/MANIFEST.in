@@ -8,4 +8,4 @@ recursive-include I18N *.po *.mo
 recursive-include Modules/ftp *.zip *.xml
 recursive-include test/ *.py
 graft examples
-
+include Doc/Reference.pdf

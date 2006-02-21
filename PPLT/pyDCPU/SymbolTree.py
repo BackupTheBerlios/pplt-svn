@@ -139,7 +139,6 @@ class SymbolTree(SymbolFolder.Folder):
         """ Return the name of the original type of the source. """
         PList = SymbolTools.SplitPath(PathToSymbol);
         Element = self.__GetElementByPath(PList);
-        print "Typename of (%s)%s"%(PathToSymbol,Element);
         if not isinstance(Element, Symbol.Symbol):
             raise Exceptions.ItemNotFound("%s is not a symbol or doesn't exists!"%PathToSymbol);
         return Element.GetTypeName();
@@ -179,13 +178,10 @@ class SymbolTree(SymbolFolder.Folder):
                                 self.__UserDB);
 
         newFolder = SymbolFolder.Folder(Name, possession);
-        if not newFolder: raise Exceptions.Error("Error while create folder instance: contact author!");
 
         if not Parent:
             self.AddFolder(Name,newFolder);
-        else:
-            if not Parent.AddFolder(Name, newFolder):
-                raise Exceptions.SymbolError("Can't create folder %s in parentfolder: Mail author!"%Name);
+        else: Parent.AddFolder(Name, newFolder);
 
     def MoveFolder(self, From, To):
         OPList = SymbolTools.SplitPath(From);
@@ -230,15 +226,14 @@ class SymbolTree(SymbolFolder.Folder):
                 raise Exceptions.ItemNotFound("Can't delete folder %s: Folder not found!"%PathToFolder);
             if self.FolderHash[Name].IsEmpty():
                 del self.FolderHash[Name];
-                return(True);
+                return;
             raise Exceptions.ItemBusy("Can't delete folder %s: folder not empty!"%PathToFolder);    
 
         Parent = self.__GetElementByPath(PList[:-1]);
 
         if not Parent:
             raise Exceptions.ItemNotFound("Can't delete folder %s: not found!"%PathToFolder);
-        if not Parent.DeleteFolder(Name):
-            raise Exceptions.Error("Can't delete folder %s: No reason: Mail author!"%PathToFolder);
+        Parent.DeleteFolder(Name);
 
 
 
@@ -268,12 +263,8 @@ class SymbolTree(SymbolFolder.Folder):
                                   Timeout,
                                   possession);
         
-        if Parent:
-            if not Parent.AddSymbol(Name, newSymbol):
-                raise Exceptions.Error("Unable to add symbol (%s) to folder: Mail author!"%PathToSymbol);
-        else:
-            if not self.AddSymbol(Name, newSymbol):
-                raise Exceptions.Error("Unable to add symbol (%s) to folder: Mail author!"%PathToSymbol);
+        if Parent: Parent.AddSymbol(Name, newSymbol);
+        else: self.AddSymbol(Name, newSymbol);
             
 
 
@@ -321,16 +312,17 @@ class SymbolTree(SymbolFolder.Folder):
         SymbolObj.Rename(NName);
         if len(NPList)==1:
             self.SymbolHash.update( {NName:SymbolObj} );
-            return(True);
-        if not NParent.AddSymbol(NName, SymbolObj):
+            return;
+        try: NParent.AddSymbol(NName, SymbolObj);
+        except Exception, e:
             #if symbol could not added to new folder 
             #    ->move it back where it comes from.
             SymbolObj.Rename(OName);
             if len(OPList)==1:
                 self.SymbolHash.update( {OName:SymbolObj} );
-                raise Exceptions.Error("Can't add symbol %s to new folder: Mail author!"%(OldPath));
+                raise Exceptions.Error("Can't add symbol %s to new folder: Mail author! (%s)"%(OldPath, str(e)));
             OParent.AddSymbol(OName,SymbolObj);
-            raise Exceptions.Error("Can't add symbol %s to new folder: Mail author!"%(OldPath));
+            raise Exceptions.Error("Can't add symbol %s to new folder: Mail author! (%s)"%(OldPath, str(e)));
 
 
     def DeleteSymbol(self, PathToSymbol):
@@ -344,19 +336,49 @@ class SymbolTree(SymbolFolder.Folder):
             if self.SymbolHash.has_key(Name):
                 self.SymbolHash[Name].Unregister();
                 del self.SymbolHash[Name];
-                return(True);
+                return;
             raise Exceptions.ItemNotFound("Can't delete symbol %s: item not found!"%PathToSymbol);
                 
         Parent = self.__GetElementByPath(PList[:-1]);
             
         if not Parent:
             raise Exceptions.ItemNotFound("Can't delete symbol %s: Symbol not found!"%PathToSymbol);
-            return(False);  # FIXME: ohoh..
-        if not Parent.DeleteSymbol(Name):
-            raise Exceptions.Error("Can't delete symbol %s: Can't remove symbol from parent. (contact author)"%PathToSymbol);
-            return(False);
+        Parent.DeleteSymbol(Name);
 
 
+    def SetSymbolRefresh(self, PathToSymbol, Refresh):
+        """ Resets the refresh-rate of the symbol! """
+        PList = SymbolTools.SplitPath(PathToSymbol);
+        if len(PList) == 0:
+            raise Exceptions.ItemNotFound("Can't set refresh-rate of \"%s\": symbol not found!"%PathToSymbol);
+        Name = PList[-1];
+
+        if len(PList)==1:
+            if self.SymbolHash.has_key(Name):
+                return self.SymbolHash[Name].SetRefresh(Refresh);
+            raise Exceptions.ItemNotFound("Can't set refresh-rate of symbol %s: item not found!"%PathToSymbol);
+                
+        Symbol = self.__GetElementByPath(PList);
+        if not Symbol: raise pyDCPU.ItemNotFound("Can't set refresh-rate for \"%s\": Symbol not found."%PathToSymbol);
+        Symbol.SetRefresh(Refresh);
+    
+    
+    def GetSymbolRefresh(self, PathToSymbol):
+        """ Returns the refresh-rate of the given symbol! """
+        PList = SymbolTools.SplitPath(PathToSymbol);
+        if len(PList) == 0:
+            raise Exceptions.ItemNotFound("Can't get refresh-rate of \"%s\": symbol not found!"%PathToSymbol);
+        Name = PList[-1];
+
+        if len(PList)==1:
+            if self.SymbolHash.has_key(Name):
+                return self.SymbolHash[Name].GetRefresh();
+            raise Exceptions.ItemNotFound("Can't can't get refresh-rate for \"%s\": item not found!"%PathToSymbol);
+                
+        Symbol = self.__GetElementByPath(PList);
+        if not Symbol: raise pyDCPU.ItemNotFound("Can't get refresh-rate for \"%s\": Symbol not found."%PathToSymbol);
+        return Symbol.GetRefresh();
+ 
 
     def SetPossession(self, PathToElement, User, Group, Permissions):
         """ Set the Possession to a folder or symbol """
@@ -368,8 +390,7 @@ class SymbolTree(SymbolFolder.Folder):
                                 Group,
                                 Permissions,
                                 self.__UserDB);
-        if not Element.SetPossession(Possession):
-            raise Exceptions.Error("Can't set possession: Opps -> mail author!");
+        Element.SetPossession(Possession);
         
     def GetPossession(self, PathToElement):
         PList = SymbolTools.SplitPath(PathToElement);
@@ -388,7 +409,8 @@ class SymbolTree(SymbolFolder.Folder):
         if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
         if not self.__UserDB.UserExists(Name):
             raise Exceptions.ItemNotFound("Owner (%s) of %s not in user-db!"%(Name,Path));
-        
+        pos.chown(Name);
+
     def GetGroupName(self, Path):
         pos = self.GetPossession(Path);
         if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
@@ -399,7 +421,8 @@ class SymbolTree(SymbolFolder.Folder):
         if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
         if not self.__UserDB.GroupExists(Name):
             raise Exceptions.ItemNotFound("Group %s not in user-db!"%Name);
-
+        pos.chgrp(Name);
+        
     def GetRightString(self, Path):
         pos = self.GetPossession(Path);
         if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
@@ -408,7 +431,10 @@ class SymbolTree(SymbolFolder.Folder):
     def SetRightString(self, Path, Right):
         pos = self.GetPossession(Path);
         if not pos: raise Exceptions.ItemNotFound("Can't find %s!"%Path);
-    
+        self.Logger.debug("set modus to %s(%s)."%(Right,type(Right)));
+        #modus = int(Right,8);
+        pos.chmod(Right);
+
     def __GetElementByPath(self, PathList):
         """ Get a element from tree by Path """
         #PathList = pyDCPUSymbolTools.SplitPath(PathToElement);

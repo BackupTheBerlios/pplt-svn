@@ -12,3 +12,8 @@
 * svn checkout http://svn.berlios.de/srvroot/repos/pplt/PPLT [svn-repos]
 * svn checkout svn://svn.berlios.de/pplt/PPLT
 * http://svn.berlios.de/wsvn/pplt
+
+
+* CMSimple http://www.cmsimple.dk
+* tyCON http://www.tycon.info
+*

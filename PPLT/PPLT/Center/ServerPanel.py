@@ -30,6 +30,7 @@ from ServerSelectionDialog import ServerSelectionDialog;
 from ServerParameterDialog import ServerParameterDialog;
 import PPLT;
 import os;
+import Messages;
 
 class ServerPanel(wx.ListCtrl):
     def __init__(self, parent, PPLTSys):
@@ -92,8 +93,7 @@ class ServerPanel(wx.ListCtrl):
     def OnStopServer(self, event):
         item = self.GetFocusedItem();
         alias = self.GetItemText(item);
-        if not self.__PPLTSys.UnLoadServer(alias):
-            return(None);
+        self.__PPLTSys.UnLoadServer(alias);
         self.DeleteItem(item);
 
     def OnRightClick(self, event):
@@ -114,26 +114,25 @@ class ServerPanel(wx.ListCtrl):
 def LoadAServer(parent, PPLTSys):
     dlg = ServerSelectionDialog(parent, PPLTSys);
     ret = dlg.ShowModal();
-    if ret != wx.ID_OK:
-        return(None);
+    if ret != wx.ID_OK: return(None);
     SrvName = dlg.SelectedServer;
     dlg.Destroy();
-    #print "Selected Server: %s"%SrvName;
     
     dlg = ServerParameterDialog(parent, SrvName, PPLTSys);
     ret = dlg.ShowModal();
-    if not ret == wx.ID_OK:
-        return(None);
+    if not ret == wx.ID_OK: return(None);
     Alias = dlg.Alias.GetValue();
     DefUser = dlg.DefUser.GetValue();
     Vals  = dict(dlg.Values);
     Root  = dlg.Root.GetValue();
     dlg.Destroy();
 
-    print "%s as %s(%s) : %s"%(SrvName, Alias, DefUser,str(Vals))
-    if PPLTSys.LoadServer(SrvName, Alias, DefUser, Vals, Root):
-        return( (Alias, SrvName, DefUser, ParaToString(Vals),Root) );
-    return(None);
+    try: PPLTSys.LoadServer(SrvName, Alias, DefUser, Vals, Root);
+    except Exception,e:
+        err = _("Unable to load server \"%s\".\n\n Message: %s"%(SrvName,str(e)));
+        Messages.ErrorMessage(parent, err, _("Error while load server."));
+        return None;
+    return( (Alias, SrvName, DefUser, ParaToString(Vals),Root) );
 
 
 def ParaToString(para):

@@ -12,6 +12,7 @@ help-en.chm
 help-en.htb
 setup.cfg
 setup.py
+Doc/Reference.pdf
 I18N/de/PPLT.mo
 I18N/de/PPLT.po
 Modules/ftp/CoreModules/5462X.zip
@@ -163,4 +164,5 @@ test/testMods/Lock.py
 test/testMods/S7.py
 test/testMods/__init__.py
 test/testPPLT/Devices.py
+test/testPPLT/Symbols.py
 test/testPPLT/__init__.py

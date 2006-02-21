@@ -26,6 +26,7 @@
 
 
 import re;
+import Exceptions;
 
 
 
@@ -40,24 +41,19 @@ def CheckDevice(Name):
     exp = re.compile(RE_DEV_SRV);
     Name = Name.strip();
     if not re.match(exp, Name):
-        return(None);
-    return(Name);
+        raise Exceptions.Error("Device \"%s\" is an invalid name."%Name);
 
-def CheckServer(Name):
-    return(CheckDevice(Name));
+def CheckServer(Name): CheckDevice(Name);
 
 def CheckUser(Name):
     exp = re.compile(RE_USR_GRP);
     Name = Name.strip();
     if not re.match(exp, Name):
-        return(None);
-    return(Name);
+        raise Exceptions.Error("User \"%s\" is an invalid user-name."%Name);
 
-def CheckGroup(Name):
-    return(CheckUser(Name));
+def CheckGroup(Name): CheckUser(Name);
 
-def CheckAlias(Name):
-    return(CheckUser(Name));
+def CheckAlias(Name): CheckUser(Name);
 
 def CheckPath(Name):
     exp = re.compile(RE_PATH);
@@ -65,8 +61,7 @@ def CheckPath(Name):
     if len(Name)>1 and Name[-1]=='/':   #remove tailing slash
         Name = Name[:-1];
     if not re.match(exp, Name):
-        return(None);
-    return(Name);
+        raise Exceptions.Error("Path \"%s\" has invalid format!"%Name);
 
 
 

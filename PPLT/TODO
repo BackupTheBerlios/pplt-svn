@@ -14,7 +14,7 @@
 	- Write a core-mod to read/write to the parallel port (maybe with the option
 	 to control each pin of the port).
     - Write a SNMP trap (and may be a UDDI server-module).
-
+    - write something for the 1-Wire-Bus(-fs)
 
 
 +++ BUGs BUGs BUGs +++
@@ -24,8 +24,3 @@
 
 [PPLTCenter]
     - SymbolTreePanel: Make all visible items visible after rebuild tree.
-    - Fix file-types in all file-selection-dialogs. (maybe fix translation)
-
-    
-
- 

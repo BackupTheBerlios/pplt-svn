@@ -247,22 +247,6 @@ class PropertyDialog(wx.Dialog):
         self.__VBox.Add(self.__Modus,0,wx.ALL|wx.GROW,1);
         
         self.__VBox.Add(wx.StaticLine(self,-1,style=wx.HORIZONTAL),0,wx.GROW|wx.TOP|wx.BOTTOM,2);
-
-        tmp = wx.StaticText(self, -1, _("Type: "));
-        self.__Type = wx.ComboBox(self, -1, choices=["Bool", "Integer", "uInteger",
-                                                     "Long", "uLong", "Float",
-                                                     "Double","String", "ArrayBool",
-                                                     "ArrayInteger", "ArrayuInteger",
-                                                     "ArrayLong","ArrayuLong",
-                                                     "ArrayFloat", "ArrayDouble",
-                                                     "ArrayString","Raw"]);
-        if Type:
-            self.__Type.SetValue(str(Type));
-            self.__Type.SetEditable(False);
-        box = wx.BoxSizer(wx.HORIZONTAL);
-        box.Add(tmp,1,wx.ALIGN_CENTER);
-        box.Add(self.__Type,2,wx.ALIGN_RIGHT|wx.GROW);
-        self.__VBox.Add(box,0,wx.GROW|wx.ALL,1);
         
         tmp = wx.StaticText(self, -1, _("Refresh: "));
         self.__Rate = wx.TextCtrl(self, -1, "0.5");
@@ -295,8 +279,6 @@ class PropertyDialog(wx.Dialog):
         return(self.__Name.GetValue());
     def GetSlot(self):
         return(self.__Slot);
-    def GetType(self):
-        return(self.__Type.GetValue());
     def GetRate(self):
         return(self.__Rate.GetValue());
     def GetModus(self):

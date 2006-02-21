@@ -12,7 +12,7 @@
             <DCPUModule>Master.Transport.PPI</DCPUModule>
             <DCPUModule>Master.Device.S7</DCPUModule>
 			<DCPUModule>Master.Debug.Statistic</DCPUModule>
-
+            <DebugInfo>Bin im Require block</DebugInfo>
 			<Variable name="Port" default="0">
 				<Description lang="de">Geben sie hier die serielle 
 				Schnittstelle an, an die die Steuerung angschlossen ist.
@@ -84,7 +84,6 @@
 				<Load name="Master.Debug.Statistic" namespace="PPIStatistic">
 					<Address><Variable name="S7Addr"/></Address>
 					<Load name="Master.Device.S7" namespace="Marker">
-						<Address>tunnel</Address>
 					</Load>
 				</Load>
 			</Load>

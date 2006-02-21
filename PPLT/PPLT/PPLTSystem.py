@@ -20,9 +20,7 @@
 
 import pyDCPU;
 import pyDCPU.SymbolTools
-import Configuration;
 import Logging;
-import Install;
 import Device;
 import Server;
 import DataBase;
@@ -43,12 +41,6 @@ class System:
  class. To get a instance of this class simply call:
  >>> obj = PPLT.System(). 
  
- There is a optional parameter for this method: "ConfigFile":
- >>> obj = PPLT.System(ConfigFile="/home/hannes/PPLT.conf")
- If you miss this parameter, the default sys.exec_prefix+"/PPLT/PPLT.conf" will
- be used. Will be installed, so you should simply call PPLT.System() to get an
- instance of this class.
-
  A typical session could be:
  >>> import PPLT
  >>> #Start the pplt-system:
@@ -66,10 +58,7 @@ class System:
  >>> # NOTE: All folders on the path to the symbol must exsists.
  >>> # The second parameter is the full name of the symbol-slot the symbol will be
  >>> # attached to. The format for the symbol-slot name is ALIAS::NAMESPACE::SLOT.
- >>> # The last 3rd parameter is the type-name of the symbol (depends on the slot
- >>> # you use: pleas see at the device reference). Also there are some optional
- >>> # parameters, please see at the reference of the CreateSymbol() method.
- >>> system.CreateSymbol("/r_bool", "rand::Generator::Bool", "Bool")
+ >>> system.CreateSymbol("/r_bool", "rand::Generator::Bool")
  >>> 
  >>> #Now start a server:
  >>> # The call of LoadServer is quied simular to the call of LoadDevice, but
@@ -105,9 +94,9 @@ class System:
         self.__UserDataBase = self.__Core.GetTheUserDB();
         self.__DeviceHash = {}                                                  # init some tables
         self.__ServerHash = {}                                                  # ...
-        self.__SymbolTable = {};                                                # Association between SymbolPath and SlotID
-        self.__SymbolDeviceTable = {};                                          # Ass. btw. SymbolPath and DeviceAlias
-        self.__SymbolParameters = {};                                           # cache parameters for symbol...
+        # Association between SymbolPath and Slot
+        # mainly used to save the symbol-tree into a session file
+        self.__SymbolTable = {};
 
 
 
@@ -122,68 +111,40 @@ class System:
     def StopAll(self):
         """ This method will stop the system. Meaning stopping all servers,
  clear the whole Symboltree and unload all devices. (no parameters needed)""" 
-        OK = True;
-        if not self.StopServers():
-            OK = False;
-        if not self.ClearSymbolTree():
-            OK = False;
-        if not self.StopDevices():
-            OK = False;
-        return(OK);
+        self.StopServers();
+        self.ClearSymbolTree();
+        self.StopDevices();
     
     def StopServers(self):
         """ This method will stop all servers. """
         srvlst = self.__ServerHash.keys();
-        OK = True;
         for srv in srvlst:
             self.__Logger.debug("Try to stop server \"%s\"."%srv);
-            if not self.UnLoadServer(srv):
-                self.__Logger.warning("Unable to unload Server \"%s\""%srv);
-                OK = False;
-        return(OK);
+            self.UnLoadServer(srv)
 
     def StopDevices(self):
         """ This method will unload all devices. """
         devlst = self.__DeviceHash.keys();
-        OK = True;
         for dev in devlst:
             self.__Logger.debug("Try to unload device \"%s\"."%dev);
-            if not self.UnLoadDevice(dev):
-                self.__Logger.warning("Unable to unload device \"%s\"."%dev);
-                OK = False;
-        return(OK);
+            self.UnLoadDevice(dev);
 
     def ClearSymbolTree(self, path="/"):
         """ This method will clear the whole symbol tree or the path if given. """
-        OK = True;
         # delete all symbols in this folder:
         symlst = self.ListSymbols(path);
         for sym in symlst:
-            if path[-1] == '/':
-                sym = path+sym;
-            else:
-                sym = path+"/"+sym;
-            
-            if not self.DeleteSymbol(sym):
-                self.__Logger.warning("Can't delete symbol %s"%sym);
-                OK = False;
+            if path[-1] == '/': sym = path+sym;
+            else: sym = path+"/"+sym;
+            self.DeleteSymbol(sym);
 
         #recursive delete all folders in this path:
         dirlst = self.ListFolders(path);
         for fol in dirlst:
-            if path[-1] == '/':
-                fol = path+fol;
-            else:
-                fol = path+"/"+fol;
-
-            if not self.ClearSymbolTree(fol):
-                self.__Logger.warning("Unable to delete content of folder %s"%fol);
-                OK = False;
-            else:
-                if not self.DeleteFolder(fol):
-                    self.__Logger.warning("Unable to delete folder %s"%fol);
-                    OK = False;
-        return(OK);
+            if path[-1] == '/': fol = path+fol;
+            else: fol = path+"/"+fol;
+            self.ClearSymbolTree(fol);
+            self.DeleteFolder(fol);
 
 
 
@@ -199,11 +160,7 @@ class System:
         doc = impl.createDocument(None, "PPLTSession", None);
         top = doc.documentElement;
 
-        try:        #open file
-            fd = open(FileName, "w");
-        except:
-            self.__Logger.error("Error while save to file %s"%FileName);
-            return(False);
+        fd = open(FileName, "w");
 
         #save servers:
         servers_tag = doc.createElement("Servers");
@@ -224,7 +181,6 @@ class System:
         txt = doc.toprettyxml()
         fd.write(txt);
         fd.close();
-        return(True);
 
     def __SaveServers(self, Doc, Node):
         srvlst = self.__ServerHash.keys();
@@ -247,7 +203,6 @@ class System:
                 prm_tag.setAttribute("name",par);
                 val_tag = Doc.createTextNode(parmtr.get(par));
                 prm_tag.appendChild(val_tag);
-        return(None);
                 
     def __SaveDevices(self, Doc, Node):
         devlst = self.__DeviceHash.keys();
@@ -267,32 +222,29 @@ class System:
                 prm_tag.setAttribute("name",par);
                 val_tag = Doc.createTextNode(parmtr.get(par));
                 prm_tag.appendChild(val_tag);
-        return(None);
     
     def __SaveSymTree(self, Doc, Node, Path="/"):
         symlst = self.ListSymbols(Path);
         for sym in symlst:
-            if Path[-1] == "/":
-                sympath = Path+sym;
-            else:
-                sympath = Path+"/"+sym;
-            (Slot, Type) = self.__SymbolParameters[sympath];
+            if Path[-1] == "/": sympath = Path+sym;
+            else: sympath = Path+"/"+sym;
+            Slot = self.__SymbolTable[sympath];
             sym_tag = Doc.createElement("Symbol");
             Node.appendChild(sym_tag);
             sym_tag.setAttribute("name",sym);
             sym_tag.setAttribute("slot",Slot);
-            sym_tag.setAttribute("type",Type);
-            #sym_tag.setAttribute("timeout",???)
+            sym_tag.setAttribute("refresh",self.__Core.SymbolTreeGetRefresh(sympath))
             sym_tag.setAttribute("owner", self.GetOwner(sympath));
             sym_tag.setAttribute("group", self.GetGroup(sympath));
             sym_tag.setAttribute("modus", self.GetModus(sympath,MODUS_FMT_OCTAL));
+            self.__Logger.debug("Sessionsave: Save symbol %s(%s) with slot %s, refresh %s, owner %s, group %s and modus %s"%(
+                                sym, sympath, Slot, self.__Core.SymbolTreeGetRefresh(sympath), self.GetOwner(sympath),
+                                self.GetGroup(sympath), self.GetModus(sympath, MODUS_FMT_OCTAL)));
 
         dirlst = self.ListFolders(Path);
         for fol in dirlst:
-            if Path[-1]=="/":
-                folpath = Path+fol;
-            else:
-                folpath = Path+"/"+fol;
+            if Path[-1]=="/": folpath = Path+fol;
+            else: folpath = Path+"/"+fol;
             fol_tag = Doc.createElement("Folder");
             Node.appendChild(fol_tag);
             fol_tag.setAttribute("name",fol);
@@ -300,7 +252,6 @@ class System:
             fol_tag.setAttribute("group",self.GetGroup(folpath));
             fol_tag.setAttribute("modus",self.GetModus(folpath,MODUS_FMT_OCTAL));
             self.__SaveSymTree(Doc, fol_tag, folpath);
-        return(True);
 
 
 
@@ -318,17 +269,6 @@ class System:
     # - install                                                                #
     # - uninstall                                                              #
     # ######################################################################## #
-    def Install(self, InstallFile):
-        """ This method will install all core-modules and pplt-devices listed in
- the InstallFile. Return True on success."""
-        return(Install.InstallSet(InstallFile, self.__Config.GetBasePath()));
-    
-    def UnIstall(self, ModuleName):
-        """ This method will uninstall the given module/divice/server. 
- Return True on success. (not implemented yet)"""
-        #FIXME implement!
-        pass;
-
     def ListKnownServers(self, Class=None):
         """ List all Servers in Class. Return a list of strings. """
         return(self.__DataBase.ListServers(Class));
@@ -372,72 +312,57 @@ Return a list of strings. """
     def CreateGroup(self, ParentGroup, Name):
         """ Create a group within ParentGroup with Name. If ParentGroup is None,
  a new root group will be generated. Return True on success. """ 
-        Name = NameCheck.CheckGroup(Name);
-        if not Name:
-            self.__Logger.error("Invalid format for groupname. Should only contain: a-z,A-Z,0-9,_,-");
-            return(False);
-        return(self.__UserDataBase.CreateGroup(ParentGroup,Name));
+        NameCheck.CheckGroup(Name);
+        self.__UserDataBase.CreateGroup(ParentGroup,Name);
 
     def DeleteGroup(self, Name):
         """ Delete a group. Return True on success."""
-        return(self.__UserDataBase.DeleteGroup(Name));
+        self.__UserDataBase.DeleteGroup(Name);
 
     def ListGroups(self, GroupName = None):
         """ List all subgroups of given GroupName. If GroupName = None or 
  missed, all root groups will be listed. Return a list of string. """
 
-        if not GroupName:
-            group = self.__UserDataBase;
-        else:
-            group = self.__UserDataBase.GetGroupByName(GroupName);
-        if not group:
-            return([]);
+        if not GroupName: group = self.__UserDataBase;
+        else: group = self.__UserDataBase.GetGroupByName(GroupName);
+        if not group: return([]);
         # list subgroups:
         return(group.ListSubGroups());
 
     def ListMembers(self, GroupName = None):
         """ List all members of a give group. Return a list of strings. """
-        if not GroupName:
-            return([]);
+        if not GroupName: return([]);
         group = self.__UserDataBase.GetGroupByName(GroupName);
-        if not group:
-            return([]);
+        if not group: return([]);
         #list memebers:
         return(group.ListMembers());
 
     def CreateMember(self, Group, Name, Password, Description):
         """ Create a new group member for the give Group with Name, Password 
  and Description. Return True on success. """
-        Name = NameCheck.CheckUser(Name);
-        if not Name:
-            self.__Logger.error("Invalid format for username. Should only contain: a-z,A-Z,0-9,_,-");
-            return(False);
-        return(self.__UserDataBase.CreateMember(Group, Name, Password, Description, Encode=True));
+        NameCheck.CheckUser(Name);
+        self.__UserDataBase.CreateMember(Group, Name, Password, Description, Encode=True);
 
     def DeleteMember(self, Name):
         """ Delete a user. Return True on success. """
         group = self.__UserDataBase.GetGroupByUserName(Name);
-        if not group:
-            self.__Logger.warning("No group found for user %s: does he/she exists?"%Name);
-            return(False);
-        return(self.__UserDataBase.DeleteMember(group.GetName(), Name));
+        if not group: raise pyDCPU.ItemNotFound("No group found %s is member of! Does he/she exists?"%Name);
+        self.__UserDataBase.DeleteMember(group.GetName(), Name);
 
     def CreateProxy(self, Group, Name):
         """ Create a user-proxy for user (Name) in group (Group). """
-        return(self.__UserDataBase.CreateProxy(Group, Name));
+        self.__UserDataBase.CreateProxy(Group, Name);
 
     def ListProxys(self, Group):
         """List all proxys in group (Group). """
         group = self.__UserDataBase.GetGroupByName(Group);
-        if not group:
-            self.__Logger.error("Group %s not found."%Group);
-            return(None);
+        if not group: raise pyDCPU.ItemNotFound("Group \"%s\" not found."%Group);
         self.__Logger.debug("List proxys of group %s"%group.GetName());
         return(group.ListProxys());
 
     def DeleteProxy(self, Group, User):
         """ Delete proxy for user (User) in group (Group) """
-        return(self.__UserDataBase.DeleteProxy(Group, User));
+        self.__UserDataBase.DeleteProxy(Group, User);
 
     def CheckPassword(self, Name, Password):
         """ Test Password if its match to user Name's one. Return True on 
@@ -446,15 +371,15 @@ Return a list of strings. """
 
     def ChangePassword(self, Name, Password):
         """ Change the passwd for a the user Name. """
-        return(self.__UserDataBase.ChangePassword(Name,Password,Encode=True));
+        self.__UserDataBase.ChangePassword(Name,Password,Encode=True);
 
     def SetSuperUser(self, Name):
         """ Make user Name become the SuperUser. """
-        return(self.__UserDataBase.SetSuperUser(Name));
+        self.__UserDataBase.SetSuperUser(Name);
 
     def GetSuperUser(self):
         """ Return the name of the SuperUser """
-        return(self.__UserDataBase.GetSuperUser());
+        return self.__UserDataBase.GetSuperUser();
 
     def GetSuperUserGrp(self):
         """ Return the group of the SuperUser """
@@ -463,21 +388,19 @@ Return a list of strings. """
     def GetGroupByUser(self, UserName):
         """ Return the group of given user """
         grp = self.__UserDataBase.GetGroupByUserName(UserName);
-        if not grp:
-            return(None);
+        if not grp: raise pyDCPU.ItemNotFound("User \"%s\" not found!"%UserName);
         return(grp.GetName());
     
+
+
     # ######################################################################## #
     # Manage Devices                                                           #
     # ######################################################################## #
     # ######################################################################## #
     def LoadDevice(self, DeviceName, Alias, Parameters):
-        """ Load and init device DeviceName as Alias with Parameters. Return
- True on success."""
+        """ Load and init device DeviceName as Alias with Parameters."""
         #check Alias:
-        Alias = NameCheck.CheckAlias(Alias);
-        if not Alias:
-            raise pyDCPU.Exceptions.Error("Invalid fromat for alias \"%s\": Should only contain (a-z,A-Z,0-9,-,_)"%Alias);
+        NameCheck.CheckAlias(Alias);
 
         #check alias:
         if self.__DeviceHash.has_key(Alias):
@@ -487,6 +410,8 @@ Return a list of strings. """
         devFileName = self.__DataBase.GetDevicePath(DeviceName);
         if not devFileName:
             raise pyDCPU.Exceptions.ItemNotFound("Can't load device \"%s\": Associated file [%s] not found!"%(DeviceName, devFileName));
+
+        # extend parameters with default values:
 
         # load and init device
         device = Device.Device(self.__Core, devFileName, DeviceName, Parameters);
@@ -498,16 +423,19 @@ Return a list of strings. """
         return(True);
 
 
-
     def UnLoadDevice(self, Alias):
         """ Unload and destroy the given device. Return True on success. """
         if not self.__DeviceHash.has_key(Alias):
             raise pyDCPU.Exceptions.ItemNotFound("No device with alias \"%s\" known!"%Alias);
-        
-        self.__DeviceHash[Alias].destroy();
+       
+        #check if device is used by symbols:
+        for slot in self.__SymbolTable.values():
+            (device, namespace, addr) = slot.split("::",3);
+            if device == Alias:
+                raise pyDCPU.ItemBusy("The device \"%s\" is used by (some) symbol(s)."%Alias);
 
+        self.__DeviceHash[Alias].destroy();
         del self.__DeviceHash[Alias];
-        return(True);
 
 
     def ListDevices(self):
@@ -518,17 +446,13 @@ Return a list of strings. """
     def GetFQDeviceName(self, Alias):
         """Return the full qualified device name of device known as Alias."""
         dev = self.__DeviceHash.get(Alias);
-        if not dev:
-            self.__Logger.error("No device named \"%s\" found."%Alias);
-            return(None);
+        if not dev: raise pyDCPU.ItemNotFound("No device named \"%s\" found."%Alias);
         return(dev.getClassAndName());
 
     def GetDeviceParameters(self, Alias):
         """ Return all Parameters of device known as.""" 
         dev = self.__DeviceHash.get(Alias);
-        if not dev:
-            self.__Logger.error("No device named %s found"%Alias);
-            return(None);
+        if not dev: raise pyDCPU.ItemNotFound("No device named \"%s\" found."%Alias);
         return(dev.getParameters());
             
     
@@ -540,57 +464,34 @@ Return a list of strings. """
         """ Load the server ServerName as Alias with Parameters and with
  default rights of the given DefaultUser. Return True on success."""
         #check server-root:
-        Root = NameCheck.CheckPath(Root);
-        if not Root:
-            self.__Logger.error("Invalid path-format for server-root.");
-            return(False);
+        NameCheck.CheckPath(Root);
 
         #check alias:
-        Alias = NameCheck.CheckAlias(Alias);
-        if not Alias:
-            self.__Logger.error("Invalid format for an alias.");
-            return(False);
+        NameCheck.CheckAlias(Alias);
 
         #check servername:
-        ServerName = NameCheck.CheckServer(ServerName);
-        if not ServerName:
-            self.__Logger.error("Invalid format for a servername.");
-            return(False);
+        NameCheck.CheckServer(ServerName);
 
         #check alias:
         if self.__ServerHash.has_key(Alias):
-            self.__Logger.error("Alias %s already exists"%Alias);
-            return(False);
+            raise pyDCPU.ItemBusy("Alias \"%s\" allready used by an other device (or server)."%Alias);
 
         serverFileName = self.__DataBase.GetServerPath(ServerName);
-        if not serverFileName:
-            self.__Logger.warning("No server found named %s"%ServerName);
-            return(False);
-        self.__Logger.debug("Try to load server %s with %s as %s"%(ServerName, str(Parameters), Alias));
-        try:
-            server = Server.Server(self.__Core, serverFileName, ServerName, DefaultUser, Parameters, Root);
-        except:
-            self.__Logger.warning("Error while load server %s"%ServerName);
-            return(False);
 
-        if not server:
-            self.__Logger.error("Error while load Server %s"%ServerName);
-            return(False);
+        self.__Logger.debug("Try to load server %s with %s as %s"%(ServerName, str(Parameters), Alias));
+        server = Server.Server(self.__Core, serverFileName, ServerName, DefaultUser, Parameters, Root);
         self.__ServerHash.update( {Alias:server} );
-        return(True);
+
 
     def UnLoadServer(self, Name):
         """ Unload a desatroy the give Server. Return True on success."""
         # get Obj by name
         serverObj = self.__ServerHash.get(Name);
         if not serverObj:
-            self.__Logger.warning("No server running named \"%s\""%Name);
-            return(False);
+            raise pyDCPU.ItemNotFound("No server runing named \"%s\"."%Name);
         # stop it:
-        if not serverObj.destroy():
-            return(False);
+        serverObj.destroy();
         del self.__ServerHash[Name];
-        return(True);
 
     def ListRunningServers(self):
         """ List all running or hanging servers. Return a list of strings. """
@@ -602,16 +503,14 @@ Return a list of strings. """
 alias of a loaded server."""
         srv = self.__ServerHash.get(Alias);
         if not srv:
-            self.__Logger.error("No server named \"%s\" found"%Alias);
-            return(None);
+            raise pyDCPU.ItemNotFound("No server named \"%s\" found!"%Alias);
         return(srv.getClassAndName());
 
     def GetServerParameters(self, Alias):
         """ Return all parameters of the given server in a dict. """
         srv = self.__ServerHash.get(Alias);
         if not srv:
-            self.__Logger.error("No server named \"%s\" found"%Alias);
-            return(None);
+            raise pyDCPU.ItemNotFound("No server named \"%s\" found."%Alias);
         return(srv.getParameters());
 
     def GetServerDefaultUser(self, Alias):
@@ -619,16 +518,14 @@ alias of a loaded server."""
 doesn't know a authentification."""
         srv = self.__ServerHash.get(Alias);
         if not srv:
-            self.__Logger.error("No server named \"%s\" found"%Alias);
-            return(None);
+            raise pyDCPU.ItemNotFound("No server named \"%s\" found."%Alias);
         return(srv.getDefaultUser());
 
     def GetServerRoot(self, Alias):
         """ Return the server-root of a server. """
         srv = self.__ServerHash.get(Alias);
         if not srv:
-            self.__Logger.error("No server named \"%s\" found"%Alias);
-            return(None);
+            raise pyDCPU.ItemNotFound("No server named \"%s\" found."%Alias);
         return(srv.getRoot());
     
 
@@ -642,87 +539,63 @@ doesn't know a authentification."""
  SuperUserGroup will be used for Owner and Group and 600 will be used as
  the modus. Return True on success."""
         #check path:
-        Path = NameCheck.CheckPath(Path);
-        if not Path:
-            self.__Logger.error("Invalid path-format for folder-path.");
-            return(False);
+        NameCheck.CheckPath(Path);
 
         # map call to core-object:
-        if not self.__Core.SymbolTreeCreateFolder(Path):
-            return(False);
-        if Owner:
-            if not self.ChangeOwner(Path,Owner):
-                self.__Logger.warning("Error while set owner to %s"%Owner);
-        if not Group:
-            if Owner:
-                Group = self.__UserDataBase.GetGroupByUserName(Owner);
-                if not Group:
-                    self.__Logger.warning("Unknown owner %s"%Owner);
-                self.ChangeGroup(Path, Group);
-        if Modus != '600':
-            self.ChangeModus(Path,Modus);
-        return(True);
+        self.__Core.SymbolTreeCreateFolder(Path);
+        try:
+            #try to set owner, group, modus 
+            #if somethig goes wrong -> remove folder
+            if Owner: self.ChangeOwner(Path,Owner);
+            if not Group:
+                if Owner:
+                    Group = self.__UserDataBase.GetGroupByUserName(Owner);
+                    self.ChangeGroup(Path, Group);
+            if Modus != '600': self.ChangeModus(Path,Modus);
+        except Exception,e:
+            self.__Core.SymbolTreeDeleteFolder(Path);
+            raise e;
 
 
     def MoveFolder(self, From, To):
         """ Move a folder from (From) to (To). """
-        #check path:
-        To = SymbolTools.NormPath(To);
-        From  = SymbolTools.NormPath(From);
+        To = pyDCPU.SymbolTools.NormPath(To);
+        From  = pyDCPU.SymbolTools.NormPath(From);
         self.__Logger.debug("Move Folder from %s to %s"%(From, To));
 
-        To = NameCheck.CheckPath(To);
-        if not To:
-            self.__Logger.error("Invalid path-format for destination.");
-            return(False);
+        NameCheck.CheckPath(To);
         
         if not self.__Core.SymbolTreeCheckPath(From):
-            self.__Logger.error("Source %s does not exsists."%From);
-            return False;
+            raise pyDCPU.ItemNotFound("Source-folder %s doesn't exists."%From);
         if self.__Core.SymbolTreeCheckPath(To):
-            self.__Logger.error("Destination %s already exsists."%To);
-            return False;
+            raise pyDCPU.ItemBusy("Destination folder allready exists");
 
         # get pathes of all symbols under folder (From):
         OSymList = RecursiveSymbolList(self, From);
 
         #map call to core object:
-        if not self.__Core.SymbolTreeMoveFolder(From, To):
-            self.__Logger.error("Error while move folder from %s to %s"%(From, To));
-            return(False);
+        self.__Core.SymbolTreeMoveFolder(From, To);
 
         # get pathes of all symbol under (new) folder (To) 
         #   (are in the sameorder):
         NSymList = RecursiveSymbolList(self, To);
 
         if len(OSymList) != len(NSymList):
-            self.__Logger.fatal("Fatal error while move folder: Lost symbols.");
+            raise Exception("FATAL-ERROR: while move folder; Symbols lost! Mail author!");
 
         for Idx in range(len(OSymList)):
             From = OSymList[Idx];
             To   = NSymList[Idx];
-            #update symbol-parameters:
-            paras = self.__SymbolParameters.get(From);
-            del self.__SymbolParameters[From];
-            self.__SymbolParameters.update( {To:paras} );
-        
-            #update symbol<->device table:
-            device = self.__SymbolDeviceTable.get(From);
-            del self.__SymbolDeviceTable[From];
-            self.__SymbolDeviceTable.update( {To:device} );
 
             #update symbol<->slot table:
             slot = self.__SymbolTable.get(From);
             del self.__SymbolTable[From];
             self.__SymbolTable.update( {To:slot} );
-        return(True);
 
 
     def DeleteFolder(self, Path, Recur=False):
         """ Simply delete a (empty) Folder. Return True on success. """
-        #simply map call to core:
         return(self.__Core.SymbolTreeDeleteFolder(Path));
-        #FIXME Add recursive detete
 
 
     def ListFolders(self, Path):
@@ -731,104 +604,62 @@ doesn't know a authentification."""
         return(self.__Core.SymbolTreeListFolders(Path));
 
 
-    def CreateSymbol(self, Path, Slot, Type, Modus='600', Owner=None, Group=None):
+    def CreateSymbol(self, Path, Slot, Refresh=0.5, Modus='600', Owner=None, Group=None):
         """ Create a Symbol with Type in Path and attach it to Slot. Modus, Owner, Group
  can be obmitted. Then SuperUser, SuperUserGroup and 600 will be used. Return True on
  success. """
         # check slot-path:
-        Path = NameCheck.CheckPath(Path);
-        if not Path:
-            self.__Logger.error("Invalid path-format for symbol-path.");
-            return(False);
+        NameCheck.CheckPath(Path);
 
         # check slot:
-        Slot = NameCheck.CheckSlot(Slot);
-        if not Slot:
-            self.__Logger.error("\"%s\": Invalid format for a Slot name."%Slot);
-            return(False);
+        NameCheck.CheckSlot(Slot);
 
         # check if symbol allready exists:
         # split slot:
         tmp = Slot.split('::');
-        if len(tmp) < 2 or len(tmp) > 3:
-            self.__Logger.error("Slot address format: DEVICE::NAMESPACE::ADDRESS");
-            return(False);
 
         # get device name:
         DevName = tmp[0];
-
         # get namespace
-        if len(tmp) == 2:
-            NameSpace = None;
-        else:
-            NameSpace = tmp[1];
-
+        NameSpace = tmp[1];
         # get address:
-        Address = tmp[-1];
+        Address = tmp[2];
         
         # try to create slot:
         # get device
         dev = self.__DeviceHash.get(DevName);
-        if not dev:
-            self.__Logger.error("No device named \"%s\" found!"%DevName);
-            return(False);
-        # get slotid
-        SlotID = dev.register(NameSpace, Address, Type);
-        # create symbol in core object
-        if not self.__Core.SymbolTreeCreateSymbol(Path, SlotID):
-            self.__Logger.error("Can't create symbol \"%s\""%Path);
-            # unregister symbol:
-            dev.unregister(SlotID);
-            return(False);
+        if not dev: pyDCPU.ItemNotFound("No device named \"%s\" found!"%DevName);
 
-        # fin
-        self.__SymbolTable.update( {Path:SlotID} );
-        self.__SymbolDeviceTable.update( {Path:DevName} );
+        # get CoreModID by Namespace:
+        ID = dev.GetIDByNameSpace(NameSpace);
+        
+        # create symbol in core object
+        self.__Core.SymbolTreeCreateSymbol(Path, ID, Address, Refresh);
+
+        # save Symbol<->Slot
+        self.__SymbolTable.update( {Path:Slot} );
+        
         # CHANGE ACCESS
         # set modus:
-        if Modus != '600':
-            if not self.ChangeModus(Path,Modus):
-                self.__Logger.warning("Unable to change modus to %s"%Modus);
-        if Owner:
-            if not self.ChangeOwner(Path,Owner):
-                self.__Logger.warning("Unable to change owner to %s"%Owner);
-            if not Group:
-                GrpObj = self.__UserDataBase.GetGroupByUserName(Owner);
-                if not GrpObj:
-                    self.__Logger.warning("Unable to set Group");
-                else:
-                    if not self.ChangeGroup(Path,GrpObj.GetName()):
-                        self.__Logger.warning("Unable to set Group");
-        if Group:
-            if not self.ChangeGroup(Path,Group):
-                self.__Logger.warning("Unable to change group to %s"%Group);
-        
-        self.__Logger.debug("Save %s for %s."%(str((Slot,Type)),Path))
-        self.__SymbolParameters.update( {Path:(Slot,Type)} );
-        return(True);
-
+        try:
+            if Modus != '600': self.ChangeModus(Path,Modus);
+            if Owner:
+                self.ChangeOwner(Path,Owner);
+                if not Group:
+                    GrpObj = self.__UserDataBase.GetGroupByUserName(Owner);
+                    if GrpObj: self.ChangeGroup(Path,GrpObj.GetName());
+            if Group: self.ChangeGroup(Path,Group);
+        except Exception,e:
+            self.DeleteSymbol(Path);
+            raise e;
 
     def MoveSymbol(self, From, To):
         """Move a symbol from (From) to (To). Please use only full pathes."""
-        To = SymbolTools.NormPath(To);
-        From = SymbolTools.NormPath(From)
-        To = NameCheck.CheckPath(To);
-        if not To:
-            self.__Logger.error("Invalid symbolpath-format for destiantion.");
-            return(False);
-        if not self.__Core.SymbolTreeMoveSymbol(From,To):
-            self.__Logger.error("Error while move symbol from %s to %s"%(From,To))
-            return(False);
+        To = pyDCPU.SymbolTools.NormPath(To);
+        From = pyDCPU.SymbolTools.NormPath(From)
+        NameCheck.CheckPath(To);
 
-        #update symbol-parameters:
-        paras = self.__SymbolParameters.get(From);
-        del self.__SymbolParameters[From];
-        self.__SymbolParameters.update( {To:paras} );
-        
-        #update symbol<->device table:
-        device = self.__SymbolDeviceTable.get(From);
-        del self.__SymbolDeviceTable[From];
-        self.__SymbolDeviceTable.update( {To:device} );
+        self.__Core.SymbolTreeMoveSymbol(From,To);
 
         #update symbol<->slot table:
         slot = self.__SymbolTable.get(From);
@@ -840,55 +671,34 @@ doesn't know a authentification."""
     def DeleteSymbol(self, Path):
         """ Simply delete the symbol in Path. Return True on success."""
         # get slotID by symbol path:
-        SlotID = self.__SymbolTable.get(Path);
-        if not SlotID:
-            self.__Logger.error("Unknown symbol \"%s\""%Path);
-            return(False);
-        # get deviceName by slotID
-        DevName = self.__SymbolDeviceTable.get(Path);
-        if not DevName:
-            self.__Logger.fatal("no device enty for slotid in table! Mail author!");
-            return(False);
-        # get device object by name
-        Dev = self.__DeviceHash.get(DevName);
-        if not Dev:
-            self.__Logger.fatal("no device object for name \"%s\" in table! Mail author!"%DevName);
-            return(False);
+        if not self.__SymbolTable.has_key(Path):
+            raise pyDCPU.ItemNotFound("Unknwn symbol \"%s\""%Path);
         #delete symbol from tree
-        if not self.__Core.SymbolTreeDeleteSymbol(Path):
-            self.__Logger.error("Can't del symbol \"%s\""%Path);
-            return(False);
-        if not Dev.unregister(SlotID):
-            self.__Logger.error("Can't unregister symbol from device");
-            self.__Logger.debug("Restore symbol...");
-            self.__Core.SymbolTreeCreateSymbol(Path, SlotID);
-            return(False);
+        self.__Core.SymbolTreeDeleteSymbol(Path);
         del self.__SymbolTable[Path];
-        del self.__SymbolParameters[Path];
-        #FIXME check if it is ness. to del some else...
-        return(True);
 
+    def SetSymbolRefresh(self, Path, Rate=0.5):
+        """ (Re)Sets the refresh-rate of the given symbol to %%Timeout%%."""
+        self.__Core.SymbolTreeSetRefresh(Path, Rate);
+    
+    def GetSymbolRefresh(self, Path):
+        """ Returns the refresh-rate for the given symbol. """
+        return self.__Core.SymbolTreeGetRefresh(Path);
+
+    def GetSymbolType(self, Path):
+        """ Returns the type of the symbol. """
+        return self.__Core.SymbolTreeGetTypeName(Path);
+
+    def GetSymbolSlot(self, Path):
+        """ Returns the slot the given symbol is attached to. """
+        if(not self.__SymbolTable.has_key(Path)):
+            raise Exceptions.ItemNotFound("symbol-path %s not known."%Path);
+        return self.__SymbolTable[Path];
 
     def ListSymbols(self, Path):
         """ List all Symbols in Path. Return a lsit of strings. """
         #simple map call to core:
         return(self.__Core.SymbolTreeListSymbols(Path));
-
-    def GetSymbolSlot(self, Path):
-        """ Return the slot the symbol at Path is attached to. """
-        para = self.__SymbolParameters.get(Path);
-        if not para:
-            self.__Logger.error("No symbol: %s"%Path);
-            return(None);
-        return(para[0]);
-
-    def GetSymbolType(self, Path):
-        """ Return the type (name) of the given symbol. """
-        para = self.__SymbolParameters.get(Path);
-        if not para:
-            self.__Logger.error("No symbol: %s"%Path);
-            return(None);
-        return(para[1]);
 
     def GetSymbolTimeStamp(self, Path):
         """ Return the time of the last update of the symbol pointed by Path. """
@@ -900,36 +710,22 @@ doesn't know a authentification."""
  modus will be returnd. If Format is STRING, a string formated like
  the modus in ls -l command will be returned. If Format is INTEGER
  the integer representation of the modus will be returned (base=10!!!)."""
- 
         (User, Group, Modus) = self.__Core.SymbolTreeGetAccess(Path);
-        if Modus == None:
-            self.__Logger.warning("Error while get modus of %s, maybe it does not exist"%Path);
-            return(None);
         if Format==MODUS_FMT_OCTAL:
             return(ModusToOctString(Modus));
         if Format==MODUS_FMT_STRING:
             return(ModusToString(Modus));
         if Format==MODUS_FMT_INTEGER:
             return(Modus);
-        self.__Logger.warning("Invalid format...");
-        return(None);
-
+        raise pyDCPU.Error("Uknown format-type: %i"%Format);
 
     def ChangeModus(self, Path, Modus):
         """ Change the modus of the symbol or folder pointed by path.
  Only the OCTAL string format is accepted. Return True on success. """
         (user, group, old_modus) = self.__Core.SymbolTreeGetAccess(Path);
-        if isinstance(Modus,int):
-            new_modus = Modus;
-        elif isinstance(Modus,(str,unicode)):
-            try:
-                new_modus = int(Modus,8);
-            except:
-                self.__Logger.warning("Can't convert modus format.");
-                return(None);
-        else:
-            self.__Logger.error("Invalid modus fromat. Expacted str or int got %s"%str(type(Modus)));
-            return(None);
+        if isinstance(Modus,int): new_modus = Modus;
+        elif isinstance(Modus,(str,unicode)): new_modus = int(Modus,8);
+        else: raise pyDCPU.Error("Invalid modus fromat. Expacted str or int got %s"%str(type(Modus)));
         return(self.__Core.SymbolTreeSetAccess(Path,user,group,new_modus));
 
     def GetOwner(self, Path):
@@ -940,12 +736,9 @@ doesn't know a authentification."""
     def ChangeOwner(self, Path, Owner):
         """ Set the owner of a symbol or folder. Return True
  on success. """
-        Owner = NameCheck.CheckUser(Owner);
-        if not Owner:
-            self.__Logger.error("Invalid user name. Usernames should only contain (a-z,A-Z,0-9,-,_).");
-            return(False);
+        NameCheck.CheckUser(Owner);
         (old_user, group, modus) = self.__Core.SymbolTreeGetAccess(Path);
-        return(self.__Core.SymbolTreeSetAccess(Path, Owner, group, modus));
+        self.__Core.SymbolTreeSetAccess(Path, Owner, group, modus);
 
 
     def GetGroup(self, Path):
@@ -956,12 +749,9 @@ doesn't know a authentification."""
 
     def ChangeGroup(self, Path, Group):
         """ Set the group of a symbol or folder. Return True on success."""
-        Group = NameCheck.CheckGroup(Group);
-        if not Group:
-            self.__Logger.error("Invalid group name. Groupnames should only contain (a-z,A-Z,0-9,-,_).");
-            return(None);
+        NameCheck.CheckGroup(Group);
         (owner, old_group, modus) = self.__Core.SymbolTreeGetAccess(Path);
-        return(self.__Core.SymbolTreeSetAccess(Path, owner, Group, modus));
+        self.__Core.SymbolTreeSetAccess(Path, owner, Group, modus);
 
 
     def GetValue(self, Path):
@@ -971,7 +761,7 @@ doesn't know a authentification."""
 
     def SetValue(self, Path, Value):
         """ Set the Value of a symbol pointed by path. """
-        return(self.__Core.SymbolTreeSetValue(Path, Value));
+        self.__Core.SymbolTreeSetValue(Path, Value);
 
 
 
@@ -993,26 +783,19 @@ def ModusToString(modus):
     rstr= "";
     tmp = "";
     for mod in (own,grp,any):
-        if mod & 0x01:
-            tmp += "r";
-        else:
-            tmp += "-";
-        if (mod>>1)&0x01:
-            tmp += "w";
-        else:
-            tmp += "-";
-        if (mod>>2)&0x01:
-            tmp += "x";
-        else:
-            tmp += "-";
+        if mod & 0x01: tmp += "r";
+        else: tmp += "-";
+        if (mod>>1)&0x01: tmp += "w";
+        else: tmp += "-";
+        if (mod>>2)&0x01: tmp += "x";
+        else: tmp += "-";
         rstr += tmp;
         tmp = "";
     return(rstr);
 
 
 def RecursiveSymbolList(Sys, Path, List=None):
-    if not List:
-        List = [];
+    if not List: List = [];
     FList = Sys.ListFolders(Path);
     for Folder in FList:
         nPath = NormPath(Path+"/"+Folder);
@@ -1029,8 +812,7 @@ def NormPath(Path):
     tmpList = Path.split("/");
     PList = [];
     for tmp in tmpList:
-        if tmp and tmp != "":
-            PList.append(tmp);
+        if tmp and tmp != "": PList.append(tmp);
     Path = "/"+string.join(PList,"/");
     return(Path);
 
@@ -1048,6 +830,10 @@ def NormPath(Path):
 
 
 # CHANGELOG:
+# 2006-02-09:
+#   * updated to new core-API
+# 2006-02-08:
+#   + updated to new exception model
 # 2005-08-28:
 #   + add move/rename folders.
 # 2005-08-26:

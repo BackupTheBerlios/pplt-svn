@@ -14,7 +14,6 @@
 		<!-- The require section list all needed modules and variables //-->
         <Require>
             <DCPUModule>Master.Interface.UniSerial</DCPUModule>
-            <DCPUModule>Master.Transport.ReadLine</DCPUModule>
             <DCPUModule>Master.Device.GSM</DCPUModule>
         
 			<!-- Needed variables(with help) //-->
@@ -84,9 +83,7 @@
             <Parameter name="TimeOut">2.0</Parameter>
 			<Parameter name="Parity">None</Parameter>
             <Parameter name="Speed"><Variable name="Speed"/></Parameter>
-            <Load name="Master.Debug.HexDump">
-                <Load name="Master.Device.GSM" namespace="GSM"/>
-            </Load>
+            <Load name="Master.Device.GSM" namespace="GSM"/>
         </Load>
     </Setup>
         

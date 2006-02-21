@@ -215,7 +215,6 @@ You can install and uninstall (if you have the right to do) modules. """
     def GetServerPath(self, Name):
         " Returns the file-path to the server given. "
         Srv = self.__GetServer(Name);
-        if not Srv: return(None);
         return(Srv.GetFilePath());
 
     def GetServerDescription(self, Name):

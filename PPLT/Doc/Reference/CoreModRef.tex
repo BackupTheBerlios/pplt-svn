@@ -306,7 +306,7 @@ core-module.
 This module need two parameters to be set up. These parameters specify the
 primary and secondary signal source. If you only want to use the primary
 source you should set the secondary to the same source like the primary.
-\begin{tableiii}{l|p{10}|l}{textrm}{Parameter}{Description}{Default}
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default}
 \lineiii{PSource}
         {This specifies the primary source. This can be one of A0 (analog \#1),
          A1 (analog \#2), M (math) or F (form).}{---}
@@ -314,7 +314,7 @@ source you should set the secondary to the same source like the primary.
         {This specifies the secondaray source. Look at \var{PSource} for more
          details}{---}
 \end{tableiii}         
-\bf{To be continued}\bf{To be continued}
+\bf{To be continued} \bf{To be continued}
 
 %
 % Panasonic A200 Imagechecker
@@ -327,8 +327,40 @@ source you should set the secondary to the same source like the primary.
 % GSM compatible mobile-phone.
 %
 \CoreModDesc{Master.Device.GSM}
+With this device you can send SMS or read status information about a GSM 
+compatible mobile-phone. You only need to append this device on a serial
+interface (IrDA, bluetouth may also work).
 
+\subsubsection{Parameters}
+This module needs no parameters.
 
+\subsubsection{Addresses}
+\begin{tableiii}{l|l|p{10cm}}{textrm}{Address}{Type}{Description}
+\lineiii{network}{\code{TInteger}}
+        {If you read from this connection you'll get the network-state of
+         the mobile phone.}
+\lineiii{battery}{\code{TInteger}}
+        {If you read from this connection you'll get the battary-level of
+         the mobile-phone in percent.}
+\lineiii{quality}{\code{TInterger}}
+        {If you read from this connection you'll get the signal-quality of
+         the connection to the access-point the mobile-phone is dialed in.}
+\lineiii{errorrate}{\code{TInteger}}
+        {If you read from this connection you'll get the errorrate of the
+         connetion to the access-point the mobile-phone is dialed in.}
+\lineiii{manufacturer}{\code{TString}}
+        {Returns the name of the manufacturer.}
+\lineiii{model}{\code{TString}}
+        {Returns the modelname.}
+\lineiii{sms:NUMBER}{\code{TString}}
+        {If you write into this connection, you'll send a sms to the given 
+         number! For example \code{sms:0123456789}.}
+\end{tableiii}
+
+\subsubsection{Example}
+In this example I will show how to read the information form the mobile-phone 
+and to send this data as a short \emph{Report-SMS}.
+\lstinputlisting{coremod12.py}
 
 %
 % Command-messages for the Panasonic FP0 and FP1
