@@ -126,10 +126,9 @@ class UserDBPanel(wx.TreeCtrl):
         if self.ItemHasChildren(item):
             (citem,c) = self.GetFirstChild(item);
             self.__RemoveProxys(Name, citem);
-        
-        sitem = self.GetNextSibling(item);
-        if sitem:
-            self.__RemoveProxys(Name, sitem);
+        try: sitem = self.GetNextSibling(item);
+        except: return;
+        if sitem: self.__RemoveProxys(Name, sitem);
 
     def OnCompareItems(self, item1, item2):
         Label1 = self.GetItemText(item1);

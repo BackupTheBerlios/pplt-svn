@@ -30,8 +30,15 @@ class MyLogger(logging.Handler):
     def __init__(self, LogTextCtrl):
         logging.Handler.__init__(self);
         self.__TxtCtrl = LogTextCtrl;
+        self.lock = False;
 
     def emit(self, record):
+        while (self.lock): pass;
+        self.lock = True;
+        try: self.write_to_window(record);
+        finally: self.lock = False;
+        
+    def write_to_window(self, record):
         name = record.name;
         level  = record.levelno;
         leveln = record.levelname;
@@ -47,6 +54,7 @@ class MyLogger(logging.Handler):
             self.__TxtCtrl.SetDefaultStyle(wx.TextAttr(wx.BLACK));
         self.__TxtCtrl.SetInsertionPoint(0);
         self.__TxtCtrl.WriteText("%s >>> %s: %s\n"%(name,leveln, record.getMessage()) );
+        
 
 
 class LogWindow(wx.TextCtrl):

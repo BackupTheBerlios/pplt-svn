@@ -311,12 +311,12 @@ Return a list of strings. """
     # ######################################################################## #
     def CreateGroup(self, ParentGroup, Name):
         """ Create a group within ParentGroup with Name. If ParentGroup is None,
- a new root group will be generated. Return True on success. """ 
+ a new root group will be generated. """ 
         NameCheck.CheckGroup(Name);
         self.__UserDataBase.CreateGroup(ParentGroup,Name);
 
     def DeleteGroup(self, Name):
-        """ Delete a group. Return True on success."""
+        """ Delete a group."""
         self.__UserDataBase.DeleteGroup(Name);
 
     def ListGroups(self, GroupName = None):
@@ -339,12 +339,12 @@ Return a list of strings. """
 
     def CreateMember(self, Group, Name, Password, Description):
         """ Create a new group member for the give Group with Name, Password 
- and Description. Return True on success. """
+ and Description. """
         NameCheck.CheckUser(Name);
         self.__UserDataBase.CreateMember(Group, Name, Password, Description, Encode=True);
 
     def DeleteMember(self, Name):
-        """ Delete a user. Return True on success. """
+        """ Delete a user. """
         group = self.__UserDataBase.GetGroupByUserName(Name);
         if not group: raise pyDCPU.ItemNotFound("No group found %s is member of! Does he/she exists?"%Name);
         self.__UserDataBase.DeleteMember(group.GetName(), Name);
@@ -365,8 +365,7 @@ Return a list of strings. """
         self.__UserDataBase.DeleteProxy(Group, User);
 
     def CheckPassword(self, Name, Password):
-        """ Test Password if its match to user Name's one. Return True on 
- success. """
+        """ Test Password if its match to user Name's one. """
         return(self.__UserDataBase.ValidUser(Name,Password));
 
     def ChangePassword(self, Name, Password):
@@ -424,7 +423,7 @@ Return a list of strings. """
 
 
     def UnLoadDevice(self, Alias):
-        """ Unload and destroy the given device. Return True on success. """
+        """ Unload and destroy the given device. """
         if not self.__DeviceHash.has_key(Alias):
             raise pyDCPU.Exceptions.ItemNotFound("No device with alias \"%s\" known!"%Alias);
        
@@ -462,7 +461,7 @@ Return a list of strings. """
     # ######################################################################## #
     def LoadServer(self, ServerName, Alias, DefaultUser, Parameters, Root = "/"):
         """ Load the server ServerName as Alias with Parameters and with
- default rights of the given DefaultUser. Return True on success."""
+ default rights of the given DefaultUser."""
         #check server-root:
         NameCheck.CheckPath(Root);
 
@@ -484,7 +483,7 @@ Return a list of strings. """
 
 
     def UnLoadServer(self, Name):
-        """ Unload a desatroy the give Server. Return True on success."""
+        """ Unload a desatroy the give Server."""
         # get Obj by name
         serverObj = self.__ServerHash.get(Name);
         if not serverObj:
@@ -494,7 +493,7 @@ Return a list of strings. """
         del self.__ServerHash[Name];
 
     def ListRunningServers(self):
-        """ List all running or hanging servers. Return a list of strings. """
+        """ List all running or hanging servers. """
         # simply return a list of known aliases:
         return(self.__ServerHash.keys());
 
@@ -537,7 +536,7 @@ doesn't know a authentification."""
         """ Create a new Folder in Folder "Path" with Modus, Owner, Group.
  Modus, Owner, Group can be obmitted, then the SuperUser and the 
  SuperUserGroup will be used for Owner and Group and 600 will be used as
- the modus. Return True on success."""
+ the modus."""
         #check path:
         NameCheck.CheckPath(Path);
 
@@ -594,7 +593,7 @@ doesn't know a authentification."""
 
 
     def DeleteFolder(self, Path, Recur=False):
-        """ Simply delete a (empty) Folder. Return True on success. """
+        """ Simply delete a (empty) Folder. """
         return(self.__Core.SymbolTreeDeleteFolder(Path));
 
 
@@ -606,8 +605,7 @@ doesn't know a authentification."""
 
     def CreateSymbol(self, Path, Slot, Refresh=0.5, Modus='600', Owner=None, Group=None):
         """ Create a Symbol with Type in Path and attach it to Slot. Modus, Owner, Group
- can be obmitted. Then SuperUser, SuperUserGroup and 600 will be used. Return True on
- success. """
+ can be obmitted. Then SuperUser, SuperUserGroup and 600 will be used. """
         # check slot-path:
         NameCheck.CheckPath(Path);
 
@@ -669,7 +667,7 @@ doesn't know a authentification."""
 
 
     def DeleteSymbol(self, Path):
-        """ Simply delete the symbol in Path. Return True on success."""
+        """ Simply delete the symbol in Path."""
         # get slotID by symbol path:
         if not self.__SymbolTable.has_key(Path):
             raise pyDCPU.ItemNotFound("Unknwn symbol \"%s\""%Path);
@@ -721,7 +719,7 @@ doesn't know a authentification."""
 
     def ChangeModus(self, Path, Modus):
         """ Change the modus of the symbol or folder pointed by path.
- Only the OCTAL string format is accepted. Return True on success. """
+ Only the OCTAL string format is accepted. """
         (user, group, old_modus) = self.__Core.SymbolTreeGetAccess(Path);
         if isinstance(Modus,int): new_modus = Modus;
         elif isinstance(Modus,(str,unicode)): new_modus = int(Modus,8);
@@ -734,8 +732,7 @@ doesn't know a authentification."""
         return(user);
 
     def ChangeOwner(self, Path, Owner):
-        """ Set the owner of a symbol or folder. Return True
- on success. """
+        """ Set the owner of a symbol or folder. """
         NameCheck.CheckUser(Owner);
         (old_user, group, modus) = self.__Core.SymbolTreeGetAccess(Path);
         self.__Core.SymbolTreeSetAccess(Path, Owner, group, modus);
@@ -748,7 +745,7 @@ doesn't know a authentification."""
 
 
     def ChangeGroup(self, Path, Group):
-        """ Set the group of a symbol or folder. Return True on success."""
+        """ Set the group of a symbol or folder."""
         NameCheck.CheckGroup(Group);
         (owner, old_group, modus) = self.__Core.SymbolTreeGetAccess(Path);
         self.__Core.SymbolTreeSetAccess(Path, owner, Group, modus);

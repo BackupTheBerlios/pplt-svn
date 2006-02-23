@@ -1,4 +1,4 @@
-\newcommand{\CoreModDesc}[1]{\newpage\subsection{#1}\index{Core Modules!#1}}
+\newcommand{\CoreModDesc}[1]{\subsection{#1}\index{Core Modules!#1}}
 \newcommand{\CoreMod}[1]{\code{#1}}
 
 \chapter{Core-modules Reference}
@@ -408,7 +408,7 @@ This example shows how to access a FPx using the \emph{ToolPort} (serial interfa
 
 
 %
-%
+% Command messages for the Siemens SIMATIC S7-200 (may be other)
 %
 \CoreModDesc{Master.Device.S7}
 This module implements the command-messages of the Siemens SIMATIC S7(-200). 
@@ -677,9 +677,124 @@ interface.
 
 
 
-\newpage
 \section{Export modules}
+Export or better server-modules are used to export the symbols stored in the 
+symbol-tree to other applications like visualisations etc. You can start a
+server by calling the \code{ExporterAdd()} method. You can stop the server
+by calling the \code{ExporterDel()} method with the id of the server 
+(returned by the \code{ExporterAdd()} method). 
+
+Servers are running in there own thread, so the main application doesn't block
+if you're starting a new server. 
+
+Some of the servers don't know any authentication, but the PPLT system needs 
+to know who access the symbol tree. So each server can be started with a 
+\emph{default-user}. If the server doesn't use authentication, the server 
+will run with the rights of the given defaut user. \notice{So be carefull
+with this default user and allways take a user, that has the lowest rights.}
+
+Also you can define a \emph{server-root} on loading. By this you can export 
+only a part (only the folder you've specified as the server-root) of the
+symbol-tree by the specific server. Look at the core library refrerence for
+details.
+
+
 \CoreModDesc{Export.JVisu}
+This server-module implements a \emph{JVisu} socket-server for the open
+sourec Java visualiation. This server knows no authentication so be
+carefull with the default-user.
+
+\subsubsection{parameters}
+This module needs only two parameters to be set up. The address the server
+will be bind to and the TCP port the server will listen on for new 
+connections.
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default}
+\lineiii{Address}
+        {This parameter specifies the address the server will bind to.}
+        {---}
+\lineiii{Port}
+        {This parameter specifies the port the server will listen for new
+         connections.}
+        {---}
+\end{tableiii}
+
+
+
 \CoreModDesc{Export.SimpleExport}
+This module implement a simple XML-RPC server that serves some functions to 
+access the symbols and folders on the exported symbol-tree. This server 
+provides some functions to authenticate but if the authentication was missed,
+the default user will be used. So please be carefull with the default-user 
+you'll define. 
+
+XML-RPC is a system and language independent protocoll to call 
+remote-procedures so your applications can access the symbol-tree independent
+from the language you use or the system your application will run on.
+
+\subsubsection{Parameters}
+This module needs two parameters to be set up. The address the server will be
+bind to and the TCP port the server will listen to.
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default}
+\lineiii{Address}
+        {This parameter defines the address the server will be bind to.}
+        {---}
+\lineiii{Port}
+        {This parameters specifies the TCP port the server will listen for 
+         new connections.}
+        {---}
+\end{tableiii}
+
+\subsubsection{Exported methods}
+The \code{logon()} method can be used to start a session. This method takes 
+two arguments. The first argument is a string and contains the username and
+the second is a string containing the password. The method will return a 
+string with the sessionid or \code{false} on error. The returned sessionid
+can be used as an argument for all other methods to authenticate your calls.
+If you miss the session-argument, you calls will be executed with the rights
+of the defualt-user specified at the loading of the server.
+
+The \code{logoff()} method quits a session. The method will need the sessionid
+you've got from the \code{logon()} method as argument.
+
+The \code{get()} method can be used to get the value from the given symbol. 
+So the method will take a string argument containing the full path to the 
+symbol. 
+
+The \code{set()} method will set the value of the given symbol to the given
+value. So this method will take at least two arguments. The first is a string
+containing the full path to the symbol and the second is the value. This method
+will return true on success and false on error.
+
+The \code{listfolders()} method will return a array containing all folders 
+in the given folder. So the first argument should be a string containing the
+full path to the folder (for all root-folders use '/') the content you want to
+get. The returned array will be an array of strings with all folder-names. If
+there are no folders the method will return an empty array.
+
+The \code{listsymbols()} method works like the \code{listfolders()} method. It
+returns all symbols in the given folder. So the first argument should be a 
+string containing the full path to the folder you want to list.
+
+
+
 \CoreModDesc{Export.PPLTWeb}
+This coremodule implements a simple web-server to serve the symbol-tree. You 
+can access the symbol-tree and the values of the stored symbols by a simple 
+web-browser. This server known a basic http-authentication, so you the 
+\emph{default user} will be ignored.
+
+\subsubsection{Parameters}
+This server-module will need two parameters to be set up. The address the 
+server will be bind to and the TCP port the server will listen on for new
+connections.
+\begin{tableiii}{l|p{10cm}|l}{textrm}{Parameter}{Description}{Default}
+\lineiii{Address}
+        {This parameter defines the address the server will be bind to.}
+        {---}
+\lineiii{Port}
+        {This parameters specifies the TCP port the server will listen for 
+         new connections.}
+        {---}
+\end{tableiii}
+
 

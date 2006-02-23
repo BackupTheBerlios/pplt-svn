@@ -17,26 +17,32 @@
     <SymbolTree>
         <Folder group="Admin" modus="600" name="Rand" owner="admin">
             <Symbol group="Users" modus="640" name="r_double" 
-                    owner="Hannes" slot="rand::Generator::Double" type="Double"/>
+                    owner="Hannes" slot="rand::Generator::Double"
+                    refresh="0.5"/>
             <Symbol group="Admin" modus="640" name="r_bool" 
-                    owner="admin" slot="rand::Generator::Bool" type="Bool"/>
+                    owner="admin" slot="rand::Generator::Bool"
+                    refresh="0.5"/>
         </Folder>
         <Folder group="Admin" modus="600" name="S7" owner="admin">
             <Symbol group="Users" modus="640" name="A02" 
-                    owner="Hannes" slot="s7::Marker::A0.2" type="Bool"/>
+                    owner="Hannes" slot="s7::Marker::A0.2"
+                    refresh="0.5"/>
             <Symbol group="Users" modus="640" name="A00" owner="Hannes" 
-                    slot="s7::Marker::A0.0" type="Bool"/>
+                    slot="s7::Marker::A0.0" 
+                    refresh="0.5"/>
             <Symbol group="Users" modus="640" name="A01" 
-                    owner="Hannes" slot="s7::Marker::A0.1" type="Bool"/>
+                    owner="Hannes" slot="s7::Marker::A0.1"
+                    refresh="0.5"/>
             <Symbol group="Users" modus="640" name="SMB28" 
-                    owner="Hannes" slot="s7::Marker::SMB28" type="uInteger"/>
+                    owner="Hannes" slot="s7::Marker::SMB28"
+                    refresh="0.5"/>
             <Folder group="Admin" modus="640" name="PPI" owner="Hannes">
                 <Symbol group="Users" modus="640" name="read_data" owner="Hannes" 
-                        slot="s7::PPIStatistic::read_data" type="uInteger"/>
+                        slot="s7::PPIStatistic::read_data" refresh="0.5"/>
                 <Symbol group="Users" modus="600" name="write_data" owner="Hannes" 
-                        slot="s7::PPIStatistic::write_data" type="uInteger"/>
+                        slot="s7::PPIStatistic::write_data" refresh="0.5"/>
                 <Symbol group="Users" modus="640" name="error_count" owner="Hannes" 
-                        slot="s7::PPIStatistic::error" type="uInteger"/>
+                        slot="s7::PPIStatistic::error" refresh="0.5"/>
             </Folder>
         </Folder>
     </SymbolTree>

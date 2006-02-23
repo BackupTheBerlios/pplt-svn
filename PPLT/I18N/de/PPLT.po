@@ -1,307 +1,144 @@
-# translation of PPLT.po to deutsch
+# SOME DESCRIPTIVE TITLE.
+# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER
 # This file is distributed under the same license as the PACKAGE package.
-# Copyright (C) YEAR THE PACKAGE'S COPYRIGHT HOLDER.
-# Hannes Matuschek <hmatuschek@gmx.net>, 2005.
+# FIRST AUTHOR <EMAIL@ADDRESS>, YEAR.
 #
+#, fuzzy
 msgid ""
 msgstr ""
-"Project-Id-Version: PPLT\n"
-"Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2005-09-28 00:21+0200\n"
-"PO-Revision-Date: 2005-09-28 00:35+0200\n"
+"Project-Id-Version: 0.9.0\n"
+"Report-Msgid-Bugs-To: hmatuschek@gmx.net\n"
+"POT-Creation-Date: 2006-02-21 21:06+0100\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: Hannes Matuschek <hmatuschek@gmx.net>\n"
-"Language-Team: deutsch <de@li.org>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: 8bit\n"
-"X-Generator: KBabel 1.10\n"
 
-#: Scripts/PPLTC.py:52
-msgid "&New session"
-msgstr "&Neue Sitzung"
-
-#: Scripts/PPLTC.py:52
-msgid "Create a new (epmty) session."
-msgstr "Erzeugt einen neue (leere) Sitzung"
-
-#: Scripts/PPLTC.py:55
-msgid "&Open session"
-msgstr "Sitzung &laden"
-
-#: Scripts/PPLTC.py:55
-msgid "Open a saved session."
-msgstr "Läd eine gespeicherte Sitzung"
-
-#: Scripts/PPLTC.py:58
-msgid "&Save session"
-msgstr "Sitzung &speichern"
-
-#: Scripts/PPLTC.py:58
-msgid "Save the current session."
-msgstr "Speichert die aktuelle Sitzung"
-
-#: Scripts/PPLTC.py:61
-msgid "Save session &as ..."
-msgstr "Sitzung speichern &unter..."
-
-#: Scripts/PPLTC.py:61
-msgid "Save the curent session under an other filename."
-msgstr "Speichert die aktuelle Sitzung unter einem anderen Dateinamen."
-
-#: Scripts/PPLTC.py:65
-msgid "&Quit"
-msgstr "&Beenden"
-
-#: Scripts/PPLTC.py:65
-msgid "Exit the application."
-msgstr "Beendet die Applikation"
-
-#: Scripts/PPLTC.py:68
-msgid "&File"
-msgstr "&Datei"
-
-#: Scripts/PPLTC.py:73
-msgid "Load &device..."
-msgstr "&Gerät laden"
-
-#: Scripts/PPLTC.py:73
-msgid "Loads a device to the device list."
-msgstr "Läd ein Gerät"
-
-#: Scripts/PPLTC.py:76
-msgid "Load &server..."
-msgstr "&Server laden"
-
-#: Scripts/PPLTC.py:76
-msgid "Loads a server to the server list."
-msgstr "Läd und startet einen Server"
-
-#: Scripts/PPLTC.py:79
-msgid "&Load"
-msgstr "&Laden"
-
-#: Scripts/PPLTC.py:84
-msgid "&Help..."
-msgstr "&Hilfe..."
-
-#: Scripts/PPLTC.py:84
-msgid "Shows the help book..."
-msgstr "Zeigt die Online Hilfe an..."
-
-#: Scripts/PPLTC.py:87
-msgid "&About PPLT"
-msgstr "&Über PPLT"
-
-#: Scripts/PPLTC.py:87
-msgid "Shows a short info like version etc ..."
-msgstr "Zeigt eine kurze Info über die PPLT an..."
-
-#: Scripts/PPLTC.py:90
-msgid "&Help"
-msgstr "&Hilfe"
-
-#: Scripts/PPLTC.py:123
-msgid "Select InstallFile"
-msgstr " "
-
-#: Scripts/PPLTC.py:123
-msgid "Install Description File (*.idf)|*.idf"
-msgstr " "
-
-#: Scripts/PPLTC.py:139
-msgid "Select a SessionFile"
-msgstr " "
-
-#: Scripts/PPLTC.py:139 Scripts/PPLTC.py:163
-msgid "PPLT Session File (*.psf)|*.psf"
-msgstr " "
-
-#: Scripts/PPLTC.py:163
-msgid "Save Session as..."
-msgstr " "
-
-#: Scripts/PPLTMod.py:13
-msgid "Select a repositority..."
-msgstr " Installationsquelle auswählen..."
-
-#: Scripts/PPLTMod.py:16
-msgid " Select Repositorities"
-msgstr " Installationsquellen "
-
-#: Scripts/PPLTMod.py:20
-msgid "Default PPLT Module Responsidority (HTTP)"
-msgstr "Standard PPLT Modul Respositority (http://pplt.berlios.de)"
-
-#: Scripts/PPLTMod.py:22
-msgid "Default PPLT Module Responsidority (FTP)"
-msgstr "Standard PPLT Modul Respositority (http://ftp.berlios.de/pub/pplt)"
-
-#: Scripts/PPLTMod.py:27
-msgid "Other URL: "
-msgstr "Andere URL: "
-
-#: Scripts/PPLTMod.py:35
-msgid "Local File: "
-msgstr "lokale Datei: "
-
-#: Scripts/PPLTMod.py:46
-msgid " Options: "
-msgstr " Optionen: "
-
-#: Scripts/PPLTMod.py:51
-msgid "Follow links"
-msgstr "Verlinkungen folgen"
-
-#: Scripts/PPLTMod.py:54
-msgid "Follow also links to other sides."
-msgstr "Verlinkungen auch zu anderen Rechnern folgen."
-
-#: Scripts/PPLTMod.py:94
-msgid "Select Module Folder"
-msgstr "Auswahl des Modul-Verzeichnisses"
-
-#: Scripts/PPLTMod.py:117
-msgid "Import Module Repositorities"
-msgstr "Importiere Modulquellen"
-
-#: Scripts/PPLTMod.py:117
-msgid "Start..."
-msgstr "Start..."
-
-#: Scripts/PPLTMod.py:122
-msgid "Import: "
-msgstr "Importiere: "
-
-#: Scripts/PPLTMod.py:128
-msgid "Could not import repositority "
-msgstr "Fehler beim importieren der Modulquelle"
-
-#: Scripts/PPLTMod.py:128
-msgid ""
-"\n"
-" ErrorCode: "
-msgstr ""
-"\n"
-" Fehlercode: "
-
-#: Scripts/PPLTMod.py:129
-msgid "Error while import"
-msgstr "Fehler beim importieren"
-
-#: Scripts/PPLTMod.py:141
-msgid "PPLT Module Manager"
-msgstr "PPLT Modul Manager"
-
-#: Scripts/PPLTMod.py:147
-msgid "Hide Core-Modules"
-msgstr "Kernmodule ausblenden"
-
-#: PPLT/Center/AddFolderDialog.py:31 PPLT/Center/SymbolTreePanel.py:511
+#: AddFolderDialog.py:31 SymbolTreePanel.py:501
 msgid "Add Folder"
 msgstr "Ordner hinzufügen"
 
-#: PPLT/Center/AddFolderDialog.py:35 PPLT/Center/AddSymbolDialog.py:236
+#: AddFolderDialog.py:35 AddSymbolDialog.py:236
 msgid "Name: "
 msgstr "Name: "
 
-#: PPLT/Center/AddFolderDialog.py:36 PPLT/Center/AddSymbolDialog.py:238
+#: AddFolderDialog.py:36 AddSymbolDialog.py:238
 msgid "Name"
 msgstr "Name"
 
-#: PPLT/Center/AddFolderDialog.py:45 PPLT/Center/AddSymbolDialog.py:276
-#: PPLT/Center/ServerParameterDialog.py:67 PPLT/Center/SetPropertyDialog.py:38
-#: PPLT/Center/UserDBDialogs.py:69 PPLT/Center/UserDBDialogs.py:133
-#: PPLT/Center/UserDBDialogs.py:175 PPLT/Center/UserDBDialogs.py:224
+#: AddFolderDialog.py:45 AddSymbolDialog.py:260 ServerParameterDialog.py:67
+#: SetPropertyDialog.py:38 UserDBDialogs.py:69 UserDBDialogs.py:133
+#: UserDBDialogs.py:175 UserDBDialogs.py:224
 msgid "OK"
-msgstr "OK"
+msgstr "Ok"
 
-#: PPLT/Center/AddFolderDialog.py:46 PPLT/Center/AddSymbolDialog.py:277
-#: PPLT/Center/ServerParameterDialog.py:68 PPLT/Center/SetPropertyDialog.py:39
-#: PPLT/Center/UserDBDialogs.py:70 PPLT/Center/UserDBDialogs.py:131
-#: PPLT/Center/UserDBDialogs.py:173 PPLT/Center/UserDBDialogs.py:225
+#: AddFolderDialog.py:46 AddSymbolDialog.py:261 ServerParameterDialog.py:68
+#: SetPropertyDialog.py:39 UserDBDialogs.py:70 UserDBDialogs.py:131
+#: UserDBDialogs.py:173 UserDBDialogs.py:225
 msgid "Cancel"
 msgstr "Abbrechen"
 
-#: PPLT/Center/AddSymbolDialog.py:40
+#: AddSymbolDialog.py:40
 msgid "Select DeviceSlot"
-msgstr "Geräte-Slot auswählen"
+msgstr "Geräteslot auswählen"
 
-#: PPLT/Center/AddSymbolDialog.py:73 PPLT/Center/DeviceSelectionDialog.py:126
-#: PPLT/Center/NoteBook.py:41
+#: AddSymbolDialog.py:73 DeviceSelectionDialog.py:126 NoteBook.py:41
 msgid "Devices"
 msgstr "Geräte"
 
-#: PPLT/Center/AddSymbolDialog.py:148 PPLT/Center/AddSymbolDialog.py:176
+#: AddSymbolDialog.py:148 AddSymbolDialog.py:176
 msgid "Enter expl. slot name or addr.:"
-msgstr "Geben sie einen explizieten Slotnamen oder eine Adresse an:"
+msgstr "Geben sie einen Slotnamen oder eine Addresse ein:"
 
-#: PPLT/Center/AddSymbolDialog.py:149 PPLT/Center/AddSymbolDialog.py:177
+#: AddSymbolDialog.py:149 AddSymbolDialog.py:177
 msgid "Slot"
 msgstr "Slot"
 
-#: PPLT/Center/AddSymbolDialog.py:232
+#: AddSymbolDialog.py:232
 msgid "Properties of "
 msgstr "Eigenschaften von "
 
-#: PPLT/Center/AddSymbolDialog.py:251 PPLT/Center/SetValueDialog.py:26
-msgid "Type: "
-msgstr "Typ: "
-
-#: PPLT/Center/AddSymbolDialog.py:267
+#: AddSymbolDialog.py:251
 msgid "Refresh: "
 msgstr "Refresh: "
 
-#: PPLT/Center/DevicePanel.py:46 PPLT/Center/ServerPanel.py:46
+#: DevicePanel.py:47 ServerPanel.py:47
 msgid "Alias"
 msgstr "Alias"
 
-#: PPLT/Center/DevicePanel.py:47
+#: DevicePanel.py:48
 msgid "FQDN"
 msgstr "FQGN"
 
-#: PPLT/Center/DevicePanel.py:48 PPLT/Center/ServerPanel.py:50
+#: DevicePanel.py:49 ServerPanel.py:51
 msgid "Parameter"
 msgstr "Parameter"
 
-#: PPLT/Center/DevicePanel.py:76
+#: DevicePanel.py:77
 msgid "Add device..."
-msgstr "Gerät hinzufügen..."
+msgstr "Gerät hinzuf."
 
-#: PPLT/Center/DevicePanel.py:141
+#: DevicePanel.py:90
+#, python-format
+msgid ""
+"Unable to unload device %s.\n"
+" Message: %s"
+msgstr ""
+"Kann Gerät %s nicht entladen.\n"
+" Nachricht: %s"
+
+#: DevicePanel.py:91
+msgid "Unable to unload device."
+msgstr "Kann Gerät nicht entladen"
+
+#: DevicePanel.py:127
+#, python-format
+msgid ""
+"Error while load device %s.\n"
+" Message: %s"
+msgstr ""
+"Fehler beim Laden des Gerätes %s.\n"
+" Nachricht: %s"
+
+#: DevicePanel.py:128
+msgid "Unable to load device."
+msgstr "Kann Gerät nicht laden."
+
+#: DevicePanel.py:145
 msgid "Add Device"
 msgstr "Gerät hinzufügen"
 
-#: PPLT/Center/DevicePanel.py:149
+#: DevicePanel.py:153
 msgid "Del Device"
-msgstr "Gerät löschen"
+msgstr "Gerät entfernen"
 
-#: PPLT/Center/DeviceParameterDialog.py:30
-#: PPLT/Center/ServerParameterDialog.py:32
+#: DeviceParameterDialog.py:30 ServerParameterDialog.py:32
 msgid "Setup "
-msgstr "Setup "
+msgstr "Setup"
 
-#: PPLT/Center/DeviceParameterDialog.py:38
-#: PPLT/Center/ServerParameterDialog.py:40
+#: DeviceParameterDialog.py:38 ServerParameterDialog.py:40
 msgid "Alias: "
 msgstr "Alias: "
 
-#: PPLT/Center/DeviceParameterDialog.py:39
+#: DeviceParameterDialog.py:39
 msgid "DevName"
-msgstr "Name"
+msgstr "DevName"
 
-#: PPLT/Center/DeviceParameterDialog.py:49
+#: DeviceParameterDialog.py:49
 msgid " OK "
 msgstr " OK "
 
-#: PPLT/Center/DeviceParameterDialog.py:50
+#: DeviceParameterDialog.py:50
 msgid " Cancel "
 msgstr " Abbrechen "
 
-#: PPLT/Center/DeviceSelectionDialog.py:37
+#: DeviceSelectionDialog.py:37
 msgid "DeviceSelection"
-msgstr "Geräte Auswahl"
+msgstr "Geräteauswahl"
 
-#: PPLT/Center/DeviceSelectionDialog.py:45
+#: DeviceSelectionDialog.py:45
 msgid ""
 "Select a Device:\n"
 "Above are all known devices are listed. Grouped by there class.\n"
@@ -309,438 +146,394 @@ msgid ""
 "To select a device, please double-click the device.\n"
 "To see a short help-text for a device, single-click it."
 msgstr ""
-"Wählen sie ein Gerät:\n"
-"Oben sind alle bekannten Geräte aufgelistet, gruppiert nach\n"
-"ihren Klassen. Um den Inhalt einer Klasse zu sehen,\n"
-"doppel-klicken sie die Klasse, Um ein Gerät aus zu wählen\n"
-"doppel-klicken sie das Gerät.\n"
-" Sie erhalten einen kurzen\n"
-"Hilfetext, wenn sie das Gerät mit einem einfachen Klick\n"
-"markieren."
+"Wählen sie ein Gerät aus:\n"
+"Oben sind alle bekannten Geräte nach ihren Klassen aufgelistet.\n"
+"Um den Inhalt einer Klasse zu sehen, klicken sie doppelt auf den Klassennamen.\n"
+"Um ein Gerät auszuwählen, klicken sie doppelt auf das Gerät.\n"
+"Um einen kurzen Hilfetext zu sehen, selektieren sie das Gerät\n"
+"mit einen einfachen Klick."
 
-#: PPLT/Center/InfoFrame.py:6
+#: InfoFrame.py:6
 msgid "PPLT Info"
 msgstr "PPLT Info"
 
-#: PPLT/Center/InfoFrame.py:17
+#: InfoFrame.py:17
 msgid ""
 "http://pplt.berlios.de\n"
 "by Hannes Matuschek <hmatuschek@gmx.net>"
 msgstr ""
-"http://pplt.berlios.de/de\n"
+"http://pplt.berlios.de\n"
 "von Hannes Matuschek <hmatuschek@gmx.net>"
 
-#: PPLT/Center/InfoFrame.py:21
+#: InfoFrame.py:21
 msgid ""
 "PPLT Center demonstrate the functionality of the PPLT library.  \n"
 "At first create some users and change the password of the \n"
-"superuser. Then load one or two devices, create symbols, that\n"
-"are attached to the devices and at the end start a server.\n"
+"superuser.Then load one or two devices, create symbols, that\n"
+"are attached to the devices and at least start a server.\n"
 msgstr ""
-"Das PPLT Center demonstriert die Funktionalität der PPLT\n"
-"Bibliothek. Zunächst sollten sie einige Benutzer anlegen und\n"
-"das Passwort des Superusers ändern. Dann können sie ein\n"
-"oder zwei Geräte laden, Symbole erzeugen, die mit den\n"
-"Geräten verbunden sind. Zum Schluß können sie einen\n"
+"Das PPLT Center demonstriert die Funktionalität der PPLT Bibliothek.\n"
+"Als erstes sollten sie einige Benutzer anlegen und das Passwort des\n"
+"Superusers ändern. Dann können sie ein oder zwei Geräte laden, Symbole\n"
+"erzeugen welche mit den Geräten verbunden sind, und zum Schluss einen\n"
 "Server starten.\n"
 
-#: PPLT/Center/ModusBox.py:49
+#: ModusBox.py:50
 msgid "Owner: "
 msgstr "Besitzer: "
 
-#: PPLT/Center/ModusBox.py:57
+#: ModusBox.py:58
 msgid "Group: "
 msgstr "Gruppe: "
 
-#: PPLT/Center/ModusBox.py:65
+#: ModusBox.py:66
 msgid "Owner:"
 msgstr "Besitzer:"
 
-#: PPLT/Center/ModusBox.py:66
+#: ModusBox.py:67
 msgid "Group:"
 msgstr "Gruppe:"
 
-#: PPLT/Center/ModusBox.py:67
+#: ModusBox.py:68
 msgid "Any:"
 msgstr "Jeder:"
 
-#: PPLT/Center/ModusBox.py:68 PPLT/Center/ModusBox.py:70
-#: PPLT/Center/ModusBox.py:72
+#: ModusBox.py:69 ModusBox.py:71 ModusBox.py:73
 msgid "read"
 msgstr "lesen"
 
-#: PPLT/Center/ModusBox.py:69 PPLT/Center/ModusBox.py:71
-#: PPLT/Center/ModusBox.py:73
+#: ModusBox.py:70 ModusBox.py:72 ModusBox.py:74
 msgid "write"
-msgstr "schreiben"
+msgstr "scheiben"
 
-#: PPLT/Center/NoteBook.py:42
+#: NoteBook.py:42
 msgid "SymbolTree"
 msgstr "Symbolbaum"
 
-#: PPLT/Center/NoteBook.py:43
+#: NoteBook.py:43
 msgid "Server"
 msgstr "Server"
 
-#: PPLT/Center/NoteBook.py:44
+#: NoteBook.py:44
 msgid "User DataBase"
-msgstr "Benutzerdatenbank"
+msgstr "Benutzer-Datenbank"
 
-#: PPLT/Center/ServerPanel.py:47
+#: ServerPanel.py:48
 msgid "FQSN"
 msgstr "FQSN"
 
-#: PPLT/Center/ServerPanel.py:48
+#: ServerPanel.py:49
 msgid "DefaultUser"
 msgstr "Standard Benutzer"
 
-#: PPLT/Center/ServerPanel.py:49
+#: ServerPanel.py:50
 msgid "Root"
 msgstr "Root"
 
-#: PPLT/Center/ServerPanel.py:154
-msgid "Add Server"
-msgstr "Server hinzufügen"
+#: ServerPanel.py:132
+#, python-format
+msgid ""
+"Unable to load server \"%s\".\n"
+"\n"
+" Message: %s"
+msgstr ""
+"Kann Sercer \"%s\" nicht laden.\n"
+" Nachricht: %s"
 
-#: PPLT/Center/ServerPanel.py:162
+#: ServerPanel.py:133
+msgid "Error while load server."
+msgstr "Fehler beim laden."
+
+#: ServerPanel.py:153
+msgid "Add Server"
+msgstr "Server hinzuf."
+
+#: ServerPanel.py:161
 msgid "Stop Server"
 msgstr "Server anhalten"
 
-#: PPLT/Center/ServerParameterDialog.py:41
+#: ServerParameterDialog.py:41
 msgid "SrvName"
-msgstr "Name"
+msgstr "SrvName"
 
-#: PPLT/Center/ServerParameterDialog.py:47
+#: ServerParameterDialog.py:47
 msgid "DefautUser: "
 msgstr "Standard Benutzer: "
 
-#: PPLT/Center/ServerParameterDialog.py:56
+#: ServerParameterDialog.py:56
 msgid "Root: "
 msgstr "Root: "
 
-#: PPLT/Center/ServerSelectionDialog.py:37
+#: ServerSelectionDialog.py:37
 msgid "ServerSelection"
 msgstr "Serverauswahl"
 
-#: PPLT/Center/ServerSelectionDialog.py:118
+#: ServerSelectionDialog.py:118
 msgid "Servers"
 msgstr "Server"
 
-#: PPLT/Center/SetPropertyDialog.py:31 PPLT/Center/SymbolTreePanel.py:528
+#: SetPropertyDialog.py:31 SymbolTreePanel.py:518
 msgid "Properties"
-msgstr "Eigenschaften"
+msgstr "Eigenschaften."
 
-#: PPLT/Center/SetValueDialog.py:9
+#: SetValueDialog.py:31
 msgid "Set Value"
 msgstr "Wert setzen"
 
-#: PPLT/Center/SetValueDialog.py:16
+#: SetValueDialog.py:35
+#, python-format
+msgid ""
+"Unable to get value from %s.\n"
+"\n"
+"Messsage: %s"
+msgstr ""
+"Kann Wert von %s nicht lesen.\n"
+"\n"
+"Nachricht: %s"
+
+#: SetValueDialog.py:36
+msgid "Unable to get value."
+msgstr "Kann Wert nicht lesen"
+
+#: SetValueDialog.py:41
 msgid "Value: "
 msgstr "Wert: "
 
-#: PPLT/Center/SetValueDialog.py:18
+#: SetValueDialog.py:43
 msgid "Set"
 msgstr "Setzen"
 
-#: PPLT/Center/SetValueDialog.py:33
+#: SetValueDialog.py:51
 msgid "Time: "
-msgstr "Zeitstempel:"
+msgstr "Zeit: "
 
-#: PPLT/Center/SetValueDialog.py:43
+#: SetValueDialog.py:61
 msgid "Close"
 msgstr "Schließen"
 
-#: PPLT/Center/SetValueDialog.py:63
-msgid "Error while set value of symbol "
-msgstr "Fehler beim Setzen des Wertes des Symbols "
+#: SetValueDialog.py:82
+#, python-format
+msgid ""
+"Error while set value of symbol %s\n"
+" Type of symbol is bool but no boolean value given!"
+msgstr ""
+"Fehler beim setzten des Wertes von %s\n"
+" Typ des Symbols is bool aber kein boolscher Wert gegeben!"
 
-#: PPLT/Center/SetValueDialog.py:63
-msgid "Error while set value"
-msgstr "Fehler beim Setzen des Wertes"
+#: SetValueDialog.py:83 SetValueDialog.py:90 SetValueDialog.py:96
+msgid "Error while set value."
+msgstr "Fehler beim setzen des Wertes."
 
-#: PPLT/Center/SymbolTreePanel.py:81
+#: SetValueDialog.py:89
+#, python-format
+msgid ""
+"Error while set value of symbol %s.\n"
+" %s is not a atomic type!"
+msgstr ""
+"Kann Wert von %s nicht setzten.\n"
+" %s is kein atomischer Typ!"
+
+#: SetValueDialog.py:95
+#, python-format
+msgid ""
+"Error while set value of symbol %s\n"
+" Message: %s"
+msgstr ""
+"Kann Wert von %s nicht setzten\n"
+" Nachricht: %s"
+
+#: SymbolTreePanel.py:81
 msgid "SymbolTree (/)"
 msgstr "Symbolbaum (/)"
 
-#: PPLT/Center/SymbolTreePanel.py:509
+#: SymbolTreePanel.py:499
 msgid "Add Symbol"
-msgstr "Symbol hinzufügen"
+msgstr "Symbol hinzuf."
 
-#: PPLT/Center/SymbolTreePanel.py:514
+#: SymbolTreePanel.py:504
 msgid "Get/Set Value"
-msgstr "Wert setzen/lesen"
+msgstr "Wert lesen/setzen"
 
-#: PPLT/Center/SymbolTreePanel.py:516
+#: SymbolTreePanel.py:506
 msgid "Delete Symbol"
 msgstr "Symbol löschen"
 
-#: PPLT/Center/SymbolTreePanel.py:520
+#: SymbolTreePanel.py:510
 msgid "Rename"
 msgstr "Umbenennen"
 
-#: PPLT/Center/SymbolTreePanel.py:524
+#: SymbolTreePanel.py:514
 msgid "Delete Folder"
 msgstr "Ordner löschen"
 
-#: PPLT/Center/UserDBDialogs.py:42
+#: UserDBDialogs.py:42
 msgid "Username: "
-msgstr "Benutzername: "
+msgstr "Benutzer: "
 
-#: PPLT/Center/UserDBDialogs.py:50 PPLT/Center/UserDBDialogs.py:205
+#: UserDBDialogs.py:50 UserDBDialogs.py:205
 msgid "Password: "
 msgstr "Passwort: "
 
-#: PPLT/Center/UserDBDialogs.py:58 PPLT/Center/UserDBDialogs.py:213
+#: UserDBDialogs.py:58 UserDBDialogs.py:213
 msgid "Re-Type:  "
-msgstr "Nocheinmal:  "
+msgstr "Nocheinmal: "
 
-#: PPLT/Center/UserDBDialogs.py:120
+#: UserDBDialogs.py:120
 msgid "Group Name: "
-msgstr "Gruppenname: "
+msgstr "Guppenname: "
 
-#: PPLT/Center/UserDBDialogs.py:161
+#: UserDBDialogs.py:161
 msgid "User Name: "
 msgstr "Benutzername: "
 
-#: PPLT/Center/UserDBPanel.py:180
+#: UserDBPanel.py:179
 msgid "Create Memeber"
 msgstr "Benutzer erzeugen"
 
-#: PPLT/Center/UserDBPanel.py:231
+#: UserDBPanel.py:229
 msgid "Create User-Proxy"
 msgstr "Vertreter erzeugen"
 
-#: PPLT/Center/UserDBPanel.py:284
+#: UserDBPanel.py:284
 msgid "Create Group"
-msgstr "Gruppe erzeugen"
+msgstr "Gupper erzeugen"
 
-#: PPLT/Center/UserDBPanel.py:354
+#: UserDBPanel.py:357
 msgid "Change Password of "
-msgstr "Passwort ändern von "
+msgstr "Ändere Passwort von "
 
-#: PPLT/Center/UserDBPanel.py:412
+#: UserDBPanel.py:416
 msgid "Del User-Proxy"
 msgstr "Vertreter löschen"
 
-#: PPLT/Center/UserDBPanel.py:416
+#: UserDBPanel.py:420
 msgid "Add User"
-msgstr "Benutzer hinzufügen"
+msgstr "Benutzer hinzuf."
 
-#: PPLT/Center/UserDBPanel.py:418
+#: UserDBPanel.py:422
 msgid "Add User-Proxy"
-msgstr "Vertreter hinzufügen"
+msgstr "Vertreter hinzuf."
 
-#: PPLT/Center/UserDBPanel.py:420
+#: UserDBPanel.py:424
 msgid "Add Group"
-msgstr "Gruppe hinzufügen"
+msgstr "Gruppe hinzuf."
 
-#: PPLT/Center/UserDBPanel.py:423
+#: UserDBPanel.py:427
 msgid "Del Group"
 msgstr "Gruppe löschen"
 
-#: PPLT/Center/UserDBPanel.py:428
+#: UserDBPanel.py:432
 msgid "Del User"
 msgstr "Benutzer löschen"
 
-#: PPLT/Center/UserDBPanel.py:430
+#: UserDBPanel.py:434
 msgid "Set SuperUser"
-msgstr "Superuser setzen"
+msgstr "Als Superuser setzen"
 
-#: PPLT/Center/UserDBPanel.py:432
+#: UserDBPanel.py:436
 msgid "Change Password"
 msgstr "Passwort ändern"
 
-#: PPLT/ModSrc/ModInstallList.py:55
-msgid "Description"
-msgstr "Beschreibung"
+#: ../../Scripts/PPLTC.py:53
+msgid "&New session"
+msgstr "&Neue Sitzung"
 
-#: PPLT/ModSrc/ModInstallList.py:81
-msgid "Do you realy want to uninstall "
-msgstr "Möchten sie mit dem Löschen fortfahren von: "
+#: ../../Scripts/PPLTC.py:53
+msgid "Create a new (epmty) session."
+msgstr "Erzeugt eine neue (leere) Sitzung"
 
-#: PPLT/ModSrc/ModInstallList.py:81
-msgid "Uninstall"
-msgstr "Deinstallieren"
+#: ../../Scripts/PPLTC.py:56
+msgid "&Open session"
+msgstr "&Sitzung &Oeffnen"
 
-#: PPLT/ModSrc/ModInstallList.py:88
-msgid "Error"
-msgstr "Fehler"
+#: ../../Scripts/PPLTC.py:56
+msgid "Open a saved session."
+msgstr "Öffnet eine gespeicherte Sitzung"
 
-#: PPLT/ModSrc/ModInstallList.py:95
-msgid "Modulename: "
-msgstr "Modulname: "
+#: ../../Scripts/PPLTC.py:59
+msgid "&Save session"
+msgstr "&Sitzung speichern"
 
-#: PPLT/ModSrc/ModInstallList.py:96
-msgid ""
-"\n"
-"Version: "
+#: ../../Scripts/PPLTC.py:59
+msgid "Save the current session."
+msgstr "Sichert die aktuelle Sitzung"
+
+#: ../../Scripts/PPLTC.py:62
+msgid "Save session &as ..."
+msgstr "Speichern &unter..."
+
+#: ../../Scripts/PPLTC.py:62
+msgid "Save the curent session under an other filename."
+msgstr "Sichert die aktuelle Sitzung unter einen anderen Dateinamen."
+
+#: ../../Scripts/PPLTC.py:66
+msgid "&Quit"
+msgstr "&Beenden"
+
+#: ../../Scripts/PPLTC.py:66
+msgid "Exit the application."
+msgstr "Beendet das Programm"
+
+#: ../../Scripts/PPLTC.py:69
+msgid "&File"
+msgstr "&Datei"
+
+#: ../../Scripts/PPLTC.py:74
+msgid "Load &device..."
+msgstr "&Gerät laden"
+
+#: ../../Scripts/PPLTC.py:74
+msgid "Loads a device to the device list."
+msgstr "Läd ein Gerät"
+
+#: ../../Scripts/PPLTC.py:77
+msgid "Load &server..."
+msgstr "&Server laden"
+
+#: ../../Scripts/PPLTC.py:77
+msgid "Loads a server to the server list."
+msgstr "Läd einen Server"
+
+#: ../../Scripts/PPLTC.py:80
+msgid "&Load"
+msgstr "&Laden"
+
+#: ../../Scripts/PPLTC.py:85
+msgid "&Help..."
+msgstr "&Hilfe"
+
+#: ../../Scripts/PPLTC.py:85
+msgid "Shows the help book..."
+msgstr "Zeigt die Online-Hilfe"
+
+#: ../../Scripts/PPLTC.py:88
+msgid "&About PPLT"
+msgstr "&Über PPLT"
+
+#: ../../Scripts/PPLTC.py:88
+msgid "Shows a short info like version etc ..."
+msgstr "Zeigt eine kurze Info"
+
+#: ../../Scripts/PPLTC.py:91
+msgid "&Help"
+msgstr "&Hilfe"
+
+#: ../../Scripts/PPLTC.py:124
+msgid "Select InstallFile"
 msgstr ""
-"\n"
-"Version: "
 
-#: PPLT/ModSrc/ModInstallList.py:99
-msgid ""
-"\n"
-"Module is installed."
+#: ../../Scripts/PPLTC.py:124
+msgid "Install Description File (*.idf)|*.idf"
 msgstr ""
-"\n"
-"Modul ist installiert."
 
-#: PPLT/ModSrc/ModInstallList.py:101
-msgid "And update aviable."
-msgstr "Und Updates sind verfügbar."
+#: ../../Scripts/PPLTC.py:140
+msgid "Select a SessionFile"
+msgstr "Sitzungsdatei auswählen"
 
-#: PPLT/ModSrc/ModInstallList.py:102
-msgid ""
-"\n"
-"\n"
-" To update the module: please double-click at the icon of the Module"
-msgstr ""
-"\n"
-"\n"
-"Um das Modul zu updaten: Klicken sie bitte duppelt auf das Icon des Moduls."
+#: ../../Scripts/PPLTC.py:140 ../../Scripts/PPLTC.py:159
+msgid "PPLT Session File (*.psf)|*.psf"
+msgstr "PPLT Session File (*.psf)|*.psf"
 
-#: PPLT/ModSrc/ModInstallList.py:104
-msgid ""
-"\n"
-"Module not installed."
-msgstr ""
-"\n"
-"Modul nicht installiert."
-
-#: PPLT/ModSrc/ModInstallList.py:105
-msgid ""
-"\n"
-"\n"
-"To install the module: please double-click at the icon of the Module"
-msgstr ""
-"\n"
-"\n"
-"Um das Modul zu installieren, klicken sie bitte doppelt auf das Icon des "
-"Moduls."
-
-#: PPLT/ModSrc/ModInstallList.py:107
-msgid ""
-"\n"
-"Module installed but the update is not installable."
-msgstr ""
-"\n"
-"Modul ist installiert jedoch ist das Update nicht installierbar."
-
-#: PPLT/ModSrc/ModInstallList.py:108
-msgid ""
-"\n"
-"Module not installable!"
-msgstr ""
-"\n"
-"Modul ist nicht installierbar!"
-
-#: PPLT/ModSrc/ModInstallList.py:109
-msgid ""
-"\n"
-"Reason: "
-msgstr ""
-"\n"
-"Grund: "
-
-#: PPLT/ModSrc/ModInstallList.py:110
-msgid "Module Info"
-msgstr "Modul Info"
-
-#: PPLT/ModSrc/Set.py:84
-msgid "Unpossible combination of beeing not installed and being local."
-msgstr ""
-"Unmögliche kombination der Zustände \"nicht installiert\" und \"local\".\n"
-" Bitte wenden sie sich an den Author!"
-
-#: PPLT/ModSrc/Set.py:111
-#, python-format
-msgid "Mismatching Python version: Need %s <-> has %s"
-msgstr "Unpassende Python Version: Benötige %s <-> habe %s"
-
-#: PPLT/ModSrc/Set.py:118
-#, python-format
-msgid "Mismatching pyDCPU version: Need %s <-> has %s"
-msgstr "Unpassende pyDCPU Version: Benötige %s <-> habe %s"
-
-#: PPLT/ModSrc/Set.py:124
-#, python-format
-msgid "Needed Python library %s not found (not installed?!?)"
-msgstr "Benötigte Python Bibliothek %s nicht gefunden!"
-
-#: PPLT/ModSrc/Set.py:134 PPLT/ModSrc/Set.py:176 PPLT/ModSrc/Set.py:202
-#, python-format
-msgid "Unable to get file from URL %s"
-msgstr "Fehler beim laden einer Datei von der URL %s"
-
-#: PPLT/ModSrc/Set.py:138 PPLT/ModSrc/Set.py:186 PPLT/ModSrc/Set.py:212
-#, python-format
-msgid "Error while install %s"
-msgstr "Fehler beim Installieren von %s"
-
-#: PPLT/ModSrc/Set.py:145
-msgid "This CoreMdoule is used by other Modules."
-msgstr "Dieses Kernmodul wird von anderen Module verwendet."
-
-#: PPLT/ModSrc/Set.py:162
-#, python-format
-msgid "Core module %s not known!"
-msgstr "Kernmodul %s (und dessen Quelle) nicht bekannt!"
-
-#: PPLT/ModSrc/Set.py:166
-#, python-format
-msgid "Core mod %s is not installable. (%s)"
-msgstr "Kernmodul %s ist nicht installierbar. (%s)"
-
-#: PPLT/ModSrc/Set.py:182 PPLT/ModSrc/Set.py:208
-#, python-format
-msgid "Unable to install %s: Install of %s failed.(%s)"
-msgstr ""
-"Fehler beim Installieren von %s: Installation von %s fehlgeschlagen.\n"
-"(%s)"
-
-#: PPLT/ModSrc/URLSource.py:18
-#, python-format
-msgid "Can't open URL %s. Maybe bad proxy or network not reachable."
-msgstr ""
-"Konnte URL %s nicht öffenen. Vielleicht eine Fehlerhafte Proxyeinstellung "
-"oder das Netzwerk ist nicht erreichbar."
-
-#: PPLT/ModSrc/URLSource.py:24
-#, python-format
-msgid ""
-"Error while parse module-list at %s\n"
-">>> %s"
-msgstr ""
-"Fehler beim parsen der Modulliste in %s\n"
-">>> %s"
-
-#: PPLT/ModSrc/URLSource.py:27
-msgid "Invalid Document."
-msgstr "Fatal: Dokumentenfehler."
-
-#: PPLT/ModSrc/URLSource.py:50 PPLT/ModSrc/URLSource.py:91
-#, python-format
-msgid "Invalid format of module-list %s. (no name)"
-msgstr "Formatfehler in Modulliste %s. (Kein Name)"
-
-#: PPLT/ModSrc/URLSource.py:52 PPLT/ModSrc/URLSource.py:93
-#, python-format
-msgid "Invalid format of module-list %s. (no class)"
-msgstr "Formatfehler in Modulliste %s. (Keine Klasse)"
-
-#: PPLT/ModSrc/URLSource.py:54 PPLT/ModSrc/URLSource.py:95
-#, python-format
-msgid "Invalid format of module-list %s. (no version)"
-msgstr "Formatfehler in Modulliste %s. (Keine Version)"
-
-#: PPLT/ModSrc/URLSource.py:56 PPLT/ModSrc/URLSource.py:97
-#, python-format
-msgid "Invalid format of module-list %s. (no file-name)"
-msgstr "Formatfehler in Modulliste %s. (Kein Dateiname)"
-
-#: PPLT/ModSrc/URLSource.py:89
-#, python-format
-msgid "Invalid element (%s) in list."
-msgstr "Fahlerhaftes (unbekanntes) Element %s in der Modulliste!"
-
+#: ../../Scripts/PPLTC.py:159
+msgid "Save Session as..."
+msgstr "Sitzung speichern unter ..."

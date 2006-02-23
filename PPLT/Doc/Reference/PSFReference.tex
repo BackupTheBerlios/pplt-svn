@@ -151,9 +151,9 @@ as \code{'S7'}.
 The \keyword{SymbolTree}-section describes the content of the symbol-tree. So this tag can only contain
 any occurrence of \keyword{Symbol} and \keyword{Folder} tags. This tag don't take any attributes.
 
-\subsubsection{How the symbol-tree is depicted}
+\subsubsection{How the symbol-tree is maped}
 The symbol-tree works like a small filesystem, with folders, sub-folder and symbols. The root of this filesystem is the
-symbol-tree itself. Now you need to know how to depict the hierarchy of the symbol-tree to an XML file.
+symbol-tree itself. Now you need to know how to map the hierarchy of the symbol-tree to an XML file.
 
 I think the best way to describe is to give an example. The following symbol-tree hierarchy
 \begin{verbatim}
@@ -167,7 +167,7 @@ I think the best way to describe is to give an example. The following symbol-tre
 /FOLDER3/Symbol4
 /Symbol5
 \end{verbatim}
-will be depicted as something like:
+will be maped as something like:
 \begin{verbatim}
 <SymbolTree>
     <Folder name="FOLDER1">
@@ -199,8 +199,8 @@ connected to. It should be the string you give to the \keyword{Device}-attribute
 \code{SLOT\_NAME}s are provided by the devices. To find out what namespaces are available, look at the documentation of 
 each device.
 
-In this context you also need to define the type of the symbol by the attribute \var{type}. The type is defined by the
-slot you use. So please take a look at the documentation of the specific device.
+In this context you have to set the refresh-rate of the symbol. This value in seconds specifies the time
+a value will be cached by the symbol for the next read(s).
 
 Now your symbol can get and (maybe) set values. But a major feature of the PPLT is, that you can control the
 access to the symbol by setting rights to it. To do so, you need to set a \var{owner}, \var{group} and
@@ -209,7 +209,7 @@ a random-generator loaded as \code{'rand'} could be:
 \begin{verbatim}
 [...]
     <SymbolTree>
-        <Symbol name="r_bool" slot="rand::Generator::Bool" type="Bool" 
+        <Symbol name="r_bool" slot="rand::Generator::Bool" refresh="0.5" 
                 owner="admin" group="Admin" modus="600"/>
         [...]
     </SymbolTree>

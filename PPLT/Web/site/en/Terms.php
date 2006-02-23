@@ -233,7 +233,7 @@ syste.LoadServer("Class.ServerName", "Alias", "DefaultUser", {"Parameter":"Value
 import PPLT;
 system = PPLT.System();
 [...]
-system.CreateSymbol("/PathToSymbol", "ALIAS::NAMESPACE::SLOT", "Type");
+system.CreateSymbol("/PathToSymbol", "ALIAS::NAMESPACE::SLOT");
 </pre>
 	
 		<i>/PathToSymbol</i> is the complete path to the symbol you want to 
@@ -241,9 +241,7 @@ system.CreateSymbol("/PathToSymbol", "ALIAS::NAMESPACE::SLOT", "Type");
 		<i>ALIAS::NAMESPACE::SLOT</i> is the full qualified name of a slot, where
 		<i>ALIAS</i> is the device alias of the device you want to use, 
 		<i>NAMESPACE</i> is the Namespace and <i>SLOT</i> is the slot you want 
-		to connect your symbol to. You see, that you need to know the 
-		<a href="#Types">type</a> of the values you can get from the specific 
-		slot</p>
+		to connect your symbol to. </p>
 
 		<p>A slotrange is a kind of a placeholder for a complete list of slots.
 		For example if you want to connect a new symbol to a marker of a PLC.
@@ -270,7 +268,7 @@ system.CreateSymbol("/PathToSymbol", "ALIAS::NAMESPACE::SLOT", "Type");
 		writing. Also you can set different rights for the owner of the symbol
 		and for the group.</p>
 
-		<p>Symbols are connected to a determ <a href="#Slot">slot</a> of a 
+		<p>Symbols are connected to a  <a href="#Slot">slot</a> of a 
 		<a href="#Device">device</a>. If a <a href="#Server">server</a> wants
 		to read from a symbol, the symbol gets its data from the specified
 		slot and converts it into a usable value.</p>
@@ -287,7 +285,7 @@ system.CreateSymbol("/PathToSymbol", "ALIAS::NAMESPACE::SLOT", "Type");
 import PPLT;
 system = PPLT.System();
 [...]
-system.CreateSymbol("/PathToSymbol", "ALIAS::NAMESPACE::SLOT", "Type");
+system.CreateSymbol("/PathToSymbol", "ALIAS::NAMESPACE::SLOT");
 </pre>
 		Substitute <i>/PathToSymbol</i> with the complete (including the slash) 
 		path to the symbol you want to create. <i>ALIAS::NAMESPACE::SLOT</i>

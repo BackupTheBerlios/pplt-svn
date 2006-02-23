@@ -43,6 +43,7 @@ Modules/ftp/PPLTModules/PPLTWebServer-0.3.xml
 Modules/ftp/PPLTModules/Panasonic_FPWEB-0.3.xml
 Modules/ftp/PPLTModules/Panasonic_FPX-0.3.xml
 Modules/ftp/PPLTModules/RandomGenerator-0.3.xml
+Modules/ftp/PPLTModules/RandomGenerator-0.4.xml
 Modules/ftp/PPLTModules/SIMATIC_S7_200-0.3.xml
 Modules/ftp/PPLTModules/SimpleExportServer-0.3.xml
 PPLT/Configuration.py
@@ -71,6 +72,7 @@ PPLT/Center/InfoFrame.py
 PPLT/Center/InstallDialog.py
 PPLT/Center/LoadBitmaps.py
 PPLT/Center/LogWindow.py
+PPLT/Center/Messages.py
 PPLT/Center/ModusBox.py
 PPLT/Center/NoteBook.py
 PPLT/Center/ServerPanel.py
@@ -91,8 +93,6 @@ PPLT/ModSrc/Version.py
 PPLT/ModSrc/__init__.py
 Scripts/PPLTC.py
 Scripts/PPLTMod.py
-examples/Random-JVisuServer.psf
-examples/Random-WebServer.psf
 examples/Core/Random-WebServer.py
 icons/PPLT.ico
 icons/PPLT.xpm

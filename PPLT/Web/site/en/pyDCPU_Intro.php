@@ -57,8 +57,6 @@
     <div class="Text">
         At first I planed to reach the stabile state.
 
-        <p>In the next future i will provide a usable documentation.</p>
-
         <p>But to reach this I need <u>help</u>. I am studying physics at the university
         of Potsdam. It is hard to do booth, studying physics and developing
         open source software at the same time. So if you are interested contact

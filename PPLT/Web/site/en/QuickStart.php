@@ -70,14 +70,6 @@
 	<i>/usr/bin</i> or <i>/usr/local/bin</i>. 
 	</div>
 
-	<div class="Head">Install Modules</div>
-	<div class="Text">
-	Now if the Center is running, you can install the Modules. So get the module-package and unpack the ZIP into 
-	a folder. There will be a lot of files in it. One called <b>Setup.idf</b>. Now start the PPLT-Center and click 
-	on the left menu at the icon labled <i>Module install</i>. You will see a file section dialog. Change to 
-	the folder where you unpacked the modules and select the Setup.idf. Now all modules will be installed. 
-	</div>
-
 	<div class="Head">The PPLT Center frontend</div>
 	<div class="Text">
 	The PPLT Center has a really strange concept of use. You will not find so much buttons like in

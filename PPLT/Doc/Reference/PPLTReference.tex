@@ -98,8 +98,6 @@ is the parameter name and the value should be the parameter-value. For example:
 \begin{notice}
 All parameter names and also \textbf{all} parameter values are strings!
 \end{notice}
-
-This method will return \code{Ture} on success an \code{False} on error.
 \end{methoddesc}
 
 
@@ -109,8 +107,6 @@ This method unload and destroy the given device.
 The argument \var{Alias} specifies the alias of the device you want to be
 unloaded. This is the alias you've set at the \method{LoadDevice} 
 method-call.
-
-This method returns \code{True} on success and \code{False} on error.
 \end{methoddesc}
 
 
@@ -121,14 +117,13 @@ This method returns the full qualified device name of the device loaded as
 The attribute \var{Alias} specifies the alias of the loaded device. This is
 the alias you've set at the \method{LoadDevice} method-call.
 
-This method returns a string containing the full qualified device name or non 
-if the alias if not a device or not loaded.
+This method returns a string containing the full qualified device name.
 \end{methoddesc}
 
 
 \begin{methoddesc}[System]{GetDeviceParameters}{Alias}
 This method will return the parameters the device was loaded with. This method
-will return a dict on success or \code{None} on error.
+will return a dict on success.
 \end{methoddesc}
 
 
@@ -164,8 +159,6 @@ by this server. But if you want to export only a specific folder of the
 symbol-tree you can specify this folder with the \var{Root} argument. So
 if \var{Root}=\code{'/test'} only the content of the folder \code{'/test'}
 will be accessible by this server.
-
-This method returns \code{True} on success and \code{False} else.
 \end{methoddesc}
 
 
@@ -174,8 +167,6 @@ This method will stop and destroy a server loaded with \method{LoadServer}.
 
 The attribute \var{Alias} specifies the server you want to stop. This is the 
 alias you've defined on loading the server with \method{LoadServer}.
-
-This method will return \code{True} on success and \code{False} else.
 \end{methoddesc}
 
 
@@ -185,8 +176,6 @@ by his alias.
 
 The argument \var{Alias} specifies the alias of the server. This is the alias
 you have defined on loading by the \method{LoadServer} method.
-
-This method returns a string on success or \code{None} on error.
 \end{methoddesc}
 
 
@@ -198,8 +187,8 @@ This is the parameter dict, you have defined on loading the server with
 The argument \var{Alias} specifies the alias of the loaded server. This is
 the alias you have defined on loading the server with \method{LoadServer}.
 
-This method will return a dict or \code{None} on error. This method will
-return an empty dict even if you've loaded the server with no parameters.
+This method will return an empty dict even if you've loaded the server with no
+parameters.
 \end{methoddesc}
 
 
@@ -214,7 +203,7 @@ server.
 The argument \var{Alias} specifies the alias of the loaded server. This is the
 alias you have defined on loading the server with \method{LoadServer}. 
 
-This method will return a string on success or \code{None} on error.
+This method will return a string on success.
 \end{methoddesc}
 
 
@@ -229,7 +218,7 @@ The argument \var{Alias} specifies the alias of the loaded server. This is the
 alias you have defined for this server on loading with \method{LoadServer} 
 call.
 
-This method will return a string on success or \code{None} on error.
+This method will return a string on success.
 \end{methoddesc}
 
 
@@ -258,8 +247,7 @@ representation you can use the table above.
 \begin{methoddesc}[System]{CreateFolder}{Path\optional{, Modus}\optional{, Owner}\optional{, Group}}
 This method will crate a new folder (at \var{Path}) at the symbol-tree. 
 Optional you can set the rights of this folder by the arguments \var{Modus}, 
-\var{Owner}, \var{Group}. If the folder was successfully created, the method 
-returns \code{True} else it returns \code{False}.
+\var{Owner}, \var{Group}. 
 
 The argument \var{Path} specifies the \textbf{complete} path of the folder, 
 you want to create. You cant create folders relative to an other because the 
@@ -293,8 +281,6 @@ With this method you can delete an \textbf{empty} folder of the symbol-tree.
 The argument \var{Path} specifies the \textbf{full} path to the folder you want to
 delete. This is the path you've set on create the folder by 
 \method{CreateFolder} method-call.
-
-This method returns \code{True} on success an \code{False} else.
 \end{methoddesc}
 
 
@@ -305,8 +291,6 @@ The argument \var{From} specifies the \textbf{full} path of the folder you want
 to move. The argument \var{To} specifies the \textbf{full} path of the destination 
 folder you want the source folder to be moved to. Of cause, the destination folder
 can't be a sub-folder of the source.
-
-This method returns \code{True} on success an \code{False} on error.
 \end{methoddesc}
 
 
@@ -317,15 +301,14 @@ The argument \var{Path} specifies the \textbf{full} path of the parent-folder
 you want to list it's sub-folders. If you want to list the root path, please 
 set \var{Path}=\code{'/'}.
 
-The method returns a list of strings on success or \code{None} on error. 
-This method will return an empty list if the given folder doesn't contain 
-any sub-folders.
+The method returns a list of strings on success. This method will return an 
+empty list if the given folder doesn't contain any sub-folders.
 \end{methoddesc}
 
 
-\begin{methoddesc}[System]{CreateSymbol}{Path, Slot, Type, \optional{, Modus}\optional{, Owner}\optional{, Group}}
-This method creates a new symbol on path \var{Path} connected to the slot \var{Slot} and associated with the type
-\var{Type}. Optional you can set the owner, group and access rights of the new symbol.
+\begin{methoddesc}[System]{CreateSymbol}{Path, Slot, \optional{Refresh}, \optional{, Modus}\optional{, Owner}\optional{, Group}}
+This method creates a new symbol on path \var{Path} connected to the slot \var{Slot}.
+Optional you can set the refresh-rate, owner, group and access rights of the new symbol.
 
 The argument \var{Path} specifies the full path to the symbol that should be 
 created. \textbf{Note}: All folder on this path must exist! 
@@ -337,12 +320,8 @@ the symbol will be attached to with \code{DEVICEALIAS}. You can find the
 namespaces and slot/slot-ranges the device provide at the Chapter 
 \emph{PPLT Modules}.
 
-The argument \var{Type} specifies the type-name the symbol will associated 
-with. This should be one of \code{'Bool'}, \code{'Integer'}, 
-\code{'uInteger'}, \code{'Float'}, \code{'Double'}, \code{'String'}, 
-\code{'ArrayOfBool'}, \code{'ArrayOfInteger'}, \code{'ArrayOfuInteger'},
-\code{'ArrayOfFloat'}, \code{'ArrayOfDouble'}, \code{'ArrayOfString'} and
-\code{'Raw'}.
+The argument \var{Refresh} specifies the time in seconds the value of the last
+read will be cached and returned by future reads.
 
 The optional argument \var{Modus} specifies the access-right of the new symbol.
 This should be a string (i.e. \code{'600'}) containing an octal integer 
@@ -355,8 +334,6 @@ the user marked as super-user.
 The optional argument \var{Group} specifies the group, the symbol will be 
 attached to. This should be a string containing the name of an existing 
 group. By default this will be the group of the super-user.
-
-This method will return \code{True} on success or \code{False} else.
 \end{methoddesc}
 
 
@@ -365,8 +342,6 @@ This method will remove a symbol from the symbol tree.
 
 The argument \var{Path} specifies the \textbf{full} path
 to the symbol you want to remove. 
-
-This method will return \code{False} on error or \code{True} on success.
 \end{methoddesc}
 
 
@@ -376,8 +351,6 @@ This method moves a symbol from path \var{From} into the folder specified by
 
 The argument \var{Specifies} the symbol you want to move and the argument 
 \var{To} specifies the destination folder. The destination folder have to exist.
-
-This method return \code{False} on error or \code{True} on success.
 \end{methoddesc}
 
 
@@ -387,8 +360,7 @@ This method will list all symbols of the folder specified by \var{Path}.
 The argument \var{Path} specifies the folder.
 
 This method will return a list of strings, even if the folder doesn't contain 
-any symbols (in this case the method will return an empty list). The method
-will return \code{None} on error.
+any symbols (in this case the method will return an empty list).
 \end{methoddesc}
 
 
@@ -396,8 +368,7 @@ will return \code{None} on error.
 This method returns the value of the symbol specified by the argument 
 \var{Path}. 
 
-This method will return any value or a list of values on success or 
-\code{None} on error.
+This method will return any value or a list of values on success.
 \end{methoddesc}
 
 
@@ -408,8 +379,6 @@ This method will set the value of the symbol specified by \var{Path} to
 The argument \var{Path} specifies the symbol, you want to set. The argument 
 \var{Value} specifies the value (or even the list of values) you want to set 
 to the symbol.
-
-This method will return \code{True} on success or \code{False} on error.
 \end{methoddesc}
 
 
@@ -425,8 +394,7 @@ This method returns a string or \code{None} on error.
 
 \begin{methoddesc}[System]{GetSymbolType}{Path}
 This method returns the type-name of a symbol. The argument \var{Path} 
-specifies the \textbf{full} path to the symbol. This method returns 
-\code{True} on success or \code{None} on error.
+specifies the \textbf{full} path to the symbol.
 \end{methoddesc}
 
 
@@ -435,14 +403,14 @@ This method returns the timestamp of the value of a given symbol. The argument
 \var{Path} specifies the full path to the symbol. \textbf{Note}: This method
 will return the timestamp of the last update of the symbol-value. This is not 
 always the timestamp of the last \emph{successful} update. This method will 
-return a float (seconds since epoch) on success or \code{None} on error.
+return a float (seconds since epoch) on success.
 \end{methoddesc}
 
 
 \begin{methoddesc}[System]{GetOwner}{Path}
 This method will return the owner-name of a symbol. The argument
 \var{Path} specifies the \textbf{full} path to the symbol. This method will
-return a string on success or \code{None} on error.
+return a string on success.
 \end{methoddesc}
 
 
@@ -450,16 +418,14 @@ return a string on success or \code{None} on error.
 This method sets the owner of a symbol or folder. The argument \var{Path} 
 specifies the \textbf{full} path to the symbol/folder. The argument 
 \var{Owner} specifies the name of the new owner. This must be an existing 
-username! This method will return \code{True} on success or \code{False} on
-error.
+username! 
 \end{methoddesc}
 
 
 \begin{methoddesc}[System]{GetGroup}{Path}
 This method will return the name of the group a symbol or folder is attached 
 to. The argument \var{Path} specifies the \textbf{full} path of the 
-symbol/folder. This method will return a string containing the group-name
-or \code{None} on error.
+symbol/folder. This method will return a string containing the group-name.
 \end{methoddesc}
 
 
@@ -474,8 +440,7 @@ must be a existing group.
 \begin{methoddesc}[System]{GetModus}{Path}
 This method will return the access-rights of the given symbol or folder.
 The argument \var{Path} specifies the \textbf{full} path to the symbol/folder.
-This method will returns a string formated as described above or \code{None}
-on error. 
+This method will returns a string formated as described above.
 
 To process this string by your script, I recommend you to convert this string 
 into a integer and then working with bit operations on it like the following 
@@ -502,15 +467,13 @@ This method will set the access rights of owner, group and other
 of a given symbol or folder. The argument \var{Path} specifies the 
 \textbf{full} path to the symbol/folder. The argument \var{Modus} specifies
 the access-rights. This should a string containing the 3 octal numbers 
-specifying the rights like described above. This method will return 
-\code{True} on success or \code{False} on error.
+specifying the rights like described above.
 \end{methoddesc}
 
 
 \begin{methoddesc}[System]{ClearSymbolTree}{\optional{Path}}
 This method will clear (remove all) elements from the whole symbol-tree or
-optional down from the given \var{Path}. This method will return 
-\code{True} on success or \code{False} on error.
+optional down from the given \var{Path}.
 \end{methoddesc}
 
 
@@ -525,7 +488,6 @@ filename of the session file to load.
 \begin{notice} 
 The current session will be lost! 
 \end{notice}
-This method will return \code{True} on success and \code{False} on error.
 \end{methoddesc}
 
 
@@ -533,29 +495,25 @@ This method will return \code{True} on success and \code{False} on error.
 This method will save the current session to the given file. The used
 format is the PSF format described in the chapter 
 \emph{PSF --- PPLT Session File}. The argument \var{FileName} specifies
-the file to save the session to. The method will return \code{True} on 
-success an \code{False} on error.
+the file to save the session to.
 \end{methoddesc}
 
 
 \begin{methoddesc}[System]{StopAll}{}
 This method stops the whole PPLT system and reset it to the init state by calling  the 
 methods \method{ClearSymbolTree}, \method{StopDevices} and
-\method{StopServers}. This method will return \code{True} on success or
-\code{False} on error.
+\method{StopServers}.
 \end{methoddesc}
 
 
 \begin{methoddesc}[System]{StopDevices}{}
 This method will stop and unload all loaded devices. The method can be used to
-shutdown the PPLT system. The method will return \code{True} on success or 
-\code{False} on error.
+shutdown the PPLT system.
 \end{methoddesc}
 
 
 \begin{methoddesc}[System]{StopServers}{}
 This method will stop all loaded servers and unload them. This method can be used 
-to shutdown the PPLT system. This method will return \code{False} on error or 
-\code{True} on success.
+to shutdown the PPLT system.
 \end{methoddesc}
 

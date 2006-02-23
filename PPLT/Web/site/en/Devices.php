@@ -68,10 +68,9 @@ system.LoadDevice("Debug.RandomGenerator", "alias", {});
 	slot holds the random numbers for a defined type. So the slot holds
 	<i>Byte</i> random values of the type byte, etc. 
 	<table align="center">
-		<tr><th>Slot</th><th>Type</th><th>Meaning</th></tr>
+		<tr><th>Slot</th><th>Meaning</th></tr>
 		<tr>
 			<td>Bool</td>
-			<td>bool</td>
 			<td>Randomly True or False.</td>
 		</tr>
 		<tr>

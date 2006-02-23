@@ -2,13 +2,14 @@
 [ALL]
     Do testing and testing and testing ...
 
-    Update README
     
 [pyDCPU]
-    Implement mounting of a remote symbol tree 
-    maybe by using simple export (XML-RPC)
-    (maybe very complex -> a task for 
-    release 1.1.0)
+    - Implement mounting of a remote symbol tree 
+      maybe by using simple export (XML-RPC)
+      (maybe very complex -> a task for 
+      release 1.1.0)
+    - Implement module-compiling (pyDCPU/Compile.py exists now implement anywhere)
+    - implement validating the core-mod meta.xml files
 
 [CoreModule]
 	- Write a core-mod to read/write to the parallel port (maybe with the option
@@ -18,9 +19,6 @@
 
 
 +++ BUGs BUGs BUGs +++
-[pyDCPU]
-    - Implement module-compiling (pyDCPU/Compile.py exists now implement anywhere)
-    - implement validating the core-mod meta.xml files
 
 [PPLTCenter]
     - SymbolTreePanel: Make all visible items visible after rebuild tree.
