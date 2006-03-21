@@ -22,3 +22,4 @@
 
 [PPLTCenter]
     - SymbolTreePanel: Make all visible items visible after rebuild tree.
+    - Tracebacks shown in a error-message should be in a scollable window.

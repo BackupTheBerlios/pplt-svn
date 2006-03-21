@@ -114,7 +114,6 @@ class System:
         self.StopServers();
         self.ClearSymbolTree();
         self.StopDevices();
-    
     def StopServers(self):
         """ This method will stop all servers. """
         srvlst = self.__ServerHash.keys();
