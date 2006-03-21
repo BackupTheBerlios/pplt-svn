@@ -20,13 +20,13 @@ public class baseMessage{
     protected int 			myTimeToLife;
     protected string        mySenderID;
 
-    public baseMessage(int TTL, MsgPriority priority){
+    public baseMessage(int TTL, MsgPriority priority){ // {{{
         this.myPriority	= priority;
         this.myTimeToLife	= TTL;
         this.myThread		= Thread.CurrentThread;
         this.myCreateTime = DateTime.Now.Ticks;
     }
-
+    //}}}
     public baseMessage(int TTL): this(TTL, MsgPriority.Normal){}
 
     
