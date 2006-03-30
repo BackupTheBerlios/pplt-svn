@@ -1,8 +1,4 @@
 +++ general Tasks +++
-[ALL]
-    Do testing and testing and testing ...
-
-    
 [pyDCPU]
     - Implement mounting of a remote symbol tree 
       maybe by using simple export (XML-RPC)
@@ -22,4 +18,3 @@
 
 [PPLTCenter]
     - SymbolTreePanel: Make all visible items visible after rebuild tree.
-    - Tracebacks shown in a error-message should be in a scollable window.

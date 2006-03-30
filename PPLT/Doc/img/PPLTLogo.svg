@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!-- Created with Inkscape (http://www.inkscape.org/) -->
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://web.resource.org/cc/"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://inkscape.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   width="210mm"
+   height="297mm"
+   id="svg2"
+   sodipodi:version="0.32"
+   inkscape:version="0.42.2"
+   sodipodi:docbase="/home/hannes/Projekte/PPLT/Doc/img"
+   sodipodi:docname="PPLTLogo.svg">
+  <defs
+     id="defs4" />
+  <sodipodi:namedview
+     id="base"
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1.0"
+     inkscape:pageopacity="0.0"
+     inkscape:pageshadow="2"
+     inkscape:zoom="5.1222222"
+     inkscape:cx="170.12779"
+     inkscape:cy="840.28708"
+     inkscape:document-units="px"
+     inkscape:current-layer="layer1"
+     inkscape:window-width="1016"
+     inkscape:window-height="712"
+     inkscape:window-x="0"
+     inkscape:window-y="28" />
+  <metadata
+     id="metadata7">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <g
+     inkscape:label="Ebene 1"
+     inkscape:groupmode="layer"
+     id="layer1">
+    <g
+       id="g11621"
+       transform="translate(2.928417,2.537961)">
+      <rect
+         style="opacity:1.0000000;fill:#e6b42f;fill-opacity:1.0000000;fill-rule:evenodd"
+         id="rect10137"
+         width="164.00000"
+         height="68.000000"
+         x="79.000000"
+         y="169.36218"
+         rx="19.000000"
+         ry="19.000000" />
+      <path
+         id="path10129"
+         d="M 98.000000,169.37500 C 94.168290,169.37500 90.634340,170.50145 87.656250,172.43750 L 87.718750,173.12500 C 88.678380,182.99724 94.554880,197.22761 100.31250,203.59375 C 109.98483,214.28834 123.71755,222.51343 136.15625,225.09375 C 138.07271,225.49132 143.67042,225.54646 148.59375,225.21875 C 176.04520,223.39156 200.02370,200.33470 202.65625,173.25000 L 203.03125,169.37500 L 172.87500,169.37500 L 172.31250,171.65625 C 170.06359,180.58784 160.75750,189.74887 151.93750,191.75000 C 137.41777,195.04425 125.00773,188.12194 119.31250,173.53125 L 117.68750,169.37500 L 98.000000,169.37500 z M 230.18750,186.68750 C 228.69802,186.77072 227.24457,187.07208 225.87500,187.62500 C 220.26728,189.88893 217.19026,193.17511 213.46875,200.87500 C 207.31856,213.59986 191.75083,227.07873 174.78125,234.34375 L 167.68750,237.37500 L 224.00000,237.37500 C 229.11840,237.37500 233.71538,235.33149 237.12500,232.06250 C 238.51956,230.19565 239.88759,228.23938 241.46875,225.84375 C 241.47797,225.82211 241.49086,225.80293 241.50000,225.78125 C 242.45891,223.50659 243.00000,221.00650 243.00000,218.37500 L 243.00000,191.46875 C 239.02810,188.15429 234.45825,186.44889 230.18750,186.68750 z M 79.000000,206.34375 L 79.000000,218.37500 C 79.000000,228.90100 87.474000,237.37500 98.000000,237.37500 L 123.96875,237.37500 L 118.43750,235.06250 C 104.45938,229.20588 96.316140,223.85200 87.000000,214.43750 L 79.000000,206.34375 z "
+         style="fill:#735a17;fill-opacity:0.54117650" />
+    </g>
+    <rect
+       style="opacity:1.0000000;fill:#646464;fill-opacity:1.0000000;fill-rule:evenodd"
+       id="rect3574"
+       width="163.97614"
+       height="16.000000"
+       x="96.000000"
+       y="214.36218"
+       ry="7.0000005"
+       rx="7.0000000" />
+    <text
+       xml:space="preserve"
+       style="font-size:10.000000px;font-style:normal;font-variant:normal;font-weight:normal;font-stretch:normal;line-height:100.00000%;writing-mode:lr-tb;text-anchor:start;fill:#000000;fill-opacity:1.0000000;stroke:none;stroke-width:1.0000000px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1.0000000;font-family:Sans"
+       x="101.39046"
+       y="226.14308"
+       id="text5032"
+       sodipodi:linespacing="100.00000%"><tspan
+         sodipodi:role="line"
+         id="tspan5034"
+         x="101.39046"
+         y="226.14308">Potsdamer Prozessleitteechnik</tspan></text>
+  </g>
+</svg>

@@ -1,3 +1,5 @@
+    * changed MasterObject-lock to a more elegant locking:
+        - pyDCPU/MasterObject.py
     * updated core mod "Master.Device.GSM"
     * Commit: Revision 36
     * Added bug-track system to website.

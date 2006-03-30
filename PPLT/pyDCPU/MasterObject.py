@@ -19,6 +19,8 @@
 # ############################################################################ #
 
 # CHANGELOG:
+# 2006-03-29:
+#   + more elegant way to lock a module
 # 2006-01-14:
 #   + fixed locking (should be now clear)
 # 2005-12-08:
@@ -32,6 +34,7 @@ import traceback;
 import sys;
 import md5;
 import time;
+import thread;
 
 
 class MasterConnection:
@@ -53,40 +56,32 @@ class MasterConnection:
         return(self.Parent.close());
 
     def read_seq(self): 
-        if self.Parent.islocked(): raise ItemBusy("Can't read_seq() from Parent: is locked!");
         self.Parent.lock();
         try: return self.Parent.read(self);     # finaly will be exec anyway
         finally: self.Parent.unlock();
         
     def write_seq(self, Data): 
-        if self.Parent.islocked(): raise ItemBusy("Can't write_seq() to Parent: is locked!");
         self.Parent.lock();
         try: return self.Parent.write(self, Data);
         finally: self.Parent.unlock();
         
     def read(self, Len=None): 
-        if self.Parent.islocked(): raise ItemBusy("Can't read() from parent: is locked!");
         self.Parent.lock();
         try: return self.Parent.read(self, Len);
         finally: self.Parent.unlock();
 
     def write(self, Data):
-        if self.Parent.islocked(): raise ItemBusy("Can't write() to parent: is locked!");
         self.Parent.lock();
         try: return self.Parent.write(self, Data);
         finally: self.Parent.unlock();
 
     def b_read(self,Len=None):
-        while(self.Parent.islocked()): pass;
         return(self.read(Len));
     def b_read_seq(self):
-        while(self.Parent.islocked()): pass;
         return self.read_seq();
     def b_write(self,Data):
-        while(self.Parent.islocked()): pass;
         return(self.write(Data));
     def b_write_seq(self, Data):
-        while(self.Parent.islocked()): pass;
         return self.write_seq(Data);
 
     def flush(self):
@@ -121,7 +116,6 @@ class StreamConnection(MasterConnection):
 
     def read_seq(self):
         self.Logger.warning("Trying to read a sequence out of a stream: will return only 1 byte.");
-        if self.Parent.islocked(): raise ItemBusy("Unable to read_seq() from parent: is locked!");
         self.Parent.lock();
         try: return self.Parent.read(1);
         finally: self.Parent.unlock();
@@ -129,13 +123,11 @@ class StreamConnection(MasterConnection):
     def write_seq(self, Data): return self.write(Data);
 
     def read(self, Len=None):
-        if self.Parent.islocked(): raise ItemBusy("Can't read() from parent: is locked!");
         self.Parent.lock();
         try: return self.Parent.read(self, Len);
         finally: self.Parent.unlock();
 
     def write(self, Data):
-        if self.Parent.islocked(): raise ItemBusy("Unable to write to parent: is locked!");
         self.Parent.lock();
         try: return self.Parent.write(self, Data);
         finally: self.Parent.unlock();
@@ -155,8 +147,6 @@ class SequenceConnection(MasterConnection):
             tmp = self.Buffer;
             self.Buffer=None;
             return tmp;
-        # check if parent is locked:
-        if self.Parent.islocked(): raise ItemBusy("Unable to read_seq() from parent: is locked!");
         self.Parent.lock();
         # get data:
         try: return self.Parent.read(self);
@@ -166,7 +156,6 @@ class SequenceConnection(MasterConnection):
 
     def read(self, Len=None):
         if self.Buffer==None:     #if buffer is empty -> fill up
-            if self.Parent.islocked(): raise ItemBusy("Unable to read() from parent: item locked.");
             self.Parent.lock();
             try: self.Buffer = self.Parent.read(self, Len);
             finally: self.Parent.unlock();
@@ -187,7 +176,6 @@ class SequenceConnection(MasterConnection):
        
         
     def write(self, Data):
-        if self.Parent.islocked(): raise ItemBusy("Unable to write() to parent: is locked!");
         self.Parent.lock();
         try: return self.Parent.write(self, Data);
         finally: self.Parent.unlock();
@@ -250,9 +238,9 @@ class MasterObject:
         if Parameters: self.Parameters = Parameters.copy();
         else: self.Parameters = None;
         self.Logger = logging.getLogger("pyDCPU");
-        self.Lock   = False;
+        self.Lock   = thread.allocate_lock();
 
-    def tear_down(self): 
+    def tear_down(self):
         if self.Connection: self.Connection.close();
         self.destroy();
 
@@ -272,7 +260,7 @@ class MasterObject:
         Connection = MasterConnection(self, Address);
         return(Connection);
 
-    def close(self,Connection=None): 
+    def close(self,Connection=None):
         return(True);
 
     def read(self, Connection, Len): pass;
@@ -280,17 +268,12 @@ class MasterObject:
     def write(self, Connection, Data): pass;
 
     def flush(self):
-        self.unlock();
+        self.Lock.release();
         return(True);
     
-    def lock(self):
-        self.Lock = True;
-        return(True);
-    def unlock(self):
-        self.Lock = False;
-        return(True);
-    def islocked(self):
-        return(self.Lock);
+    def lock(self): return self.Lock.acquire();
+    def unlock(self): return self.Lock.release();
+    def islocked(self): return self.Lock.locked();
 
     def _GetID(self): return(self.ID);
     def _GetClass(self): return(self.Class);
