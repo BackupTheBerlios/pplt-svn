@@ -16,8 +16,7 @@ cConnection::~cConnection(){
 }
 
 
-
-void cConnection::data_notify(){
+void cConnection::notify_child(){
     if(0 == d_owner_module)
         throw ModuleError("Can't notify owner -> no owner set!");
     d_owner_module->data_notify();

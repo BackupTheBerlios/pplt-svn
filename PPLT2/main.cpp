@@ -1,30 +1,27 @@
 #include <iostream>
+#include <typeinfo>
 
-
-#include "Logging.h"
-#include "plugins/RandomModule.h"
+#include "../include/Logging.h"
+#include "plugins/LoopbackModule.h"
 #include "plugins/HexDumpModule.h"
+#include "../include/cConnection.h"
+#include "../include/cStreamConnection.h"
+#include "../include/cModule.h"
 
 using namespace PPLTCore;
-
-
+using namespace PPLTPlugin;
 
 
 int main(void){
     initLogging();
+    cModule             *loop = new LoopbackModule();
+    cModule             *hex = new HexDumpModule(loop, "a");
+    cStreamConnection   *con = dynamic_cast<cStreamConnection *>(loop->connect("a"));
 
-    cModule     *mod1 = new PPLTPlugin::RandomModule();
-    cModule     *mod2 = new PPLTPlugin::HexDumpModule(mod1, "");
-    cConnection *con  = mod2->connect("");
+    std::cout << "Type of connection: " << typeid(hex).name() << std::endl;
 
-    char        buff[32];
-    for(int n=0; n<32; n++)
-        buff[n] = 0;
+    con->write("test",4);
 
-    dynamic_cast<cStreamConnection *>(con)->read(buff, 23);
-    for(int n=0; n<32; n++)
-        std::cout << (int)buff[n] << " ";
-    std::cout << std::endl;
 
 
 return 0;

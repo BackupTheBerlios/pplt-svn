@@ -9,23 +9,61 @@ using namespace PPLTPlugin;
 
 
 HexDumpModule::HexDumpModule(cModule *parent, std::string addr)
-: cInnerModule(parent, addr){ }
+: cInnerModule(parent, addr){
+    d_my_child = 0;
+}
 
 
 void HexDumpModule::disable_events() {}
 void HexDumpModule::enable_events() {}
-void HexDumpModule::data_notify() {}
+
+
+void HexDumpModule::data_notify() {
+    char                tmp[256];
+    char                *buffer;
+    int                 buf_len;
+    int                 ret_len;
+    cStreamConnection   *con;
+
+    // set buffer pointer and length:
+    buffer = 0; buf_len = 0;
+    // check cast of parent connection:
+    if(0 == (con = dynamic_cast<cStreamConnection *>(d_parent_connection)) )
+        throw ModuleError("Unable to cast parent connection to stream!");
+
+    // do some debug:
+    MODLOG_DEBUG("In HexDump::data_notify()");
+
+    // check if a child is defined:
+    if(0 == d_my_child)
+        throw ModuleError("No child defined");
+
+    // loop for data and store is in a buffer:
+    do{
+        ret_len = con->read(tmp, 265);
+        if(ret_len > 0){
+            if(0 == (buffer = (char *) realloc(buffer, ret_len+buf_len)) )
+                throw ModuleError("Unable to alloc mem for ");
+            memcpy(buffer+buf_len, tmp, ret_len);
+            buf_len += ret_len;
+        }
+    }while(265 == ret_len);
+    // try to inform the child:
+    try{
+        d_my_child->push(buffer, buf_len);
+        free(buffer);
+    }catch(...){ free(buffer); }
+}
+
 
 cConnection *HexDumpModule::connect(std::string addr, cDisposable *child){
-    cStreamConnection *con;
-
-    if(1 < d_connections.count())
-        throw ModuleError("HexDump can only handle one connection!");
-
-    con = new cStreamConnection(this, child);
-    d_connections.addConnection(addr, con);
-    return con;
+    if(0 != d_my_child)
+        throw ModuleError("This module can handle only one child-connection.");
+    MODLOG_DEBUG("Create cStreamConnection for HexDump");
+    d_my_child = new cStreamConnection(this, child);
+    return d_my_child;
 }
+
 
 void HexDumpModule::disconnect(std::string con_id){
     d_connections.remConnection(con_id);

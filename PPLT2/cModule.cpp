@@ -31,6 +31,15 @@ void cConnectionDataBase::remConnection(std::string id){
 
 
 int cConnectionDataBase::count(){ return d_id_address_map.size(); }
+int cConnectionDataBase::count(std::string addr){
+    int         con_count = 0;
+
+    for( std::map<std::string, std::string>::iterator it = d_id_address_map.begin();
+            it != d_id_address_map.end(); ++it){
+        con_count++;
+    }
+    return con_count;
+}
 
 
 cConnection *cConnectionDataBase::getConnectionByID(std::string id){
@@ -49,8 +58,9 @@ std::list<cConnection *> *cConnectionDataBase::getConnectionsByAddress(std::stri
     for( std::map<std::string, std::string>::iterator it = d_id_address_map.begin();
             it != d_id_address_map.end(); ++it){
         if(addr == it->second)
-            my_list->insert(0, d_id_connection_map[it->first]);
+            my_list->push_back(d_id_connection_map[it->first]);
     }
+
     return my_list;
 }
 

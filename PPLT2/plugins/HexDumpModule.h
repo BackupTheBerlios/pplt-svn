@@ -13,6 +13,7 @@ namespace PPLTPlugin{
     :public PPLTCore::cInnerModule,
      public PPLTCore::iStreamModule{
         private:
+            PPLTCore::cStreamConnection   *d_my_child;
             std::string hexLine(char *buff, int offset, int len=8);
 
         public:

@@ -1,38 +1,38 @@
-#ifndef PPLT_PLUGIN_LOOPBACKMODULE_H
-#define PPLT_PLUGIN_LOOPBACKMODULE_H
+#ifndef PPLT_PLUGIN_LOOPBACK_H
+#define PPLT_PLUGIN_LOOPBACK_H
 
-#include <iostream>
-#include "../CModule.h"
+#include "../cModule.h"
+#include "../iStreamModule.h"
+#include "../cConnection.h"
+#include "../cStreamConnection.h"
+#include "../cDisposable.h"
+#include "../Logging.h"
+#include "../Exceptions.h"
+
 
 namespace PPLTPlugin{
 
-    class LoopbackBuffer{
+    class LoopbackModule
+    : public PPLTCore::cModule,
+      public PPLTCore::iStreamModule
+    {
         private:
-            std::string     d_buffer;
+            PPLTCore::cConnection *GetTheOtherOne(std::string addr);
 
         public:
-            int write(char *, int);
-            int read(char *, int);
-    };
+            LoopbackModule();
 
-    class LoopbackModule: public PPLTCore::CRootModule{
-        private:
-            LoopbackBuffer  d_buffer;
-            bool            d_events_enabled;
+            void enable_events();
+            void disable_events();
 
-        public:
-            LoopbackModule(std::string);
-
-            int connect(std::string, PPLTCore::CInnerModule *);
-            int disconnect(std::string);
+            PPLTCore::cConnection *connect(std::string addr,
+                                           PPLTCore::cDisposable *child=0);
+            void disconnect(std::string);
 
             int read(std::string, char *, int);
             int write(std::string, char *, int);
-
-            int enable_events();
-            int disable_events();
     };
-
 }
+
 
 #endif

@@ -28,6 +28,7 @@ namespace PPLTCore{
             void    remConnection(std::string);
 
             int     count();
+            int     count(std::string);
 
             cConnection  *getConnectionByID(std::string);
             std::string getAddressByID(std::string);

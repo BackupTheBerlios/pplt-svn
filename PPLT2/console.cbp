@@ -9,7 +9,7 @@
 		<Option compiler="0"/>
 		<Build>
 			<Target title="default">
-				<Option output="/home/hannes/Projekte/PPLT2/console"/>
+				<Option output="/home/hannes/Projekte/PPLT2/test"/>
 				<Option working_dir="."/>
 				<Option object_output=".objs"/>
 				<Option deps_output=".deps"/>
@@ -44,12 +44,6 @@
 		</Unit>
 		<Unit filename="Logging.cpp">
 			<Option compilerVar="CPP"/>
-			<Option target="default"/>
-		</Unit>
-		<Unit filename="Logging.h">
-			<Option compilerVar=""/>
-			<Option compile="0"/>
-			<Option link="0"/>
 			<Option target="default"/>
 		</Unit>
 		<Unit filename="cConnection.cpp">
@@ -158,6 +152,12 @@
 			<Option link="0"/>
 			<Option target="default"/>
 		</Unit>
+		<Unit filename="include/Logging.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="default"/>
+		</Unit>
 		<Unit filename="main.cpp">
 			<Option compilerVar="CPP"/>
 			<Option target="default"/>
@@ -167,6 +167,16 @@
 			<Option target="default"/>
 		</Unit>
 		<Unit filename="plugins/HexDumpModule.h">
+			<Option compilerVar=""/>
+			<Option compile="0"/>
+			<Option link="0"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="plugins/LoopbackModule.cpp">
+			<Option compilerVar="CPP"/>
+			<Option target="default"/>
+		</Unit>
+		<Unit filename="plugins/LoopbackModule.h">
 			<Option compilerVar=""/>
 			<Option compile="0"/>
 			<Option link="0"/>

@@ -6,9 +6,7 @@
 namespace PPLTCore{
 
     class iSequenceModule{
-        public:
-            virtual std::string *read(std::string) = 0;
-            virtual void write(std::string, std::string) = 0;
+        //FIXME: implement
     };
 
 }

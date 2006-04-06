@@ -59,7 +59,6 @@ int RandomModule::get(std::string con_id){
     MODLOG_DEBUG("get() request from connection :"+con_id);
     if("int" != d_connections.getAddressByID(con_id))
         throw Error("Wrong interface...");
-    // FIXME: this will allways return the same random number!
     return std::rand();
 }
 

@@ -28,7 +28,7 @@ namespace PPLTCore{
      * connected to. Normaly you need not to create a
      * cConnection object by your self.
      */
-    class cConnection: public cObject, public cDisposable{
+    class cConnection: public cObject{
         private:
             cDisposable *d_owner_module;
 
@@ -37,7 +37,14 @@ namespace PPLTCore{
             * This attribute will be used by the derived classes to
             * access the parent module.
             */
-            class cModule     *d_parent_module;
+            class cModule   *d_parent_module;
+
+            /** Notyfy child about new data in buffer,
+            * This method can be called from derived classes to
+            * notify the child module (or symbol) about new data
+            * in the  buffer.
+            */
+            virtual void    notify_child();
 
         public:
             /** Constructor:
@@ -52,8 +59,6 @@ namespace PPLTCore{
             */
             cConnection(cModule *parent, cDisposable *owner=0);
             virtual ~cConnection();
-
-            virtual void data_notify();
     };
 
 }
