@@ -1,94 +1,110 @@
 <?xml version="1.0"?>
 <!DOCTYPE CodeBlocks_layout_file>
 <CodeBlocks_layout_file>
-	<File name="Exceptions.cpp" open="0" top="0">
-		<Cursor position="42" topLine="0"/>
+	<File name="include/Exceptions.h" open="0" top="0">
+		<Cursor position="2361" topLine="0"/>
 	</File>
-	<File name="Exceptions.h" open="0" top="0">
-		<Cursor position="3186" topLine="71"/>
+	<File name="include/Logging.h" open="0" top="0">
+		<Cursor position="1753" topLine="2"/>
 	</File>
-	<File name="Logging.cpp" open="0" top="0">
-		<Cursor position="271" topLine="0"/>
+	<File name="include/cConnection.h" open="0" top="0">
+		<Cursor position="2549" topLine="33"/>
 	</File>
-	<File name="Logging.h" open="0" top="0">
-		<Cursor position="1566" topLine="0"/>
+	<File name="include/cDisposable.h" open="0" top="0">
+		<Cursor position="1331" topLine="13"/>
 	</File>
-	<File name="cConnection.cpp" open="0" top="0">
-		<Cursor position="99" topLine="0"/>
+	<File name="include/cIntegerConnection.h" open="0" top="0">
+		<Cursor position="0" topLine="9"/>
 	</File>
-	<File name="cConnection.h" open="0" top="0">
-		<Cursor position="2021" topLine="22"/>
+	<File name="include/cModule.h" open="0" top="0">
+		<Cursor position="4343" topLine="82"/>
 	</File>
-	<File name="cDisposable.cpp" open="0" top="0">
-		<Cursor position="139" topLine="0"/>
+	<File name="include/cObject.h" open="0" top="0">
+		<Cursor position="178" topLine="14"/>
 	</File>
-	<File name="cDisposable.h" open="0" top="0">
-		<Cursor position="586" topLine="0"/>
+	<File name="include/cSequenceConnection.h" open="0" top="0">
+		<Cursor position="1561" topLine="18"/>
 	</File>
-	<File name="cInnerModule.cpp" open="0" top="0">
-		<Cursor position="152" topLine="0"/>
+	<File name="include/cStreamConnection.h" open="0" top="0">
+		<Cursor position="88" topLine="0"/>
 	</File>
-	<File name="cInnerModule.h" open="0" top="0">
-		<Cursor position="2139" topLine="20"/>
+	<File name="include/cSymbol.h" open="0" top="0">
+		<Cursor position="161" topLine="0"/>
 	</File>
-	<File name="cIntegerConnection.cpp" open="0" top="0">
-		<Cursor position="207" topLine="0"/>
+	<File name="include/iSequenceModule.h" open="0" top="0">
+		<Cursor position="826" topLine="0"/>
 	</File>
-	<File name="cIntegerConnection.h" open="1" top="1">
-		<Cursor position="557" topLine="0"/>
-	</File>
-	<File name="cModule.cpp" open="0" top="0">
-		<Cursor position="261" topLine="0"/>
-	</File>
-	<File name="cModule.h" open="0" top="0">
-		<Cursor position="1424" topLine="30"/>
-	</File>
-	<File name="cStreamConnection.cpp" open="0" top="0">
-		<Cursor position="110" topLine="0"/>
-	</File>
-	<File name="cStreamConnection.h" open="0" top="0">
-		<Cursor position="180" topLine="0"/>
-	</File>
-	<File name="cValueConnection.cpp" open="0" top="0">
-		<Cursor position="156" topLine="0"/>
-	</File>
-	<File name="cValueConnection.h" open="0" top="0">
-		<Cursor position="240" topLine="0"/>
-	</File>
-	<File name="iIntegerModule.cpp" open="0" top="0">
-		<Cursor position="129" topLine="0"/>
-	</File>
-	<File name="iIntegerModule.h" open="0" top="0">
-		<Cursor position="177" topLine="0"/>
-	</File>
-	<File name="iSequenceModule.h" open="0" top="0">
-		<Cursor position="149" topLine="0"/>
-	</File>
-	<File name="iStreamModule.cpp" open="0" top="0">
-		<Cursor position="124" topLine="0"/>
-	</File>
-	<File name="iStreamModule.h" open="0" top="0">
-		<Cursor position="193" topLine="0"/>
-	</File>
-	<File name="main.cpp" open="0" top="0">
-		<Cursor position="19" topLine="0"/>
+	<File name="main.cpp" open="1" top="1">
+		<Cursor position="773" topLine="0"/>
 	</File>
 	<File name="plugins/HexDumpModule.cpp" open="0" top="0">
-		<Cursor position="2805" topLine="72"/>
+		<Cursor position="1442" topLine="29"/>
 	</File>
 	<File name="plugins/HexDumpModule.h" open="0" top="0">
-		<Cursor position="408" topLine="0"/>
+		<Cursor position="224" topLine="0"/>
+	</File>
+	<File name="plugins/LoopbackModule.cpp" open="0" top="0">
+		<Cursor position="503" topLine="0"/>
+	</File>
+	<File name="plugins/LoopbackModule.h" open="0" top="0">
+		<Cursor position="300" topLine="1"/>
 	</File>
 	<File name="plugins/NULLModule.cpp" open="0" top="0">
-		<Cursor position="369" topLine="5"/>
+		<Cursor position="20" topLine="0"/>
 	</File>
 	<File name="plugins/NULLModule.h" open="0" top="0">
-		<Cursor position="205" topLine="0"/>
+		<Cursor position="223" topLine="0"/>
 	</File>
 	<File name="plugins/RandomModule.cpp" open="0" top="0">
-		<Cursor position="566" topLine="7"/>
+		<Cursor position="28" topLine="0"/>
 	</File>
 	<File name="plugins/RandomModule.h" open="0" top="0">
-		<Cursor position="435" topLine="0"/>
+		<Cursor position="82" topLine="0"/>
 	</File>
+	<File name="src/Exceptions.cpp" open="0" top="0">
+		<Cursor position="84" topLine="0"/>
+	</File>
+	<File name="src/Logging.cpp" open="0" top="0">
+		<Cursor position="21" topLine="0"/>
+	</File>
+	<File name="src/cConnection.cpp" open="0" top="0">
+		<Cursor position="844" topLine="0"/>
+	</File>
+	<File name="src/cDisposable.cpp" open="0" top="0">
+		<Cursor position="57" topLine="0"/>
+	</File>
+	<File name="src/cInnerModule.cpp" open="0" top="0">
+		<Cursor position="58" topLine="0"/>
+	</File>
+	<File name="src/cIntegerConnection.cpp" open="0" top="0">
+		<Cursor position="39" topLine="0"/>
+	</File>
+	<File name="src/cModule.cpp" open="0" top="0">
+		<Cursor position="400" topLine="4"/>
+	</File>
+	<File name="src/cObject.cpp" open="0" top="0">
+		<Cursor position="21" topLine="0"/>
+	</File>
+	<File name="src/cSequenceConnection.cpp" open="0" top="0">
+		<Cursor position="2867" topLine="72"/>
+	</File>
+	<File name="src/cStreamConnection.cpp" open="0" top="0">
+		<Cursor position="42" topLine="0"/>
+	</File>
+	<File name="src/cSymbol.cpp" open="0" top="0">
+		<Cursor position="603" topLine="0"/>
+	</File>
+	<File name="src/cValueConnection.cpp" open="0" top="0">
+		<Cursor position="21" topLine="0"/>
+	</File>
+	<File name="src/iIntegerModule.cpp" open="0" top="0">
+		<Cursor position="21" topLine="0"/>
+	</File>
+	<File name="src/iSequenceModule.cpp" open="0" top="0">
+		<Cursor position="107" topLine="0"/>
+	</File>
+	<File name="src/iStreamModule.cpp" open="0" top="0">
+		<Cursor position="21" topLine="0"/>
+	</File>
+	<Expand folder="/Sources"/>
 </CodeBlocks_layout_file>

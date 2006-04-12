@@ -1,9 +1,5 @@
 #include "RandomModule.h"
 
-#include "../Exceptions.h"
-#include "../cStreamConnection.h"
-#include "../cIntegerConnection.h"
-#include "../Logging.h"
 
 using namespace PPLTCore;
 using namespace PPLTPlugin;

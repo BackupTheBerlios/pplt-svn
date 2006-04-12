@@ -1,7 +1,4 @@
-#include "cStreamConnection.h"
-#include "iStreamModule.h"
-#include "Exceptions.h"
-#include "Logging.h"
+#include "../include/cStreamConnection.h"
 
 using namespace PPLTCore;
 
@@ -14,7 +11,10 @@ cStreamConnection::cStreamConnection(cModule *parent, cDisposable *child) : cCon
     // init buffer...
     d_buffer = 0;
     d_buffer_size = 0;
+    pthread_mutex_init(&d_buffer_lock, 0);
 }
+
+
 /* Destructor: may free the internal buffer. */
 cStreamConnection::~cStreamConnection(){
     // if buffer is allocated -> free it
@@ -25,25 +25,40 @@ cStreamConnection::~cStreamConnection(){
 
 /* Push method: update buffer and notify() child.*/
 void cStreamConnection::push(char * buffer, int len){
+    // lock internal buffer:
+    if(pthread_mutex_lock(&d_buffer_lock))
+        throw CoreError("Unable to lock buffer: Mutex returned error.");
+
     // if int. buffer not set -> init
     // else -> expand int. buffer and copy buffer into it.
-    if(0 == (d_buffer = (char *)realloc(d_buffer, len+d_buffer_size)) )
+    if(0 == (d_buffer = (char *)realloc(d_buffer, len+d_buffer_size)) ){
+        pthread_mutex_unlock(&d_buffer_lock);
         throw CoreError("OutOfMem: Unable to alloc mem for internal buffer!");
+    }
 
     memcpy(d_buffer+d_buffer_size, buffer, len);
     d_buffer_size += len;
+
+    pthread_mutex_unlock(&d_buffer_lock);
+
     notify_child();
 }
 
 
 /* Clear the internal buffer */
 void cStreamConnection::flush(){
+    // try to lock internal buffer:
+    if(pthread_mutex_lock(&d_buffer_lock))
+        throw CoreError("Unable to lock buffer: Mutex returned error.");
+
     // reset the buffer!
     if(0 != d_buffer){
         free(d_buffer);
         d_buffer = 0;
         d_buffer_size = 0;
     }
+    // unlock buffer:
+    pthread_mutex_unlock(&d_buffer_lock);
 }
 
 
@@ -56,6 +71,8 @@ int cStreamConnection::read(char *buffer, int len){
 
     // if data left in int buffer:
     if(0 != d_buffer){
+        if(pthread_mutex_lock(&d_buffer_lock))
+            throw CoreError("Unable to lock buffer: Mutex returned error.");
         // check length:
         if (len > d_buffer_size)
             cpy_len = d_buffer_size;
@@ -73,10 +90,13 @@ int cStreamConnection::read(char *buffer, int len){
         }else{
             CORELOG_DEBUG("Try to resize the int. buffer!");
             memmove(d_buffer, d_buffer+cpy_len, d_buffer_size-cpy_len);
-            if(0 == (d_buffer = (char *)realloc(d_buffer, d_buffer_size-cpy_len)) )
+            if(0 == (d_buffer = (char *)realloc(d_buffer, d_buffer_size-cpy_len)) ){
+                pthread_mutex_unlock(&d_buffer_lock);
                 throw CoreError("OutOfMem: Unable to alloc mem for int. buffer!");
+            }
             d_buffer_size -= cpy_len;
         }
+        pthread_mutex_unlock(&d_buffer_lock);
         return cpy_len;
     }
 

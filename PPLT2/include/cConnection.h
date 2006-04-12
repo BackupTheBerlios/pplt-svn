@@ -4,17 +4,18 @@
 #include "cModule.h"
 #include "cObject.h"
 #include "cDisposable.h"
-
-
+/**\file cConnection.h
+ * \brief This file contains the definition of the basic
+ * connection class. This class is used by any other connection
+ * objects.
+*/
 namespace PPLTCore{
     /** The basic connection class.
      * The cConnection class is the base class for
      * all connections between modules and modules or
-     * the external world. From this class the classes
-     * @see cStreamConnection, @see cSequenceConnection and
-     * @see cValueConnection are derived.
+     * the external world.
      *
-     * Note: if this class will be destroyed, the destructor
+     * \b Note: if this class will be destroyed, the destructor
      * will call the disconnect() method of the parent module.
      * So the connection will be closed clean. You don't need
      * to care about the closing of the connection. But you
@@ -23,11 +24,12 @@ namespace PPLTCore{
      * modules. In this case the child module will destruct
      * the connection if it is destruct.
      *
-     * Note: All constructos all called by the connect() method
+     * \b Note: All constructos all called by the connect() method
      * of the module you or an other module want to be
      * connected to. Normaly you need not to create a
-     * cConnection object by your self.
-     */
+     * cConnection object by your self
+     * @see cStreamConnection @see cSequenceConnection
+     * @see cValueConnection */
     class cConnection: public cObject{
         private:
             cDisposable *d_owner_module;
@@ -53,12 +55,15 @@ namespace PPLTCore{
             * parameter contains the pointer to the child module.
             * This pointer doesn't need to point to an complete
             * module, but the object have to implement at least the
-            * @see cDisposable interface.
-            * @param *parent Pointer to the parent.
-            * @param *child Optional pointer to child.
+            * cDisposable interface.
+            * @param parent Pointer to the parent.
+            * @param owner Optional pointer to child.
             */
             cConnection(cModule *parent, cDisposable *owner=0);
             virtual ~cConnection();
+
+            void reserve();
+            void release();
     };
 
 }

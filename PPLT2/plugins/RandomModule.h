@@ -1,9 +1,19 @@
 #ifndef PLUGIN_RANDOMMODULE_H
 #define PLUGIN_RANDOMMODULE_H
 
-#include "../iStreamModule.h"
-#include "../iIntegerModule.h"
-#include "../cConnection.h"
+#include "../include/Logging.h"
+#include "../include/Exceptions.h"
+#include "../include/cModule.h"
+#include "../include/iStreamModule.h"
+#include "../include/iIntegerModule.h"
+#include "../include/cConnection.h"
+#include "../include/cIntegerConnection.h"
+#include "../include/cStreamConnection.h"
+
+
+
+
+
 
 namespace PPLTPlugin{
 

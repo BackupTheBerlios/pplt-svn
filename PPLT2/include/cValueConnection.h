@@ -5,8 +5,19 @@
 #include "Logging.h"
 #include <sys/timex.h>
 
+/**\file cValueConnection.h
+ * \brief This file contains the cValueConnection class definitions.
+ *
+ * This class is the base class for connection between a module that
+ * provides data in shape of a value like the iIntegerModule.
+ * @see cIntegerConnection */
 namespace PPLTCore{
-
+    /** This class defines the basic interface for a connection
+     * to a module that provieds data in shape of values.
+     *
+     * \b Note: Please don't use this class directily to instance a
+     * value connection to you module. Use the classes
+     * cIntergerConnection, ... instead. */
     class cValueConnection: public cConnection{
         private:
             struct timeval  d_last_update;

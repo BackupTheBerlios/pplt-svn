@@ -1,5 +1,5 @@
-#include "cModule.h"
-#include "Exceptions.h"
+#include "../include/cModule.h"
+#include "../include/Exceptions.h"
 
 using namespace PPLTCore;
 
@@ -8,15 +8,37 @@ using namespace PPLTCore;
 /* ************************************************************************ *
  * Methods of cModule class:
  * ************************************************************************ */
-cModule::cModule(){}
+cModule::cModule(){
+    // init mutexes:
+    pthread_mutex_init(&d_reservation_lock, 0);
+}
+
 cModule::~cModule(){ }
+
+
+void cModule::reserve(){
+    MODLOG_DEBUG("Reserve module.");
+    if(pthread_mutex_lock(&d_reservation_lock))
+        throw CoreError("Unable to reserver module! Error returned from mutex.");
+}
+
+void cModule::release(){
+    MODLOG_DEBUG("Release module.");
+    pthread_mutex_unlock(&d_reservation_lock);
+}
+
+
 
 
 /* ************************************************************************ *
  * Methods of CModule class:
  * ************************************************************************ */
 cConnectionDataBase::cConnectionDataBase(){ }
-cConnectionDataBase::~cConnectionDataBase(){ d_id_address_map.clear(); d_id_connection_map.clear(); }
+
+cConnectionDataBase::~cConnectionDataBase(){
+    d_id_address_map.clear(); d_id_connection_map.clear();
+}
+
 
 void cConnectionDataBase::addConnection(std::string addr, cConnection *connection){
     std::string     id = connection->Identifier();

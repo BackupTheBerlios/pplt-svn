@@ -1,5 +1,4 @@
 #include <iostream>
-
 #include "NULLModule.h"
 
 using namespace PPLTCore;

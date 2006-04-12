@@ -1,13 +1,13 @@
 #ifndef PPLT_PLUGIN_LOOPBACK_H
 #define PPLT_PLUGIN_LOOPBACK_H
 
-#include "../cModule.h"
-#include "../iStreamModule.h"
-#include "../cConnection.h"
-#include "../cStreamConnection.h"
-#include "../cDisposable.h"
-#include "../Logging.h"
-#include "../Exceptions.h"
+#include "../include/cModule.h"
+#include "../include/iStreamModule.h"
+#include "../include/cConnection.h"
+#include "../include/cStreamConnection.h"
+#include "../include/cDisposable.h"
+#include "../include/Logging.h"
+#include "../include/Exceptions.h"
 
 
 namespace PPLTPlugin{

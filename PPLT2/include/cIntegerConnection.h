@@ -4,16 +4,19 @@
 #include "iIntegerModule.h"
 #include "cValueConnection.h"
 
+/**\file cIntegerConnection.h
+ * \brief This file contains the definition of the cIntegerConnection
+ * class. */
 namespace PPLTCore{
 
-    /** A conection to a module that implements IntegerModule.
+    /** A conection to a module that implements iIntegerModule.
+     *
      * This class extend the cValueConnection class to implement
      * a connection to a module that provies integer values.
      * This class can also (like other connection classes) connect
      * two modules. The child module have to know how to handle
      * integer connections. A module can check on construction what
-     * kind of connection it got.
-     */
+     * kind of connection it got.*/
     class cIntegerConnection : public cValueConnection{
         private:
             int d_cache_value;

@@ -1,10 +1,10 @@
-#include "cIntegerConnection.h"
-#include "iIntegerModule.h"
-#include "Exceptions.h"
-#include "Logging.h"
-#include "cModule.h"
 #include <iostream>
 #include <sstream>
+#include "../include/cIntegerConnection.h"
+#include "../include/iIntegerModule.h"
+#include "../include/Exceptions.h"
+#include "../include/Logging.h"
+#include "../include/cModule.h"
 
 using namespace PPLTCore;
 

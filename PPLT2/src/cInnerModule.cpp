@@ -1,5 +1,5 @@
-#include "cInnerModule.h"
-#include "Exceptions.h"
+#include "../include/cInnerModule.h"
+#include "../include/Exceptions.h"
 
 using namespace PPLTCore;
 

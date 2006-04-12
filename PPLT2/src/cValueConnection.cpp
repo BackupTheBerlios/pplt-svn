@@ -1,4 +1,4 @@
-#include "cValueConnection.h"
+#include "../include/cValueConnection.h"
 
 using namespace PPLTCore;
 

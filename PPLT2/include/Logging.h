@@ -24,6 +24,10 @@ namespace PPLTCore{
     #define MODLOG_ERROR(msg)       LOG4CPLUS_ERROR(log4cplus::Logger::getInstance("Module"), msg)
     #define MODLOG_FATAL(msg)       LOG4CPLUS_FATAL(log4cplus::Logger::getInstance("Module"), msg)
 
+    /** Logging initializer.
+    * This function will init the logging system. Simply call this
+    * function before calling any other PPLT stuff to get the logging
+    * running. This function takes no parameters. */
     void initLogging();
 
     void Log(log4cplus::Logger log, log4cplus::LogLevel level, const char *file, int line,

@@ -1,5 +1,5 @@
-#include "Exceptions.h"
-#include "Logging.h"
+#include "../include/Exceptions.h"
+#include "../include/Logging.h"
 #include <iostream>
 
 using namespace PPLTCore;

@@ -1,12 +1,13 @@
 # depslib dependency file v1.0
-1144353024 /home/hannes/Projekte/PPLT2/main.cpp
+1144447173 /home/hannes/Projekte/PPLT2/main.cpp
 	<iostream>
-	"Logging.h"
+	<typeinfo>
+	"include/Logging.h"
 	"plugins/LoopbackModule.h"
 	"plugins/HexDumpModule.h"
-	"cConnection.h"
-	"cStreamConnection.h"
-	"cModule.h"
+	"include/cConnection.h"
+	"include/cStreamConnection.h"
+	"include/cModule.h"
 
 1143899435 /home/hannes/Projekte/PPLT2/CInnerModule.h
 	<string>
@@ -36,14 +37,14 @@
 	"CInnerModule.h"
 	"Exceptions.h"
 
-1144240651 /home/hannes/Projekte/PPLT2/plugins/NULLModule.h
+1144358492 /home/hannes/Projekte/PPLT2/plugins/NULLModule.h
 	<string>
-	"../iStreamModule.h"
-	"../cStreamConnection.h"
-	"../cConnection.h"
-	"../cDisposable.h"
+	"../include/iStreamModule.h"
+	"../include/cStreamConnection.h"
+	"../include/cConnection.h"
+	"../include/cDisposable.h"
 
-1144240723 /home/hannes/Projekte/PPLT2/plugins/NULLModule.cpp
+1144358305 /home/hannes/Projekte/PPLT2/plugins/NULLModule.cpp
 	<iostream>
 	"NULLModule.h"
 
@@ -60,14 +61,14 @@
 	"CModule.h"
 	"Exceptions.h"
 
-1144353055 /home/hannes/Projekte/PPLT2/plugins/LoopbackModule.h
-	"../cModule.h"
-	"../iStreamModule.h"
-	"../cConnection.h"
-	"../cStreamConnection.h"
-	"../cDisposable.h"
-	"../Logging.h"
-	"../Exceptions.h"
+1144358521 /home/hannes/Projekte/PPLT2/plugins/LoopbackModule.h
+	"../include/cModule.h"
+	"../include/iStreamModule.h"
+	"../include/cConnection.h"
+	"../include/cStreamConnection.h"
+	"../include/cDisposable.h"
+	"../include/Logging.h"
+	"../include/Exceptions.h"
 
 1144352973 /home/hannes/Projekte/PPLT2/plugins/LoopbackModule.cpp
 	"LoopbackModule.h"
@@ -148,17 +149,18 @@
 1144022273 /home/hannes/Projekte/PPLT2/iValueModule.h
 	"cModule.h"
 
-1144241324 /home/hannes/Projekte/PPLT2/plugins/RandomModule.cpp
+1144358462 /home/hannes/Projekte/PPLT2/plugins/RandomModule.cpp
 	"RandomModule.h"
-	"../Exceptions.h"
-	"../cStreamConnection.h"
-	"../cIntegerConnection.h"
-	"../Logging.h"
 
-1144241056 /home/hannes/Projekte/PPLT2/plugins/RandomModule.h
-	"../iStreamModule.h"
-	"../iIntegerModule.h"
-	"../cConnection.h"
+1144358454 /home/hannes/Projekte/PPLT2/plugins/RandomModule.h
+	"../include/Logging.h"
+	"../include/Exceptions.h"
+	"../include/cModule.h"
+	"../include/iStreamModule.h"
+	"../include/iIntegerModule.h"
+	"../include/cConnection.h"
+	"../include/cIntegerConnection.h"
+	"../include/cStreamConnection.h"
 
 1144330724 /home/hannes/Projekte/PPLT2/cValueConnection.h
 	"cConnection.h"
@@ -204,16 +206,148 @@
 
 1144238644 /home/hannes/Projekte/PPLT2/iDisposable.h
 
-1144344834 /home/hannes/Projekte/PPLT2/plugins/HexDumpModule.h
-	"../Logging.h"
-	"../Exceptions.h"
-	"../cInnerModule.h"
-	"../iStreamModule.h"
-	"../cStreamConnection.h"
+1144358547 /home/hannes/Projekte/PPLT2/plugins/HexDumpModule.h
+	"../include/Logging.h"
+	"../include/Exceptions.h"
+	"../include/cInnerModule.h"
+	"../include/iStreamModule.h"
+	"../include/cStreamConnection.h"
 
 1144345122 /home/hannes/Projekte/PPLT2/plugins/HexDumpModule.cpp
 	"HexDumpModule.h"
 	<iostream>
 	<streambuf>
 	<iomanip>
+
+1144360681 /home/hannes/Projekte/PPLT2/include/Logging.h
+	<log4cplus/logger.h>
+	<log4cplus/consoleappender.h>
+
+1144507023 /home/hannes/Projekte/PPLT2/include/cModule.h
+	<pthread.h>
+	<string>
+	<list>
+	<map>
+	"cConnection.h"
+	"Logging.h"
+	"cDisposable.h"
+	"cObject.h"
+
+1144505265 /home/hannes/Projekte/PPLT2/include/cConnection.h
+	"cModule.h"
+	"cObject.h"
+	"cDisposable.h"
+
+1144367759 /home/hannes/Projekte/PPLT2/include/cObject.h
+	<string>
+	<list>
+	<iostream>
+
+1144365858 /home/hannes/Projekte/PPLT2/include/cDisposable.h
+
+1144362456 /home/hannes/Projekte/PPLT2/include/iStreamModule.h
+	"cModule.h"
+
+1144522669 /home/hannes/Projekte/PPLT2/include/cStreamConnection.h
+	<pthread.h>
+	"cConnection.h"
+	"iStreamModule.h"
+	"Exceptions.h"
+	"Logging.h"
+
+1144368427 /home/hannes/Projekte/PPLT2/include/Exceptions.h
+	<string>
+
+1144361062 /home/hannes/Projekte/PPLT2/include/cInnerModule.h
+	"cModule.h"
+	"cDisposable.h"
+
+1144365071 /home/hannes/Projekte/PPLT2/include/iIntegerModule.h
+	"cModule.h"
+
+1144363766 /home/hannes/Projekte/PPLT2/include/cIntegerConnection.h
+	"iIntegerModule.h"
+	"cValueConnection.h"
+
+1144363616 /home/hannes/Projekte/PPLT2/include/cValueConnection.h
+	"cConnection.h"
+	"Logging.h"
+	<sys/timex.h>
+
+1144358632 /home/hannes/Projekte/PPLT2/src/Exceptions.cpp
+	"../include/Exceptions.h"
+	"../include/Logging.h"
+	<iostream>
+
+1144358650 /home/hannes/Projekte/PPLT2/src/Logging.cpp
+	"../include/Logging.h"
+
+1144523119 /home/hannes/Projekte/PPLT2/src/cConnection.cpp
+	"../include/cConnection.h"
+	"../include/Exceptions.h"
+	"../include/Logging.h"
+
+1144358688 /home/hannes/Projekte/PPLT2/src/cDisposable.cpp
+	"../include/cDisposable.h"
+	"../include/Exceptions.h"
+
+1144358707 /home/hannes/Projekte/PPLT2/src/cInnerModule.cpp
+	"../include/cInnerModule.h"
+	"../include/Exceptions.h"
+
+1144358737 /home/hannes/Projekte/PPLT2/src/cIntegerConnection.cpp
+	<iostream>
+	<sstream>
+	"../include/cIntegerConnection.h"
+	"../include/iIntegerModule.h"
+	"../include/Exceptions.h"
+	"../include/Logging.h"
+	"../include/cModule.h"
+
+1144523158 /home/hannes/Projekte/PPLT2/src/cModule.cpp
+	"../include/cModule.h"
+	"../include/Exceptions.h"
+
+1144358764 /home/hannes/Projekte/PPLT2/src/cObject.cpp
+	"../include/cObject.h"
+
+1144524035 /home/hannes/Projekte/PPLT2/src/cStreamConnection.cpp
+	"../include/cStreamConnection.h"
+
+1144358779 /home/hannes/Projekte/PPLT2/src/cValueConnection.cpp
+	"../include/cValueConnection.h"
+
+1144358783 /home/hannes/Projekte/PPLT2/src/iIntegerModule.cpp
+	"../include/iIntegerModule.h"
+
+1144358791 /home/hannes/Projekte/PPLT2/src/iStreamModule.cpp
+	"../include/iStreamModule.h"
+
+1144523174 /home/hannes/Projekte/PPLT2/src/cSequenceConnection.cpp
+	"../include/cSequenceConnection.h"
+
+1144522494 /home/hannes/Projekte/PPLT2/include/cSequenceConnection.h
+	<pthread.h>
+	"cConnection.h"
+	"iSequenceModule.h"
+	"cModule.h"
+	"cDisposable.h"
+	"Logging.h"
+	"Exceptions.h"
+
+1144415757 /home/hannes/Projekte/PPLT2/src/iSequenceModule.cpp
+	"../include/iSequenceModule.h"
+
+1144435534 /home/hannes/Projekte/PPLT2/include/iSequenceModule.h
+	"cModule.h"
+
+1144530973 /home/hannes/Projekte/PPLT2/src/cSymbol.cpp
+	"../include/cSymbol.h"
+
+1144526182 /home/hannes/Projekte/PPLT2/include/cSymbol.h
+	"Logging.h"
+	"Exceptions.h"
+	"cDisposable.h"
+	"cObject.h"
+	"cConnection.h"
 

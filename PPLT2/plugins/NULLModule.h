@@ -3,10 +3,10 @@
 
 #include <string>
 
-#include "../iStreamModule.h"
-#include "../cStreamConnection.h"
-#include "../cConnection.h"
-#include "../cDisposable.h"
+#include "../include/iStreamModule.h"
+#include "../include/cStreamConnection.h"
+#include "../include/cConnection.h"
+#include "../include/cDisposable.h"
 
 namespace PPLTPlugin{
 

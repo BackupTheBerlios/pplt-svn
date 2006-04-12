@@ -1,4 +1,4 @@
-#include "iStreamModule.h"
+#include "../include/iStreamModule.h"
 
 using namespace PPLTCore;
 

@@ -4,6 +4,15 @@
 #include "cModule.h"
 #include "cDisposable.h"
 
+/**\file cInnerModule.h
+ * \brief This file contains the definition of the cInnerModule class.
+ *
+ * The cInnerModule class can be used to define a inner module. This
+ * are modules, that doesn't access any hardware or the OS but
+ * accessing other modules. By this a single layer of an
+ * communication path will be implemented by a replaceable module,
+ * This incraces the reusability of the modules for an other
+ * context.*/
 namespace PPLTCore{
 
     /** Baseclass for all inner modules.

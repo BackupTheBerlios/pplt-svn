@@ -3,6 +3,11 @@
 
 #include "cModule.h"
 
+/**\file iStreamModule.h
+ * \brief This file contains the iStreamModule interface definition.
+ *
+ * The iStreamModule interface have to be implemented by any module
+ * that wants to provide a data stream. */
 namespace PPLTCore{
 
     class iStreamModule{
