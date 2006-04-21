@@ -20,8 +20,7 @@
  * "tool", it contains a instance of the cConnectionDataBase class,
  * that can manage connetions to a module for you.
  * @see cConnectionDataBase
- * @see cModule
- */
+ * @see cModule */
 namespace PPLTCore{
 
     /** Simple database used by the CModule classes to handle
@@ -91,7 +90,23 @@ namespace PPLTCore{
      * Any module needs to implement this class. There are some pure virtual
      * methods. These methods have to be present in the module to be compiled.
      * These methods implement some of the functionality of the module.
-     * \todo Write some more about cModule and how to implement own modules. */
+     *
+     * This class also provides some methods to lock this module. Locking means
+     * to make sure that no other module or symbo can access this module at the
+     * same time. It also makes it possible to reserve your parent module for an
+     * exclusive access. To do this, you have to put an 
+     * d_parent_connection->reserve() call for each access to the parent module.
+     * But you have to care, that the parent will be unlocked. Also there was 
+     * thrown an exception while accessing the parent. 
+     * Example:
+     *
+     * d_parent_connection->reserve();
+     * try{
+     *      //access your parent
+     * }catch(...){
+     *      d_parent_connection->release();
+     * } 
+     * \todo Write some examples how to inform a child. */
     class cModule: public cObject{
         private:
             pthread_mutex_t     d_reservation_lock;
@@ -112,8 +127,7 @@ namespace PPLTCore{
 
             virtual class cConnection *connect(std::string addr, cDisposable *child=0) = 0;
             virtual void disconnect(std::string)   = 0;
-
-    };
+   };
 
 }
 

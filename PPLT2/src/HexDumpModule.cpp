@@ -1,4 +1,4 @@
-#include "HexDumpModule.h"
+#include "../include/HexDumpModule.h"
 #include <iostream>
 #include <streambuf>
 #include <iomanip>

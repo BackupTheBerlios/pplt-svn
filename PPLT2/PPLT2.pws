@@ -1,0 +1,30 @@
+
+[filenumbers]
+0=19
+1=24
+
+[filemarkers]
+0=
+1=
+
+[File View]
+filter.file.unmatch=*.so *.o *.a *.la
+filter.file.ignore.hidden=0
+filter.dir.ignore.hidden=0
+
+[executer]
+RunInTerminal=true
+
+[Project State]
+clean before build=false
+
+[filelist]
+0=/home/hannes/Projekte/PPLT2/src/Exceptions.cpp
+1=/home/hannes/Projekte/PPLT2/src/main.cc
+
+[Project Tree]
+0=0
+1=0:0
+
+[File Tree]
+0=0

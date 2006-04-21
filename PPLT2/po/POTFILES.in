@@ -1,0 +1,29 @@
+# List of source files containing translatable strings.
+
+## Created by Anjuta - will be overwritten
+## If you don't want it to overwrite it,
+## 	Please disable it in the Anjuta project configuration
+
+# Source files
+src/main.cc
+src/Exceptions.cpp
+src/Logging.cpp
+src/cConnection.cpp
+src/cDisposable.cpp
+src/cInnerModule.cpp
+src/cIntegerConnection.cpp
+src/cModule.cpp
+src/cObject.cpp
+src/cSequenceConnection.cpp
+src/cStreamConnection.cpp
+src/cSymbol.cpp
+src/cValueConnection.cpp
+src/iIntegerModule.cpp
+src/iSequenceModule.cpp
+src/iStreamModule.cpp
+src/HexDumpModule.cpp
+src/LoopbackModule.cpp
+src/NULLModule.cpp
+src/RandomModule.cpp
+
+

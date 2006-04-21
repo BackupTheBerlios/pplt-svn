@@ -1,0 +1,146 @@
+# Anjuta Version 1.2.4 
+Compatibility Level: 1 
+
+<PROJECT_DESCRIPTION_START>
+Potsdamer Prozessleittechnik<PROJECT_DESCRIPTION_END>
+<CONFIG_PROGS_START>
+<CONFIG_PROGS_END>
+<CONFIG_LIBS_START>
+AC_CHECK_LIB(-llog4cplus,)<CONFIG_LIBS_END>
+<CONFIG_HEADERS_START>
+<CONFIG_HEADERS_END>
+<CONFIG_CHARACTERISTICS_START>
+<CONFIG_CHARACTERISTICS_END>
+<CONFIG_LIB_FUNCS_START>
+<CONFIG_LIB_FUNCS_END>
+<CONFIG_ADDITIONAL_START>
+<CONFIG_ADDITIONAL_END>
+<CONFIG_FILES_START>
+<CONFIG_FILES_END>
+<MAKEFILE_AM_START>
+<MAKEFILE_AM_END>
+
+props.file.type=project
+
+anjuta.version=1.2.4
+anjuta.compatibility.level=1
+
+project.name=PPLT2
+project.type=GENERIC
+project.target.type=EXECUTABLE
+project.version=2.0.1
+project.author=Hannes Matuschek <hmatuschek@gmx.net>
+project.source.target=pplt2
+project.has.gettext=1
+project.gui.command=
+project.programming.language=C++
+project.excluded.modules=intl
+
+project.config.extra.modules.before=
+project.config.extra.modules.after=
+project.config.blocked=0
+project.config.disable.overwriting=0 0 0 0 0 0 0 0 0 
+
+project.menu.entry=PPLT2 Version 2.0.1
+project.menu.group=Applications
+project.menu.comment=PPLT2 Version 2.0.1
+project.menu.icon=
+project.menu.need.terminal=0
+
+project.configure.options=
+anjuta.program.arguments=
+preferences.build.option.jobs=0
+preferences.build.option.silent=0
+preferences.build.option.autosave=1
+preferences.make=make
+preferences.build.option.keep.going=1
+preferences.build.option.warn.undef=0
+preferences.autoformat.custom.style= -i8 -sc -bli0 -bl0 -cbi0 -ss
+preferences.indent.opening=0
+preferences.autoformat.disable=1
+preferences.indent.automatic=1
+preferences.use.tabs=0
+preferences.indent.size=4
+preferences.tabsize=4
+preferences.indent.closing=0
+
+module.include.name=include
+module.include.type=
+module.include.files=\
+	Exceptions.h\
+	Logging.h\
+	cConnection.h\
+	cDisposable.h\
+	cInnerModule.h\
+	cIntegerConnection.h\
+	cModule.h\
+	cObject.h\
+	cSequenceConnection.h\
+	cStreamConnection.h\
+	cSymbol.h\
+	cValueConnection.h\
+	iIntegerModule.h\
+	iSequenceModule.h\
+	iStreamModule.h\
+	HexDumpModule.h\
+	LoopbackModule.h\
+	NULLModule.h\
+	RandomModule.h
+
+module.source.name=src
+module.source.type=
+module.source.files=\
+	main.cc\
+	Exceptions.cpp\
+	Logging.cpp\
+	cConnection.cpp\
+	cDisposable.cpp\
+	cInnerModule.cpp\
+	cIntegerConnection.cpp\
+	cModule.cpp\
+	cObject.cpp\
+	cSequenceConnection.cpp\
+	cStreamConnection.cpp\
+	cSymbol.cpp\
+	cValueConnection.cpp\
+	iIntegerModule.cpp\
+	iSequenceModule.cpp\
+	iStreamModule.cpp\
+	HexDumpModule.cpp\
+	LoopbackModule.cpp\
+	NULLModule.cpp\
+	RandomModule.cpp
+
+module.pixmap.name=pixmaps
+module.pixmap.type=
+module.pixmap.files=
+
+module.data.name=data
+module.data.type=
+module.data.files=
+
+module.help.name=help
+module.help.type=
+module.help.files=
+
+module.doc.name=doc
+module.doc.type=
+module.doc.files=
+
+module.po.files=
+
+compiler.options.supports=
+compiler.options.include.paths=
+compiler.options.library.paths=
+compiler.options.libraries=
+compiler.options.libraries.selected=
+compiler.options.defines=
+compiler.options.defines.selected=
+compiler.options.warning.buttons=0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0 
+compiler.options.optimize.buttons=1 0 0 0 
+compiler.options.other.buttons=1 0 
+compiler.options.other.c.flags=
+compiler.options.other.l.flags=-llog4cplus -rdynamic
+compiler.options.other.l.libs=
+
+project.src.paths=

@@ -1,4 +1,4 @@
-#include "RandomModule.h"
+#include "../include/RandomModule.h"
 
 
 using namespace PPLTCore;
@@ -61,4 +61,3 @@ int RandomModule::get(std::string con_id){
 void RandomModule::set(std::string con_id, int value){
     throw Error("This module is read only!");
 }
-

@@ -1,5 +1,5 @@
 #include <iostream>
-#include "NULLModule.h"
+#include "../include/NULLModule.h"
 
 using namespace PPLTCore;
 
@@ -36,5 +36,3 @@ int NULLModule::write(std::string addr, char *buffer, int len){ return len; }
 
 void NULLModule::enable_events(){ }
 void NULLModule::disable_events(){ }
-
-

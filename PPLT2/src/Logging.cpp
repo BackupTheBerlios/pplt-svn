@@ -10,6 +10,7 @@ void PPLTCore::initLogging(){
     std::string pattern = "[%t] %-5p %c{2} - %m [%l]%n";
     app->setLayout( std::auto_ptr<Layout>(new PatternLayout(pattern)));
     Logger::getRoot().addAppender(app);
+    CORELOG_DEBUG("Init logging...");
 }
 
 void Log(Logger log, int level, const char* file, int line, std::string func_name, std::string pat){

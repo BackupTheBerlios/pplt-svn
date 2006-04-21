@@ -1,4 +1,4 @@
-#include "LoopbackModule.h"
+#include "../include/LoopbackModule.h"
 
 using namespace PPLTCore;
 using namespace PPLTPlugin;
@@ -60,4 +60,3 @@ int LoopbackModule::write(std::string con_id, char *buffer, int len){
     con->push(buffer, len);
     return len;
 }
-
