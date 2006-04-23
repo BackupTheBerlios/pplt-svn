@@ -25,6 +25,7 @@ pplt2_include_DATA = \
 	HexDumpModule.h\
 	LoopbackModule.h\
 	NULLModule.h\
-	RandomModule.h
+	RandomModule.h\
+	cStreamSymbol.h
 
 EXTRA_DIST = $(pplt2_include_DATA)

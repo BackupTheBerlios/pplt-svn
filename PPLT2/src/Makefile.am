@@ -32,7 +32,8 @@ pplt2_SOURCES = \
 	HexDumpModule.cpp\
 	LoopbackModule.cpp\
 	NULLModule.cpp\
-	RandomModule.cpp
+	RandomModule.cpp\
+	cStreamSymbol.cpp
 
 pplt2_LDFLAGS = \
 	-llog4cplus -rdynamic

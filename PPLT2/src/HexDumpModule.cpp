@@ -1,3 +1,11 @@
+/***************************************************************************
+ *            HexDumpModule.cpp
+ *
+ *  Sun Apr 23 01:25:47 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/HexDumpModule.h"
 #include <iostream>
 #include <streambuf>

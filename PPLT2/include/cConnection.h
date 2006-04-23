@@ -1,9 +1,35 @@
+/***************************************************************************
+ *            cConnection.h
+ *
+ *  Sun Apr 23 01:16:07 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+ 
 #ifndef PPLT_CCONNECTION_H
 #define PPLT_CCONNECTION_H
 
 #include "cModule.h"
 #include "cObject.h"
 #include "cDisposable.h"
+
+
 /**\file cConnection.h
  * \brief This file contains the definition of the basic
  * connection class. This class is used by any other connection
@@ -62,7 +88,12 @@ namespace PPLTCore{
             cConnection(cModule *parent, cDisposable *owner=0);
             virtual ~cConnection();
 
+            /** Reserve the module of this connection.
+            * This method reserves the module, this connection
+            * is attached to. This reservation can be resetted by calling
+            * release(). */
             void reserve();
+            /** Release the reservation. */
             void release();
     };
 

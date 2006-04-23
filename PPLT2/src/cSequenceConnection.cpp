@@ -1,3 +1,11 @@
+/***************************************************************************
+ *            cSequenceConnection.cpp
+ *
+ *  Sun Apr 23 01:27:00 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/cSequenceConnection.h"
 
 using namespace PPLTCore;

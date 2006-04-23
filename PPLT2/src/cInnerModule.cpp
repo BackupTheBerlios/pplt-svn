@@ -1,3 +1,11 @@
+/***************************************************************************
+ *            cInnerModule.cpp
+ *
+ *  Sun Apr 23 01:26:27 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/cInnerModule.h"
 #include "../include/Exceptions.h"
 

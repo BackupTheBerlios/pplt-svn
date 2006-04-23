@@ -1,3 +1,11 @@
+/***************************************************************************
+ *            LoopbackModule.cpp
+ *
+ *  Sun Apr 23 01:26:00 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/LoopbackModule.h"
 
 using namespace PPLTCore;
@@ -48,15 +56,16 @@ cConnection *LoopbackModule::GetTheOtherOne(std::string con_id){
 
 
 int LoopbackModule::read(std::string con_id, char *buffer, int len){
+    MODLOG_DEBUG("LoopbackModule has no internal buffer so I return 0");
     return 0;
 }
 
 
 int LoopbackModule::write(std::string con_id, char *buffer, int len){
-    cStreamConnection     *con;
-
+    cStreamConnection       *con;
+    
     if(0 == (con = dynamic_cast<cStreamConnection *>(GetTheOtherOne(con_id))) )
         throw ModuleError("Can't cast to cStremConnection!");
-    con->push(buffer, len);
+    con->push(buffer, len);    
     return len;
 }

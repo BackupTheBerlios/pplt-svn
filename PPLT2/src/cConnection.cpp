@@ -1,3 +1,11 @@
+/***************************************************************************
+ *            cConnection.cpp
+ *
+ *  Sun Apr 23 01:26:16 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/cConnection.h"
 #include "../include/Exceptions.h"
 #include "../include/Logging.h"

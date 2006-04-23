@@ -1,3 +1,11 @@
+/***************************************************************************
+ *            cModule.cpp
+ *
+ *  Sun Apr 23 01:26:36 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/cModule.h"
 #include "../include/Exceptions.h"
 
@@ -17,9 +25,9 @@ cModule::~cModule(){ }
 
 
 void cModule::reserve(){
-    MODLOG_DEBUG("Reserve module.");
     if(pthread_mutex_lock(&d_reservation_lock))
         throw CoreError("Unable to reserver module! Error returned from mutex.");
+    MODLOG_DEBUG("Module reserved.");
 }
 
 void cModule::release(){

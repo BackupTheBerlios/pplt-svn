@@ -1,3 +1,12 @@
+/***************************************************************************
+ *            cSymbol.cpp
+ *
+ *  Sun Apr 23 01:13:08 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
+
 #include "../include/cSymbol.h"
 
 using namespace PPLTCore;
@@ -13,10 +22,13 @@ cSymbol::~cSymbol(){
 
 
 void cSymbol::data_notify(){
+    pthread_t       thread;
+    
     for(std::list<tSymbolCallback>::iterator it = d_callbacks.begin();
         it != d_callbacks.end();
         ++it){
-        (*it)(this);
+        pthread_create(&thread, 0, reinterpret_cast<tThreadCallback>(*it), this);
+        pthread_detach(thread);
     }
 }
 
@@ -26,4 +38,3 @@ int cSymbol::addHandler(tSymbolCallback cb){
 }
 
 void cSymbol::remHandler(int ID){ }
-

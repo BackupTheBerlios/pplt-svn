@@ -50,7 +50,7 @@ project.menu.need.terminal=0
 project.configure.options=
 anjuta.program.arguments=
 preferences.build.option.jobs=0
-preferences.build.option.silent=0
+preferences.build.option.silent=1
 preferences.build.option.autosave=1
 preferences.make=make
 preferences.build.option.keep.going=1
@@ -85,7 +85,8 @@ module.include.files=\
 	HexDumpModule.h\
 	LoopbackModule.h\
 	NULLModule.h\
-	RandomModule.h
+	RandomModule.h\
+	cStreamSymbol.h
 
 module.source.name=src
 module.source.type=
@@ -109,7 +110,8 @@ module.source.files=\
 	HexDumpModule.cpp\
 	LoopbackModule.cpp\
 	NULLModule.cpp\
-	RandomModule.cpp
+	RandomModule.cpp\
+	cStreamSymbol.cpp
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
@@ -140,7 +142,7 @@ compiler.options.warning.buttons=0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
 compiler.options.optimize.buttons=1 0 0 0 
 compiler.options.other.buttons=1 0 
 compiler.options.other.c.flags=
-compiler.options.other.l.flags=-llog4cplus
+compiler.options.other.l.flags=-llog4cplus -rdynamic
 compiler.options.other.l.libs=
 
 project.src.paths=

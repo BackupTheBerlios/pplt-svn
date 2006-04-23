@@ -1,3 +1,11 @@
+/***************************************************************************
+ *            Logging.cpp
+ *
+ *  Sun Apr 23 01:25:55 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/Logging.h"
 
 using namespace PPLTCore;

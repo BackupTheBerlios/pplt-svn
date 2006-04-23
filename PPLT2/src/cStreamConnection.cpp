@@ -1,9 +1,18 @@
+/***************************************************************************
+ *            cStreamConnection.cpp
+ *
+ *  Sun Apr 23 01:27:04 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/cStreamConnection.h"
 
 using namespace PPLTCore;
 
 /* Constructor */
-cStreamConnection::cStreamConnection(cModule *parent, cDisposable *child) : cConnection(parent, child){
+cStreamConnection::cStreamConnection(cModule *parent, cDisposable *child) 
+: cConnection(parent, child){
     CORELOG_DEBUG("Init cStreamConnection");
     // check if parent match cStreamModule:
     if(!dynamic_cast<iStreamModule *>(parent) )

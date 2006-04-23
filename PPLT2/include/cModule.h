@@ -1,3 +1,27 @@
+/***************************************************************************
+ *            cModule.h
+ *
+ *  Sun Apr 23 01:16:52 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
+/*
+ *  This program is free software; you can redistribute it and/or modify
+ *  it under the terms of the GNU General Public License as published by
+ *  the Free Software Foundation; either version 2 of the License, or
+ *  (at your option) any later version.
+ *
+ *  This program is distributed in the hope that it will be useful,
+ *  but WITHOUT ANY WARRANTY; without even the implied warranty of
+ *  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ *  GNU General Public License for more details.
+ *
+ *  You should have received a copy of the GNU General Public License
+ *  along with this program; if not, write to the Free Software
+ *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+ */
+ 
 #ifndef PPLT_CMODULE_H
 #define PPLT_CMODULE_H
 
@@ -116,16 +140,50 @@ namespace PPLTCore{
             cConnectionDataBase          d_connections;
 
         public:
+            /** Constructor.
+            * This is the constructor. It doesn't take any parameters
+            * because this class isn't really complex. */
             cModule();
+            
+            /** Destructor. */
             virtual ~cModule();
 
+            /** Reserves (locks) the module.
+            * Calling this method the module will be locked. This means that
+            * no other thread can access this module at the same time. The 
+            * locking will not be done automaticly because by this way it is
+            * possible to reserve the module over more then one access. */
             void reserve();
+            
+            /** Frees (releases) the module. 
+            * This method will release the module lock. */
             void release();
-
+            
+            /** Should disable the eventes.
+            * This method have to be implemented by the module to diable
+            * the events. If this method is called no events should be send
+            * to any child! */
             virtual void disable_events() = 0;
+            
+            /** Enables events.
+            * If the events were not be disabled this method should do nothing.
+            * This method is a pure virtual method. So a module have to
+            * implement this method to be a module. */
             virtual void enable_events()  = 0;
 
-            virtual class cConnection *connect(std::string addr, cDisposable *child=0) = 0;
+            /** Creates a new connection to the module.
+            * This pure virtual method have to be implemented by a module.
+            * This method should return a pointer to a new allocated cConnection
+            * object or better to one that was derived from this. (like 
+            * cStreamConnection). Please use the available tools to manage the
+            * connections. */
+            virtual class cConnection *connect(std::string addr, 
+                                               cDisposable *child=0) = 0;
+            
+            /** Closes a connection.
+            * This method should close the connection. The parameter is the 
+            * connection id. This method will be calleb by the destructor of
+            * the cConnection object or the one derived from this. */
             virtual void disconnect(std::string)   = 0;
    };
 

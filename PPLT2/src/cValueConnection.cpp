@@ -1,3 +1,11 @@
+/***************************************************************************
+ *            cValueConnection.cpp
+ *
+ *  Sun Apr 23 01:27:17 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/cValueConnection.h"
 
 using namespace PPLTCore;

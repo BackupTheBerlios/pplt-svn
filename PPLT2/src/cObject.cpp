@@ -1,3 +1,11 @@
+/***************************************************************************
+ *            cObject.cpp
+ *
+ *  Sun Apr 23 01:26:44 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/cObject.h"
 
 using namespace PPLTCore;

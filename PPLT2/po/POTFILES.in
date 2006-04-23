@@ -25,5 +25,6 @@ src/HexDumpModule.cpp
 src/LoopbackModule.cpp
 src/NULLModule.cpp
 src/RandomModule.cpp
+src/cStreamSymbol.cpp
 
 

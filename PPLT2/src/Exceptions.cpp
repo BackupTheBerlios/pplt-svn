@@ -1,3 +1,11 @@
+/***************************************************************************
+ *            Exceptions.cpp
+ *
+ *  Sun Apr 23 01:25:40 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
+ ****************************************************************************/
+
 #include "../include/Exceptions.h"
 #include "../include/Logging.h"
 #include <iostream>
@@ -11,10 +19,11 @@ Error::Error(std::string message){
     char **strings;
     
     CORELOG_ERROR(message);
+    //FIXME: Log this traceback into the logging system...
     size = backtrace(bt, 256);
     strings = backtrace_symbols(bt, size);
     printf("BACKTRACE (%i)\n",size);
-    for(int i=0;i<size;i++)
+    for(unsigned int i=0;i<size;i++)
         printf(" %s\n",strings[i]);
     printf("-----\n");
     free(strings);
