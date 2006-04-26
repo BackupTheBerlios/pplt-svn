@@ -15,6 +15,8 @@ using namespace PPLTCore;
 
 cConnection::cConnection(cModule *parent, cDisposable *owner){
     d_owner_module = owner; d_parent_module = parent;
+    d_is_autolock = true;
+    d_events_enabled = true;
 }
 
 
@@ -32,14 +34,38 @@ void cConnection::notify_child(){
 
 
 void cConnection::reserve(){
+    if(autolock()){
+        CORELOG_WARN("Reserve called; but autolock is anabled. This may cause into"
+                     "a deadlock.");
+    }
+
     if(0 == dynamic_cast<cModule *>(d_parent_module))
         throw CoreError("Unable to cast parent_module to cModule.");
     d_parent_module->reserve();
 }
 
 
+
 void cConnection::release(){
+    if(autolock()){
+        CORELOG_WARN("Release called; but autolock is enabled. This may cause into"
+                     "some strange errors.");
+    }
+    
     if(0 == dynamic_cast<cModule *>(d_parent_module))
         throw CoreError("Unable to cast parent_module to cModule.");
     d_parent_module->release();
 }
+
+
+void cConnection::events_enabled(bool stat){
+    d_events_enabled = stat;
+}
+
+bool cConnection::events_enabled(void){
+    return d_events_enabled;
+}
+
+
+void cConnection::autolock(bool al){ d_is_autolock = al; }
+bool cConnection::autolock(void){ return d_is_autolock; }

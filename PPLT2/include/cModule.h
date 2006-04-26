@@ -47,6 +47,9 @@
  * @see cModule */
 namespace PPLTCore{
 
+    /** */
+    typedef std::map<std::string, std::string>  tModuleParameters;
+    
     /** Simple database used by the CModule classes to handle
      * all connections to children.
      *
@@ -116,20 +119,23 @@ namespace PPLTCore{
      * These methods implement some of the functionality of the module.
      *
      * This class also provides some methods to lock this module. Locking means
-     * to make sure that no other module or symbo can access this module at the
+     * to make sure that no other module or symbol can access this module at the
      * same time. It also makes it possible to reserve your parent module for an
-     * exclusive access. To do this, you have to put an 
-     * d_parent_connection->reserve() call for each access to the parent module.
-     * But you have to care, that the parent will be unlocked. Also there was 
-     * thrown an exception while accessing the parent. 
-     * Example:
-     *
-     * d_parent_connection->reserve();
-     * try{
-     *      //access your parent
-     * }catch(...){
-     *      d_parent_connection->release();
-     * } 
+     * exclusive access. Normaly each connection to a module will automaticly
+     * lock the module. But with a autolock(false) call you can disable the 
+     * autolock mechanism. But in this case you have to care about the locking
+     * and unlocking. Example:
+     * \code
+       cConnection connection = module->connect("address");
+       connection->reserve();
+       try{
+            //do IO with connection
+            connection->reserve()
+       }catch(...){
+            connection->release();
+            throw;
+       } 
+       \endcode
      * \todo Write some examples how to inform a child. */
     class cModule: public cObject{
         private:
@@ -138,12 +144,13 @@ namespace PPLTCore{
         protected:
             /** The connection data base */
             cConnectionDataBase          d_connections;
-
+            tModuleParameters            d_parameters;
+        
         public:
             /** Constructor.
             * This is the constructor. It doesn't take any parameters
             * because this class isn't really complex. */
-            cModule();
+            cModule(tModuleParameters);
             
             /** Destructor. */
             virtual ~cModule();
@@ -163,13 +170,13 @@ namespace PPLTCore{
             * This method have to be implemented by the module to diable
             * the events. If this method is called no events should be send
             * to any child! */
-            virtual void disable_events() = 0;
+            //virtual void disable_events() = 0;
             
             /** Enables events.
             * If the events were not be disabled this method should do nothing.
             * This method is a pure virtual method. So a module have to
             * implement this method to be a module. */
-            virtual void enable_events()  = 0;
+            //virtual void enable_events()  = 0;
 
             /** Creates a new connection to the module.
             * This pure virtual method have to be implemented by a module.
@@ -177,7 +184,7 @@ namespace PPLTCore{
             * object or better to one that was derived from this. (like 
             * cStreamConnection). Please use the available tools to manage the
             * connections. */
-            virtual class cConnection *connect(std::string addr, 
+            virtual class cConnection *connect(std::string addr="", 
                                                cDisposable *child=0) = 0;
             
             /** Closes a connection.

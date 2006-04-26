@@ -36,7 +36,7 @@ namespace PPLTPlugin{
 
     class NULLModule : public PPLTCore::cModule, public PPLTCore::iStreamModule{
     public:
-        NULLModule();
+        NULLModule(PPLTCore::tModuleParameters params);
 
         PPLTCore::cConnection *connect(std::string);
         PPLTCore::cConnection *connect(std::string, PPLTCore::cDisposable *);
@@ -44,9 +44,6 @@ namespace PPLTPlugin{
 
         int read(std::string, char *, int);
         int write(std::string, char *, int);
-
-        void enable_events();
-        void disable_events();
     };
 
 }

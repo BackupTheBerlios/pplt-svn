@@ -16,14 +16,10 @@ using namespace PPLTCore;
 using namespace PPLTPlugin;
 
 
-HexDumpModule::HexDumpModule(cModule *parent, std::string addr)
-: cInnerModule(parent, addr){
-    d_my_child = 0;
-}
-
-
-void HexDumpModule::disable_events() {}
-void HexDumpModule::enable_events() {}
+HexDumpModule::HexDumpModule(cModule *parent, std::string addr, 
+                             tModuleParameters params)
+: cInnerModule(parent, addr, params)
+{ d_my_child = 0; }
 
 
 void HexDumpModule::data_notify() {
@@ -32,6 +28,8 @@ void HexDumpModule::data_notify() {
     int                 buf_len;
     int                 ret_len;
     cStreamConnection   *con;
+    int                 line_num;
+    std::string         line;
 
     // set buffer pointer and length:
     buffer = 0; buf_len = 0;
@@ -56,11 +54,25 @@ void HexDumpModule::data_notify() {
             buf_len += ret_len;
         }
     }while(265 == ret_len);
+    line_num = buf_len/8;
+    for(register int ln=0;ln<line_num; ln++){
+        line = hexLine(buffer, ln*8);
+        MODLOG_DEBUG("data_notify() (+"<<ln*8<<"b):\t"<<line);
+    }
+
+    if(0 < buf_len - (line_num*8) ){
+        line = hexLine(buffer, line_num*8, buf_len-(line_num*8));
+        MODLOG_DEBUG("data_notify() (+"<<line_num*8<<"b):\t"<<line);
+    }
+
     // try to inform the child:
     try{
         d_my_child->push(buffer, buf_len);
         free(buffer);
-    }catch(...){ free(buffer); }
+    }catch(...){ 
+        free(buffer);
+        throw;
+    }
 }
 
 
@@ -116,6 +128,7 @@ int HexDumpModule::write(std::string con_id, char *buff, int len){
 
     return ret_len;
 }
+
 
 std::string HexDumpModule::hexLine(char *buffer, int offset, int len){
     std::ostringstream  output("",std::ios::ate);

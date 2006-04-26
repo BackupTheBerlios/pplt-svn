@@ -1,49 +1,57 @@
-#include <iostream>
-#include <typeinfo>
-
-#include "../include/Logging.h"
+#include "../include/Exceptions.h"
 #include "../include/LoopbackModule.h"
 #include "../include/HexDumpModule.h"
-#include "../include/cConnection.h"
 #include "../include/cStreamConnection.h"
 #include "../include/cModule.h"
-#include "../include/cStreamSymbol.h"
-
+#include "../include/iSequenceModule.h"
+#include "../include/cSequenceConnection.h"
 using namespace PPLTCore;
 using namespace PPLTPlugin;
 
-
-void my_handler(cSymbol *symb){
-    char    buff[128];
-    int     len;
+class StaticHDLC: public cInnerModule, public iSequenceModule{
+    private:
+        int d_my_address;
     
-    cStreamSymbol   *my_symb = dynamic_cast<cStreamSymbol *>(symb);
-    
-    if(0 == my_symb)
-        throw Error("Unable to cast to a cStreamSymbol pointer!");
-    
-    len = my_symb->read(buff, 128);
-
-    std::cout << "HDL: Got " << len << "bytes  ";
-    for(int n=0;n<len;n++)
-        std::cout << (char)buff[n];
-    std::cout << "\n";
-}
+    public:
+        StaticHDLC(cModule *parent, std::string addr, tModuleParameters params)
+        : cInnerModule(parent, addr, params){
+            // check if parameter "address" is present:
+            if(!params.count("address"))
+                throw ModuleSetupError("Module StaticHDLC needs a pramaeter addr!");
+            // check if parentconnection is a stream!
+            if(0 == dynamic_cast<cStreamConnection *>d_parent_connection)
+                throw ModuleSetupError("Module StaticHDCL needs a streaming parent!");
+            // save addr as number!
+            d_my_address = atoi(params["address"].c_str());
+        }
+        
+        
+        cConnection *connect(std::string addr, cDisposable *child){
+            return new cSequenceConnection(this, child);
+        }
+        
+        void disconnect(std::string id){ }        
+        
+        
+        std::string recv(std::string id){ return ""; }
+        void send(std::string id, std::string data){ }
+        
+        void data_notify(){ }
+};    
 
 int main(void){
-    initLogging();
-    cModule             *loop = new LoopbackModule();
-    cModule             *hex = new HexDumpModule(loop, "a");
-    cStreamConnection   *con = dynamic_cast<cStreamConnection *>(hex->connect("a"));
-    cStreamSymbol       *sym = new cStreamSymbol(loop, "a",true);
-
-    sym->addHandler(my_handler);
+    PPLTCore::initLogging();
     
-    con->reserve();
-    con->write("test",4);
-    con->release();
+    char                buff[32];
     
-    sym->data_notify();
-    sleep(1);
-return 0;
+    cModule             *loop = new LoopbackModule(tModuleParameters());
+    cModule             *hex  = new HexDumpModule(loop, "a", tModuleParameters());
+    cStreamConnection   *con1 = dynamic_cast<cStreamConnection *>(loop->connect("a"));
+    cModule             *hdlc = new StaticHDLC(hex, "", tModuleParameters());
+    
+    // stop emmiting events
+    con1->events_enabled(false);
+    
+    
+return(0);    
 }

@@ -11,11 +11,7 @@
 using namespace PPLTCore;
 using namespace PPLTPlugin;
 
-LoopbackModule::LoopbackModule():cModule(){}
-
-
-void LoopbackModule::enable_events(){}
-void LoopbackModule::disable_events(){}
+LoopbackModule::LoopbackModule(tModuleParameters params):cModule(params){}
 
 
 cConnection *LoopbackModule::connect(std::string addr, cDisposable *child){

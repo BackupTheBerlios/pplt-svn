@@ -11,7 +11,9 @@
 
 using namespace PPLTCore;
 
-cInnerModule::cInnerModule(cModule *parent, std::string addr): cModule(){
+cInnerModule::cInnerModule(cModule *parent, std::string addr, 
+                            tModuleParameters params): cModule(params)
+{
     d_parent_connection = parent->connect(addr, this);
 }
 

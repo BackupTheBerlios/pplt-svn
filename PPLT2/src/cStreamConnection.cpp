@@ -50,7 +50,8 @@ void cStreamConnection::push(char * buffer, int len){
 
     pthread_mutex_unlock(&d_buffer_lock);
 
-    notify_child();
+    if(events_enabled())
+        notify_child();
 }
 
 
@@ -77,7 +78,8 @@ void cStreamConnection::flush(){
 int cStreamConnection::read(char *buffer, int len){
     iStreamModule   *mod;
     int             cpy_len;
-
+    int             ret_len;
+    
     // if data left in int buffer:
     if(0 != d_buffer){
         if(pthread_mutex_lock(&d_buffer_lock))
@@ -112,16 +114,43 @@ int cStreamConnection::read(char *buffer, int len){
     //check cast to iStreamModule
     if(0 == (mod = dynamic_cast<iStreamModule *>(d_parent_module)) )
         throw CoreError("Unable to cast to iStreamModule!");
-    // call read() method of the parent
-    return mod->read(Identifier(), buffer, len);
+    
+    if(autolock())
+        d_parent_module->reserve();
+    
+    try{
+        ret_len = mod->read(Identifier(), buffer, len);
+    }catch(...){
+        if(autolock())
+            d_parent_module->release();
+        throw;
+    }
+    
+    if(autolock())
+        d_parent_module->release();
+    return ret_len;
 }
 
 
 /* Method write(): simply writes to the partent */
 int cStreamConnection::write(char *buffer, int len){
+    int ret_len;
+    
     // check cast to iStreamModule:
     if(0 == dynamic_cast<iStreamModule *>(d_parent_module) )
         throw CoreError("Unable to cast to iStreamModule!");
-    // call write() method of the parent:
-    return dynamic_cast<iStreamModule *>(d_parent_module)->write(Identifier(), buffer, len);
+    
+    if(autolock())
+        d_parent_module->reserve();
+    try{
+        ret_len = dynamic_cast<iStreamModule *>(d_parent_module)->write(Identifier(), buffer, len);
+    }catch(...){
+        if(autolock())
+            d_parent_module->release();
+        throw;
+    }
+    
+    if(autolock())
+        d_parent_module->release();
+    return ret_len;
 }

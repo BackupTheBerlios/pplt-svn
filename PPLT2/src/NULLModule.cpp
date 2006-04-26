@@ -13,7 +13,7 @@ using namespace PPLTCore;
 
 using namespace PPLTPlugin;
 
-NULLModule::NULLModule(): cModule(){
+NULLModule::NULLModule(tModuleParameters params): cModule(params){
     std::cout << "Setup NULLModule\n";
 }
 
@@ -41,6 +41,3 @@ return len;
 }
 
 int NULLModule::write(std::string addr, char *buffer, int len){ return len; }
-
-void NULLModule::enable_events(){ }
-void NULLModule::disable_events(){ }

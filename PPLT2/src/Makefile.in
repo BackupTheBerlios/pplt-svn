@@ -56,10 +56,9 @@ am_pplt2_OBJECTS = main.$(OBJEXT) Exceptions.$(OBJEXT) \
 	cModule.$(OBJEXT) cObject.$(OBJEXT) \
 	cSequenceConnection.$(OBJEXT) cStreamConnection.$(OBJEXT) \
 	cSymbol.$(OBJEXT) cValueConnection.$(OBJEXT) \
-	iIntegerModule.$(OBJEXT) iSequenceModule.$(OBJEXT) \
-	iStreamModule.$(OBJEXT) HexDumpModule.$(OBJEXT) \
-	LoopbackModule.$(OBJEXT) NULLModule.$(OBJEXT) \
-	RandomModule.$(OBJEXT) cStreamSymbol.$(OBJEXT)
+	HexDumpModule.$(OBJEXT) LoopbackModule.$(OBJEXT) \
+	NULLModule.$(OBJEXT) RandomModule.$(OBJEXT) \
+	cStreamSymbol.$(OBJEXT)
 pplt2_OBJECTS = $(am_pplt2_OBJECTS)
 pplt2_DEPENDENCIES =
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -221,9 +220,6 @@ pplt2_SOURCES = \
 	cStreamConnection.cpp\
 	cSymbol.cpp\
 	cValueConnection.cpp\
-	iIntegerModule.cpp\
-	iSequenceModule.cpp\
-	iStreamModule.cpp\
 	HexDumpModule.cpp\
 	LoopbackModule.cpp\
 	NULLModule.cpp\
@@ -231,7 +227,7 @@ pplt2_SOURCES = \
 	cStreamSymbol.cpp
 
 pplt2_LDFLAGS = \
-	-llog4cplus -rdynamic
+	-llog4cplus -rdynamic -liberty
 
 pplt2_LDADD = 
 all: all-am
@@ -322,9 +318,6 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cStreamSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cValueConnection.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/iIntegerModule.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/iSequenceModule.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/iStreamModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
 
 .cc.o:

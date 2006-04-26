@@ -47,14 +47,11 @@ namespace PPLTPlugin{
      public PPLTCore::iIntegerModule {
      
         public:
-            RandomModule();
+            RandomModule(PPLTCore::tModuleParameters params);
 
             PPLTCore::cConnection *connect(std::string, PPLTCore::cDisposable *child = 0);
 
             void disconnect(std::string);
-
-            void enable_events();
-            void disable_events();
 
             int read(std::string, char *, int);
             int write(std::string, char *, int);

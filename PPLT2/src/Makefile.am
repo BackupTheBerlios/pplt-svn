@@ -26,9 +26,6 @@ pplt2_SOURCES = \
 	cStreamConnection.cpp\
 	cSymbol.cpp\
 	cValueConnection.cpp\
-	iIntegerModule.cpp\
-	iSequenceModule.cpp\
-	iStreamModule.cpp\
 	HexDumpModule.cpp\
 	LoopbackModule.cpp\
 	NULLModule.cpp\
@@ -36,7 +33,7 @@ pplt2_SOURCES = \
 	cStreamSymbol.cpp
 
 pplt2_LDFLAGS = \
-	-llog4cplus -rdynamic
+	-llog4cplus -rdynamic -liberty
 
 pplt2_LDADD = 
 

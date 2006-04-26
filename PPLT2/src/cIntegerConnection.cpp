@@ -27,10 +27,13 @@ cIntegerConnection::cIntegerConnection(cModule *parent, cDisposable *child): cVa
 /* push() method: Will (may) called by the parent module. Store this given
  * value into the cache and inform the child for new data. */
 void cIntegerConnection::push(int value){
-    // change cache
+    // change cache and reset timestamp.
     d_cache_value = value;
-    // if child is set -> notify
-    notify_child();
+    UpdateTimestamp();
+    
+    // if events are enabled -> notify child.
+    if(events_enabled())
+        notify_child();
 }
 
 
@@ -47,21 +50,53 @@ int cIntegerConnection::get(){
     // else -> check cast to iIntegerModule:
     if(0 == (mod = dynamic_cast<iIntegerModule *>(d_parent_module)) )
         throw Error("Unable to cast to iIntegerModule!");
+    
     // cache the new value and return it:
     CORELOG_DEBUG("Update value-cache.");
-    d_cache_value = mod->get(Identifier());
+    // lock parent
+    if(autolock())
+        d_parent_module->reserve();
+    // try to get new value:
+    try{
+        d_cache_value = mod->get(Identifier());
+    }catch(...){
+        // on error release and rethrow exception.
+        if(autolock())
+            d_parent_module->release();
+        throw;
+    }
+    // release parent
+    if(autolock())
+        d_parent_module->release();
+    // update timestamp and return value.
     UpdateTimestamp();
     return d_cache_value;
 }
 
 
 /* set() method: send the new value to the parent and store it into the cache.
- * It alos updates the last_update time. */
+ * It also updates the last_update time. */
 void cIntegerConnection::set(int value){
     iIntegerModule  *mod;
     // check cast to iIntegerModule:
     if(0 == (mod = dynamic_cast<iIntegerModule *>(d_parent_module)) )
+        throw CoreError("Unable to cast parent module to iIntegerModule!");
+    
+    // lock parent
+    if(autolock())
+        d_parent_module->reserve();
+    // try to get new value
+    try{ 
         mod->set(Identifier(), value);
+    }catch(...){
+        // on error: unlock parent and rethrow exception.
+        if(autolock())
+            d_parent_module->release();
+        throw;
+    }
+    // unlock parent
+    if(autolock())
+        d_parent_module->release();
     // if success -> save new value in cache:
     d_cache_value = value;
     UpdateTimestamp();

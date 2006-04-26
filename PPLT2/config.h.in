@@ -20,6 +20,9 @@
 /* Package name for gettext */
 #undef GETTEXT_PACKAGE
 
+/* Backtrace */
+#undef HAVE_BACKTRACE_SYMBOLS
+
 /* Define to 1 if you have the `bind_textdomain_codeset' function. */
 #undef HAVE_BIND_TEXTDOMAIN_CODESET
 
@@ -37,9 +40,6 @@
 
 /* Define if your <locale.h> file defines LC_MESSAGES. */
 #undef HAVE_LC_MESSAGES
-
-/* Define to 1 if you have the `-llog4cplus' library (-l-llog4cplus). */
-#undef HAVE_LIB_LLOG4CPLUS
 
 /* Define to 1 if you have the <locale.h> header file. */
 #undef HAVE_LOCALE_H

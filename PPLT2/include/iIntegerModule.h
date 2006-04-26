@@ -45,9 +45,7 @@ namespace PPLTCore{
      * able to read (get()) or write (set()) integer values.  */
     class iIntegerModule{
         public:
-            /** Constructor */
-            iIntegerModule();
-            virtual ~iIntegerModule();
+            virtual ~iIntegerModule(){ };
 
             /** Should return a integer value.
              *

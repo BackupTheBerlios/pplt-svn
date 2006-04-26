@@ -35,17 +35,14 @@
 namespace PPLTPlugin{
 
     class HexDumpModule
-    :public PPLTCore::cInnerModule,
-     public PPLTCore::iStreamModule{
+    :public PPLTCore::cInnerModule, public PPLTCore::iStreamModule{
         private:
             PPLTCore::cStreamConnection   *d_my_child;
             std::string hexLine(char *buff, int offset, int len=8);
 
         public:
-            HexDumpModule(PPLTCore::cModule *, std::string);
-
-            void enable_events();
-            void disable_events();
+            HexDumpModule(PPLTCore::cModule *, std::string, 
+                          PPLTCore::tModuleParameters);
 
             PPLTCore::cConnection *connect(std::string addr,
                                            PPLTCore::cDisposable *child=0);

@@ -45,10 +45,7 @@ namespace PPLTPlugin{
             void *notify_child(void *data);
         
         public:
-            LoopbackModule();
-
-            void enable_events();
-            void disable_events();
+            LoopbackModule(PPLTCore::tModuleParameters);
 
             PPLTCore::cConnection *connect(std::string addr,
                                            PPLTCore::cDisposable *child=0);

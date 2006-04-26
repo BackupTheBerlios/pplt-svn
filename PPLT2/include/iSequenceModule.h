@@ -42,7 +42,7 @@ namespace PPLTCore{
      * data. */
     class iSequenceModule{
         public:
-            virtual ~iSequenceModule();
+            virtual ~iSequenceModule(){};
 
             virtual std::string recv(std::string con_id) = 0;
             virtual void send(std::string con_id, std::string data) = 0;

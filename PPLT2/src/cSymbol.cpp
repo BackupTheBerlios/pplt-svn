@@ -24,17 +24,42 @@ cSymbol::~cSymbol(){
 void cSymbol::data_notify(){
     pthread_t       thread;
     
-    for(std::list<tSymbolCallback>::iterator it = d_callbacks.begin();
+    for(std::map<int, tSymbolCallback>::iterator it = d_callbacks.begin();
         it != d_callbacks.end();
         ++it){
-        pthread_create(&thread, 0, reinterpret_cast<tThreadCallback>(*it), this);
+        pthread_create(&thread, 0, 
+                       reinterpret_cast<tThreadCallback>(*it->second), this);
         pthread_detach(thread);
     }
 }
 
+
+
 int cSymbol::addHandler(tSymbolCallback cb){
-    d_callbacks.push_back(cb);
-    return(0);  //FIXME: handle this with IDs
+    int id = new_callback_id();
+    
+    d_callbacks[id] = cb;
+    return(id);
 }
 
-void cSymbol::remHandler(int ID){ }
+
+
+// private function to generate unique ids for the callbacks:
+int cSymbol::new_callback_id(void){ 
+    srand(time(0));
+    int id = random();
+    
+    while(d_callbacks.count(id))
+        id = random();
+    return id;
+}
+
+
+
+void cSymbol::remHandler(int ID){
+    if(0==d_callbacks.count(ID)){
+        throw ItemNotFound("Unable to remove callback handler with ID %i"\
+                           ". No such ID found in map!", ID);
+    }
+    d_callbacks.erase(ID);
+}

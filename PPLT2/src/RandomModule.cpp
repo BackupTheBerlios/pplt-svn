@@ -14,7 +14,7 @@ using namespace PPLTPlugin;
 
 
 
-RandomModule::RandomModule(): cModule(){
+RandomModule::RandomModule(tModuleParameters params): cModule(params){
     //init random generator:
     std::srand(std::time(0));
 }
@@ -40,10 +40,6 @@ cConnection *RandomModule::connect(std::string addr, cDisposable *child){
 void RandomModule::disconnect(std::string con_id){
     d_connections.remConnection(con_id);
 }
-
-
-void RandomModule::enable_events(){}
-void RandomModule::disable_events(){}
 
 
 int RandomModule::read(std::string con_id, char *buff, int len){

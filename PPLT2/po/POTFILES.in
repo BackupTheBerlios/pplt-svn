@@ -18,9 +18,6 @@ src/cSequenceConnection.cpp
 src/cStreamConnection.cpp
 src/cSymbol.cpp
 src/cValueConnection.cpp
-src/iIntegerModule.cpp
-src/iSequenceModule.cpp
-src/iStreamModule.cpp
 src/HexDumpModule.cpp
 src/LoopbackModule.cpp
 src/NULLModule.cpp

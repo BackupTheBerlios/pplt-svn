@@ -39,8 +39,10 @@ void cSequenceConnection::push(std::string data){
     d_data_cache.push_back( std::string(data) );
     // unlock cache:
     pthread_mutex_unlock(&d_cache_lock);
-    // inform child module.
-    notify_child();
+    
+    // inform child module (if events are enabled).
+    if(events_enabled())
+        notify_child();
 }
 
 
@@ -100,17 +102,41 @@ std::string cSequenceConnection::recv(){
         return ret;
     }
 
-    // try to get new seq:
-    return mod->recv(Identifier());
+    // if autolock is enabled -> lock parent
+    if(autolock())
+        d_parent_module->reserve();
+    // try to get new seq.
+    try{
+        ret = mod->recv(Identifier());
+    }catch(...){
+        // on error -> unlock and rethrow exception
+        if(autolock())
+            d_parent_module->release();
+        throw;
+    }
+    // unlock and return
+    if(autolock())
+        d_parent_module->release();
+    return ret;
 }
 
 
 void cSequenceConnection::send(std::string data){
     if(0 == dynamic_cast<iSequenceModule *>(d_parent_module))
         throw CoreError("Unable to cast parent to iSequenceModule.");
-
-    dynamic_cast<iSequenceModule *>(d_parent_module)->send(Identifier(), data);
+    if(autolock())
+        d_parent_module->reserve();
+    try{
+        dynamic_cast<iSequenceModule *>(d_parent_module)->send(Identifier(), data);
+    }catch(...){
+        if(autolock())
+            d_parent_module->release();
+        throw;
+    }
+    if(autolock())
+        d_parent_module->release();
 }
+
 
 
 int cSequenceConnection::read(char *buffer, int len){
@@ -126,6 +152,7 @@ int cSequenceConnection::read(char *buffer, int len){
         int         int_len;
         // try to recieve a new sequence:
         try{
+            // i need not to lock parent: this is done by the recv() method.
             std::string tmp = recv();
             int_buff = (char *)tmp.data();
             int_len  = tmp.size();
@@ -196,6 +223,7 @@ int cSequenceConnection::write(char *buffer, int len){
     // simply convert (len) bytes from (buffer) into a string and
     // call send() -> return (len) because (len) bytes are send.
     tmp.append(buffer, len);
-    send(tmp);
+    //there is no locking needed because it is done by the send() method
+    send(tmp);      
     return len;
 }

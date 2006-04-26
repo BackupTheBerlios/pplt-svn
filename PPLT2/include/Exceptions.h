@@ -26,7 +26,13 @@
 #ifndef PPLT_EXCEPTIONS_H
 #define PPLT_EXCEPTIONS_H
 
+#include "../include/Logging.h"
 #include <string>
+#include <stdarg.h>
+#include <iostream>
+#include <execinfo.h>
+#include <streambuf>
+
 
 /** \file Exceptions.h
  * \brief In this file all exception-classes are listed.
@@ -47,7 +53,10 @@ namespace PPLTCore{
      */
     class Error{
     protected:
-        std::string     d_message;
+        void        do_traceback();
+        void        log_message(const char *temp, va_list ap);
+        void        log_message(std::string msg);
+        std::string d_message;
 
     public:
         /** Constructor.
@@ -56,7 +65,9 @@ namespace PPLTCore{
          * need this message.
          * The parameter \c msg takes the message for the exceptions.
          * May be the reason for the exception. */
-        Error(std::string);
+        Error();
+        Error(std::string message);
+        Error(const char *temp, ...);
 
         ~Error();
 
@@ -83,7 +94,9 @@ namespace PPLTCore{
              * This constructor takes a string \c message, that
              * defined the message of the exception. This can be the
              * reason for the exception. */
+            CoreError();
             CoreError(std::string msg);
+            CoreError(const char *temp, ...);
     };
 
 
@@ -94,7 +107,9 @@ namespace PPLTCore{
          public:
             /** Constructor:
              * @see Error */
+            ModuleError();
             ModuleError(std::string);
+            ModuleError(const char *temp, ...);
      };
 
 
@@ -105,10 +120,28 @@ namespace PPLTCore{
         public:
             /** Constructor:
              * @see Error */
+            NotImplementedYet();
             NotImplementedYet(std::string);
+            NotImplementedYet(const char *temp, ...);
     };
 
-
+    
+    class ItemNotFound: public Error{
+        public:
+            ItemNotFound();
+            ItemNotFound(std::string);
+            ItemNotFound(const char *, ...);
+    };
+    
+    
+    class ItemBusy: public Error{
+        public:
+            ItemBusy();
+            ItemBusy(std::string);
+            ItemBusy(const char *, ...);
+    };
+    
+    
     /** Class to indicate an setup-error for modules.
      * This exception can be used by module-developers to
      * indicate an bas setup of a module. I.e. a missing parameter.*/
@@ -116,8 +149,9 @@ namespace PPLTCore{
     public:
         /** Constructor:
          * @see Error */
+        ModuleSetupError();
         ModuleSetupError(std::string);
-        ~ModuleSetupError();
+        ModuleSetupError(const char *, ...);
     };
 
 }

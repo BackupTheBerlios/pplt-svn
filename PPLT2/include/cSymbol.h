@@ -33,11 +33,13 @@
 
 /**\file cSymbol.h
  * This file contains the declaration of the basic Symbol class. 
- * CHANGELOG: */
+ */
  
 namespace PPLTCore{
-
+    /** Interface for a callback function.
+    * A callback handler should inplement this interface. */
     typedef void (*tSymbolCallback)(class cSymbol *);
+        
     typedef void *(*tThreadCallback)(void *);
     
     /**Basic class for Symbols.
@@ -47,8 +49,9 @@ namespace PPLTCore{
      * handler.	*/
     class cSymbol: public cDisposable, public cObject{
     	private:
-        	std::list<tSymbolCallback>  d_callbacks;
-
+        	std::map<int, tSymbolCallback>  d_callbacks;
+            int new_callback_id();
+        
         protected:
             /** Pointer to the connection.
             * This protected attribute holds the pointer to the connection
