@@ -26,11 +26,11 @@ pplt2_SOURCES = \
 	cStreamConnection.cpp\
 	cSymbol.cpp\
 	cValueConnection.cpp\
-	HexDumpModule.cpp\
-	LoopbackModule.cpp\
-	NULLModule.cpp\
-	RandomModule.cpp\
-	cStreamSymbol.cpp
+	cStreamSymbol.cpp\
+	plugins/NULLModule.cpp\
+	plugins/HexDumpModule.cpp\
+	plugins/LoopbackModule.cpp\
+	plugins/RandomModule.cpp
 
 pplt2_LDFLAGS = \
 	-llog4cplus -rdynamic -liberty

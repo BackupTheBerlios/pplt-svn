@@ -78,6 +78,10 @@ namespace PPLTCore{
             * method. In this case it only calles set() */
             void Integer(int);
 
+
+            double Float();
+            void Float(double value);
+
             /** Get the value as an string.
             * This method calls get() and tryes to convert the value
             * into a string. */

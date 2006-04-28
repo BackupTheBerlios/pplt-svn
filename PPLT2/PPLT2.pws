@@ -1,6 +1,6 @@
 
 [filenumbers]
-0=50
+0=15
 1=33
 2=11
 3=50
@@ -25,8 +25,7 @@ RunInTerminal=true
 clean before build=false
 
 [filelist]
-0=/home/hannes/Projekte/PPLT/PPLT2/include/RandomModule.h
-1=/home/hannes/Projekte/PPLT/PPLT2/src/main.cc
+0=/home/hannes/Projekte/PPLT/PPLT2/src/main.cc
 
 [Project Tree]
 0=0

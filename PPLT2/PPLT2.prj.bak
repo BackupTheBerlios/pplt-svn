@@ -15,7 +15,7 @@ Potsdamer Prozessleittechnik<PROJECT_DESCRIPTION_END>
 <CONFIG_LIB_FUNCS_START>
 <CONFIG_LIB_FUNCS_END>
 <CONFIG_ADDITIONAL_START>
-AC_CHECK_FUNC(backtrace_symbols, [AC_DEFINE(HAVE_BACKTRACE_SYMBOLS, , [])] )<CONFIG_ADDITIONAL_END>
+AC_CHECK_FUNC(backtrace_symbols, [AC_DEFINE([HAVE_BACKTRACE_SYMBOLS], [], [Backtrace])] )<CONFIG_ADDITIONAL_END>
 <CONFIG_FILES_START>
 <CONFIG_FILES_END>
 <MAKEFILE_AM_START>
@@ -87,7 +87,8 @@ module.include.files=\
 	LoopbackModule.h\
 	NULLModule.h\
 	RandomModule.h\
-	cStreamSymbol.h
+	cStreamSymbol.h\
+	iFloatModule.h
 
 module.source.name=src
 module.source.type=
@@ -107,9 +108,9 @@ module.source.files=\
 	cValueConnection.cpp\
 	HexDumpModule.cpp\
 	LoopbackModule.cpp\
-	NULLModule.cpp\
 	RandomModule.cpp\
-	cStreamSymbol.cpp
+	cStreamSymbol.cpp\
+	plugins/NULLModule.cpp
 
 module.pixmap.name=pixmaps
 module.pixmap.type=

@@ -83,11 +83,12 @@ module.include.files=\
 	iIntegerModule.h\
 	iSequenceModule.h\
 	iStreamModule.h\
-	HexDumpModule.h\
-	LoopbackModule.h\
-	NULLModule.h\
-	RandomModule.h\
-	cStreamSymbol.h
+	cStreamSymbol.h\
+	iFloatModule.h\
+	plugins/HexDumpModule.h\
+	plugins/LoopbackModule.h\
+	plugins/NULLModule.h\
+	plugins/RandomModule.h
 
 module.source.name=src
 module.source.type=
@@ -105,11 +106,11 @@ module.source.files=\
 	cStreamConnection.cpp\
 	cSymbol.cpp\
 	cValueConnection.cpp\
-	HexDumpModule.cpp\
-	LoopbackModule.cpp\
-	NULLModule.cpp\
-	RandomModule.cpp\
-	cStreamSymbol.cpp
+	cStreamSymbol.cpp\
+	plugins/NULLModule.cpp\
+	plugins/HexDumpModule.cpp\
+	plugins/LoopbackModule.cpp\
+	plugins/RandomModule.cpp
 
 module.pixmap.name=pixmaps
 module.pixmap.type=

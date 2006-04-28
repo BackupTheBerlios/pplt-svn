@@ -18,10 +18,10 @@ src/cSequenceConnection.cpp
 src/cStreamConnection.cpp
 src/cSymbol.cpp
 src/cValueConnection.cpp
-src/HexDumpModule.cpp
-src/LoopbackModule.cpp
-src/NULLModule.cpp
-src/RandomModule.cpp
 src/cStreamSymbol.cpp
+src/plugins/NULLModule.cpp
+src/plugins/HexDumpModule.cpp
+src/plugins/LoopbackModule.cpp
+src/plugins/RandomModule.cpp
 
 

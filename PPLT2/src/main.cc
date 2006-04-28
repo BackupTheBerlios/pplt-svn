@@ -19,7 +19,7 @@ class StaticHDLC: public cInnerModule, public iSequenceModule{
             if(!params.count("address"))
                 throw ModuleSetupError("Module StaticHDLC needs a pramaeter addr!");
             // check if parentconnection is a stream!
-            if(0 == dynamic_cast<cStreamConnection *>d_parent_connection)
+            if(0 == dynamic_cast<cStreamConnection *>(d_parent_connection))
                 throw ModuleSetupError("Module StaticHDCL needs a streaming parent!");
             // save addr as number!
             d_my_address = atoi(params["address"].c_str());

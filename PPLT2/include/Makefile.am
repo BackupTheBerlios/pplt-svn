@@ -22,10 +22,11 @@ pplt2_include_DATA = \
 	iIntegerModule.h\
 	iSequenceModule.h\
 	iStreamModule.h\
-	HexDumpModule.h\
-	LoopbackModule.h\
-	NULLModule.h\
-	RandomModule.h\
-	cStreamSymbol.h
+	cStreamSymbol.h\
+	iFloatModule.h\
+	plugins/HexDumpModule.h\
+	plugins/LoopbackModule.h\
+	plugins/NULLModule.h\
+	plugins/RandomModule.h
 
 EXTRA_DIST = $(pplt2_include_DATA)
