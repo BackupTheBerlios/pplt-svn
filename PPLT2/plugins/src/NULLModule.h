@@ -1,9 +1,9 @@
 /***************************************************************************
- *            cFloatConnection.c
+ *            NULLModule.h
  *
- *  Thu Apr 27 14:01:07 2006
- *  Copyright  2006  User
- *  Email
+ *  Sun Apr 23 01:15:30 2006
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
  ****************************************************************************/
 
 /*
@@ -22,39 +22,36 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
  
-#include "../include/cFloatConnection.h"
-#include "../include/cValueConnection.h"
+#ifndef PPLT_PLUGIN_NULLMODULE_H
+#define PPLT_PLUGIN_NULLMODULE_H
 
+#include <string>
 
-using namespace PPLTCore;
+#include "../../include/iStreamModule.h"
+#include "../../include/cStreamConnection.h"
+#include "../../include/cConnection.h"
+#include "../../include/cDisposable.h"
 
+extern "C"{
+    PPLTCore::cModule *NULLModuleFactory(PPLTCore::tModuleParameters);
+};
 
-cFloatConnection::cFloatConnection(cModule parent, cDisposable *child)
-: cValueConnection(parent,child){
-    if(0 == dynamic_cast<iFloatModule *>(parent)){
-        throw Error("Unable to cast parent module to iFloatModule!"\
-                    " Need a FloatModule as parent for a FloatConnection!");
-    }    
+namespace PPLTPlugin{
+
+    class NULLModule : public PPLTCore::cModule, public PPLTCore::iStreamModule{
+    public:
+        NULLModule(PPLTCore::tModuleParameters params);
+
+        PPLTCore::cConnection *connect(std::string);
+        PPLTCore::cConnection *connect(std::string, PPLTCore::cDisposable *);
+        void disconnect(std::string);
+
+        int read(std::string, char *, int);
+        int write(std::string, char *, int);
+    };
+
 }
 
 
-cFloatConnection::push(double value){
-    d_cached_value = value;
-    UpdateTimestamp();
-    
-    if(events_enabled())
-        notify_child();
-}
 
-//FIXME:
-cFloatConnection::get();
-cFloatConnection::set();
-
-cFloatConnection::Integer();
-cFloatConnection::Integer();
-
-cFloatConnection::Float();
-cFloatConnection::Float();
-
-cFloatConnection::String();
-cFloatConnection::String();
+#endif

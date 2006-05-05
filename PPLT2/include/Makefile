@@ -199,11 +199,15 @@ pplt2_include_DATA = \
 	iIntegerModule.h\
 	iSequenceModule.h\
 	iStreamModule.h\
-	HexDumpModule.h\
-	LoopbackModule.h\
-	NULLModule.h\
-	RandomModule.h\
-	cStreamSymbol.h
+	cStreamSymbol.h\
+	iFloatModule.h\
+	plugins/HexDumpModule.h\
+	plugins/LoopbackModule.h\
+	plugins/NULLModule.h\
+	plugins/RandomModule.h\
+	cFloatConnection.h\
+	cIntegerSymbol.h\
+	cFloatSymbol.h
 
 EXTRA_DIST = $(pplt2_include_DATA)
 all: all-am
@@ -273,6 +277,7 @@ CTAGS:
 
 
 distdir: $(DISTFILES)
+	$(mkdir_p) $(distdir)/plugins
 	@srcdirstrip=`echo "$(srcdir)" | sed 's|.|.|g'`; \
 	topsrcdirstrip=`echo "$(top_srcdir)" | sed 's|.|.|g'`; \
 	list='$(DISTFILES)'; for file in $$list; do \

@@ -1,7 +1,7 @@
 /***************************************************************************
- *            iFloatModule.h
+ *            cIntegerSymbol.h
  *
- *  Thu Apr 27 13:40:55 2006
+ *  Fri Apr 28 16:23:21 2006
  *  Copyright  2006  Hannes Matuschek
  *  hmatuschek@gmx.net
  ****************************************************************************/
@@ -22,32 +22,35 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
  
-/** \file iFloatModule.h 
- * This file contains the definition of the iFloatModule interface. */
-#ifndef PPLT_IFLOATMODULE_H
-#define PPLT_IFLOATMODULE_H
+#ifndef PPLT_CINTEGERSYMBOL_H 
+#define PPLT_CINTEGERSYMBOL_H
 
 #include <iostream>
+#include "cSymbol.h"
+#include "cIntegerConnection.h"
 
-namespace PPLTCore{ 
-
-    /** Interface for a module that provides floating point values.
-     * This interface defines what, methods a module that wants to provide 
-     * floatingpoint number have to implement. This are the methods get() and
-     * set(). */
-    class iFloatModule{
+/**\file cIntegerSymbol.h
+ * This file contains the definition of the cIntegerSymbol class. */
+namespace PPLTCore{
+    
+    /** This call implements a symbol that can handle integer values.
+     * This class is a simple wrapper around the cIntegerConnection class.
+     * It extends this class with some methods inherit from the cSymbol class.
+     * There methods can be used to handle several user defined callback 
+     * functions. 
+     * @see cSymbol
+     * @see cIntegerConnection */
+    class cIntegerSymbol: public cSymbol{
+        protected:
+            cIntegerConnection  *d_int_connection;
+        
         public:
-            virtual ~iFloatModule(){}
+            cIntegerSymbol(cModule *parent, std::string addr);
+        
+            int get();
+            void set(int value);
+        
+    };        
     
-            /** Sets the value of the given connetor. 
-             * Thsi method will be used by the connection or
-             * Symbol to set the value of the given connection. */
-            virtual void set(std::string con_id, double value) = 0;
-            /** Returns the value of the given connection. */
-            virtual double get(std::string con_id)=0;
-    
-    };
-
 }
-
 #endif

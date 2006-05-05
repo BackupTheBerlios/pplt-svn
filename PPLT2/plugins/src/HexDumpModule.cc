@@ -6,14 +6,19 @@
  *  hmatuschek@gmx.net
  ****************************************************************************/
 
-#include "../../include/plugins/HexDumpModule.h"
-#include <iostream>
-#include <streambuf>
-#include <iomanip>
+#include "HexDumpModule.h"
 
 
 using namespace PPLTCore;
 using namespace PPLTPlugin;
+
+
+
+cModule *HexDumpModuleFactory(cModule *parent, std::string addr, tModuleParameters params){
+    return new HexDumpModule(parent, addr, params);
+}
+
+
 
 
 HexDumpModule::HexDumpModule(cModule *parent, std::string addr, 

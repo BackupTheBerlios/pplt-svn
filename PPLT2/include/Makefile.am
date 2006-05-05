@@ -24,9 +24,9 @@ pplt2_include_DATA = \
 	iStreamModule.h\
 	cStreamSymbol.h\
 	iFloatModule.h\
-	plugins/HexDumpModule.h\
-	plugins/LoopbackModule.h\
-	plugins/NULLModule.h\
-	plugins/RandomModule.h
+	cFloatConnection.h\
+	cIntegerSymbol.h\
+	cFloatSymbol.h\
+	soModuleLoader.h
 
 EXTRA_DIST = $(pplt2_include_DATA)

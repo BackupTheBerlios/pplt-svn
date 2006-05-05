@@ -6,10 +6,17 @@
  *  hmatuschek@gmx.net
  ****************************************************************************/
 
-#include "../../include/plugins/LoopbackModule.h"
+#include "LoopbackModule.h"
 
 using namespace PPLTCore;
 using namespace PPLTPlugin;
+
+
+cModule *LoopbackModuleFactory(tModuleParameters params){
+    return new LoopbackModule(params);
+}
+
+
 
 LoopbackModule::LoopbackModule(tModuleParameters params):cModule(params){}
 

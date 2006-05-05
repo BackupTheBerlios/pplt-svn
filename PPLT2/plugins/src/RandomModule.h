@@ -1,7 +1,7 @@
 /***************************************************************************
- *            LoopbackModule.h
+ *            RandomModule.h
  *
- *  Sun Apr 23 01:15:16 2006
+ *  Sun Apr 23 01:15:45 2006
  *  Copyright  2006  Hannes Matuschek
  *  hmatuschek@gmx.net
  ****************************************************************************/
@@ -22,39 +22,45 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
  
-#ifndef PPLT_PLUGIN_LOOPBACK_H
-#define PPLT_PLUGIN_LOOPBACK_H
+#ifndef PLUGIN_RANDOMMODULE_H
+#define PLUGIN_RANDOMMODULE_H
 
-#include "../../include/cModule.h"
-#include "../../include/iStreamModule.h"
-#include "../../include/cConnection.h"
-#include "../../include/cStreamConnection.h"
-#include "../../include/cDisposable.h"
 #include "../../include/Logging.h"
 #include "../../include/Exceptions.h"
+#include "../../include/cModule.h"
+#include "../../include/iStreamModule.h"
+#include "../../include/iIntegerModule.h"
+#include "../../include/cConnection.h"
+#include "../../include/cIntegerConnection.h"
+#include "../../include/cStreamConnection.h"
+
+
+extern "C"{
+    PPLTCore::cModule   *RandomModuleFactory(PPLTCore::tModuleParameters params);
+};
 
 
 namespace PPLTPlugin{
 
-    class LoopbackModule
-    : public PPLTCore::cModule,
-      public PPLTCore::iStreamModule
-    {
-        private:
-            PPLTCore::cConnection *GetTheOtherOne(std::string addr);
-            void *notify_child(void *data);
-        
+    class RandomModule
+    :public PPLTCore::cModule,
+     public PPLTCore::iStreamModule, 
+     public PPLTCore::iIntegerModule {
+     
         public:
-            LoopbackModule(PPLTCore::tModuleParameters);
+            RandomModule(PPLTCore::tModuleParameters params);
 
-            PPLTCore::cConnection *connect(std::string addr,
-                                           PPLTCore::cDisposable *child=0);
+            PPLTCore::cConnection *connect(std::string, PPLTCore::cDisposable *child = 0);
+
             void disconnect(std::string);
 
             int read(std::string, char *, int);
             int write(std::string, char *, int);
-    };
-}
 
+            int get(std::string);
+            void set(std::string, int);
+    };
+
+}
 
 #endif

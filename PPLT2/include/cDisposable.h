@@ -59,7 +59,9 @@ namespace PPLTCore{
      * to implement this interface. */
     class cDisposable{
         public:
+            /** Constructor. */
             cDisposable();
+            /** Destructor. */
             virtual ~cDisposable();
 
             /** Callback.

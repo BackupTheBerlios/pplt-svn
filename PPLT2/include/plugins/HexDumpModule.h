@@ -26,11 +26,11 @@
 #ifndef PPLT_PLUGIN_HEXDUMP_H
 #define PPLT_PLUGIN_HEXDUMP_H
 
-#include "../include/Logging.h"
-#include "../include/Exceptions.h"
-#include "../include/cInnerModule.h"
-#include "../include/iStreamModule.h"
-#include "../include/cStreamConnection.h"
+#include "../../include/Logging.h"
+#include "../../include/Exceptions.h"
+#include "../../include/cInnerModule.h"
+#include "../../include/iStreamModule.h"
+#include "../../include/cStreamConnection.h"
 
 namespace PPLTPlugin{
 

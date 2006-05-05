@@ -1,7 +1,7 @@
 /***************************************************************************
- *            LoopbackModule.h
+ *            HexDumpModule.h
  *
- *  Sun Apr 23 01:15:16 2006
+ *  Sun Apr 23 01:13:55 2006
  *  Copyright  2006  Hannes Matuschek
  *  hmatuschek@gmx.net
  ****************************************************************************/
@@ -22,30 +22,39 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
  
-#ifndef PPLT_PLUGIN_LOOPBACK_H
-#define PPLT_PLUGIN_LOOPBACK_H
 
-#include "../../include/cModule.h"
-#include "../../include/iStreamModule.h"
-#include "../../include/cConnection.h"
-#include "../../include/cStreamConnection.h"
-#include "../../include/cDisposable.h"
+#ifndef PPLT_PLUGIN_HEXDUMP_H
+#define PPLT_PLUGIN_HEXDUMP_H
+
+#include <iostream>
+#include <streambuf>
+#include <iomanip>
 #include "../../include/Logging.h"
 #include "../../include/Exceptions.h"
+#include "../../include/cInnerModule.h"
+#include "../../include/iStreamModule.h"
+#include "../../include/cStreamConnection.h"
+
+
+extern "C"{
+    PPLTCore::cModule *HexDumpModuleFactory(PPLTCore::cModule *parent, 
+                                            std::string addr, 
+                                            PPLTCore::tModuleParameters params);
+};
+
 
 
 namespace PPLTPlugin{
 
-    class LoopbackModule
-    : public PPLTCore::cModule,
-      public PPLTCore::iStreamModule
-    {
+    class HexDumpModule
+    :public PPLTCore::cInnerModule, public PPLTCore::iStreamModule{
         private:
-            PPLTCore::cConnection *GetTheOtherOne(std::string addr);
-            void *notify_child(void *data);
-        
+            PPLTCore::cStreamConnection   *d_my_child;
+            std::string hexLine(char *buff, int offset, int len=8);
+
         public:
-            LoopbackModule(PPLTCore::tModuleParameters);
+            HexDumpModule(PPLTCore::cModule *, std::string, 
+                          PPLTCore::tModuleParameters);
 
             PPLTCore::cConnection *connect(std::string addr,
                                            PPLTCore::cDisposable *child=0);
@@ -53,8 +62,10 @@ namespace PPLTPlugin{
 
             int read(std::string, char *, int);
             int write(std::string, char *, int);
-    };
-}
 
+            void data_notify();
+    };
+
+}
 
 #endif

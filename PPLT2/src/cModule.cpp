@@ -28,11 +28,11 @@ cModule::~cModule(){ }
 void cModule::reserve(){
     if(pthread_mutex_lock(&d_reservation_lock))
         throw CoreError("Unable to reserver module! Error returned from mutex.");
-    MODLOG_DEBUG("Module ("<<Identifier()<<") reserved.");
+    MODLOG_DEBUG("Module ("<<Identifier().substr(0,12)<<"...) reserved.");
 }
 
 void cModule::release(){
-    MODLOG_DEBUG("Release module ("<<Identifier()<<").");
+    MODLOG_DEBUG("Release module ("<<Identifier().substr(0,12)<<"...).");
     pthread_mutex_unlock(&d_reservation_lock);
 }
 

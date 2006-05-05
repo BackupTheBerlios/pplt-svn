@@ -56,9 +56,9 @@ am_pplt2_OBJECTS = main.$(OBJEXT) Exceptions.$(OBJEXT) \
 	cModule.$(OBJEXT) cObject.$(OBJEXT) \
 	cSequenceConnection.$(OBJEXT) cStreamConnection.$(OBJEXT) \
 	cSymbol.$(OBJEXT) cValueConnection.$(OBJEXT) \
-	HexDumpModule.$(OBJEXT) LoopbackModule.$(OBJEXT) \
-	NULLModule.$(OBJEXT) RandomModule.$(OBJEXT) \
-	cStreamSymbol.$(OBJEXT)
+	cStreamSymbol.$(OBJEXT) cFloatConnection.$(OBJEXT) \
+	cIntegerSymbol.$(OBJEXT) cFloatSymbol.$(OBJEXT) \
+	soModuleLoader.$(OBJEXT)
 pplt2_OBJECTS = $(am_pplt2_OBJECTS)
 pplt2_DEPENDENCIES =
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -220,14 +220,14 @@ pplt2_SOURCES = \
 	cStreamConnection.cpp\
 	cSymbol.cpp\
 	cValueConnection.cpp\
-	HexDumpModule.cpp\
-	LoopbackModule.cpp\
-	NULLModule.cpp\
-	RandomModule.cpp\
-	cStreamSymbol.cpp
+	cStreamSymbol.cpp\
+	cFloatConnection.cpp\
+	cIntegerSymbol.cpp\
+	cFloatSymbol.cpp\
+	soModuleLoader.cc
 
 pplt2_LDFLAGS = \
-	-llog4cplus -rdynamic -liberty
+	-llog4cplus -rdynamic -liberty -ldl
 
 pplt2_LDADD = 
 all: all-am
@@ -302,15 +302,14 @@ distclean-compile:
 	-rm -f *.tab.c
 
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Exceptions.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/HexDumpModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/Logging.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/LoopbackModule.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/NULLModule.Po@am__quote@
-@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/RandomModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cConnection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cDisposable.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cFloatConnection.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cFloatSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cInnerModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cIntegerConnection.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cIntegerSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cModule.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cObject.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cSequenceConnection.Po@am__quote@
@@ -319,6 +318,7 @@ distclean-compile:
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cSymbol.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/cValueConnection.Po@am__quote@
 @AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/main.Po@am__quote@
+@AMDEP_TRUE@@am__include@ @am__quote@./$(DEPDIR)/soModuleLoader.Po@am__quote@
 
 .cc.o:
 @am__fastdepCXX_TRUE@	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \

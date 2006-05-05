@@ -33,6 +33,10 @@
 #include "../../include/Logging.h"
 #include "../../include/Exceptions.h"
 
+extern "C"{
+    PPLTCore::cModule   *LoopbackModuleFactory(PPLTCore::tModuleParameters);   
+};    
+
 
 namespace PPLTPlugin{
 

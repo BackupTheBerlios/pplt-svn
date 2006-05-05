@@ -85,10 +85,10 @@ module.include.files=\
 	iStreamModule.h\
 	cStreamSymbol.h\
 	iFloatModule.h\
-	plugins/HexDumpModule.h\
-	plugins/LoopbackModule.h\
-	plugins/NULLModule.h\
-	plugins/RandomModule.h
+	cFloatConnection.h\
+	cIntegerSymbol.h\
+	cFloatSymbol.h\
+	soModuleLoader.h
 
 module.source.name=src
 module.source.type=
@@ -107,10 +107,10 @@ module.source.files=\
 	cSymbol.cpp\
 	cValueConnection.cpp\
 	cStreamSymbol.cpp\
-	plugins/NULLModule.cpp\
-	plugins/HexDumpModule.cpp\
-	plugins/LoopbackModule.cpp\
-	plugins/RandomModule.cpp
+	cFloatConnection.cpp\
+	cIntegerSymbol.cpp\
+	cFloatSymbol.cpp\
+	soModuleLoader.cc
 
 module.pixmap.name=pixmaps
 module.pixmap.type=
@@ -141,7 +141,7 @@ compiler.options.warning.buttons=0 0 1 0 0 0 0 0 0 0 0 0 0 0 0 0
 compiler.options.optimize.buttons=1 0 0 0 
 compiler.options.other.buttons=1 0 
 compiler.options.other.c.flags=
-compiler.options.other.l.flags=-llog4cplus -rdynamic -liberty
+compiler.options.other.l.flags=-llog4cplus -rdynamic -liberty -ldl
 compiler.options.other.l.libs=
 
 project.src.paths=

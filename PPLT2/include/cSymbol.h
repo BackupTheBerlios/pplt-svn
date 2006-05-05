@@ -83,6 +83,13 @@ namespace PPLTCore{
             /** Removes a handler.
             * This method removes the given handler from the list. */
 			void remHandler(int );
+
+            
+            void reserve();
+            void release();
+            void autolock(bool al);
+            bool autolock(void);
+            
     };
 
 }

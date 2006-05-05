@@ -1,7 +1,7 @@
 /***************************************************************************
- *            LoopbackModule.h
+ *            cFloatSymbol.h
  *
- *  Sun Apr 23 01:15:16 2006
+ *  Fri Apr 28 16:47:52 2006
  *  Copyright  2006  Hannes Matuschek
  *  hmatuschek@gmx.net
  ****************************************************************************/
@@ -22,39 +22,34 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
  
-#ifndef PPLT_PLUGIN_LOOPBACK_H
-#define PPLT_PLUGIN_LOOPBACK_H
+#ifndef PPLT_CFLOATSYMBOL_H
+#define PPLT_CFLOATSYMBOL_H
 
-#include "../../include/cModule.h"
-#include "../../include/iStreamModule.h"
-#include "../../include/cConnection.h"
-#include "../../include/cStreamConnection.h"
-#include "../../include/cDisposable.h"
-#include "../../include/Logging.h"
-#include "../../include/Exceptions.h"
+#include <iostream>
+#include "cSymbol.h"
+#include "cFloatConnection.h"
 
+/**\file cFloatSymbol.h
+ * This file contains the definition of the cFloatSymbol. **/
+namespace PPLTCore{
 
-namespace PPLTPlugin{
-
-    class LoopbackModule
-    : public PPLTCore::cModule,
-      public PPLTCore::iStreamModule
-    {
-        private:
-            PPLTCore::cConnection *GetTheOtherOne(std::string addr);
-            void *notify_child(void *data);
+    /** This class implements a symbol that deals with floating point numbers.
+     * This class is a simple wrapper around the cFloatConnection. It extends
+     * it interface with some methods inherit from the cSymbol class to manage
+     * user defined callback methods. 
+     * @see cFloatConnection
+     * @see cSymbol*/
+    class cFloatSymbol: public cSymbol{
+        protected:
+            cFloatConnection    *d_float_connection;
         
         public:
-            LoopbackModule(PPLTCore::tModuleParameters);
-
-            PPLTCore::cConnection *connect(std::string addr,
-                                           PPLTCore::cDisposable *child=0);
-            void disconnect(std::string);
-
-            int read(std::string, char *, int);
-            int write(std::string, char *, int);
+            cFloatSymbol(cModule *parent, std::string addr);
+        
+            double get();
+            void set(double value);
     };
+    
 }
-
 
 #endif

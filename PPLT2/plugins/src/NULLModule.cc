@@ -7,7 +7,7 @@
  ****************************************************************************/
 
 #include <iostream>
-#include "../../include/plugins/NULLModule.h"
+#include "NULLModule.h"
 
 using namespace PPLTCore;
 

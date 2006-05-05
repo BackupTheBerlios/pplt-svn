@@ -56,9 +56,9 @@ am_pplt2_OBJECTS = main.$(OBJEXT) Exceptions.$(OBJEXT) \
 	cModule.$(OBJEXT) cObject.$(OBJEXT) \
 	cSequenceConnection.$(OBJEXT) cStreamConnection.$(OBJEXT) \
 	cSymbol.$(OBJEXT) cValueConnection.$(OBJEXT) \
-	HexDumpModule.$(OBJEXT) LoopbackModule.$(OBJEXT) \
-	NULLModule.$(OBJEXT) RandomModule.$(OBJEXT) \
-	cStreamSymbol.$(OBJEXT)
+	cStreamSymbol.$(OBJEXT) cFloatConnection.$(OBJEXT) \
+	cIntegerSymbol.$(OBJEXT) cFloatSymbol.$(OBJEXT) \
+	soModuleLoader.$(OBJEXT)
 pplt2_OBJECTS = $(am_pplt2_OBJECTS)
 pplt2_DEPENDENCIES =
 DEFAULT_INCLUDES = -I. -I$(srcdir) -I$(top_builddir)
@@ -220,14 +220,14 @@ pplt2_SOURCES = \
 	cStreamConnection.cpp\
 	cSymbol.cpp\
 	cValueConnection.cpp\
-	HexDumpModule.cpp\
-	LoopbackModule.cpp\
-	NULLModule.cpp\
-	RandomModule.cpp\
-	cStreamSymbol.cpp
+	cStreamSymbol.cpp\
+	cFloatConnection.cpp\
+	cIntegerSymbol.cpp\
+	cFloatSymbol.cpp\
+	soModuleLoader.cc
 
 pplt2_LDFLAGS = \
-	-llog4cplus -rdynamic -liberty
+	-llog4cplus -rdynamic -liberty -ldl
 
 pplt2_LDADD = 
 all: all-am
@@ -302,15 +302,14 @@ distclean-compile:
 	-rm -f *.tab.c
 
 include ./$(DEPDIR)/Exceptions.Po
-include ./$(DEPDIR)/HexDumpModule.Po
 include ./$(DEPDIR)/Logging.Po
-include ./$(DEPDIR)/LoopbackModule.Po
-include ./$(DEPDIR)/NULLModule.Po
-include ./$(DEPDIR)/RandomModule.Po
 include ./$(DEPDIR)/cConnection.Po
 include ./$(DEPDIR)/cDisposable.Po
+include ./$(DEPDIR)/cFloatConnection.Po
+include ./$(DEPDIR)/cFloatSymbol.Po
 include ./$(DEPDIR)/cInnerModule.Po
 include ./$(DEPDIR)/cIntegerConnection.Po
+include ./$(DEPDIR)/cIntegerSymbol.Po
 include ./$(DEPDIR)/cModule.Po
 include ./$(DEPDIR)/cObject.Po
 include ./$(DEPDIR)/cSequenceConnection.Po
@@ -319,6 +318,7 @@ include ./$(DEPDIR)/cStreamSymbol.Po
 include ./$(DEPDIR)/cSymbol.Po
 include ./$(DEPDIR)/cValueConnection.Po
 include ./$(DEPDIR)/main.Po
+include ./$(DEPDIR)/soModuleLoader.Po
 
 .cc.o:
 	if $(CXXCOMPILE) -MT $@ -MD -MP -MF "$(DEPDIR)/$*.Tpo" -c -o $@ $<; \

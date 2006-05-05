@@ -2,8 +2,8 @@
  *            cFloatConnection.h
  *
  *  Thu Apr 27 13:48:52 2006
- *  Copyright  2006  User
- *  Email
+ *  Copyright  2006  Hannes Matuschek
+ *  hmatuschek@gmx.net
  ****************************************************************************/
 
 /*
@@ -22,32 +22,64 @@
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
  
+#ifndef PPLT_CFLOATCONNECTION_H 
+#define PPLT_CFLOATCONNECTION_H
+
 #include "iFloatModule.h"
 #include "cValueConnection.h"
 #include "cDisposable.h"
+#include "cModule.h"
+#include "Exceptions.h"
+
+/**\file cFloatConnection.h
+ * This file contains the cFloatConnection class definition. */
 
 namespace PPLTCore{
     
+    /** Connection class for connections dealing with floatingpoint numbers.*/
     class cFloatConnection: public cValueConnection{
         private:
             double d_cached_value;            
         
         public:
+            /** Constructor.
+             * The contructor take the pointer to the parent module of the
+             * connection. Normaly this is the module that creates the 
+             * connection. The second parameter is the child module. Normaly
+             * this is the module that will own the connection. This parameter
+             * is optional. If missed, no events will be send to the child. */
             cFloatConnection(cModule *parent, cDisposable *child=0);
             
+            /** Pushes the given value into the cache and notify the child
+             * if there is one. */
             void push(double value);
             
+            /** Returns the actual value. 
+             * This method will return the cached value if it is up to date.
+             * Other wise it will try to get it from the parent, store it into
+             * the cache and update the timestamp. */
             double get();
+        
+            /** Sets the value of this connection. */
             void set(double value);
         
+            /** Works like get() but returns an integer. */
             int Integer();
+            /** Works like set() but takes an integer. */
             void Integer(int value);
         
+            /** Simlpy calles get(). */
             double Float();
+            /** Simply calles set(). */
             void  Float(double value);
-        
+            
+            /**\todo implement! */
             std::string String();
+            /**\todo implement! */
             void String(std::string value);
         
     };
 }
+
+
+#endif

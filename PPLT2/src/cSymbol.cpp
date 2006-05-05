@@ -63,3 +63,20 @@ void cSymbol::remHandler(int ID){
     }
     d_callbacks.erase(ID);
 }
+
+
+void cSymbol::reserve(void){
+    d_parent_connection->reserve();
+}
+
+void cSymbol::release(void){
+    d_parent_connection->release();
+}
+
+bool cSymbol::autolock(void){
+    return d_parent_connection->autolock();
+}
+
+void cSymbol::autolock(bool al){
+    d_parent_connection->autolock(al);
+}

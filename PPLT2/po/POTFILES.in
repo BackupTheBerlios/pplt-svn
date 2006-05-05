@@ -19,9 +19,9 @@ src/cStreamConnection.cpp
 src/cSymbol.cpp
 src/cValueConnection.cpp
 src/cStreamSymbol.cpp
-src/plugins/NULLModule.cpp
-src/plugins/HexDumpModule.cpp
-src/plugins/LoopbackModule.cpp
-src/plugins/RandomModule.cpp
+src/cFloatConnection.cpp
+src/cIntegerSymbol.cpp
+src/cFloatSymbol.cpp
+src/soModuleLoader.cc
 
 

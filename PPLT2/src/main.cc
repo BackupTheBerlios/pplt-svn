@@ -1,57 +1,26 @@
-#include "../include/Exceptions.h"
-#include "../include/LoopbackModule.h"
-#include "../include/HexDumpModule.h"
-#include "../include/cStreamConnection.h"
+#include "../include/cFloatSymbol.h"
+#include "../include/soModuleLoader.h"
 #include "../include/cModule.h"
-#include "../include/iSequenceModule.h"
-#include "../include/cSequenceConnection.h"
-using namespace PPLTCore;
-using namespace PPLTPlugin;
 
-class StaticHDLC: public cInnerModule, public iSequenceModule{
-    private:
-        int d_my_address;
-    
-    public:
-        StaticHDLC(cModule *parent, std::string addr, tModuleParameters params)
-        : cInnerModule(parent, addr, params){
-            // check if parameter "address" is present:
-            if(!params.count("address"))
-                throw ModuleSetupError("Module StaticHDLC needs a pramaeter addr!");
-            // check if parentconnection is a stream!
-            if(0 == dynamic_cast<cStreamConnection *>(d_parent_connection))
-                throw ModuleSetupError("Module StaticHDCL needs a streaming parent!");
-            // save addr as number!
-            d_my_address = atoi(params["address"].c_str());
-        }
-        
-        
-        cConnection *connect(std::string addr, cDisposable *child){
-            return new cSequenceConnection(this, child);
-        }
-        
-        void disconnect(std::string id){ }        
-        
-        
-        std::string recv(std::string id){ return ""; }
-        void send(std::string id, std::string data){ }
-        
-        void data_notify(){ }
-};    
+using namespace PPLTCore;
+
+
 
 int main(void){
     PPLTCore::initLogging();
+    soModuleLoader  loader("../plugins/src/");
+    cModule         *mod = loader.load("PPLTCoreStdPackage.so.2.0.0",
+                                       "TimeModuleFactory", 
+                                       tModuleParameters());
+    cFloatSymbol    symb(mod, "timestamp");
+    double          val1, val2;
+    val1 = symb.get();
+    std::cout << "Unix timestamp: " << val1 << "sec." <<std::endl;
+    sleep(2);
+    val2 = symb.get();
+    std::cout << "Unix timestamp: " << val2 << "sec." <<std::endl;
+    std::cout << "Diff: " << val2-val1 << std::endl;
     
-    char                buff[32];
     
-    cModule             *loop = new LoopbackModule(tModuleParameters());
-    cModule             *hex  = new HexDumpModule(loop, "a", tModuleParameters());
-    cStreamConnection   *con1 = dynamic_cast<cStreamConnection *>(loop->connect("a"));
-    cModule             *hdlc = new StaticHDLC(hex, "", tModuleParameters());
-    
-    // stop emmiting events
-    con1->events_enabled(false);
-    
-    
-return(0);    
+return(0);        
 }

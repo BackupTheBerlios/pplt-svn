@@ -44,7 +44,7 @@ namespace PPLTCore{
      * module. Therefor there are the methods read() and write(). */
     class cStreamSymbol: public cSymbol{
         private:
-            bool        d_is_autolock;
+            // bool        d_is_autolock;
         
         protected:
             /** Connection to the parent. */
@@ -70,25 +70,7 @@ namespace PPLTCore{
             * autolock is enabled. */
             int write(char *buffer, int len);
             
-            /** Reserves (lock) the parent module.
-            * \b Note: You only need to use this method if autolock is disabled
-            * otherwise this clas takes care about the locking of the parent 
-            * module. But sometimes it is secessary to do the locking by hand.
-            * To disable the locking please use the autolock() method. But be
-            * carefull with the using of this method. It may cause deadlocks!*/
-            void reserve();
-            
-            /** Releases the parent module if it was reserved. */
-            void release();
-            
-            /** Enable or disable autolock.
-            * With this method you can set the autolock. Calling autolock(true)
-            * to enable the autolock and with false to disable.*/
-            void autolock(bool al);
 
-            /** Get autolock state.
-            * Returns true if autolock is enabled. */
-            bool autolock(void);
     };
     
 }

@@ -6,12 +6,16 @@
  *  hmatuschek@gmx.net
  ****************************************************************************/
 
-#include "../../include/plugins/RandomModule.h"
+#include "RandomModule.h"
 
 
 using namespace PPLTCore;
 using namespace PPLTPlugin;
 
+
+cModule *RandomModuleFactory(tModuleParameters params){
+    return new RandomModule(params);
+}
 
 
 RandomModule::RandomModule(tModuleParameters params): cModule(params){

@@ -28,23 +28,3 @@ int cStreamSymbol::read(char *buffer, int len){
 int cStreamSymbol::write(char *buffer, int len){
     return d_stream_connection->write(buffer, len);
 }
-
-
-
-void cStreamSymbol::reserve(){ 
-    d_parent_connection->reserve(); 
-}
-
-
-void cStreamSymbol::release(){ 
-    d_parent_connection->release(); 
-}
-
-
-void cStreamSymbol::autolock(bool al){ 
-    d_parent_connection->autolock(al);
-}
-
-bool cStreamSymbol::autolock(){ 
-    return d_parent_connection->autolock(); 
-}

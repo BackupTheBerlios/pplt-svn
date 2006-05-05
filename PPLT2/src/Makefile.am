@@ -27,13 +27,13 @@ pplt2_SOURCES = \
 	cSymbol.cpp\
 	cValueConnection.cpp\
 	cStreamSymbol.cpp\
-	plugins/NULLModule.cpp\
-	plugins/HexDumpModule.cpp\
-	plugins/LoopbackModule.cpp\
-	plugins/RandomModule.cpp
+	cFloatConnection.cpp\
+	cIntegerSymbol.cpp\
+	cFloatSymbol.cpp\
+	soModuleLoader.cc
 
 pplt2_LDFLAGS = \
-	-llog4cplus -rdynamic -liberty
+	-llog4cplus -rdynamic -liberty -ldl
 
 pplt2_LDADD = 
 

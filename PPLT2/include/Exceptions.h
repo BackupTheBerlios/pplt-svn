@@ -126,10 +126,16 @@ namespace PPLTCore{
     };
 
     
+    /** This exception will be raised if a item (module, ...) can not be found. */
     class ItemNotFound: public Error{
         public:
+            /** Default constructor with no message */
             ItemNotFound();
+            /** Constructor with a string-message.*/
             ItemNotFound(std::string);
+            /** Constructor with a template string and optional value parameters.
+             * This constructor can be used like the printf() function.
+             * For example: throw ItemNotFound("Following item can't be found: %s",name);*/
             ItemNotFound(const char *, ...);
     };
     
