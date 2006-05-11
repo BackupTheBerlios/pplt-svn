@@ -30,6 +30,8 @@
 #include "cDisposable.h"
 #include "cObject.h"
 #include "cConnection.h"
+#include "cValueConnection.h"
+
 
 /**\file cSymbol.h
  * This file contains the declaration of the basic Symbol class. 
@@ -90,6 +92,14 @@ namespace PPLTCore{
             void autolock(bool al);
             bool autolock(void);
             
+            
+            /* Followin' methods are used to  define an interface of a "normal"
+             * symbol: getting and setting values of different types. 
+             * StreamSymbols are extended symbols inherit this class. */
+            virtual void set(int value);
+            virtual void set(double value);
+            virtual int getInt(void);
+            virtual double getFloat(void);
     };
 
 }

@@ -147,6 +147,18 @@ namespace PPLTCore{
             ItemBusy(const char *, ...);
     };
     
+
+    /** This exception will be thrown if a type reconversion of a symbol fails.
+     * This exception will be thrown for example if you try to access a symbol
+     * like a integer but it is a data steam. */
+    class SymbolReconversionError: public Error{
+        public:
+            SymbolReconversionError();
+            SymbolReconversionError(std::string msg);
+            SymbolReconversionError(const char *, ...);
+    };
+    
+    
     
     /** Class to indicate an setup-error for modules.
      * This exception can be used by module-developers to

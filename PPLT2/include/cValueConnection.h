@@ -67,6 +67,9 @@ namespace PPLTCore{
             virtual int Integer() = 0;
             virtual void Integer(int) = 0;
 
+            virtual double Float() = 0;
+            virtual void Float() = 0;
+            
             virtual std::string String() = 0;
             virtual void String(std::string) = 0;
     };

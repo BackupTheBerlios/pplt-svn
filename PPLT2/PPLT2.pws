@@ -24,14 +24,8 @@ RunInTerminal=true
 [Project State]
 clean before build=false
 
-[filelist]
-0=/home/hannes/Projekte/PPLT/PPLT2/src/soModuleLoader.cc
-1=/home/hannes/Projekte/PPLT/PPLT2/include/soModuleLoader.h
-2=/home/hannes/Projekte/PPLT/PPLT2/include/cFloatConnection.h
-
 [Project Tree]
 0=0
-1=0:1
 
 [File Tree]
 0=0

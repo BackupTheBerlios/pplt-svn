@@ -139,6 +139,21 @@ ItemBusy::ItemBusy(const char *temp, ...){
 }
 
 
+
+SymbolReconversionError::SymbolReconversionError(){}
+SymbolReconversionError::SymbolReconversionError(std::string msg): Error(msg){ }
+SymbolReconversionError::SymbolReconversionError(const char *temp, ...){
+    va_list     ap;
+    
+    va_start(ap, temp);
+    log_message(temp, ap);
+    va_end(ap);
+    
+    do_traceback();    
+}
+
+
+
 ModuleSetupError::ModuleSetupError(){ }
 ModuleSetupError::ModuleSetupError(std::string message):ModuleError(message){ }
 ModuleSetupError::ModuleSetupError(const char *temp, ...){

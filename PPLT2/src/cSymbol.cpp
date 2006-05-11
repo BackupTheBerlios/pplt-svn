@@ -80,3 +80,41 @@ bool cSymbol::autolock(void){
 void cSymbol::autolock(bool al){
     d_parent_connection->autolock(al);
 }
+
+void cSymbol::set(int value){ 
+    cValueConnection    *con;
+    if(0 == (con = dynamic_cast<cValueConnection *>(d_parent_connection)) ){
+        throw CoreError("Incompatible connection type: The connection does not"\
+                         " provide a value.");
+    }
+    con->Integer(value);
+}
+
+void cSymbol::set(double value){
+    cValueConnection    *con;
+    if(0 == (con = dynamic_cast<cValueConnection *>(d_parent_connection)) ){
+        throw CoreError("Incompatible connection type: The connection does"\
+                         " not provide a value.");
+    }
+    con->Float(value);
+}
+
+int cSymbol::getInt(void){
+    cValueConnection    *con;
+    if(0 == (con = dynamic_cast<cValueConnection *>(d_parent_connection)) ){
+        throw CoreError("Incompatible connection type: The connection does"\
+                         " not provide a value.");
+    }    
+    return con->Integer();
+}
+
+double cSymbol::getFloat(void){
+    cValueConnection    *con;
+    if(0 == (con = dynamic_cast<cValueConnection *>(d_parent_connection)) ){
+        throw CoreError("Incompatible connection type: The connection does"\
+                         " not provide a value.");
+    }    
+    return con->Float();
+}
+
+    
