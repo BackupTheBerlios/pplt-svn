@@ -1,0 +1,16 @@
+
+CPPFLAGS = -I.. -g @CPPFLAGS@
+LIBS = -lppltcore
+LDFLAGS = -L../libppltcore
+
+
+all: main.o
+	$(CC) $(LIBS) $(LDFLAGS) -o test main.o
+
+clean:
+	rm -f main.o test
+
+dist-clean: clean
+	rm -f configure Makefile config.status config.h
+	rm -rf autom4te.cache
+	rm -f config.log
