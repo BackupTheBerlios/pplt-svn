@@ -11,8 +11,6 @@ int main(void){
 
     std::cout << "Now: "<< sym.getFloat() << " ...\n"; 
 
-    std::cout << "Unload 1st module ...\n";
-    loader.unload(mod1);
     
    
 return(0);

@@ -1,17 +1,17 @@
 OBJS    = HexDumpModule.o LoopbackModule.o NULLModule.o RandomModule.o TimeModule.o
 LDFLAGS = @LDFLAGS@ -shared
 LIBS    = @LIBS@
-
+CXX     = @CXX@
 
 all: $(OBJS)
-	$(CC) $(LIBS) $(LDFLAGS) -o ppltstdmodules.so $(OBJS)
+	$(CXX) $(LIBS) $(LDFLAGS) -o ppltstdmodules.so $(OBJS)
 
 clean:
 	rm -f *.o
 	rm -f *.so
 
 
-dist-clean: clean
+distclean: clean
 	rm -f configure Makefile config.status config.h
 	rm -rf autom4te.cache
 	rm -f config.log

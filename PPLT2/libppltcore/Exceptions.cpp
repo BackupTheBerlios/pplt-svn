@@ -7,7 +7,7 @@
  ****************************************************************************/
 
 #include "Exceptions.h"
-#include "config.h"
+#include "../config.h"
 
 using namespace PPLTCore;
 

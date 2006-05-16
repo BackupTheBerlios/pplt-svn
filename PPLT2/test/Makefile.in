@@ -10,7 +10,5 @@ all: main.o
 clean:
 	rm -f main.o test
 
-dist-clean: clean
-	rm -f configure Makefile config.status config.h
-	rm -rf autom4te.cache
-	rm -f config.log
+distclean: clean
+	rm -f Makefile 

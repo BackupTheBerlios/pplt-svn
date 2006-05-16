@@ -1,0 +1,26 @@
+How to install:
+
+unpack ziped file:
+    $> tar -xjf pplt-2.x.x.tar.bz2
+    
+configure:
+    $> cd pplt-2.x.x
+    $> ./configure
+
+complile:
+    $> make
+
+install library and binaries (as root):
+    $> make install
+    
+create and install keys (as root):
+    $> make keys
+    $> make install-keys
+
+sign plugins (also as root):
+    $> make sing
+
+complete install (as root):
+    $> make install-plugins
+
+

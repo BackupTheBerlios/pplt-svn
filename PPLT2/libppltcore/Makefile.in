@@ -1,14 +1,13 @@
-CFLAGS   = @CFLAGS@
 CPPFLAGS = @CPPFLAGS@
 LDFLAGS  = @LDFLAGS@  
 LIBS     = @LIBS@ -llog4cplus
-CC       = @CC@
+CXX      = @CXX@
 
 OBJS = cConnection.o cDisposable.o cFloatConnection.o cInnerModule.o cIntegerConnection.o cModule.o cObject.o cSequenceConnection.o cStreamConnection.o cStreamSymbol.o cSymbol.o cValueConnection.o Logging.o Exceptions.o soModuleLoader.o
 
 
 all: $(OBJS)
-	$(CC) $(CPPFLAGS) $(CXXFLAGS) $(DEFS) $(LDFLAGS) $(LIBS) -shared -o libppltcore.so.2.0.0 $(OBJS)
+	$(CXX) $(CPPFLAGS) $(CXXFLAGS) $(DEFS) $(LDFLAGS) $(LIBS) -shared -o libppltcore.so.2.0.0 $(OBJS)
 	if !(test -e libppltcore.so.2); then ln -s libppltcore.so.2.0.0 libppltcore.so.2; fi
 	if !(test -e libppltcore.so);   then ln -s libppltcore.so.2     libppltcore.so;   fi
 
@@ -16,20 +15,11 @@ clean:
 	rm -f libppltcore.so libppltcore.so.2 libppltcore.so.2.0.0
 	rm -f *.o
 
-dist-clean: clean
-	rm -f configure Makefile config.status config.h
-	rm -rf autom4te.cache
-	rm -f config.log
+distclean: clean
+	rm -f Makefile 
 
 install: all
 	install -D libppltcore.so.2.0.0 /usr/lib/libppltcore.so.2.0.0
 	if !(test -e /usr/lib/libppltcore.so.2); then ln -s /usr/lib/libppltcore.so.2.0.0 /usr/lib/libppltcore.so.2; fi
 	if !(test -e /usr/lib/libppltcore.so); then ln -s /usr/lib/libppltcore.so.2 /usr/lib/libppltcore.so; fi
 	
-cConnection.o: cConnection.h cModule.h cObject.h cDisposable.h Exceptions.h Logging.h 
-cDisposable.o: cDisposable.h Exceptions.h Logging.h
-cFloatConnection.o: cFloatConnection.h iFloatModule.h cValueConnection.h cDisposable.h cModule.h Exceptions.h Logging.h
-cInnerModule.o: cInnerModule.h cModule.h cDisposable.h Exceptions.h Logging.h
-cIntegerConnection.o: cIntegerConnection.h Exceptions.h Logging.h cModule.h iIntegerModule.h cValueConnection.h
-
-
