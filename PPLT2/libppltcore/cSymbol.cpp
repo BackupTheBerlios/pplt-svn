@@ -99,6 +99,16 @@ void cSymbol::set(double value){
     con->Float(value);
 }
 
+void cSymbol::set(std::string value){
+    cSequenceConnection *con;
+    if(0 == (con = dynamic_cast<cSequenceConnection *>(d_parent_connection)) ){
+        throw CoreError("Incompatible connection type: The connection does not"\
+                        " provide a sequences od data.");
+    }
+    con->send(value);
+}
+
+
 int cSymbol::getInt(void){
     cValueConnection    *con;
     if(0 == (con = dynamic_cast<cValueConnection *>(d_parent_connection)) ){
@@ -117,4 +127,13 @@ double cSymbol::getFloat(void){
     return con->Float();
 }
 
-    
+std::string cSymbol::getSeq(void){
+    cSequenceConnection *con;
+    if(0 == (con = dynamic_cast<cSequenceConnection *>(d_parent_connection)) ){
+        throw CoreError("Incompatible connection type: The connection does"\
+                         " not provide a value.");
+    }
+    return con->recv();
+}
+
+

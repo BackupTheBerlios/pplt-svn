@@ -3,6 +3,7 @@
 
 #include "Exceptions.h"
 #include "Logging.h"
+#include "Portability.h"
 
 #include "cObject.h"
 #include "cModule.h"

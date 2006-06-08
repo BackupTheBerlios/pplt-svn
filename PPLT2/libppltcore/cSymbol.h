@@ -31,7 +31,7 @@
 #include "cObject.h"
 #include "cConnection.h"
 #include "cValueConnection.h"
-
+#include "cSequenceConnection.h"
 
 /**\file cSymbol.h
  * This file contains the declaration of the basic Symbol class. 
@@ -98,9 +98,12 @@ namespace PPLTCore{
              * StreamSymbols are extended symbols inherit this class. */
             virtual void set(int value);
             virtual void set(double value);
+            virtual void set(std::string value);
+
             virtual int getInt(void);
             virtual double getFloat(void);
-    };
+            virtual std::string getSeq(void);
+};
 
 }
 

@@ -1,14 +1,19 @@
-
-CPPFLAGS = -I.. -g @CPPFLAGS@
-LIBS = -lppltcore
-LDFLAGS = -L../libppltcore
+OBJ = main.o libPPLTCoreTest.o soModuleLoaderTest.o PortabilityTest.o
 
 
-all: main.o
-	$(CC) $(LIBS) $(LDFLAGS) -o test main.o
+CPPFLAGS = -I.. -I/usr/local/include -g @CPPFLAGS@
+LIBS = -lppltcore -lcppunit
+LDFLAGS = -L../libppltcore -L/usr/local/lib
+
+
+all: $(OBJ)
+	$(CC) $(LIBS) $(LDFLAGS) -o test $(OBJ)
 
 clean:
-	rm -f main.o test
+	rm -f $(OBJ) test
 
 distclean: clean
 	rm -f Makefile 
+
+
+install:    

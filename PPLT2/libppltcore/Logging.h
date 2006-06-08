@@ -26,40 +26,143 @@
 #ifndef PPLT_LOGGING_H
 #define PPLT_LOGGING_H
 
-/**\todo Use config.h to determ if log4cplus is available 
- * if not use own "logging" methods. */
+#include <iostream>
+#include <map>
+#include <list>
+#include <streambuf>
+#include <sstream>
+#include <fstream>
+#include "Exceptions.h"
 
-#include <log4cplus/logger.h>
-#include <log4cplus/consoleappender.h>
 
 /** \file Logging.h
  * \brief contains all functions and macros for the Logging system.
  *
- * To init the logging, please call @see initLogging(). After calling
- * the function you can use all logging-functions.
+ * To init the logging, please call initLogging(). After calling
+ * this function you can use all logging-functions.
  * The best way to log is to use the defined macros.
  */
+
+
 namespace PPLTCore{
-    #define CORELOG_DEBUG(msg)      LOG4CPLUS_DEBUG(log4cplus::Logger::getInstance("Core"), msg)
-    #define CORELOG_INFO(msg)       LOG4CPLUS_INFO(log4cplus::Logger::getInstance("Core"), msg)
-    #define CORELOG_WARN(msg)       LOG4CPLUS_WARN(log4cplus::Logger::getInstance("Core"), msg)
-    #define CORELOG_ERROR(msg)      LOG4CPLUS_ERROR(log4cplus::Logger::getInstance("Core"), msg)
-    #define CORELOG_FATAL(msg)      LOG4CPLUS_FATAL(log4cplus::Logger::getInstance("Core"), msg)
+    typedef std::ostringstream      LoggingStream;
+    
+    #define CORELOG_DEBUG(msg)      LOG_DEBUG(PPLTCore::Logger::getInstance("Core"), msg)
+    #define CORELOG_INFO(msg)       LOG_INFO(PPLTCore::Logger::getInstance("Core"), msg)
+    #define CORELOG_WARN(msg)       LOG_WARN(PPLTCore::Logger::getInstance("Core"), msg)
+    #define CORELOG_ERROR(msg)      LOG_ERROR(PPLTCore::Logger::getInstance("Core"), msg)
+    #define CORELOG_FATAL(msg)      LOG_FATAL(PPLTCore::Logger::getInstance("Core"), msg)
 
-    #define MODLOG_DEBUG(msg)       LOG4CPLUS_DEBUG(log4cplus::Logger::getInstance("Module"), msg)
-    #define MODLOG_INFO(msg)        LOG4CPLUS_INFO(log4cplus::Logger::getInstance("Module"), msg)
-    #define MODLOG_WARN(msg)        LOG4CPLUS_WARN(log4cplus::Logger::getInstance("Module"), msg)
-    #define MODLOG_ERROR(msg)       LOG4CPLUS_ERROR(log4cplus::Logger::getInstance("Module"), msg)
-    #define MODLOG_FATAL(msg)       LOG4CPLUS_FATAL(log4cplus::Logger::getInstance("Module"), msg)
+    #define MODLOG_DEBUG(msg)       LOG_DEBUG(PPLTCore::Logger::getInstance("Module"), msg)
+    #define MODLOG_INFO(msg)        LOG_INFO(PPLTCore::Logger::getInstance("Module"), msg)
+    #define MODLOG_WARN(msg)        LOG_WARN(PPLTCore::Logger::getInstance("Module"), msg)
+    #define MODLOG_ERROR(msg)       LOG_ERROR(PPLTCore::Logger::getInstance("Module"), msg)
+    #define MODLOG_FATAL(msg)       LOG_FATAL(PPLTCore::Logger::getInstance("Module"), msg)
 
-    /** Logging initializer.
-    * This function will init the logging system. Simply call this
-    * function before calling any other PPLT stuff to get the logging
-    * running. This function takes no parameters. */
+    #define LOG_DEBUG(inst, msg)    LOG(inst, LLDEBUG, msg)
+    #define LOG_INFO(inst, msg)     LOG(inst, LLINFO, msg)
+    #define LOG_WARN(inst, msg)     LOG(inst, LLWARNING, msg)
+    #define LOG_ERROR(inst, msg)    LOG(inst, LLERROR, msg)
+    #define LOG_FATAL(inst, msg)    LOG(inst, LLFATAL, msg)
+    #define LOG(inst, level, msg)   do{\
+                                        std::ostringstream buff;\
+                                        buff << msg; \
+                                        inst->log(level, __FILE__, __LINE__, buff.str());\
+                                    }while(0);
+
+
     void initLogging();
 
-    void Log(log4cplus::Logger log, log4cplus::LogLevel level, const char *file, int line,
-                std::string func_name, std::string pat);
+    
+    /** This enumeration defines the available loglevels */
+    typedef enum {
+        LLDEBUG     = 10,
+        LLINFO      = 20,
+        LLWARNING   = 30,
+        LLERROR     = 40,
+        LLFATAL     = 100
+    } LogLevel;
+   
 
+    /** This class defines the basic interface for an outputter.
+     * Outputters have to recive a logging request and to put them into the 
+     * output ie a file or the screen.*/
+    class LogOutputter{
+        public:
+            LogOutputter();
+            virtual ~LogOutputter();
+
+            virtual void log(LogLevel level, std::string file_name, int line, std::string msg) = 0;
+    };
+
+    
+    
+    /** Uses the console for output. */
+    class ConsoleOutputter: public LogOutputter {
+        public:
+            ConsoleOutputter();
+            virtual void log(LogLevel level, std::string file_name, int line, std::string msg);
+    };
+
+
+    
+    /** Uses a file for output. */
+    class FileOutputter: public LogOutputter{
+        private:
+            std::ofstream    d_file;
+        public:
+            FileOutputter(std::string file);
+            virtual ~FileOutputter();
+
+            virtual void log(LogLevel level, std::string file, int line, std::string msg);
+    };
+
+    /** This class defnies the basic (root) logging class. */
+    class Logger{
+        private:            
+            /** This static member holds all loaded loggers.*/
+            static std::map<std::string, Logger *>  s_loggers;
+
+            /** This list takes all ouputters. */
+            std::list<LogOutputter *>               d_outputters;
+
+            /** This member defines the actual logging level (filter). */
+            LogLevel                                d_log_level;
+
+            /** Defines the parent logger.
+             * All logging request are send also to the parent. */
+            Logger                                  *d_parent_logger;        
+            
+
+        protected:
+            std::string                             d_name;
+
+            
+        public:
+            Logger(std::string name);
+            Logger(std::string name, Logger *parent);
+            ~Logger();
+            
+            void attachOutput(LogOutputter *output);
+            
+            /** This method sets the logging level (filter).*/
+            void logLevel(LogLevel level);
+            /** This method returns the actual logging level (filter) for this
+             * logger. */
+            LogLevel  logLevel( void );
+            
+            virtual void log(LogLevel level, std::string file_name, int line, std::string msg);
+            
+            void debug(std::string file_name, int line, std::string msg);
+            void info(std::string file_name, int line, std::string msg);
+            void warning(std::string file_name, int line, std::string msg);
+            void error(std::string file_name, int line, std::string msg);
+            void fatal(std::string file_name, int line, std::string msg);
+
+            static Logger *getInstance(std::string name);
+    };
+
+
+   
 }
 #endif

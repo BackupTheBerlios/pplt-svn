@@ -1,18 +1,27 @@
 #include "libppltcore/ppltcore.h"
 
+#include "libPPLTCoreTest.h"
+#include "soModuleLoaderTest.h"
+
+
 using namespace PPLTCore;
+using namespace PPLTCore::Test;
+
 
 int main(void){
     initLogging();
 
-    soModuleLoader  loader("/home/hannes/Projekte/PPLT/PPLT2/plugins");
-    cModule         *mod1 = loader.load("ppltstdmodules.so", "TimeModuleFactory", tModuleParameters());
-    cSymbol         sym(mod1, "timestamp");
+    CPPUNIT_NS::BriefTestProgressListener    testlistener;
+    CPPUNIT_NS::TextTestRunner              testrunner;
 
-    std::cout << "Now: "<< sym.getFloat() << " ...\n"; 
 
+    testrunner.addTest(CPPUNIT_NS::TestFactoryRegistry::getRegistry().makeTest());
+    testrunner.eventManager().addListener(&testlistener);
     
-   
-return(0);
+    testrunner.run("");
+    
+    return 0;
 }
+
+
 

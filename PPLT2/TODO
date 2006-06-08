@@ -1,0 +1,10 @@
+ === Global security context ===
+    + This context should contain all signatures and there depencies.
+    + implement the signing of modules (also into the mod-desc-lang). May also multible signs
+    + ACLs
+
+ === Module description language ===
+    + develop and implement a module description language
+   
+ === soModuleLoader ===
+    + implement the security context -> only trusted (signed) modules should be loadable.

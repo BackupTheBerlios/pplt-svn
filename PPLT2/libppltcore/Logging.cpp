@@ -9,18 +9,99 @@
 #include "Logging.h"
 
 using namespace PPLTCore;
-using namespace log4cplus;
-using namespace log4cplus::helpers;
+
+std::map<std::string, Logger *> Logger::s_loggers; 
 
 void PPLTCore::initLogging(){
-    SharedObjectPtr<Appender>  app(new ConsoleAppender());
-    app->setName("ConLog");
-    std::string pattern = "[%t] %-5p %c{2} - %m [%l]%n";
-    app->setLayout( std::auto_ptr<Layout>(new PatternLayout(pattern)));
-    Logger::getRoot().addAppender(app);
-    CORELOG_DEBUG("Init logging...");
+    Logger  *root, *mod;
+    
+    // create a new "root" Logger:
+    root = new Logger("Core");
+    
+    // attach module logger to root:
+    mod  = new Logger("Module", root);
+
+    //append console outputter at root:
+    LogOutputter *out = new FileOutputter("test.log");
+    root->attachOutput(out);
+    
+    //Test it:
+    root = Logger::getInstance("Core");
+    root->log(LLINFO, __FILE__, __LINE__, "Logging started...");
 }
 
-void Log(Logger log, int level, const char* file, int line, std::string func_name, std::string pat){
-    log.forcedLog((LogLevel)level, pat, file, line);
+
+
+Logger::Logger(std::string name){
+    d_log_level = LLDEBUG;
+    d_name = name;
+    Logger::s_loggers[name] =  this;
+    d_parent_logger = 0;
 }
+
+
+
+Logger::Logger(std::string name, Logger *parent){
+    d_log_level = LLDEBUG;
+    d_name = name;
+    Logger::s_loggers[name] = this;
+    d_parent_logger = parent;
+}
+
+
+
+Logger::~Logger(){
+    for(std::list<LogOutputter *>::iterator it = d_outputters.begin();
+        it != d_outputters.end(); ++it){
+            delete (*it);
+    }
+}
+
+
+
+Logger *Logger::getInstance(std::string name){
+    if(0 == Logger::s_loggers.count(name))
+        throw ItemNotFound("Unkown logger \"%s\" requested!", name.c_str());
+
+    return Logger::s_loggers[name];        
+}
+
+
+
+void Logger::logLevel(LogLevel level){
+    d_log_level = level;
+}
+
+
+
+
+LogLevel Logger::logLevel( void ){
+    return d_log_level;
+}
+
+
+
+void Logger::log(LogLevel level, std::string file, int line, std::string msg){
+    if(0 != d_parent_logger)
+        d_parent_logger->log(level, file, line, msg);
+
+    if(level < d_log_level)
+        return;
+
+    for(std::list<LogOutputter *>::iterator it = d_outputters.begin();
+        it != d_outputters.end(); ++it){
+            (*it)->log(level, file, line, msg);     
+    }
+}   
+
+void Logger::debug(std::string file, int line, std::string msg)   { log(LLDEBUG,   file, line, msg); }
+void Logger::info(std::string file, int line, std::string msg)    { log(LLINFO,    file, line, msg); }
+void Logger::warning(std::string file, int line, std::string msg) { log(LLWARNING, file, line, msg); }
+void Logger::error(std::string file, int line, std::string msg)   { log(LLERROR,   file, line, msg); }
+void Logger::fatal(std::string file, int line, std::string msg)   { log(LLFATAL,   file, line, msg); }
+
+
+
+void Logger::attachOutput(LogOutputter *output){
+    d_outputters.push_back(output);
+}    

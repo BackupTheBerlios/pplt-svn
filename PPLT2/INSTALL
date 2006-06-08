@@ -1,6 +1,6 @@
 How to install:
 
-unpack ziped file:
+unpack file:
     $> tar -xjf pplt-2.x.x.tar.bz2
     
 configure:
@@ -18,7 +18,7 @@ create and install keys (as root):
     $> make install-keys
 
 sign plugins (also as root):
-    $> make sing
+    $> make sign
 
 complete install (as root):
     $> make install-plugins
