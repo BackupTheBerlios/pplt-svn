@@ -1,5 +1,5 @@
 /***************************************************************************
- *            HexDumpModule.cpp
+ *            HexDumpModule.cc
  *
  *  Sun Apr 23 01:25:47 2006
  *  Copyright  2006  Hannes Matuschek
@@ -20,62 +20,45 @@ cModule *HexDumpModuleFactory(cModule *parent, std::string addr, tModuleParamete
 
 
 
-
 HexDumpModule::HexDumpModule(cModule *parent, std::string addr, 
                              tModuleParameters params)
-: cInnerModule(parent, addr, params)
-{ d_my_child = 0; }
+: cInnerModule(parent, addr, params) { d_my_child = 0; }
+
 
 
 void HexDumpModule::data_notify() {
-    char                tmp[256];
-    char                *buffer;
-    int                 buf_len;
-    int                 ret_len;
+    std::string         buffer;
     cStreamConnection   *con;
     int                 line_num;
-    std::string         line;
+    int                 ret_len=0;
 
-    // set buffer pointer and length:
-    buffer = 0; buf_len = 0;
-    // check cast of parent connection:
-    if(0 == (con = dynamic_cast<cStreamConnection *>(d_parent_connection)) )
-        throw ModuleError("Unable to cast parent connection to stream!");
-
-    // do some debug:
     MODLOG_DEBUG("In HexDump::data_notify()");
 
+    // cast connection:
+    if(0 == (con = dynamic_cast<cStreamConnection *>(d_parent_connection)) )
+        throw ModuleError("Unable to cast parent connection to stream!");
+   
+    //try to get data from parent:
+    do{
+        std::string  tmp;
+        tmp = con->read(1024);
+        ret_len = tmp.length();
+        buffer += tmp;
+    }while(ret_len == 1024);    
+    
+    line_num = buffer.length()/8; 
+    for(register int ln=0; ln<line_num+1; ln++){
+        MODLOG_DEBUG("data_notify() (+" << ln*8<<"b):\t" << hexLine(buffer, ln*8));
+    }
+    
     // check if a child is defined:
     if(0 == d_my_child)
         throw ModuleError("No child defined");
 
-    // loop for data and store is in a buffer:
-    do{
-        ret_len = con->read(tmp, 265);
-        if(ret_len > 0){
-            if(0 == (buffer = (char *) realloc(buffer, ret_len+buf_len)) )
-                throw ModuleError("Unable to alloc mem for ");
-            memcpy(buffer+buf_len, tmp, ret_len);
-            buf_len += ret_len;
-        }
-    }while(265 == ret_len);
-    line_num = buf_len/8;
-    for(register int ln=0;ln<line_num; ln++){
-        line = hexLine(buffer, ln*8);
-        MODLOG_DEBUG("data_notify() (+"<<ln*8<<"b):\t"<<line);
-    }
-
-    if(0 < buf_len - (line_num*8) ){
-        line = hexLine(buffer, line_num*8, buf_len-(line_num*8));
-        MODLOG_DEBUG("data_notify() (+"<<line_num*8<<"b):\t"<<line);
-    }
-
     // try to inform the child:
     try{
-        d_my_child->push(buffer, buf_len);
-        free(buffer);
+        d_my_child->push(buffer, buffer.length());
     }catch(...){ 
-        free(buffer);
         throw;
     }
 }
@@ -100,55 +83,62 @@ bool HexDumpModule::isBusy(void){
 
 
 void HexDumpModule::disconnect(std::string con_id){
-    d_connections.remConnection(con_id);
+    if(0 == d_my_child)
+        throw ItemNotFound("Connection %s is not to me!", con_id.c_str());
+    if(con_id != d_my_child->Identifier())    
+        throw ItemNotFound("Connection %s is not to me!", con_id.c_str());
+    d_my_child = 0;
 }
 
-int HexDumpModule::read(std::string con_id, char *buff, int len){
-    int             ret_len;
+
+
+std::string HexDumpModule::read(std::string con_id, int len){
+    std::string     data;
     int             line_num;
-    std::string     line;
 
-    ret_len = dynamic_cast<cStreamConnection *>(d_parent_connection)->read(buff, len);
-    line_num = ret_len/8;
-    for(register int ln=0;ln<line_num; ln++){
-        line = hexLine(buff, ln*8);
+    if(0 == d_my_child)
+        throw ItemNotFound("Connection %s is not to me!", con_id.c_str());
+    if(con_id != d_my_child->Identifier())    
+        throw ItemNotFound("Connection %s is not to me!", con_id.c_str());
+    
+    data = dynamic_cast<cStreamConnection *>(d_parent_connection)->read(len);
+    
+    line_num = data.length()/8;
+    for(register int ln=0;ln<line_num+1; ln++){
+        std::string line = hexLine(data, ln*8);
         MODLOG_DEBUG("read() (+"<<ln*8<<"b):\t"<<line);
     }
 
-    if(0 < ret_len - (line_num*8) ){
-        line = hexLine(buff, line_num*8, ret_len-(line_num*8));
-        MODLOG_DEBUG("read() (+"<<line_num*8<<"b):\t"<<line);
-    }
-
-    return ret_len;
+    return data;
 }
 
-int HexDumpModule::write(std::string con_id, char *buff, int len){
-    int         ret_len;
+int HexDumpModule::write(std::string con_id, std::string data, int len){
     int         line_num;
-    std::string line;
-    ret_len = dynamic_cast<cStreamConnection *>(d_parent_connection)->write(buff, len);
+    len = dynamic_cast<cStreamConnection *>(d_parent_connection)->write(data, len);
 
-    line_num = ret_len/8;
-    for(register int ln=0;ln<line_num; ln++){
-        line = hexLine(buff, ln*8);
+    line_num = len/8;
+    for(register int ln=0;ln<line_num+1; ln++){
+        std::string line = hexLine(data, ln*8);
         MODLOG_DEBUG("read() (+"<<ln*8<<"b):\t"<<line);
     }
 
-    if(0 < ret_len - (line_num*8) ){
-        line = hexLine(buff, line_num*8, ret_len-(line_num*8));
-        MODLOG_DEBUG("read() (+"<<line_num*8<<"b):\t"<<line);
-    }
-
-    return ret_len;
+    return len;
 }
 
 
-std::string HexDumpModule::hexLine(char *buffer, int offset, int len){
+std::string HexDumpModule::hexLine(std::string buffer, int offset){
     std::ostringstream  output("",std::ios::ate);
-    unsigned int      val;
+    unsigned int        val;
+    int                 len=8;
+    std::string         hex_line;
+    
+    if(0 >= buffer.length()-offset)
+        return hex_line;
 
     output.setf(std::ios::right, std::ios::adjustfield);
+
+    if(len > buffer.length()-offset)
+        len = buffer.length()-offset;
 
     for(register int n=0;n<len;n++){
         val = buffer[offset+n];

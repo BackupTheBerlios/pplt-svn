@@ -20,6 +20,8 @@ cModule *TimeModuleFactory(tModuleParameters params){
 
 TimeModule::TimeModule(tModuleParameters params): cModule(params){ }
 
+
+
 cConnection *TimeModule::connect(std::string addr, cDisposable *child){
     cFloatConnection *con;
     
@@ -34,11 +36,15 @@ cConnection *TimeModule::connect(std::string addr, cDisposable *child){
     }
 }
 
+
+
 void TimeModule::disconnect(std::string con_id){
     d_connections.remConnection(con_id);
 }
 
-double TimeModule::get(std::string con_id){
+
+
+double TimeModule::get_float(std::string con_id){
     struct ntptimeval   t;
     double              val;
     
@@ -54,6 +60,9 @@ double TimeModule::get(std::string con_id){
                       con_id.c_str());
 }
 
-void TimeModule::set(std::string con_id, double value){
+
+
+void TimeModule::set_float(std::string con_id, double value){
     throw ModuleError("This module (TimeModule) is read only!!!");
 }
+

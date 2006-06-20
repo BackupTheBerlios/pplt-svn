@@ -32,12 +32,14 @@
 #include "iIntegerModule.h"
 #include "cValueConnection.h"
 
-/**\file cIntegerConnection.h
- * \brief This file contains the definition of the cIntegerConnection
- * class. */
+/** \file cIntegerConnection.h */
+
+
+
 namespace PPLTCore{
 
-    /** A conection to a module that implements iIntegerModule.
+    /** A conection to a module that implements the iIntegerModule 
+     *  Interface.
      *
      * This class extend the cValueConnection class to implement
      * a connection to a module that provies integer values.
@@ -67,8 +69,14 @@ namespace PPLTCore{
             * of the child. */
             void push(int value);
 
+            /** Pop() callback.
+             * This method can be used by the parent to request the last 
+             * value.*/
+            int pop();
+
             /** Returns the cached value or one obtained from parent. */
             int get();
+            
             /** Sends the value to the parent and update cache. */
             void set(int);
 
@@ -76,20 +84,26 @@ namespace PPLTCore{
             * This method calls get() and tryes to convert the value
             * into an integer. In this case it does quiet nothing.  */
             int Integer();
+            
             /** Set the value from an integer.
             * This method tryes to convert the given value to an
             * integer and then set the value by calling the set()
             * method. In this case it only calles set() */
             void Integer(int);
 
-
+            /** This method will return the value as a floating point 
+             *  number.*/
             double Float();
+            
+            /** This method uses the given folating value and set the rounded
+             *  value.*/
             void Float(double value);
 
             /** Get the value as an string.
             * This method calls get() and tryes to convert the value
             * into a string. */
             std::string String();
+            
             /** Set the value from a string.
             * This method tryes to convert the string into a integer
             * and then call set() to set this value. */

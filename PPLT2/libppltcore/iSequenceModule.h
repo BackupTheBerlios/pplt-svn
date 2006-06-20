@@ -42,11 +42,27 @@ namespace PPLTCore{
      * data. */
     class iSequenceModule{
         public:
+            /** Destructor */
             virtual ~iSequenceModule(){};
 
+            /** Reception of data sequence.
+             * This method should be implemented by all modules,
+             * that provides sequencial data. This methdo should 
+             * return a string containing the recived data. 
+             * @param con_id    This string contains the id of the connection. 
+             *                  This id can be used to determ the address of
+             *                  the request. */
             virtual std::string recv(std::string con_id) = 0;
+            
+            /** Sending of data.
+             * This method should be implemented by all modules, that provides
+             * sequencial data. This method should process the given data as 
+             * once.
+             * @param con_id    This string contains the id of the connection.
+             *                  With this id it is possible to determ the 
+             *                  address of the request. 
+             * @param data      The data to process. */
             virtual void send(std::string con_id, std::string data) = 0;
-
     };
 
 }

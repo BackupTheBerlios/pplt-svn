@@ -42,8 +42,8 @@ namespace PPLTPlugin{
             
             void disconnect(std::string con_id);
     
-            double get(std::string con_id);
-            void set(std::string con_id, double value);
+            double get_float(std::string con_id);
+            void set_float(std::string con_id, double value);
     };            
 }
 

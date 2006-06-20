@@ -30,6 +30,11 @@ void cIntegerConnection::push(int value){
         notify_child();
 }
 
+// will be called by the parent to get the last value...
+int cIntegerConnection::pop( void ){
+    return d_cache_value;
+}
+
 
 /* get() method: returns the cached value if the cachetime is not elapsed
  * other wise it tryes to get a fresh value from parent. */
@@ -52,7 +57,7 @@ int cIntegerConnection::get(){
         d_parent_module->reserve();
     // try to get new value:
     try{
-        d_cache_value = mod->get(Identifier());
+        d_cache_value = mod->get_integer(Identifier());
     }catch(...){
         // on error release and rethrow exception.
         if(autolock())
@@ -81,7 +86,7 @@ void cIntegerConnection::set(int value){
         d_parent_module->reserve();
     // try to get new value
     try{ 
-        mod->set(Identifier(), value);
+        mod->set_integer(Identifier(), value);
     }catch(...){
         // on error: unlock parent and rethrow exception.
         if(autolock())

@@ -34,12 +34,29 @@
  * that wants to provide a data stream. */
 namespace PPLTCore{
 
+    /** This class (pure virtual) defines the interface for all modules that 
+     *  provides data streams.
+     * All modules that want's to provide a data stream have to implement this
+     * interface, meaning to provide the methods read and write.*/
     class iStreamModule{
         public:
+            /** Destructor. */
             virtual ~iStreamModule(){};
 
-            virtual int read(std::string, char *, int) = 0;
-            virtual int write(std::string, char *, int) = 0;
+            /** This method should return max length bytes in a string.
+             * @param con_id    This string countains the connection id. This 
+             *                  id can be used to identify the connection 
+             *                  address.
+             * @param length    This integer should be the maximum of returned bytes.*/
+            virtual std::string read(std::string con_id, int lenth) = 0;
+
+            /** This method should process the first [length] bytes from the 
+             *  given string.
+             * @param con_id    This id can be used to identify the connection.
+             * @param data      This string hold the data to process.
+             * @param length    This integer defines the count of bytes to be 
+             *                  processed from data. */
+            virtual int write(std::string con_id, std::string data, int length) = 0;
     };
 }
 

@@ -16,28 +16,26 @@ void soModuleLoaderTest::tearDown( void ){
 
 void soModuleLoaderTest::test_ModuleFinding( void ){
     cModule     *tmp;
-    module_loader->addModulePath("../plugins/");
     
     // check if a module-file can be found if it exists in the path:
     CPPUNIT_ASSERT_THROW( module_loader->load("notknown.so", "NotKnown", tModuleParameters()),
                           ItemNotFound);
                           
     // check for exception if factory can't be found:
-    CPPUNIT_ASSERT_THROW( module_loader->load("ppltstdmodules.so", "NotKnown", tModuleParameters()),
+    CPPUNIT_ASSERT_THROW( module_loader->load("../plugins/ppltstdmodules.so", "NotKnown", tModuleParameters()),
                           ItemNotFound);
 
     // checks if a exception will be raised if the given .so file is not one:
-    CPPUNIT_ASSERT_THROW( module_loader->load("NULLModule.h", "NotKnown", tModuleParameters()),
+    CPPUNIT_ASSERT_THROW( module_loader->load("../plugins/NULLModule.h", "NotKnown", tModuleParameters()),
                           CoreError);
     
 }
 
 void soModuleLoaderTest::test_ModuleLoading(void){
     cModule     *tmp;
-    module_loader->addModulePath("../plugins/");
 
     //checks if a module will be loaded correctly:
-    CPPUNIT_ASSERT_NO_THROW( tmp = module_loader->load("ppltstdmodules.so", "NULLModuleFactory", tModuleParameters()) );
+    CPPUNIT_ASSERT_NO_THROW( tmp = module_loader->load("../plugins/ppltstdmodules.so", "NULLModuleFactory", tModuleParameters()) );
 
     // checks if a module will be unloaded correctly:
     CPPUNIT_ASSERT_NO_THROW( module_loader->unload(tmp) );

@@ -43,7 +43,7 @@ namespace PPLTCore{
         
         public:
             /** Constructor.
-             * The contructor take the pointer to the parent module of the
+             * The contructor takes the pointer to the parent module of the
              * connection. Normaly this is the module that creates the 
              * connection. The second parameter is the child module. Normaly
              * this is the module that will own the connection. This parameter
@@ -51,9 +51,14 @@ namespace PPLTCore{
             cFloatConnection(cModule *parent, cDisposable *child=0);
             
             /** Pushes the given value into the cache and notify the child
-             * if there is one. */
+             * that there is one. */
             void push(double value);
-            
+           
+            /** Request the last cached value.
+             * \b Note: This method is a hack to write some strange modules 
+             * that doesn't fit into the definitions of the PPLT2. */
+            double pop();
+
             /** Returns the actual value. 
              * This method will return the cached value if it is up to date.
              * Other wise it will try to get it from the parent, store it into

@@ -56,14 +56,14 @@ namespace PPLTCore{
              * connection to your module. You can retrive the address
              * the connection was etablished with by the
              * cConnectionDataBase in your module. See: cModule */
-            virtual int get(std::string con_id) = 0;
+            virtual int get_integer(std::string con_id) = 0;
 
             /** This method will be used by the children of the module
              * to set an integer value.
              * @param con_id The connection id of the child that wants
              * to write the value.
              * @param value The value. */
-            virtual void set(std::string con_id, int value) = 0;
+            virtual void set_integer(std::string con_id, int value) = 0;
     };
 
 }

@@ -20,11 +20,11 @@ cStreamSymbol::cStreamSymbol(cModule * parent, std::string address)
 }
 
 
-int cStreamSymbol::read(char *buffer, int len){
-    return d_stream_connection->read(buffer, len);
+std::string cStreamSymbol::read(int len){
+    return d_stream_connection->read(len);
 }
 
 
-int cStreamSymbol::write(char *buffer, int len){
-    return d_stream_connection->write(buffer, len);
+int cStreamSymbol::write(std::string data, int len){
+    return d_stream_connection->write(data, len);
 }

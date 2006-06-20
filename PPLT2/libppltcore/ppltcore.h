@@ -1,6 +1,8 @@
 #ifndef PPLTCORE_H
 #define PPLTCORE_H
 
+#include "config.h"
+
 #include "Exceptions.h"
 #include "Logging.h"
 #include "Portability.h"
@@ -8,7 +10,6 @@
 #include "cObject.h"
 #include "cModule.h"
 #include "cInnerModule.h"
-
 #include "cConnection.h"
 #include "cValueConnection.h"
 #include "cFloatConnection.h"
@@ -26,7 +27,17 @@
 #include "iNotifyDestruction.h"
 #include "iSequenceModule.h"
 #include "iStreamModule.h"
+#include "iModuleLoader.h"
 
+
+//Module loader
 #include "soModuleLoader.h"
+
+
+#if HAVE_PYTHON && 1
+    #include "cPyModule.h"
+    #include "pyModuleLoader.h"
+#endif
+
 #endif
 

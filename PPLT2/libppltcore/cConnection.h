@@ -102,7 +102,7 @@ namespace PPLTCore{
             * autolock(false). But in this case the programmer has to care
             * about the locking of the connection using this and the 
             * relaese() method. If it is missed it may happen, that two or more
-            * tharead accesses the parent at the same time. */
+            * threads accesses the parent at the same time. */
             virtual void reserve();
             
             /** Release the reservation. */

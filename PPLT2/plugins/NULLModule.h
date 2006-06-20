@@ -32,22 +32,29 @@
 #include "../libppltcore/cConnection.h"
 #include "../libppltcore/cDisposable.h"
 
+
+/** This factory function is needed to load a class instance from a shared 
+ *  object using the libdl. */
 extern "C"{
     PPLTCore::cModule *NULLModuleFactory(PPLTCore::tModuleParameters);
 };
 
+
+
+
 namespace PPLTPlugin{
 
     class NULLModule : public PPLTCore::cModule, public PPLTCore::iStreamModule{
-    public:
-        NULLModule(PPLTCore::tModuleParameters params);
+        public:
+            NULLModule(PPLTCore::tModuleParameters params);
 
-        PPLTCore::cConnection *connect(std::string);
-        PPLTCore::cConnection *connect(std::string, PPLTCore::cDisposable *);
-        void disconnect(std::string);
+            PPLTCore::cConnection *connect(std::string);
+            PPLTCore::cConnection *connect(std::string, PPLTCore::cDisposable *);
+            
+            void disconnect(std::string);
 
-        int read(std::string, char *, int);
-        int write(std::string, char *, int);
+            std::string read(std::string con_id, int len);
+            int write(std::string con_id, std::string data, int len);
     };
 
 }

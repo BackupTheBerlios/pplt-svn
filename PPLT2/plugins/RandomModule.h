@@ -47,11 +47,11 @@ namespace PPLTPlugin{
 
             void disconnect(std::string);
 
-            int read(std::string, char *, int);
-            int write(std::string, char *, int);
+            std::string read(std::string con_id, int len);
+            int write(std::string con_id, std::string data, int len);
 
-            int get(std::string);
-            void set(std::string, int);
+            int get_integer(std::string);
+            void set_integer(std::string, int);
     };
 
 }

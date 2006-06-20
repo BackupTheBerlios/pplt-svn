@@ -55,8 +55,8 @@ namespace PPLTPlugin{
                                            PPLTCore::cDisposable *child=0);
             void disconnect(std::string);
 
-            int read(std::string, char *, int);
-            int write(std::string, char *, int);
+            std::string read(std::string con_id, int len);
+            int write(std::string, std::string data, int len);
     };
 }
 

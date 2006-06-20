@@ -46,26 +46,29 @@ void RandomModule::disconnect(std::string con_id){
 }
 
 
-int RandomModule::read(std::string con_id, char *buff, int len){
+std::string RandomModule::read(std::string con_id, int len){
+    std::string     buffer;
+
     if("" != d_connections.getAddressByID(con_id))
         throw Error("Wrong interface...");
+    
     for(register int n=0;n<len;n++)
-        buff[n] = (char)(std::rand()%256);
-    return len;
+        buffer[n] = (char)(std::rand()%256);
+    return buffer;
 }
 
-int RandomModule::write(std::string con_id, char *buff, int len){
+int RandomModule::write(std::string con_id, std::string data, int len){
     throw Error("This module is read only!");
 }
 
 
-int RandomModule::get(std::string con_id){
+int RandomModule::get_integer(std::string con_id){
     MODLOG_DEBUG("get() request from connection :"+con_id);
     if("int" != d_connections.getAddressByID(con_id))
         throw Error("Wrong interface...");
     return std::rand();
 }
 
-void RandomModule::set(std::string con_id, int value){
+void RandomModule::set_integer(std::string con_id, int value){
     throw Error("This module is read only!");
 }

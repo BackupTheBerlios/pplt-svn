@@ -1,0 +1,16 @@
+OBJ =
+
+
+CPPFLAGS = -I.. -I/usr/local/include -g @CPPFLAGS@
+LIBS = -lppltcore 
+LDFLAGS = -L../libppltcore -L/usr/local/lib
+
+
+all: $(OBJ)
+
+clean:
+
+distclean: clean
+	rm -f Makefile 
+
+install:    

@@ -28,6 +28,7 @@
 
 #include <iostream>
 #include <streambuf>
+#include <string>
 #include <iomanip>
 #include "../libppltcore/Logging.h"
 #include "../libppltcore/Exceptions.h"
@@ -50,7 +51,7 @@ namespace PPLTPlugin{
     :public PPLTCore::cInnerModule, public PPLTCore::iStreamModule{
         private:
             PPLTCore::cStreamConnection   *d_my_child;
-            std::string hexLine(char *buff, int offset, int len=8);
+            std::string                   hexLine(std::string buff, int offset);
 
         public:
             HexDumpModule(PPLTCore::cModule *, std::string, 
@@ -58,11 +59,12 @@ namespace PPLTPlugin{
 
             PPLTCore::cConnection *connect(std::string addr,
                                            PPLTCore::cDisposable *child=0);
-            void disconnect(std::string);
+
+            void disconnect(std::string con_id);
             bool isBusy();
 
-            int read(std::string, char *, int);
-            int write(std::string, char *, int);
+            std::string read(std::string con_id, int len);
+            int write(std::string con_id, std::string data, int len);
 
             void data_notify();
     };

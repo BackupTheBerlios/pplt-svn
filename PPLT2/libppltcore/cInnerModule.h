@@ -84,6 +84,8 @@ namespace PPLTCore{
             */
             cInnerModule(cModule *parent, std::string addr, 
                          tModuleParameters params);
+     
+            /** Destructor. */
             ~cInnerModule();
     };
 

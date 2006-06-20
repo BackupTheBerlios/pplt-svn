@@ -48,8 +48,7 @@ namespace PPLTCore{
      * C++ style stream is not(yet) provided. */
     class cStreamConnection : public cConnection{
         private:
-            char            *d_buffer;
-            int             d_buffer_size;
+            std::string     d_buffer;
             pthread_mutex_t d_buffer_lock;
 
         public:
@@ -78,11 +77,11 @@ namespace PPLTCore{
              * By this it is possible to implement a asynchron communication.
              * If a moulde needs to inform the child direct and not storing
              * the data it can use the push() method without any parameters. */
-            void push(char *buffer, int len);
+            void push(std::string data, int len);
 
             /** push() callback
              *
-             * Informs the child directly about unespected data without stroing
+             * Informs the child directly about unespected data without storing
              * the data into the connection buffer. This is mostly usefull if
              * there is only one child and the size of the data is not known
              * but the child may determ the size. */
@@ -97,15 +96,16 @@ namespace PPLTCore{
              *
              * This method will be used by the child to read data from the
              * parent. The method will try to read max. len bytes from the
-             * parent and will copy the result into the given buffer. Note
-             * that the buffer size have to be at least len bytes. The method
-             * will return the nuber of bytes read.*/
-            int read(char *buff, int len);
+             * parent and return them by the given string. 
+             * @param len   Max number of bytes read.*/
+            std::string read(int len);
 
             /** The write() method.
              *
-             * This method is used by the child to write data to the parent. */
-            int write(char *buff, int len);
+             * This method is used by the child to write data to the parent. 
+             * @param data  The string of data to send.
+             * @parma len   Defines the number of bytes send. */
+            int write(std::string data, int len);
     };
 
 }

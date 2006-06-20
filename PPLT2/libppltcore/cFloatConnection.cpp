@@ -31,6 +31,14 @@ void cFloatConnection::push(double value){
 }
 
 
+
+// will be called by the parent module to get the last value...
+double cFloatConnection::pop( void ){
+    return d_cached_value;
+}
+
+
+
 /* GET method: will be called like: value = connection.get(); */
 double cFloatConnection::get(){
     iFloatModule    *mod;
@@ -53,7 +61,7 @@ double cFloatConnection::get(){
         d_parent_module->reserve();
     // try to get new value:
     try{
-        d_cached_value = mod->get(Identifier());
+        d_cached_value = mod->get_float(Identifier());
     }catch(...){
         // on error release and rethrow exception.
         if(autolock())
@@ -85,7 +93,7 @@ void cFloatConnection::set(double value){
     
     // try to get new value
     try{ 
-        mod->set(Identifier(), value);
+        mod->set_float(Identifier(), value);
     }catch(...){
         // on error: unlock parent and rethrow exception.
         if(autolock()){ d_parent_module->release(); }

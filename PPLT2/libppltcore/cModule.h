@@ -179,7 +179,7 @@ namespace PPLTCore{
             * This method should close the connection. The parameter is the 
             * connection id. This method will be calleb by the destructor of
             * the cConnection object or the one derived from this. */
-            virtual void disconnect(std::string)   = 0;
+            virtual void disconnect(std::string con_id)   = 0;
 
             /** Returns false if module is used by an other module or symbol. */
             virtual bool isBusy(void);

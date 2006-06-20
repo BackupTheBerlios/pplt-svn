@@ -57,18 +57,16 @@ namespace PPLTCore{
             * the connection to the parent. */
             cStreamSymbol(cModule *parent, std::string address);
             
-            /** Reads len bytes from the parent into buffer.
+            /** Reads len bytes from the parent.
             * This method will read len bytes from the parent and
-            * copy them into buffer. \b Note: buffer have to be >= len bytes. 
-            * \b Note: This method will (un-) lock the parent if autolock is 
-            * enabled. */
-            int read(char *buffer, int len);
+            * return them as a string.*/
+            std::string read(int len);
         
-            /** Writes len bytes from buffer to the parent module.
-            * This method will write len bytes copyed from buffer to the 
+            /** Writes len bytes from data to the parent module.
+            * This method will write len bytes copyed from data to the 
             * parent. \b Note: This method will lock and unlock the parent if 
             * autolock is enabled. */
-            int write(char *buffer, int len);
+            int write(std::string data, int len);
             
 
     };

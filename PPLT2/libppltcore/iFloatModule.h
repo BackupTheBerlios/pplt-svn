@@ -42,9 +42,9 @@ namespace PPLTCore{
             /** Sets the value of the given connetor. 
              * Thsi method will be used by the connection or
              * Symbol to set the value of the given connection. */
-            virtual void set(std::string con_id, double value) = 0;
+            virtual void set_float(std::string con_id, double value) = 0;
             /** Returns the value of the given connection. */
-            virtual double get(std::string con_id)=0;
+            virtual double get_float(std::string con_id)=0;
     
     };
 

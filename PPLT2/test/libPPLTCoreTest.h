@@ -11,7 +11,7 @@
 #include <cppunit/TestResult.h>
 #include <cppunit/TestResultCollector.h>
 #include <cppunit/TestRunner.h>
-
+#include <cppunit/TextOutputter.h>
 
 
 namespace PPLTCore{

@@ -8,3 +8,11 @@
    
  === soModuleLoader ===
     + implement the security context -> only trusted (signed) modules should be loadable.
+
+ === pyModuleLoader ===
+    + design and implementation
+    -> design of cPyModule wrapper class
+
+ === monoModuleLoader ===
+    + design and implementation
+    -> design of cMonoModule wrapper class

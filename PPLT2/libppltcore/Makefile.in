@@ -1,9 +1,21 @@
-CPPFLAGS = @CPPFLAGS@
-LDFLAGS  = @LDFLAGS@  
-LIBS     = @LIBS@ -llog4cplus
-CXX      = @CXX@
 
-OBJS = cConnection.o cDisposable.o cFloatConnection.o cInnerModule.o cIntegerConnection.o cModule.o cObject.o cSequenceConnection.o cStreamConnection.o cStreamSymbol.o cSymbol.o cValueConnection.o Logging.o LogOutputter.o Exceptions.o Portability.o soModuleLoader.o
+CPPFLAGS    = @CPPFLAGS@
+LDFLAGS     = @LDFLAGS@  
+LIBS        = @LIBS@ 
+CXX         = @CXX@
+AR          = ar
+CONFIGFLAGS = @DEFS@
+srcdir      = @srcdir@
+top_srcdir  = @top_srcdir@
+VPATH       = @srcdir@
+prefix      = @prefix@
+exec_prefix = @exec_prefix@
+bindir      = @bindir@
+libdir      = @libdir@
+incdir      = @includedir@/pplt/
+
+
+OBJS = cConnection.o cDisposable.o cFloatConnection.o cInnerModule.o cIntegerConnection.o cModule.o cObject.o cSequenceConnection.o cStreamConnection.o cStreamSymbol.o cSymbol.o cValueConnection.o Logging.o LogOutputter.o Exceptions.o Portability.o soModuleLoader.o pyModuleLoader.o
 
 
 all: $(OBJS)
@@ -17,9 +29,11 @@ clean:
 
 distclean: clean
 	rm -f Makefile 
+	rm -f config.h
 
 install: all
-	install -D libppltcore.so.2.0.0 /usr/lib/libppltcore.so.2.0.0
-	if !(test -e /usr/lib/libppltcore.so.2); then ln -s /usr/lib/libppltcore.so.2.0.0 /usr/lib/libppltcore.so.2; fi
-	if !(test -e /usr/lib/libppltcore.so); then ln -s /usr/lib/libppltcore.so.2 /usr/lib/libppltcore.so; fi
-	
+	install -D libppltcore.so.2.0.0 $(libdir)/libppltcore.so.2.0.0
+	if !(test -e $(libdir)/libppltcore.so.2); then ln -s $(libdir)/libppltcore.so.2.0.0 $(libdir)/libppltcore.so.2; fi
+	if !(test -e $(libdir)/libppltcore.so); then ln -s $(libdir)/libppltcore.so.2 $(libdir)/libppltcore.so; fi
+	if !(test -e $(incdir)); then mkdir -p $(incdir); fi
+	install -D *.h $(incdir)    

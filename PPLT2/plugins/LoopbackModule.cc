@@ -1,5 +1,5 @@
 /***************************************************************************
- *            LoopbackModule.cpp
+ *            LoopbackModule.cc
  *
  *  Sun Apr 23 01:26:00 2006
  *  Copyright  2006  Hannes Matuschek
@@ -12,6 +12,8 @@ using namespace PPLTCore;
 using namespace PPLTPlugin;
 
 
+
+
 cModule *LoopbackModuleFactory(tModuleParameters params){
     return new LoopbackModule(params);
 }
@@ -21,10 +23,11 @@ cModule *LoopbackModuleFactory(tModuleParameters params){
 LoopbackModule::LoopbackModule(tModuleParameters params):cModule(params){}
 
 
+
 cConnection *LoopbackModule::connect(std::string addr, cDisposable *child){
     cConnection *con;
     if("" == addr)
-        throw ModuleError("This module needs a usefull addr.");
+        throw ModuleError("This module needs a usefull addr. Simply use a string like \"abc\".");
     if (2 <= d_connections.count(addr))
         throw ModuleError("This address is in use by >= 2 modules.");
     con = new cStreamConnection(this, child);
@@ -33,9 +36,11 @@ cConnection *LoopbackModule::connect(std::string addr, cDisposable *child){
 }
 
 
+
 void LoopbackModule::disconnect(std::string con_id){
     d_connections.remConnection(con_id);
 }
+
 
 
 cConnection *LoopbackModule::GetTheOtherOne(std::string con_id){
@@ -58,17 +63,23 @@ cConnection *LoopbackModule::GetTheOtherOne(std::string con_id){
 }
 
 
-int LoopbackModule::read(std::string con_id, char *buffer, int len){
+
+std::string LoopbackModule::read(std::string con_id, int len){
     MODLOG_DEBUG("LoopbackModule has no internal buffer so I return 0");
-    return 0;
+    return "";
 }
 
 
-int LoopbackModule::write(std::string con_id, char *buffer, int len){
+
+int LoopbackModule::write(std::string con_id, std::string data, int len){
     cStreamConnection       *con;
     
     if(0 == (con = dynamic_cast<cStreamConnection *>(GetTheOtherOne(con_id))) )
         throw ModuleError("Can't cast to cStremConnection!");
-    con->push(buffer, len);    
+
+    if(len > data.length())
+        len = data.length();
+    
+    con->push(data, len);    
     return len;
 }

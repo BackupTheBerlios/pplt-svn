@@ -65,8 +65,7 @@ namespace PPLTCore{
             std::list<std::string>    d_data_cache;
             // Following attr. are used by the read()/write() methods
             // to simulate a data stream.
-            char            *d_internal_buffer;
-            int             d_buffer_len;
+            std::string     d_internal_buffer;
             pthread_mutex_t d_cache_lock;
 
         public:
@@ -108,11 +107,16 @@ namespace PPLTCore{
     
             /** Reads len bytes from the connection.
             * This method can be used to access the sequence connection like
-            * a cStreamConnection. This is relized by an internal buffer.*/
-            int read(char *buffer, int len);
+            * a cStreamConnection. This is relized by an internal buffer.
+            * @param len    The max number of bytes read. */
+            std::string read(int len);
             
-            /** Sends len bytes of buffer to the parent. */
-            int write(char *buffer, int len);
+            /** Sends len bytes of buffer to the parent.
+             * This method will send max [len] byted of the given data
+             * and will return the number of bytes realy send. 
+             * @param data  The string containing the data to write.
+             * @param len   The max number of bytes send. */
+            int write(std::string data, int len);
     };
 
 }
