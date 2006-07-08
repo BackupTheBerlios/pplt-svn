@@ -1,7 +1,7 @@
 /***************************************************************************
- *            iNotifyDestruction.h
+ *            cSecurityContext.h
  *
- *  2006-05-12 
+ *  2006-06-23
  *  Copyright  2006  Hannes Matuschek
  *  hmatuschek@gmx.net
  ****************************************************************************/
@@ -21,20 +21,32 @@
  *  along with this program; if not, write to the Free Software
  *  Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
  */
- 
 
-#ifndef PPLTCORE_INOTIFY_DESTRUCTION_H
-#define PPLTCORE_INOTIFY_DESTRUCTION_H
+#ifndef PPLTCORE_SECURITY_CONTEXT
+#define PPLTCORE_SECURITY_CONTEXT
+#include <typeinfo>
+#include "Exceptions.h"
+
 
 namespace PPLTCore{
 
-    class iNotifyDestruction{
+    class iExecutionContext{ };
+    class iACLItem{ }; 
+    
+    class cSecurityContext{
+        private:
+            iUserDatabase                       *d_user_db;
+            iExecutionContext                   d_exec_ctx;
+            std::list<iACLItem>                 d_sec_acl;
+            
         public:
-            virtual ~iNotifyDestruction(){ }
-            virtual void notify_destruction(std::string id) = 0;
-    };            
+            cSecurityContext();
+            ~cSecurityContext();
+    
+            bool isAllowed(unsigned int action, iExecutionContext exec_ctx);
+
+    };
 
 }
 
 #endif
-

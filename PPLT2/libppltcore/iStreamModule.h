@@ -48,7 +48,7 @@ namespace PPLTCore{
              *                  id can be used to identify the connection 
              *                  address.
              * @param length    This integer should be the maximum of returned bytes.*/
-            virtual std::string read(std::string con_id, int lenth) = 0;
+            virtual std::string read(std::string con_id, unsigned int length) = 0;
 
             /** This method should process the first [length] bytes from the 
              *  given string.
@@ -56,7 +56,7 @@ namespace PPLTCore{
              * @param data      This string hold the data to process.
              * @param length    This integer defines the count of bytes to be 
              *                  processed from data. */
-            virtual int write(std::string con_id, std::string data, int length) = 0;
+            virtual unsigned int write(std::string con_id, std::string data, unsigned int length) = 0;
     };
 }
 

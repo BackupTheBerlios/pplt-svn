@@ -46,7 +46,7 @@ void RandomModule::disconnect(std::string con_id){
 }
 
 
-std::string RandomModule::read(std::string con_id, int len){
+std::string RandomModule::read(std::string con_id, unsigned int len){
     std::string     buffer;
 
     if("" != d_connections.getAddressByID(con_id))
@@ -57,7 +57,7 @@ std::string RandomModule::read(std::string con_id, int len){
     return buffer;
 }
 
-int RandomModule::write(std::string con_id, std::string data, int len){
+unsigned int RandomModule::write(std::string con_id, std::string data, unsigned int len){
     throw Error("This module is read only!");
 }
 

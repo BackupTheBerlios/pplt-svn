@@ -52,7 +52,7 @@ void NULLModule::disconnect(std::string id){
 
 
 
-std::string NULLModule::read(std::string addr, int len){
+std::string NULLModule::read(std::string addr, unsigned int len){
     if(len<0)
         return "";
 
@@ -66,4 +66,4 @@ std::string NULLModule::read(std::string addr, int len){
 
 
 
-int NULLModule::write(std::string addr, std::string buffer, int len){ return len; }
+unsigned int NULLModule::write(std::string addr, std::string buffer, unsigned int len){ return len; }

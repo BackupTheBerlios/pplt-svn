@@ -50,7 +50,7 @@ cModule *soModuleLoader::load(std::string filename, std::string factory,
     cModule         *mod;
                                   
     if(0 == (handle = dlopen(filename.c_str(), RTLD_NOW)) ){
-        throw CoreError("Unable to load file %s: ",filename.c_str());
+        throw ItemNotFound("Unable to load file %s: ",filename.c_str());
     }
     
     CORELOG_DEBUG("Try to load factory " << factory.c_str() <<
@@ -85,7 +85,7 @@ cModule *soModuleLoader::load(std::string filename, std::string factory,
     cModule             *mod;
                                   
     if(0 == (handle = dlopen(filename.c_str(), RTLD_NOW)) ){
-        throw CoreError("Unable to load file %s: ", filename.c_str());
+        throw ItemNotFound("Unable to load file %s: ", filename.c_str());
     }
     
     if(0 == (mod_factory = reinterpret_cast<tInnerModuleFactory>(dlsym(handle, factory.c_str()))) ){

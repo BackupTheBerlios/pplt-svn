@@ -29,9 +29,12 @@ cConnection *LoopbackModule::connect(std::string addr, cDisposable *child){
     if("" == addr)
         throw ModuleError("This module needs a usefull addr. Simply use a string like \"abc\".");
     if (2 <= d_connections.count(addr))
-        throw ModuleError("This address is in use by >= 2 modules.");
+        throw ItemBusy("This address is in use by >= 2 modules.");
+
     con = new cStreamConnection(this, child);
     d_connections.addConnection(addr, con);
+    
+    MODLOG_DEBUG("Connection with address " << addr << " created!");
     return con;
 }
 
@@ -44,34 +47,33 @@ void LoopbackModule::disconnect(std::string con_id){
 
 
 cConnection *LoopbackModule::GetTheOtherOne(std::string con_id){
-    std::list<cConnection *>    *clist;
-    std::string     addr = d_connections.getAddressByID(con_id);
-    cConnection     *con;
+    std::list<cConnection *>    clist;
+    std::string                 addr = d_connections.getAddressByID(con_id);
+    cConnection                 *con;
 
     if(2 != d_connections.count(addr) )
         return 0;
 
     clist   = d_connections.getConnectionsByAddress(addr);
 
-    con = clist->front();
+    con = clist.front();
     if(con->Identifier() == con_id){
-        clist->pop_front();
-        con = clist->front();
+        clist.pop_front();
+        con = clist.front();
     }
-    delete clist;
     return con;
 }
 
 
 
-std::string LoopbackModule::read(std::string con_id, int len){
+std::string LoopbackModule::read(std::string con_id, unsigned int len){
     MODLOG_DEBUG("LoopbackModule has no internal buffer so I return 0");
     return "";
 }
 
 
 
-int LoopbackModule::write(std::string con_id, std::string data, int len){
+unsigned int LoopbackModule::write(std::string con_id, std::string data, unsigned int len){
     cStreamConnection       *con;
     
     if(0 == (con = dynamic_cast<cStreamConnection *>(GetTheOtherOne(con_id))) )

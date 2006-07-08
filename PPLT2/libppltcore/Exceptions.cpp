@@ -7,7 +7,6 @@
  ****************************************************************************/
 
 #include "Exceptions.h"
-#include "../config.h"
 
 using namespace PPLTCore;
 
@@ -36,7 +35,7 @@ Error::Error(const char *temp, ...){
 
 void Error::do_traceback(void){
     
-    #ifdef HAVE_BACKTRACE_SYMBOLS
+    #ifdef HAVE_EXECINFO
         void                *bt[256];
         size_t              size;
         char                **strings;

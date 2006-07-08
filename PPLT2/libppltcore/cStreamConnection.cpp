@@ -29,7 +29,7 @@ cStreamConnection::~cStreamConnection(){ }
 
 
 /* Push method: update buffer and notify() child.*/
-void cStreamConnection::push(std::string data, int len){
+void cStreamConnection::push(std::string data, unsigned int len){
     // lock internal buffer:
     if(pthread_mutex_lock(&d_buffer_lock))
         throw CoreError("Unable to lock buffer: Mutex returned error.");
@@ -65,10 +65,16 @@ void cStreamConnection::flush(){
 
 
 
+unsigned int cStreamConnection::buff_len(){
+    return d_buffer.length();
+}
+
+
+
 /* Method read():
  * if there is data in the internal buffer -> return it
  * else return the data got from the parent by his read() method. */
-std::string cStreamConnection::read(int len){
+std::string cStreamConnection::read(unsigned int len){
     iStreamModule   *mod;
     std::string     tmp; 
     // if data left in int buffer:
@@ -112,8 +118,8 @@ std::string cStreamConnection::read(int len){
 
 
 /* Method write(): simply writes to the partent */
-int cStreamConnection::write(std::string data, int len){
-    int ret_len;
+unsigned int cStreamConnection::write(std::string data, unsigned int len){
+    unsigned int ret_len;
     
     // check cast to iStreamModule:
     if(0 == dynamic_cast<iStreamModule *>(d_parent_module) )

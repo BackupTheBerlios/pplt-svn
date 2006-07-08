@@ -77,7 +77,7 @@ namespace PPLTCore{
              * By this it is possible to implement a asynchron communication.
              * If a moulde needs to inform the child direct and not storing
              * the data it can use the push() method without any parameters. */
-            void push(std::string data, int len);
+            void push(std::string data, unsigned int len);
 
             /** push() callback
              *
@@ -92,20 +92,24 @@ namespace PPLTCore{
             void flush();
 
 
+            /** This method returns the number of bytes left in the connection 
+             *  buffer.*/
+            unsigned int buff_len();
+
             /** The read() method.
              *
              * This method will be used by the child to read data from the
              * parent. The method will try to read max. len bytes from the
              * parent and return them by the given string. 
              * @param len   Max number of bytes read.*/
-            std::string read(int len);
+            std::string read(unsigned int len);
 
             /** The write() method.
              *
              * This method is used by the child to write data to the parent. 
              * @param data  The string of data to send.
              * @parma len   Defines the number of bytes send. */
-            int write(std::string data, int len);
+            unsigned int write(std::string data, unsigned int len);
     };
 
 }

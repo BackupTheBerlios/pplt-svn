@@ -1,4 +1,4 @@
-OBJS    = HexDumpModule.o LoopbackModule.o NULLModule.o RandomModule.o TimeModule.o
+OBJS    = HexDumpModule.o LoopbackModule.o NULLModule.o RandomModule.o TimeModule.o HexifierModule.o
 LDFLAGS = @LDFLAGS@ -shared
 LIBS    = @LIBS@
 CXX     = @CXX@

@@ -27,7 +27,7 @@ void soModuleLoaderTest::test_ModuleFinding( void ){
 
     // checks if a exception will be raised if the given .so file is not one:
     CPPUNIT_ASSERT_THROW( module_loader->load("../plugins/NULLModule.h", "NotKnown", tModuleParameters()),
-                          CoreError);
+                          ItemNotFound);
     
 }
 

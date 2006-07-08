@@ -60,13 +60,13 @@ namespace PPLTCore{
             /** Reads len bytes from the parent.
             * This method will read len bytes from the parent and
             * return them as a string.*/
-            std::string read(int len);
+            std::string read(unsigned int len);
         
             /** Writes len bytes from data to the parent module.
             * This method will write len bytes copyed from data to the 
             * parent. \b Note: This method will lock and unlock the parent if 
             * autolock is enabled. */
-            int write(std::string data, int len);
+            unsigned int write(std::string data, unsigned int len);
             
 
     };

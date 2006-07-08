@@ -109,14 +109,14 @@ namespace PPLTCore{
             * This method can be used to access the sequence connection like
             * a cStreamConnection. This is relized by an internal buffer.
             * @param len    The max number of bytes read. */
-            std::string read(int len);
+            std::string read(unsigned int len);
             
             /** Sends len bytes of buffer to the parent.
              * This method will send max [len] byted of the given data
              * and will return the number of bytes realy send. 
              * @param data  The string containing the data to write.
              * @param len   The max number of bytes send. */
-            int write(std::string data, int len);
+            unsigned int write(std::string data, unsigned int len);
     };
 
 }

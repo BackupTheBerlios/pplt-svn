@@ -101,7 +101,7 @@ namespace PPLTCore{
             /** Returns the address of the connection with the given ID. */
             std::string getAddressByID(std::string addr);
             /** Returns all connections with the given address. */
-            std::list<cConnection *> *getConnectionsByAddress(std::string addr);
+            std::list<cConnection *> getConnectionsByAddress(std::string addr);
 
             /** Returns true if there is a connection in DB with given
              * address. */

@@ -34,6 +34,9 @@ AC_CHECK_LIB(python2.4, Py_Initialize)
 
 # Checks for header files.
 AC_HEADER_STDC
+AC_CHECK_HEADERS([execinfo.h],
+                 AC_DEFINE([HAVE_EXECINFO],1,[Have execinfo]))
+
 AC_CHECK_HEADERS([unistd.h])
 
 AC_CHECK_HEADERS([dlfcn.h],,

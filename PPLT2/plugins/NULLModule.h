@@ -53,8 +53,8 @@ namespace PPLTPlugin{
             
             void disconnect(std::string);
 
-            std::string read(std::string con_id, int len);
-            int write(std::string con_id, std::string data, int len);
+            std::string read(std::string con_id, unsigned int len);
+            unsigned int write(std::string con_id, std::string data, unsigned int len);
     };
 
 }

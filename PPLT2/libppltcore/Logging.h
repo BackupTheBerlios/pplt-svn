@@ -141,7 +141,7 @@ namespace PPLTCore{
         public:
             Logger(std::string name);
             Logger(std::string name, Logger *parent);
-            ~Logger();
+            virtual ~Logger();
             
             void attachOutput(LogOutputter *output);
             

@@ -1,5 +1,5 @@
 
-CPPFLAGS    = @CPPFLAGS@
+CPPFLAGS    = -Wall @CPPFLAGS@
 LDFLAGS     = @LDFLAGS@  
 LIBS        = @LIBS@ 
 CXX         = @CXX@
@@ -15,7 +15,7 @@ libdir      = @libdir@
 incdir      = @includedir@/pplt/
 
 
-OBJS = cConnection.o cDisposable.o cFloatConnection.o cInnerModule.o cIntegerConnection.o cModule.o cObject.o cSequenceConnection.o cStreamConnection.o cStreamSymbol.o cSymbol.o cValueConnection.o Logging.o LogOutputter.o Exceptions.o Portability.o soModuleLoader.o pyModuleLoader.o
+OBJS = cConnection.o cDisposable.o cFloatConnection.o cInnerModule.o cIntegerConnection.o cModule.o cObject.o cSequenceConnection.o cStreamConnection.o cStreamSymbol.o cSymbol.o cValueConnection.o Logging.o LogOutputter.o Exceptions.o Portability.o soModuleLoader.o pyModuleLoader.o cSecurityContext.o
 
 
 all: $(OBJS)

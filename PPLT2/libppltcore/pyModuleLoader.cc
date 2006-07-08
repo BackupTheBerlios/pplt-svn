@@ -32,12 +32,16 @@ cModule *pyModuleLoader::load(std::string filename, std::string factory, tModule
 
     if(0 == pModule)
         throw ItemNotFound("Unable to find (python) file \"%s\"", filename.c_str());
-            
+
+    //FIXME write it!    
+    return 0;            
 }
 
 
 
 cModule *pyModuleLoader::load(std::string filename, std::string factory, cModule *parent, std::string address, tModuleParameters params){
+    // FIXME write it
+    return 0;
 }
 
 

@@ -1,3 +1,4 @@
-#undef HAVE_LOG4CPLUS_LOGGER
+
+#undef HAVE_EXECINFO
 
 #undef HAVE_PYTHON

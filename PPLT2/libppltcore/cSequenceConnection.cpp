@@ -132,8 +132,8 @@ void cSequenceConnection::send(std::string data){
 
 
 
-std::string cSequenceConnection::read(int len){
-    int     cpy_len;
+std::string cSequenceConnection::read(unsigned int len){
+    unsigned int     cpy_len;
 
     if(d_internal_buffer.empty() and d_data_cache.empty()){
         // DO NOT LOCK HERE!
@@ -149,7 +149,7 @@ std::string cSequenceConnection::read(int len){
         d_data_cache.pop_front();
     }        
 
-    int bufflen = d_internal_buffer.length();
+    unsigned int bufflen = d_internal_buffer.length();
     if(len <= bufflen)
         cpy_len = len;
     if(len > bufflen)
@@ -165,7 +165,7 @@ std::string cSequenceConnection::read(int len){
 }
 
 
-int cSequenceConnection::write(std::string data, int len){
+unsigned int cSequenceConnection::write(std::string data, unsigned int len){
     // make sure that len is <= len(data)
     if(len > data.length())
         len = data.length();
