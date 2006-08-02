@@ -17,8 +17,6 @@ using namespace PPLTCore;
  * Methods of cModule class:
  * ************************************************************************ */
 cModule::cModule(tModuleParameters params){
-    // init mutexes:
-    pthread_mutex_init(&d_reservation_lock, 0);
     d_parameters = params;
 }
 
@@ -26,14 +24,13 @@ cModule::~cModule(){ }
 
 
 void cModule::reserve(){
-    if(pthread_mutex_lock(&d_reservation_lock))
-        throw CoreError("Unable to reserver module! Error returned from mutex.");
+    d_reservation_lock.lock();
     MODLOG_DEBUG("Module ("<<Identifier().substr(0,12)<<"...) reserved.");
 }
 
 void cModule::release(){
     MODLOG_DEBUG("Release module ("<<Identifier().substr(0,12)<<"...).");
-    pthread_mutex_unlock(&d_reservation_lock);
+    d_reservation_lock.unlock();
 }
 
 

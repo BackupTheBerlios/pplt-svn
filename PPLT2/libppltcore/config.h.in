@@ -1,4 +1,0 @@
-
-#undef HAVE_EXECINFO
-
-#undef HAVE_PYTHON

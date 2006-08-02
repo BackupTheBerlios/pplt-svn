@@ -32,7 +32,7 @@
 #include <iostream>
 #include <execinfo.h>
 #include <streambuf>
-#include "config.h"
+//#include "config.h"
 
 
 

@@ -2,33 +2,34 @@
 #define LIBPPLTCORETEST_H
 
 #include "libppltcore/ppltcore.h"
+#include <QtTest/QtTest>
 
-#include <cppunit/TestFixture.h>
-#include <cppunit/extensions/HelperMacros.h>
-#include <cppunit/ui/text/TestRunner.h>
-#include <cppunit/BriefTestProgressListener.h>
-#include <cppunit/extensions/TestFactoryRegistry.h>
-#include <cppunit/TestResult.h>
-#include <cppunit/TestResultCollector.h>
-#include <cppunit/TestRunner.h>
-#include <cppunit/TextOutputter.h>
-
+#define QASSERT_THROW( statement, exception)    try{ statement; }catch(exception){}catch(...){ QFAIL("Exception was throwed!"); }
+#define QASSERT_NOTHROW( statement)             try{ statement; }catch(...){ QFAIL("A unexpacted exception was throwed!"); }
 
 namespace PPLTCore{
 namespace Test{
     
-    class libPPLTCoreTest: public CPPUNIT_NS::TestFixture{ 
+    class libPPLTCoreTest: public QObject{ 
+        Q_OBJECT;
         
-        CPPUNIT_TEST_SUITE(libPPLTCoreTest);
-        CPPUNIT_TEST_SUITE_END();
-        
-        public:
-            void setUp( void );
-            void tearDown( void );
+        private slots:
+            void initTestCase( void );
+            
+            void test_ModuleFinding( void );
+            void test_ModuleLoading( void );
+            
+            void test_RandomModule();
+            void test_LoopbackModule();
+            void test_HexifierModule();
+            void test_HexDumpModule();
 
+            void cleanupTestCase( void );
+
+        private:
+            PPLTCore::soModuleLoader    *module_loader;
     };           
 
-    }
-}
+}}
 
 #endif

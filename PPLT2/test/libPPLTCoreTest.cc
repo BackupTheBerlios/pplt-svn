@@ -3,11 +3,12 @@
 using namespace PPLTCore;
 using namespace PPLTCore::Test;
 
-CPPUNIT_TEST_SUITE_REGISTRATION(libPPLTCoreTest);
-
-void libPPLTCoreTest::setUp(){
+void libPPLTCoreTest::initTestCase( void ){
+    initLogging();
+    module_loader = new soModuleLoader();
 }
 
-void libPPLTCoreTest::tearDown(){ }
-
+void libPPLTCoreTest::cleanupTestCase( void ){
+    delete module_loader;
+}
 

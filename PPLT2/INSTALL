@@ -3,24 +3,10 @@ How to install:
 unpack file:
     $> tar -xjf pplt-2.x.x.tar.bz2
     
-configure:
-    $> cd pplt-2.x.x
-    $> ./configure
+create makefile:
+    $> qmake -o Makefile pplt.pro
 
-complile:
-    $> make
-
-install library and binaries (as root):
-    $> make install
-    
-create and install keys (as root):
-    $> make keys
-    $> make install-keys
-
-sign plugins (also as root):
-    $> make sign
-
-complete install (as root):
-    $> make install-plugins
+compile and install:    
+    $> sudo make 
 
 

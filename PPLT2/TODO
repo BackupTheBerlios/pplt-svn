@@ -1,18 +1,18 @@
- === Global security context ===
-    + This context should contain all signatures and there depencies.
-    + implement the signing of modules (also into the mod-desc-lang). May also multible signs
-    + ACLs
-
  === Module description language ===
     + develop and implement a module description language
    
- === soModuleLoader ===
-    + implement the security context -> only trusted (signed) modules should be loadable.
-
- === pyModuleLoader ===
-    + design and implementation
-    -> design of cPyModule wrapper class
+ === Python stuff ===
+    + design a python package that wraps the pplt-core
+    + build a pyModuleLoader that can load modules that are
+      written in python.
 
  === monoModuleLoader ===
-    + design and implementation
-    -> design of cMonoModule wrapper class
+    + design a mono (C#) library that wraps the pplt-core.
+    + also build a mono module loader to load modules written
+      in C# or so...
+
+ === Use of QT ===
+    + Use only QT based thread stuff to be more or less platform independent.
+      At first the module locking!
+    + Use QT based XML stuff (later)
+    + Define interfaceses and implement a module loader for Qt plugins. 

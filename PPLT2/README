@@ -1,4 +1,12 @@
+ === This the the Potsdamer Prozessleittechnik (PPLT) Two ===
 
-Configfile parser is stolen from:
-http://sourceforge.net/projects/config
+ This version differs form in be written in C++ instead of Python. But there 
+ is (will be) a python port. The main feature to be a framework for master 
+ slave based communication was extended to handle events. So it can be used
+ i a multi master environment. 
 
+ == Requirements ==
+ At first you'll need a C++ compiler and the Qt-Core library to compile the 
+ core library. To get a GUI you'll also need the complete Qt framework.
+
+ To use python modules you'll need the python development packages. 
