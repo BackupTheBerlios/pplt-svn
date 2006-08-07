@@ -11,8 +11,9 @@
     + also build a mono module loader to load modules written
       in C# or so...
 
- === Use of QT ===
-    + Use only QT based thread stuff to be more or less platform independent.
-      At first the module locking!
-    + Use QT based XML stuff (later)
-    + Define interfaceses and implement a module loader for Qt plugins. 
+ === Port to wxWindows ===
+    + even if it is not so portable like qtCore, I want to port the PPLT to
+      the wxWindows platform. Becaus this platfor provides a better
+      integration into other projects. (This library lets the PPLT keep an
+      simple library)
+

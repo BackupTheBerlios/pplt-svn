@@ -1,10 +1,13 @@
-#include <QtTest/QtTest>
-#include "libppltcore/ppltcore.h"
-
 #include "libPPLTCoreTest.h"
 
 
-using namespace PPLTCore;
+using namespace PPLTTest;
 using namespace PPLTCore::Test;
 
-QTEST_APPLESS_MAIN(libPPLTCoreTest);
+int main(){
+
+    START_TEST(libPPLTCoreTest);
+
+return 0;
+}
+

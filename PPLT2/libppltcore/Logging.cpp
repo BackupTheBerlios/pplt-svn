@@ -60,8 +60,11 @@ Logger::~Logger(){
 
 
 Logger *Logger::getInstance(std::string name){
-    if(0 == Logger::s_loggers.count(name))
-        throw ItemNotFound("Unkown logger \"%s\" requested!", name.c_str());
+    if(0 == Logger::s_loggers.count(name)){
+        Logger::s_loggers[name] = new Logger(name);
+        Logger::s_loggers[name]->attachOutput(new ConsoleOutputter());
+        Logger::s_loggers[name]->log(LLINFO, __FILE__, __LINE__, name + " Logger created!");
+    }    
 
     return Logger::s_loggers[name];        
 }

@@ -2,30 +2,28 @@
 #define LIBPPLTCORETEST_H
 
 #include "libppltcore/ppltcore.h"
-#include <QtTest/QtTest>
-
-#define QASSERT_THROW( statement, exception)    try{ statement; }catch(exception){}catch(...){ QFAIL("Exception was throwed!"); }
-#define QASSERT_NOTHROW( statement)             try{ statement; }catch(...){ QFAIL("A unexpacted exception was throwed!"); }
+#include "ppltTest.h"
+#include "CoreModuleTest.h"
 
 namespace PPLTCore{
 namespace Test{
     
-    class libPPLTCoreTest: public QObject{ 
-        Q_OBJECT;
+    class libPPLTCoreTest: public PPLTTest::cTest{ 
         
-        private slots:
-            void initTestCase( void );
+        TEST_DECLARATION
+            TEST_ADD(test_ModuleFinding);
+            TEST_ADD(test_ModuleLoading);
+            TEST_ADD_SUB(CoreModuleTest);
+        TEST_DECLARATION_END
+ 
+        private:
+            void setup();
             
             void test_ModuleFinding( void );
             void test_ModuleLoading( void );
             
-            void test_RandomModule();
-            void test_LoopbackModule();
-            void test_HexifierModule();
-            void test_HexDumpModule();
-
-            void cleanupTestCase( void );
-
+            void teardown();
+            
         private:
             PPLTCore::soModuleLoader    *module_loader;
     };           

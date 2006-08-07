@@ -16,9 +16,8 @@ cStreamConnection::cStreamConnection(cModule *parent, cDisposable *child)
     CORELOG_DEBUG("Init cStreamConnection to " << parent->Identifier());
     // check if parent match cStreamModule:
     if(!dynamic_cast<iStreamModule *>(parent) )
-            throw Error("Can't create new StreamConnection! Invalid parent module!");
+            throw Error("Can't create new StreamConnection! Parent provides no iStreamModule interface!");
     // init buffer...
-    pthread_mutex_init(&d_buffer_lock, 0);
 }
 
 
@@ -31,8 +30,7 @@ cStreamConnection::~cStreamConnection(){ }
 /* Push method: update buffer and notify() child.*/
 void cStreamConnection::push(std::string data, unsigned int len){
     // lock internal buffer:
-    if(pthread_mutex_lock(&d_buffer_lock))
-        throw CoreError("Unable to lock buffer: Mutex returned error.");
+    d_buffer_lock.Lock();
     
     // ensures that len <= len(data);
     if(len > data.length())
@@ -42,9 +40,16 @@ void cStreamConnection::push(std::string data, unsigned int len){
     d_buffer += data.substr(0,len);
 
     // unlock buffer:
-    pthread_mutex_unlock(&d_buffer_lock);
+    d_buffer_lock.Unlock();
 
     // notify child:
+    if(events_enabled())
+        notify_child();
+}
+
+
+
+void cStreamConnection::push(){
     if(events_enabled())
         notify_child();
 }
@@ -54,13 +59,13 @@ void cStreamConnection::push(std::string data, unsigned int len){
 /* Clear the internal buffer */
 void cStreamConnection::flush(){
     // try to lock internal buffer:
-    if(pthread_mutex_lock(&d_buffer_lock))
-        throw CoreError("Unable to lock buffer: Mutex returned error.");
+    d_buffer_lock.Lock();
     
     // clear internal buffer:
     d_buffer.erase();
+
     // unlock buffer:
-    pthread_mutex_unlock(&d_buffer_lock);
+    d_buffer_lock.Unlock();
 }
 
 
@@ -80,8 +85,7 @@ std::string cStreamConnection::read(unsigned int len){
     // if data left in int buffer:
     if(!d_buffer.empty()){
         // lock buffer:
-        if(pthread_mutex_lock(&d_buffer_lock))
-            throw CoreError("Unable to lock buffer: Mutex returned error.");
+        d_buffer_lock.Lock();
 
         //ensures that len <= len(buffer):    
         if(len >= d_buffer.length())      
@@ -92,7 +96,7 @@ std::string cStreamConnection::read(unsigned int len){
         d_buffer.erase(0,len);
         
         // unlock buffer:
-        pthread_mutex_unlock(&d_buffer_lock);
+        d_buffer_lock.Unlock();
         return tmp;
     }
 

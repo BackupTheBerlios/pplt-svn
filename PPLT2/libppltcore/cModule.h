@@ -25,7 +25,7 @@
 #ifndef PPLT_CMODULE_H
 #define PPLT_CMODULE_H
 
-#include <QMutex>
+#include <wx/thread.h>
 #include <string>
 #include <list>
 #include <map>
@@ -139,7 +139,7 @@ namespace PPLTCore{
      * \todo Write some examples how to inform a child. */
     class cModule: public cObject{
         private:
-            QMutex                      d_reservation_lock;
+            wxMutex                     d_reservation_lock;
 
         protected:
             /** The connection data base */

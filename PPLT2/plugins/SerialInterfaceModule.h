@@ -35,19 +35,26 @@ extern "C"{
 
 namespace PPLTPlugin{
 
-    class SerialInterfaceModule: public cModule, public iStreamModule{
+    class SerialInterfaceModule: public QThread, public cModule, public iStreamModule{
+        Q_OBJECT;
+
         private:
-            pthread_cond_t      d_cond_var;
-            pthread_mutex_t     d_cond_var_mutex;
-            sem_t               d_read_sync_sem;
+            pthread_cond_t      d_read_cond;
+            pthread_mutex_t     d_read_cond_mutex;
+            pthread_cond_t      d_child_cond;
+            pthread_mutex_t     d_child_cond_mutex;
             bool                d_child_waiting;
             unsigned int        d_timeout;      //Timeout in nsec
+            bool                d_module_running;
+
+        protected:
+            void run( void );
 
         public:
             SerialInterfaceModule(PPLTCore::tModuleParameters params);
+            ~SerialInterfaceModule( void );
 
             PPLTCore::cConnection connect(std::string addr, PPLTCore::cDisposable *child = 0);
-
             void disconnect(std::string con_id);
 
             std::string read(std::string con_id, unsigned int len);

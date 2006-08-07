@@ -6,7 +6,12 @@
  i a multi master environment. 
 
  == Requirements ==
- At first you'll need a C++ compiler and the Qt-Core library to compile the 
- core library. To get a GUI you'll also need the complete Qt framework.
-
- To use python modules you'll need the python development packages. 
+    - An common C++ compiler (ie. GCC).
+    - The wxWindows library also for potability reasons.
+      So you have to have the wx installed even if you onyl want to use the 
+      PPLTCore library!
+    - Bakefile (http://bakefile.sf.net) To create the make- or project-files 
+      to complile the PPLT. Note that bakefile also have some depencies!
+    - The wxXML2 extention is used to get an platform independed interface to 
+      an XML parser. This is not reconmented if you complile only the PPLTCore.
+          

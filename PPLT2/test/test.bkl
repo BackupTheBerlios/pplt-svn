@@ -1,0 +1,49 @@
+<?xml version="1.0"?>
+
+<Makefile>
+
+    <exe id="test">
+        <warnings>max</warnings>
+        
+        <sources>
+            main.cc CoreModuleTest.cc soModuleLoaderTest.cc ppltTest.cpp libPPLTCoreTest.cc
+        </sources>            
+
+        <optimize>speed</optimize>
+
+        <include>../</include>
+        <sys-lib>ppltcore</sys-lib>
+
+        <lib-path>../libppltcore</lib-path>
+        <lib-path>/opt/pplt2/lib</lib-path>
+        <lib-path>/usr/X11R6/lib</lib-path>
+
+        <define>GTK_NO_CHECK_CASTS</define>
+        <define>__WXGTK__</define>
+        <define value="64">_FILE_OFFSET_BITS</define>
+        <define>_LARGE_FILES</define>
+        <define value="1">_LARGE_FILE_SOURCE</define>
+        <define>NO_GCC_PRAGMA</define>
+
+        <threading>multi</threading>
+
+        <include>/opt/pplt2/lib/wx/include/gtk2-unicode-release-2.6</include>
+        <include>/opt/pplt2/include/wx-2.6</include>
+
+        <lib-path>/opt/pplt2/lib</lib-path>
+        <lib-path>/usr/X11R6/lib</lib-path>
+
+        <!-- <sys-lib>pthread</sys-lib> //-->
+        <sys-lib>wx_gtk2u_xrc-2.6</sys-lib>
+        <sys-lib>wx_gtk2u_qa-2.6</sys-lib>
+        <sys-lib>wx_gtk2u_html-2.6</sys-lib>
+        <sys-lib>wx_gtk2u_adv-2.6</sys-lib>
+        <sys-lib>wx_gtk2u_core-2.6</sys-lib>
+        <sys-lib>wx_baseu_xml-2.6</sys-lib>
+        <sys-lib>wx_baseu_net-2.6</sys-lib>
+        <sys-lib>wx_baseu-2.6</sys-lib>
+
+    </exe>
+
+
+</Makefile>

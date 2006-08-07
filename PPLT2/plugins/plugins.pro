@@ -9,7 +9,7 @@ INSTALLS =
 VERSION     = 2.0.0a
 
 SOURCES     = HexDumpModule.cc HexifierModule.cc LoopbackModule.cc \
-              NULLModule.cc RandomModule.cc TimeModule.cc
+              NULLModule.cc RandomModule.cc TimeModule.cc SerialInterfaceModule.cpp
 
 HEADERS     = HexDumpModule.h HexifierModule.h LoopbackModule.h \
-              NULLModule.h RandomModule.h TimeModule.h
+              NULLModule.h RandomModule.h TimeModule.h SerialInterfaceModule.h

@@ -25,7 +25,7 @@
 #ifndef PPLT_CSTREAMCONNECTION_H
 #define PPLT_CSTREAMCONNECTION_H
 
-#include <pthread.h>
+#include <wx/thread.h>
 
 #include "cConnection.h"
 #include "iStreamModule.h"
@@ -47,9 +47,9 @@ namespace PPLTCore{
      * possible to read from the module like to read from a file.
      * C++ style stream is not(yet) provided. */
     class cStreamConnection : public cConnection{
-        private:
+        protected:
             std::string     d_buffer;
-            pthread_mutex_t d_buffer_lock;
+            wxMutex         d_buffer_lock;
 
         public:
             /** Constructor.
@@ -63,7 +63,7 @@ namespace PPLTCore{
              * module given, each push() method-call will raise a CoreError
              * exception to indicate that there is no child module to inform.*/
             cStreamConnection(cModule *parent, cDisposable *child=0);
-            ~cStreamConnection();
+            virtual ~cStreamConnection();
 
             /** The push() method stores the given data and notify child.
              *
@@ -77,7 +77,7 @@ namespace PPLTCore{
              * By this it is possible to implement a asynchron communication.
              * If a moulde needs to inform the child direct and not storing
              * the data it can use the push() method without any parameters. */
-            void push(std::string data, unsigned int len);
+            virtual void push(std::string data, unsigned int len);
 
             /** push() callback
              *
@@ -85,16 +85,16 @@ namespace PPLTCore{
              * the data into the connection buffer. This is mostly usefull if
              * there is only one child and the size of the data is not known
              * but the child may determ the size. */
-            void push();
+            virtual void push();
 
 
             /** Flushes the internal buffer */
-            void flush();
+            virtual void flush();
 
 
             /** This method returns the number of bytes left in the connection 
              *  buffer.*/
-            unsigned int buff_len();
+            virtual unsigned int buff_len();
 
             /** The read() method.
              *
@@ -102,14 +102,14 @@ namespace PPLTCore{
              * parent. The method will try to read max. len bytes from the
              * parent and return them by the given string. 
              * @param len   Max number of bytes read.*/
-            std::string read(unsigned int len);
+            virtual std::string read(unsigned int len);
 
             /** The write() method.
              *
              * This method is used by the child to write data to the parent. 
              * @param data  The string of data to send.
-             * @parma len   Defines the number of bytes send. */
-            unsigned int write(std::string data, unsigned int len);
+             * @param len   Defines the number of bytes send. */
+            virtual unsigned int write(std::string data, unsigned int len);
     };
 
 }

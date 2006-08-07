@@ -24,13 +24,13 @@ cModule::~cModule(){ }
 
 
 void cModule::reserve(){
-    d_reservation_lock.lock();
+    d_reservation_lock.Lock();
     MODLOG_DEBUG("Module ("<<Identifier().substr(0,12)<<"...) reserved.");
 }
 
 void cModule::release(){
     MODLOG_DEBUG("Release module ("<<Identifier().substr(0,12)<<"...).");
-    d_reservation_lock.unlock();
+    d_reservation_lock.Unlock();
 }
 
 
