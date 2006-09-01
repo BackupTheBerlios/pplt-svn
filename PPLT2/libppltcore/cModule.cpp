@@ -90,9 +90,9 @@ std::string cConnectionDataBase::getAddressByID(std::string id){
 
 std::list<cConnection *> cConnectionDataBase::getConnectionsByAddress(std::string addr){
     std::list<cConnection *>  my_list;
-
-    for( std::map<std::string, std::string>::iterator it = d_id_address_map.begin();
-            it != d_id_address_map.end(); ++it){
+    std::map<std::string, std::string>::iterator it;
+    
+    for(it = d_id_address_map.begin(); it != d_id_address_map.end(); ++it){
         if(addr == it->second)
             my_list.push_back(d_id_connection_map[it->first]);
     }

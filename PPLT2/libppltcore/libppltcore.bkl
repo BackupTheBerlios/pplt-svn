@@ -7,14 +7,13 @@
         <libname>ppltcore</libname>
         <version>2.0.0</version>
 
-        <optimize>speed</optimize>
 
         <sources>
            cConnection.cpp cDisposable.cpp cFloatConnection.cpp 
            cInnerModule.cpp cIntegerConnection.cpp cModule.cpp cObject.cpp
            cSequenceConnection.cpp cStreamConnection.cpp cStreamSymbol.cpp
            cSymbol.cpp cValueConnection.cpp Exceptions.cpp Logging.cpp 
-           LogOutputter.cpp soModuleLoader.cc 
+           LogOutputter.cpp soModuleLoader.cpp 
         </sources>
 
         <!-- <headers>
@@ -32,7 +31,7 @@
         <define>_LARGE_FILES</define>
         <define value="1">_LARGE_FILE_SOURCE</define>
         <define>NO_GCC_PRAGMA</define>
-
+        <define>HAVE_EXECINFO</define>
         <threading>multi</threading>
 
         <include>/opt/pplt2/lib/wx/include/gtk2-unicode-release-2.6</include>

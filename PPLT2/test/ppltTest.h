@@ -13,38 +13,6 @@
 #include <time.h>
 
 
-/** This macro starts the declaration of the test routines and sub tests. 
- * This macro indicates, that the test declarations are following. These 
- * declarations have to be closed by a TEST_DECLARATION_END macro. Between 
- * these two macros you can used TEST_ADD(test_method) to declare a test
- * method or TEST_ADD_SUB(class) to declare a sub test. 
- *\code
-class mySubTest: public PPLTTest::cTest{
-    TEST_DECLARARION
-        TEST_ADD(subtest_method);
-    TEST_DECLARATION_END
-    
-    private:
-        void setup( void );
-        void subtest_method( void );
-        void teardown( void );
-};
-
-class myTest: public PPLTTest::cTest{
-    TEST_DECLARATION
-        TEST_ADD(test_method);
-        TEST_ADD_SUB(mySubTest);
-    TEST_DECLARAION_END
-
-    private:
-        void setup( void );
-        void teardown( void );
-        void test_method( void );
-};
-\endcode
- * This example shows how to define a test with a sub test. 
- * \note The subtest will only be executed if the previous tests are 
- * succeeded. */
 #define TEST_DECLARATION        public: void _run( void ){\
                                     PPLTTest::cTestContext *_ctx = PPLTTest::cTestContext::factory();\
                                     try{ setup(); }\
@@ -54,8 +22,6 @@ class myTest: public PPLTTest::cTest{
                                     }
 
 
-/** This macro defined the end of a test declaration.
- * @see TEST_DECLARATION */
 #define TEST_DECLARATION_END        try{ teardown();}\
                                     catch(...){\
                                         std::cout << "Error while teardown() test " << PPLTTest::demangle_symbol(typeid(*this).name()) << std::endl;\

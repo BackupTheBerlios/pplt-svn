@@ -11,9 +11,10 @@ namespace Test{
     class libPPLTCoreTest: public PPLTTest::cTest{ 
         
         TEST_DECLARATION
-            TEST_ADD(test_ModuleFinding);
-            TEST_ADD(test_ModuleLoading);
-            TEST_ADD_SUB(CoreModuleTest);
+            //TEST_ADD(test_ModuleFinding);
+            //TEST_ADD(test_ModuleLoading);
+            TEST_ADD(test_Events);
+            //TEST_ADD_SUB(CoreModuleTest);
         TEST_DECLARATION_END
  
         private:
@@ -21,7 +22,9 @@ namespace Test{
             
             void test_ModuleFinding( void );
             void test_ModuleLoading( void );
-            
+           
+            void test_Events( void );
+
             void teardown();
             
         private:

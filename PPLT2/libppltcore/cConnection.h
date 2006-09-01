@@ -64,7 +64,10 @@ namespace PPLTCore{
             cDisposable     *d_owner_module;    // child module
             bool            d_is_autolock;      // autolock true by default
             bool            d_events_enabled;   // events enabled by default
-        
+            /* Stores the status of the event handling. This will be used to
+             * restore the event status if relaeas() will be called by the module! */
+            bool            d_event_status;      
+
         protected:
             /** Link to the parent module:
             * This attribute will be used by the derived classes to

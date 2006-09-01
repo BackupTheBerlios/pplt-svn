@@ -34,7 +34,9 @@ Error::Error(const char *temp, ...){
 
 
 void Error::do_traceback(void){
-    
+    /* FIXME
+     * Implement the translation of symbol into readable from using the regexp
+     * "^((.*)\\(([[:alnum:]_]+)\\)|(.*)) \\[(.+)\\]$" */
     #ifdef HAVE_EXECINFO
         void                *bt[256];
         size_t              size;
@@ -46,13 +48,31 @@ void Error::do_traceback(void){
 
         dump << "BACKTRACE ("<<size<<")\n";
         for(unsigned int i=0;i<size;i++)
-            dump << " " << strings[i] << std::endl;
+            dump << " " << format_traceback(strings[i]) << std::endl;
         dump << "----- ";
 
         CORELOG_DEBUG(dump.str());
         free(strings);
     #endif
 }
+
+
+
+std::string Error::format_traceback(const char *line){
+    //wxRegEx     reg(wxT("([^@]+)[\\(([[:alnum:]_]+)\\)|] \\[0x[:alnum:]+\\]")); 
+    std::string ret(line);
+    /*wxString    match;
+
+    if(!reg.Matches(wxString(line, *wxConvCurrent))){
+        std::cout << "No match..." << std::endl;
+        return "";
+    }        
+    ret += "In ";
+    ret += reg.GetMatch(match, 1).mbc_str();*/
+    return ret;
+}
+
+
 
 void Error::log_message(std::string msg){
     d_message = msg;

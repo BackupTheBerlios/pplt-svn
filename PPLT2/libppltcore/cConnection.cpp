@@ -32,27 +32,26 @@ void cConnection::notify_child(){
 
 
 void cConnection::reserve(){
-    if(autolock()){
-        CORELOG_WARN("Reserve called; but autolock is anabled. This may cause into"
-                     "a deadlock.");
-    }
-
     if(0 == dynamic_cast<cModule *>(d_parent_module))
         throw CoreError("Unable to cast parent_module to cModule.");
+    
+    // Store status of events and disable them. This will cause the connection
+    // to buffer all incomming events unlit release() will be called!
+    d_event_status = events_enabled();
+    events_enabled(false);
+
+    // lock the parent module!
     d_parent_module->reserve();
 }
 
 
 
 void cConnection::release(){
-    if(autolock()){
-        CORELOG_WARN("Release called; but autolock is enabled. This may cause into"
-                     "some strange errors.");
-    }
-    
     if(0 == dynamic_cast<cModule *>(d_parent_module))
         throw CoreError("Unable to cast parent_module to cModule.");
+    
     d_parent_module->release();
+    events_enabled(d_event_status);
 }
 
 

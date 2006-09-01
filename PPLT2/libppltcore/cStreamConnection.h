@@ -38,15 +38,36 @@
  *
  * The cStreamConnection class is used to connect a iStreamModule
  * with an other module or symbol. */
+
 namespace PPLTCore{
 
+    
     /** The cStreamConnection class.
      *
      * This class implements the connection between a iStreamModule
      * and an other module or symbol. By this connection is is
      * possible to read from the module like to read from a file.
-     * C++ style stream is not(yet) provided. */
+     * C++ style stream is not provided (yet). */
     class cStreamConnection : public cConnection{
+
+        class _cChildNotifyThread  : public wxThread{
+            private:
+                class cStreamConnection   *d_con;
+            public:
+                _cChildNotifyThread(cStreamConnection *con):wxThread(wxTHREAD_DETACHED){ d_con = con; }
+               
+                void *Entry( void ){ 
+                    //CORELOG_DEBUG("EventThread: Inform child about data left...");
+                    //try{ d_con->push(); }
+                    //catch(...){ CORELOG_WARN("An exception was reased in EventThread!"); }
+                    sleep(1);
+                    return (void *)0;
+                }
+        };
+
+        private:
+            _cChildNotifyThread     _d_child_notify_thread;
+
         protected:
             std::string     d_buffer;
             wxMutex         d_buffer_lock;
@@ -95,6 +116,13 @@ namespace PPLTCore{
             /** This method returns the number of bytes left in the connection 
              *  buffer.*/
             virtual unsigned int buff_len();
+
+            /** This method overrides the default events_enabled from 
+             * cConnection class. This version will notify the child
+             * if there is data left in the buffer if the events where 
+             * enabled. */
+            bool events_enabled();
+            void events_enabled(bool status);
 
             /** The read() method.
              *

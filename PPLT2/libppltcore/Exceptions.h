@@ -32,7 +32,9 @@
 #include <iostream>
 #include <execinfo.h>
 #include <streambuf>
-//#include "config.h"
+#include <wx/strconv.h>
+#include <wx/string.h>
+#include <wx/regex.h>
 
 
 
@@ -56,6 +58,7 @@ namespace PPLTCore{
     class Error{
     protected:
         void        do_traceback();
+        std::string format_traceback(const char *line);
         void        log_message(const char *temp, va_list ap);
         void        log_message(std::string msg);
         std::string d_message;

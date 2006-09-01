@@ -32,7 +32,7 @@ void soModuleLoader::unload(cModule *module){
         throw ItemNotFound("Unable to find id (%s) in list -> this may cause into a memory leak!",id.c_str());
    
     if(module->isBusy())
-        throw ItemBusy("Module %s is still used by one or more objects (symbols or other modules)!",module->Identifier().c_str());
+        throw ItemBusy("Module %s is still used by one or more objects (symbols or other modules)!",id.c_str());
     
     CORELOG_DEBUG("Destroy module "<<id);
     delete module;
