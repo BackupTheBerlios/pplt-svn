@@ -1,5 +1,5 @@
 # ########################################################################## #
-# Exceptions.py
+# testConnection.py
 #
 # 2006-09-01
 # Copyright 2006 Hannes Matuschek
@@ -23,26 +23,38 @@
 # ########################################################################## #
 
 
+import unittest;
+import core;
 
-class PPLTError (Exception):
-    def __init__(self, msg): Exception.__init__(self, msg);
+class DummyModule(core.CModule):
+    _d_con_count = 0;
+
+    def __init__(self):
+        core.CModule.__init__(self);
+        self._d_con_count = 0;
+    
+    def connect(self, addr=None, child=None):
+        if(addr == None):
+            raise PPLTError("Need Address!");
+        con = core.CConnection(self);            
+        self._d_connections.addConnection(con, addr);
+        self._d_con_count += 1;
+        return(con);
+
+    def disconnect(self, con_id):
+        self._d_connections.remConnection(con_id); 
+        self._d_con_count -=1;
+
+    def count(self): return self._d_con_count;
 
 
 
+class testConnection(unittest.TestCase):
 
-class CorruptInterface (PPLTError):
-    def __init__(self, msg): PPLTError.__init__(self, msg);
-
-
-class NotImplemented (CorruptInterface):
-    def __init__(self, msg): CorruptInterface.__init__(self, msg);
-
-
-
-
-class ItemBusy (PPLTError):
-    def __init__(self, msg): PPLTError.__init__(self, msg);
-
-
-class ItemNotFound (PPLTError):
-    def __init__(self, msg): PPLTError.__init__(self, msg);
+    def testConnectionClose(self):
+        # This module checks if the close() method of the module will be
+        # called if the connection will be destroyed!
+        dummy = DummyModule();
+        con = dummy.connect("test");
+        del con;
+        self.assert_( dummy.count() == 0 );

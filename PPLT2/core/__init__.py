@@ -1,5 +1,9 @@
+""" """ 
+#FIXME Write a (long) description about the core
+
+
 # ########################################################################## #
-# Exceptions.py
+# __init__.py
 #
 # 2006-09-01
 # Copyright 2006 Hannes Matuschek
@@ -22,27 +26,11 @@
 #
 # ########################################################################## #
 
-
-
-class PPLTError (Exception):
-    def __init__(self, msg): Exception.__init__(self, msg);
-
-
-
-
-class CorruptInterface (PPLTError):
-    def __init__(self, msg): PPLTError.__init__(self, msg);
-
-
-class NotImplemented (CorruptInterface):
-    def __init__(self, msg): CorruptInterface.__init__(self, msg);
-
-
-
-
-class ItemBusy (PPLTError):
-    def __init__(self, msg): PPLTError.__init__(self, msg);
-
-
-class ItemNotFound (PPLTError):
-    def __init__(self, msg): PPLTError.__init__(self, msg);
+from Connection import CConnection
+from Exceptions import PPLTError, CorruptInterface, NotImplemented, ItemBusy, ItemNotFound
+from Interfaces import IDisposable, IStreamModule                        
+from Module     import CModule
+from Object     import CObject
+from StreamConnection import CStreamConnection
+from AsyncStreamConnection import CAsyncStreamConnection
+from Tools import _fmtid
