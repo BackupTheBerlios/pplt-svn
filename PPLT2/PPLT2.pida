@@ -8,7 +8,7 @@ project_file_to_execute = /home/hannes/.pida/projects/pyPPLT/test/run_test.py
 # use_python_to_execute
 # None
 # default value = True
-use_python_to_execute = True
+use_python_to_execute = 1
 
 
 [general]

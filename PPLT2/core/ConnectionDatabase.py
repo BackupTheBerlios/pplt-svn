@@ -45,7 +45,7 @@ class CConnectionDatabase:
         if not isinstance(con, CConnection):
             raise CorruptInterface("The con parameter should be an instance of CConnection!");
 
-        con_id = con.Identifier();
+        con_id = con.identifier();
         if(con_id in self._d_id_con_map.keys()):
             raise ItemBusy("The connection %s already exists in db!"%con_id);
         self._d_id_con_map[con_id] = weakref.proxy(con);

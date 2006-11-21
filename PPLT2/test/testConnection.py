@@ -36,13 +36,13 @@ class DummyModule(core.CModule):
     def connect(self, addr=None, child=None):
         if(addr == None):
             raise PPLTError("Need Address!");
-        con = core.CConnection(self);            
+        con = core.CConnection(self);
         self._d_connections.addConnection(con, addr);
         self._d_con_count += 1;
         return(con);
 
     def disconnect(self, con_id):
-        self._d_connections.remConnection(con_id); 
+        self._d_connections.remConnection(con_id);
         self._d_con_count -=1;
 
     def count(self): return self._d_con_count;

@@ -76,9 +76,9 @@ class CAsyncStreamConnection (CStreamConnection):
             self._d_condition.release();
             return data;
 
-        self._d_condition.wait(self._d_timeout);                    
+        self._d_condition.wait(self._d_timeout);
         if len(self._d_buffer)==0:
-            raise ItemBusy("Timeout while read from asyc source! (in %s)"%_fmtid(self.Identifier()));
+            raise ItemBusy("Timeout while read from asyc source! (in %s)"%_fmtid(self.identifier()));
 
         if length > len(self._d_buffer): length = len(self._d_buffer);
         data = self._d_buffer[0:length];

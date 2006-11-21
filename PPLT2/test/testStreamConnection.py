@@ -49,7 +49,7 @@ class DummyDisposable(IDisposable):
     def get_connection(self): return self._d_connection;
 
     def notify_data(self):
-        self._d_data = self._d_connection.read(1024);                        
+        self._d_data = self._d_connection.read(1024);
         self._d_lock.release();
 
     def reset(self):

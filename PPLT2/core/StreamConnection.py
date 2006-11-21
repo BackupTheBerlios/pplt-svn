@@ -1,3 +1,4 @@
+""" This module contains only the CStreamConnection class. """
 # ########################################################################## #
 # StreamConnection.py
 #
@@ -23,12 +24,12 @@
 # ########################################################################## #
 
 
-from Connection import CConnection;
-from Exceptions import PPLTError, CorruptInterface;
-from Interfaces import IStreamModule, IDisposable;
-import threading;
-import logging;
-import weakref;
+from Connection import CConnection
+from Exceptions import PPLTError, CorruptInterface
+from Interfaces import IStreamModule, IDisposable
+import threading
+import logging
+import weakref
 
 
 class CStreamConnection (CConnection):
@@ -53,9 +54,9 @@ class CStreamConnection (CConnection):
         consists of only 1 read or write method call. If not autolock will be
         the wrong way! """
 
-    _d_buffer           = None;
-    _d_buffer_lock      = None;
-    _d_event_threads    = None; 
+    _d_buffer           = None
+    _d_buffer_lock      = None
+    _d_event_threads    = None
 
 
     def __init__(self, parent, child = None):
@@ -68,25 +69,25 @@ class CStreamConnection (CConnection):
             disabled. """
 
         if not isinstance(parent, IStreamModule):
-            raise CorruptInterface("The parent have to be a StreamModule!");
+            raise CorruptInterface("The parent have to be a StreamModule!")
 
         if child != None and not isinstance(child, IDisposable):
-            raise CorruptInterface("The child have to be a IDisposable!");
+            raise CorruptInterface("The child have to be a IDisposable!")
 
-        CConnection.__init__(self, parent, child);
+        CConnection.__init__(self, parent, child)
 
-        self._d_buffer = "";
-        self._d_buffer_lock = threading.Lock();
-        self._d_event_threads = [];
+        self._d_buffer = ""
+        self._d_buffer_lock = threading.Lock()
+        self._d_event_threads = []
 
 
 
     def __del__(self):
         # joins all (running) event threads 
-        for t in self._d_event_threads: t.join();
-        del self._d_event_threads[0:];
+        for t in self._d_event_threads: t.join()
+        del self._d_event_threads[0:]
         # call destructor of super-class
-        CConnection.__del__(self);
+        CConnection.__del__(self)
 
 
 
@@ -98,28 +99,30 @@ class CStreamConnection (CConnection):
             first. Only if the buffer is empty the parent module will be 
             called to retrieve new data. The parameter length specifies the 
             max. number of bytes retuned. """
-        log = logging.getLogger("PPLT.core");
+        log = logging.getLogger("PPLT.core")
 
         if(self.autolock()):
-            self._reserve();
+            self._reserve()
 
-        self._d_buffer_lock.acquire();
+        self._d_buffer_lock.acquire()
         if(len(self._d_buffer) > 0):
-            log.debug("%i bytes left in buffer: return them!"%len(self._d_buffer));    
-            if length > len(self._d_buffer): 
-                length = len(self._d_buffer);
-            data = self._d_buffer[0:length];
-            self._d_buffer = self._d_buffer[length:];
-            if(self.autolock()):
-                self._release();
-            self._d_buffer_lock.release();
-            return data;                
+            log.debug("%i bytes left in buffer: return them!"%len(self._d_buffer))
+            if length > len(self._d_buffer):
+                length = len(self._d_buffer)
+            data = self._d_buffer[0:length]
+            self._d_buffer = self._d_buffer[length:]
+            if self.autolock():
+                self._release()
+            self._d_buffer_lock.release()
+            return data
         
-        try: data = self._d_parent_module.read(self.Identifier(), length);
-        finally: 
-            self._d_buffer_lock.release();
-            if(self.autolock()): self._release();
-        return data;
+        try:
+            data = self._d_parent_module.read(self.Identifier(), length)
+        finally:
+            self._d_buffer_lock.release()
+            if(self.autolock()):
+                self._release()
+        return data
 
 
 
@@ -131,14 +134,15 @@ class CStreamConnection (CConnection):
             string of data send to the parent. This method returns the number 
             of byted send."""
 
-        if(self.autolock()): self._reserve();
+        if self.autolock():
+            self._reserve()
 
         try:
-            l = self._d_parent_module.write(self.Identifier(), data);
+            l = self._d_parent_module.write(self.identifier(), data)
         finally:
-            if(self.autolock()): self._release();
-
-        return l;
+            if(self.autolock()):
+                self._release()
+        return l
 
             
 

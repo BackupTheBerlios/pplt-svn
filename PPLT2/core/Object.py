@@ -1,3 +1,6 @@
+""" This module contains the CObject class. This is the base-class for allmost
+    all classes of the PPLT. """
+
 # ########################################################################## #
 # Object.py
 #
@@ -22,48 +25,53 @@
 #
 # ########################################################################## #
 
-import logging;
-import random;
-from Tools import _fmtid;
+import logging
+import random
+from Tools import _fmtid
 
 
 class CObject:
     """ This is the base class for all classes used to have unique instances.
-        All classes derived from this will have a method called Identifier()
+        
+        All classes derived from this will have a method called L{identifier}()
         that retunrs a unique ID for that instance. This will be used to 
-        identify module, connection and symbol-instances. """ 
-    _d_identifiers = [];
-    _d_identifier  = None;
+        identify module, connection and symbol-instances.""" 
+    _d_identifiers = []
+    _d_identifier  = None
 
     
     def __init__(self):
-        log = logging.getLogger("PPLT.core");
-        self._d_identifier = self._make_id();
+        log = logging.getLogger("PPLT.core")
+        self._d_identifier = self._make_id()
         while self._d_identifier in CObject._d_identifiers:
-            self._d_identifier = self._make_id();
-        CObject._d_identifiers.append(self._d_identifier);                    
-        log.debug("Object (%s) created with ID %s"%(str(self), _fmtid(self._d_identifier)) );
+            self._d_identifier = self._make_id()
+        CObject._d_identifiers.append(self._d_identifier)
+        log.debug("Object (%s) created with ID %s"
+                %(str(self), _fmtid(self._d_identifier)) )
 
 
 
-    def __del__(self): 
-        try: CObject._d_identifiers.remove(self._d_identifier);
+    def __del__(self):
+        try: CObject._d_identifiers.remove(self._d_identifier)
         except Exception, e:
-            log = logging.getLogger("PPLT.core");
-            log.error("Unable to remove ID %s from list: [%s]"%(_fmtid(self._d_identifier), self._d_identifiers));
-            raise e; 
+            log = logging.getLogger("PPLT.core")
+            log.error("Unable to remove ID %s from list: [%s]"
+                    %(_fmtid(self._d_identifier), self._d_identifiers))
+            raise e
    
 
 
-    def Identifier(self):
+    def identifier(self):
         """ This method will return the unique identifier for the instance. 
             """
-        return self._d_identifier;
+        return self._d_identifier
 
     
     
     def _make_id(self):
-        obj_id = '';
-        for n in range(64): obj_id += random.choice('0123456789abcdef');
-        return obj_id;
-        
+        """ Internal used function to generate unique IDs. 
+            @return: A string containing a new id. Not allways unique. """
+        obj_id = ''
+        for n in range(64): obj_id += random.choice('0123456789abcdef')
+        return obj_id
+

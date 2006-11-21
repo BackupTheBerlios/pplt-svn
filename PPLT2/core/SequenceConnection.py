@@ -64,17 +64,26 @@ class CSequenceConnection (CConnection):
 
         self._d_buffer_lock.release();
         
-        if(self.autolock()): self._parent_module.reserve();
-        try: data = self._d_parent_module.recv();
-        finally: if self.autolock(): self._d_parent_module.release();
+        if self.autolock():
+            self._parent_module.reserve();
+        
+        try:
+            data = self._d_parent_module.recv();
+        finally:
+            if self.autolock():
+                self._d_parent_module.release();
         return data;
 
 
 
     def send(self, data):
-        if self.autolock(): self._d_parent_module.reserve();
-        try: self._d_parent_module.send(data);
-        finally: if self.autolock(): self._d_parent_module.release();
+        if self.autolock():
+            self._d_parent_module.reserve();
+        try:
+            self._d_parent_module.send(data);
+        finally:
+            if self.autolock():
+                self._d_parent_module.release();
             
 
 
@@ -105,7 +114,7 @@ class CSequenceConnection (CConnection):
 
 
 
-     def _start_event_thread(*args):
+    def _start_event_thread(*args):
         """ This method will be used internally! NEVER call it directly! This
             method will simply call the notify_data() method of the child. 
             Normaly this method will be called by the new "event-thread" 

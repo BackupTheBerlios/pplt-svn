@@ -28,6 +28,8 @@ import unittest;
 from testStreamConnection import testStreamConnection;
 from testConnection import testConnection;
 from testAsyncStreamConnection import testAsyncStreamConnection;
+from testImporter import testImporter;
+
 
 if __name__ == "__main__":
     #config logging:
@@ -41,6 +43,9 @@ if __name__ == "__main__":
 
     #create suite:
     suite = unittest.TestSuite();
+    
+    suite.addTest(testImporter("testModuleFinding"));
+    suite.addTest(testImporter("testModuleLoading"));
     
     suite.addTest(testConnection("testConnectionClose"));
     

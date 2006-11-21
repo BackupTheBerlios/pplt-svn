@@ -1,9 +1,5 @@
-""" """ 
-#FIXME Write a (long) description about the core
-
-
 # ########################################################################## #
-# __init__.py
+# Tools.py
 #
 # 2006-09-01
 # Copyright 2006 Hannes Matuschek
@@ -26,14 +22,4 @@
 #
 # ########################################################################## #
 
-from Connection             import CConnection
-from Exceptions             import PPLTError, CorruptInterface, NotImplemented, ItemBusy, ItemNotFound
-from Interfaces             import IDisposable, IStreamModule, ISequenceModule
-from Module                 import CModule
-from Object                 import CObject
-from StreamConnection       import CStreamConnection
-from AsyncStreamConnection  import CAsyncStreamConnection
-from SequenceConnection     import CSequenceConnection
-from Tools                  import _fmtid
-
-from Importer               import CImporter, ModuleMeta
+def _fmtid(obj_id): return obj_id[0:10]+"...";

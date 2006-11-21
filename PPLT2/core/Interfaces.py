@@ -31,11 +31,13 @@ class IDisposable:
         "Disposable" meaning to recive events that signal that data may have 
         changed. Ie the CInnerModule class have to implement this interface to
         be able to handle events."""
+
     def notify_data(self):
         """ This method will be called by the parent to notify that his state
             have changed. Normaly a CInnerModule implementation will have this 
             method. So override it to handle events. """
         raise NotImplemented("The notify_data() method have to be implemented!");
+
 
 
 class IStreamModule:
@@ -62,3 +64,14 @@ class IStreamModule:
             connection. """
         raise NotImplemented("This read() method have to be implemented!");
 
+
+
+class ISequenceModule:
+    """ """
+    
+    def recv(self, con_id):
+        raise NotImplemented("This recv() method have to be implemented!");
+
+    
+    def send(self, con_id, msg):
+        raise NotImplemented("This send() method have to be implemented!");
