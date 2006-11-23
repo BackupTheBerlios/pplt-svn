@@ -2,7 +2,7 @@
 
 <Module version="1.0">
     
-    <Archive>debugging-modules.zip</Archive>
+    <Archive type="zip">debugging-modules.zip</Archive>
     <Class>ReflectionModule</Class>
     <Version>0.1.0</Version>
 

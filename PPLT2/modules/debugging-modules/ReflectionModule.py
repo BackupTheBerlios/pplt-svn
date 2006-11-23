@@ -1,3 +1,29 @@
+# ########################################################################## #
+# ReflectionModule.py
+#
+# 2006-11-22
+# Copyright 2006 Hannes Matuschek
+# hmatuschek@gmx.net
+# ########################################################################## #
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# ########################################################################## #
+
+
+
 from core import CModule, IStreamModule
 from core import CAsyncStreamConnection
 from core import PPLTError, ItemBusy
@@ -50,9 +76,10 @@ class ReflectionModule(CModule, IStreamModule):
         con.push(data);
 
 
-    def list_connection(self):
+    def connection_list(self):
         self._d_logger.debug("There are %i connections left:"%self._d_connections.count());
         for (cid, addr) in self._d_connections._d_id_addr_map.items():
             self._d_logger.debug("\t -> %s (%s)"%(addr, cid));
 
-
+    def connection_count(self):
+        return self._d_connections.count();

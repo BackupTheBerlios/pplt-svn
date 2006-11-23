@@ -1,0 +1,9 @@
+<?xml version="1.0"?>
+
+<Module version="1.0">
+    <Archive>debugging-modules.zip</Archive>
+    <Class>StreamDumpModule</Class>
+    <Version>0.1.0</Version>
+
+    <Description lang="en"> TODO </Description>
+</Module>
