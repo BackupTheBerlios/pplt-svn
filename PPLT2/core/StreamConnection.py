@@ -117,7 +117,7 @@ class CStreamConnection (CConnection):
             return data
         
         try:
-            data = self._d_parent_module.read(self.Identifier(), length)
+            data = self._d_parent_module.read(self.identifier(), length)
         finally:
             self._d_buffer_lock.release()
             if(self.autolock()):

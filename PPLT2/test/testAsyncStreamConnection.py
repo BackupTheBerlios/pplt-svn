@@ -54,7 +54,8 @@ class testAsyncStreamConnection(unittest.TestCase):
 
 
     def testTimeout(self):
-        refl = self._d_importer.load("reflection", {'timeout':'0.1'});
+        """ CLASS CAsyncStreamConnection timeout exception """
+        refl = self._d_importer.load("reflection", {'timeout':'0.0001'});
 
         con1 = refl.connect("aaa");
         con2 = refl.connect("aaa");
@@ -63,6 +64,7 @@ class testAsyncStreamConnection(unittest.TestCase):
 
 
     def testConnectionCount(self):
+        """ CLASS CAsyncStreamConnection connection count """
         refl = self._d_importer.load("reflection", {'timeout':1});
 
         con1 = refl.connect("aaa");
@@ -85,6 +87,7 @@ class testAsyncStreamConnection(unittest.TestCase):
 
 
     def testDataIntegrity(self):
+        """ CLASS CAsyncStreamConnection data integrity """
         refl = self._d_importer.load("reflection", {'timeout':1});
          
         con1  = refl.connect("aaa");

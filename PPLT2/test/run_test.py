@@ -29,35 +29,51 @@ from testStreamConnection import testStreamConnection;
 from testConnection import testConnection;
 from testAsyncStreamConnection import testAsyncStreamConnection;
 from testImporter import testImporter;
+from testInnerModule import testInnerModule
+from testStreamHexlifyModule import testStreamHexlifyModule
+from testStreamDumpModule import testStreamDumpModule
 
 
 if __name__ == "__main__":
     #config logging:
-    con = logging.FileHandler("test.log");
-    con.setFormatter(logging.Formatter("%(levelname)-8s %(message)s"));
-    logging.getLogger("PPLT").addHandler(con);
-    logging.getLogger("PPLT").setLevel(logging.DEBUG);
+    con = logging.FileHandler("test.log")
+    con.setFormatter(logging.Formatter("%(levelname)-8s %(message)s"))
+    logging.getLogger("PPLT").addHandler(con)
+    logging.getLogger("PPLT").setLevel(logging.DEBUG)
 
-    print "";
-    print "-"*70;
+    print ""
+    print "-" * 70
 
     #create suite:
-    suite = unittest.TestSuite();
+    suite = unittest.TestSuite()
     
-    suite.addTest(testImporter("testModuleFinding"));
-    suite.addTest(testImporter("testModuleLoading"));
-    
-    suite.addTest(testConnection("testConnectionClose"));
-    
-    suite.addTest(testStreamConnection("testPushParameterConstance"));
-    suite.addTest(testStreamConnection("testEventStatus"));
-    suite.addTest(testStreamConnection("testEventThread"));
-    
-    suite.addTest(testAsyncStreamConnection("testConnectionCount"));
-    suite.addTest(testAsyncStreamConnection("testTimeout"));
-    suite.addTest(testAsyncStreamConnection("testDataIntegrity"));
+    suite.addTest(testImporter("testModuleFinding"))
+    suite.addTest(testImporter("testModuleLoading"))
 
-    unittest.TextTestRunner(verbosity=2).run(suite);
+    suite.addTest(testInnerModule("testConCloseAtModDestroy"))
+    suite.addTest(testInnerModule("testSimpleInnerModule"))
+    suite.addTest(testInnerModule("testSimpleDisposableModule"))
+
+    suite.addTest(testConnection("testConnectionClose"))
+    
+    suite.addTest(testStreamConnection("testPushParameterConstance"))
+    suite.addTest(testStreamConnection("testEventStatus"))
+    suite.addTest(testStreamConnection("testEventThread"))
+    
+    suite.addTest(testAsyncStreamConnection("testConnectionCount"))
+    suite.addTest(testAsyncStreamConnection("testTimeout"))
+    suite.addTest(testAsyncStreamConnection("testDataIntegrity"))
+
+    suite.addTest(testStreamHexlifyModule("testHexlify"));
+    suite.addTest(testStreamHexlifyModule("testUnhexlify"))
+    suite.addTest(testStreamHexlifyModule("testConnectionCount"))
+    
+    suite.addTest(testStreamDumpModule("testConnectionCount"))
+    suite.addTest(testStreamDumpModule("testRead"))
+    suite.addTest(testStreamDumpModule("testWrite"))
+    suite.addTest(testStreamDumpModule("testEvent"))
+
+    unittest.TextTestRunner(verbosity=2).run(suite)
 
 
 

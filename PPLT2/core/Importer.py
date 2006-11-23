@@ -90,10 +90,17 @@ class CImporter:
         mod = zipimp.load_module(mod_meta.getClass());
         
         #load class from module
-        cls = mod.__dict__[mod_meta.getClass()];
+        try:
+            cls = mod.__dict__[mod_meta.getClass()]
+        except:
+            raise ItemNotFound("Can't find class %s in %s [%s]"%
+                        (mod_meta.getClass(), mod_archive, mod.__dict__.keys()))
 
         #instance class:
-        return cls(parameters);
+        if not parent:
+            return cls(parameters)
+        else:
+            return cls(parent, address, parameters)
 
 
 

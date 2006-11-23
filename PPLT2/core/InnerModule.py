@@ -1,7 +1,7 @@
 # ########################################################################## #
-# testConnection.py
+# InnerModule.py
 #
-# 2006-09-01
+# 2006-11-21
 # Copyright 2006 Hannes Matuschek
 # hmatuschek@gmx.net
 # ########################################################################## #
@@ -22,36 +22,30 @@
 #
 # ########################################################################## #
 
+from Module import CModule
+from Interfaces import IDisposable
 
-import unittest;
-import core;
+class CInnerModule (CModule):
+    _d_parent_connection = None
 
-class DummyModule(core.CModule):
-    _d_con_count = 0;
 
-    def __init__(self):
-        core.CModule.__init__(self);
-    
-    def connect(self, addr=None, child=None):
-        if(addr == None):
-            raise PPLTError("Need Address!");
-        con = core.CConnection(self);
-        self._d_connections.addConnection(con, addr);
-        return(con);
+    def __init__(self, parent, address=None, parameters=None):
+        # init super-class
+        CModule.__init__(self, parameters)
 
-    def disconnect(self, con_id):
-        self._d_connections.remConnection(con_id);
-
-    def count(self): return self._d_connections.count();
+        #FIXME Test if the connection will be closed if the module is 
+        #      destroyed!
+        self._d_parent_connection = parent.connect(address)
 
 
 
-class testConnection(unittest.TestCase):
+class CDisposableModule (CModule, IDisposable):
+    _d_parent_connection = None;
 
-    def testConnectionClose(self):
-        # This module checks if the close() method of the module will be
-        # called if the connection will be destroyed!
-        dummy = DummyModule();
-        con = dummy.connect("test");
-        del con;
-        self.assert_( dummy.count() == 0 );
+    def __init__(self, parent, address=None, parameters=None):
+        # init superclass
+        CModule.__init__(self, parameters)
+
+        self._d_parent_connection = parent.connect(address, self)
+
+

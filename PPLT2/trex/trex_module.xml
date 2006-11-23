@@ -1,0 +1,24 @@
+<?xml version="1.0"?>
+
+
+
+<element name="Module">
+    <attribute name="version"/>
+    
+    
+    <element name="Archive"> <anyString/> </element>
+    <element name="Class">   <anyString/> </element>
+    <element name="Version"> <anyString/> </element>
+   
+    <optional>
+        <element name="Author"> <anyString/> </element>
+    </optional>
+
+    <oneOrMore>
+        <element name="Description"> 
+            <attribute name="lang"/>
+            <anyString/>
+        </element>
+    </oneOrMore>                       
+
+</element>

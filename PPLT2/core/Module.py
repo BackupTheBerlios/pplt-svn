@@ -23,10 +23,14 @@
 # ########################################################################## #
 
 
-from Object import CObject;
-from Exceptions import NotImplemented;
-from ConnectionDatabase import CConnectionDatabase;
-import threading;
+from Object import CObject
+from Exceptions import NotImplemented
+from ConnectionDatabase import CConnectionDatabase
+import threading
+import logging
+from Tools import _fmtid
+
+
 
 class CModule (CObject):
     """ This is the baseclass for all Mmodule classes. This class imeplements
@@ -50,30 +54,40 @@ class CModule (CObject):
             your conenctions! Else if you don't want to use it or if you can't
             please override the is_busy() method also! This method returns 
             True if there are connections to the specific module. """
-        CObject.__init__(self);
+        CObject.__init__(self)
         
-        if None == parameters: parameters == {};
+        if None == parameters:
+            parameters == {}
 
-        self._d_module_lock = threading.Lock();
-        self._d_module_parameters = parameters;
-        self._d_connections = CConnectionDatabase();
+        self._d_module_lock = threading.Lock()
+        self._d_module_parameters = parameters
+        self._d_connections = CConnectionDatabase()
+
+        self._d_logger = logging.getLogger("PPLT.core")
+
+
+    
+    def __del__(self):
+        if self.is_busy():
+            self._d_logger.warning("Destruction of module %s but is_busy() == True"%_fmtid(self.identifier()))
+        CObject.__del__(self)
 
 
 
-    def reserve(self): 
+    def reserve(self):
         """ This method will be used by the connection objects to reserve 
             (lock) this module. Normaly this method doesn't need to be 
             overridden, a module doesn't need to know if it is reserved or 
             not.""" 
-        self._d_module_lock.acquire();
+        self._d_module_lock.acquire()
 
 
 
-    def release(self): 
+    def release(self):
         """ This method releases the module. This method will be called by the
             connection object retuned from the connect() method of the module
             implementation. """
-        self._d_module_lock.release();
+        self._d_module_lock.release()
 
 
 

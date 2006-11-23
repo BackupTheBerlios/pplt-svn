@@ -30,6 +30,7 @@ from Connection             import CConnection
 from Exceptions             import PPLTError, CorruptInterface, NotImplemented, ItemBusy, ItemNotFound
 from Interfaces             import IDisposable, IStreamModule, ISequenceModule
 from Module                 import CModule
+from InnerModule            import CInnerModule, CDisposableModule
 from Object                 import CObject
 from StreamConnection       import CStreamConnection
 from AsyncStreamConnection  import CAsyncStreamConnection
