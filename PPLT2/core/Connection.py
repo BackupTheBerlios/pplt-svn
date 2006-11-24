@@ -1,5 +1,12 @@
-""" This module contains only the CConnection base class for all connection
-    classes. """
+""" This module contains only the L{CConnection} base class.
+
+    A connection should allway be created by the connect() method of a module,
+    because the module is the only one who knows what type of connection 
+    schould be used. The CConnection class proviedes only the basic 
+    functionality for all connections types so you should never use this
+    class as a connection. Please use the derived and more specialised derived
+    classes.
+    """
 
 # ########################################################################## #
 # Connection.py
@@ -160,7 +167,9 @@ class CConnection (CObject):
             is  Ture the autolock mechanism will be enabled and if False it
             will be disabled. Please be care full using the autolock. Only
             if you are sure that all operations will consist of only on 
-            methodcall to parent this may an option for you. """
+            method-call to the parent this may an option for you.
+            
+            B{Note:} The autolock mechanism ist disabled by default!"""
         
         if(status == None):
             return self._d_autolock

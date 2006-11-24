@@ -1,4 +1,4 @@
-""" This module contains only the CStreamConnection class. """
+""" This module contains only the L{CStreamConnection} class. """
 # ########################################################################## #
 # StreamConnection.py
 #

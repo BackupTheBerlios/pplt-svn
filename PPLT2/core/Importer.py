@@ -1,4 +1,44 @@
-""" This module contains the L{CImporter} class. """
+""" This module contains the L{CImporter} class. 
+    
+    There are two types of Modules that can be imported with this importer. 
+    First of all the I{coremodules}. These are modules that are implemented by
+    pythonscripts ziped into an archive. Additional there is a file describing
+    these modules. The other type is called I{assembly} this one is an XML 
+    file describing how to assamble several coremodules to a new one. Booth
+    types behave identical, so you do not have to care about what type of 
+    module you have loaded. 
+    
+    To be able to load modules you have to instance an L{CImporter} class.
+    The constructor takes only one optional parameter C{base_path} which 
+    specifies a list of path names where the importer should look for modules.
+    If you obmit the parameter the importer will try to find the modules
+    in C{sys.prefix+'/pplt'} and C{'~/.pplt'}. 
+    
+    To load and instance a module simply do following:
+    
+    >>> import pplt
+    >>> # ... do something ...
+    >>> importer = CImporter()
+    >>> mod = importer.load("module_name", {"mod_param":"value"})
+    >>> # ... now do something with the module
+  
+    One of the advantages of the pplt is the combineing of modules. So you can
+    attach some module to other. The modules, that are attachable to other are
+    called I{inner modules} (L{InnerModule}). If you want to load an inner 
+    module and attach it to an other one, you should do following:
+
+    >>> import pplt
+    >>>
+    >>> importer = CImporter()
+    >>> root = importer.load("root_module")
+    >>> inner = importer.load("inner_module", None, root, "address")
+
+    This example loads the module "root_module" without any parameters.
+    Then is loads a module called "inner_module" also without parameters
+    and connect them with the root module using the addess "address".
+    Now the "inner_module" is attached to the "root_module"
+
+    """
 
 # ########################################################################## #
 # Importer.py
@@ -35,7 +75,13 @@ from CoreModuleMeta import CCoreModuleMeta
 
 
 class CImporter:
-    """ This simple class can search for modules and load them."""
+    """ This simple class can search for modules and load them.
+        
+        This is the unversal importer class for all pplt modules. This 
+        includes coremodule and assemblies. The load() method for loading
+        and instancing a module is the same for booth types of modules. Also
+        booth types behave indentical, so you do not know what kind of module
+        you are loading. """
 
     _d_search_path = None;
 
@@ -98,6 +144,15 @@ class CImporter:
         
 
     def getModuleMeta(self, mod_name):
+        """ Returns the module meta-data object for the given module.
+            
+            This method is used internal to get the meta-data of an module.
+            The meta-data is specified in the description file of the module.
+            The meta-data contains information about the module version, 
+            author, dependencies, parameters and maybe a translated 
+            description of the module and its parameters. In case of an 
+            assembly the meta-data also contains the information about how to
+            load the assembly. """
         file_path = self._find_module_meta(mod_name)
     
         xml_dom = xml.dom.minidom.parse(file_path).documentElement

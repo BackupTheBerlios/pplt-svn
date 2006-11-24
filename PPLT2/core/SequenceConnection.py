@@ -1,3 +1,75 @@
+""" This module only contains of the class L{CSequenceConnection}.
+
+    The sequence connection can be used if a module proviedes sequences of
+    data, i.e. datagrams in opposit to the L{CStreamConnection}. To recive a
+    datagram you have to call the C{recv()} method and to send you have to 
+    call C{send()}. Additionaly the sequence-connection provide an interface 
+    like a  stream-connection using an internal buffer. So you can call the
+    C{read()} and C{write()} methods like a stream-connection. 
+    
+    B{Note:} There is also an asynchronious version of the sequence-connction
+    that allows you to write modules simply, that operates completely
+    asynchronious. 
+    
+    An example connection method of a module that provides datagrams could 
+    look like:
+    
+    >>> def connect(self, addr, child=None):
+    >>>     # --- maybe check the address...
+    >>>     con = CSequenceConnection(self, child)
+    >>>     self._d_connections.addConnection(con,addr)
+    >>>     return con
+
+    The C{self._d_connection} attribute is a L{ConnectionDatabase} instance 
+    that every module has to store the connections.  
+    
+    An very simple example for a module that provide a sequence-connection:
+    
+    >>> from pplt import CModule, ISequenceModule, CSequenceConnection
+    >>>
+    >>> #
+    >>> # a stupid demo random module:
+    >>> #
+    >>> class StupidRandom(CModule, ISequenceModule):
+    >>>
+    >>>     def connect(self, address, child=None):
+    >>>         if self._d_connections.count(address) >0:
+    >>>             raise Exception("There is already one connection with addr %s"%address)
+    >>>         con = CSequenceConnection(self, child)
+    >>>         self._d_connections.addConnection(con, address)
+    >>>         return con
+    >>>
+    >>>
+    >>>     def disconnect(self, con_id):
+    >>>         self._d_connections.remConnection(con_id)
+    >>>
+    >>>
+    >>>     def send(self, con_id, data):
+    >>>         (con, addr) = self._d_connections.getConnectionByID(con_id)
+    >>>         print "Connection with address %s send \"%s\" "%(addr,data)
+    >>>
+    >>>
+    >>>     def recv(self, con_id):
+    >>>         (con, addr) = self._d_connections.getConnectionByID(con_id)
+    >>>         return "Hello, you are connected with address: %s"%addr
+    >>>
+    >>> 
+    >>> mod = StupidRandom()
+    >>>
+    >>> con1 = mod.connect("#1")
+    >>> con2 = mod.connect("#2")
+    >>>
+    >>> con1.send("Hello module...")
+    Connection with address #1 send "Hello module..."
+    >>>
+    >>> print con2.recv()
+    Hello, you are connected with address: #2
+    >>>
+    >>> print con1.read(5)
+    Hello
+    >>> print con1.recv()
+    , you are connected with address: #1                                                                                                                                                        """
+
 # ########################################################################## #
 # ValueConnection.py
 #
@@ -31,7 +103,7 @@ import weakref
 
 
 class CSequenceConnection (CConnection):
-    
+    """ The SequenceConnection can be used for datagram connections.  """    
     _d_buffer = None
     _d_buffer_lock = None
     _d_event_threads = None
