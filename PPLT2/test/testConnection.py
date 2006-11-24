@@ -49,6 +49,7 @@ class DummyModule(core.CModule):
 class testConnection(unittest.TestCase):
 
     def testConnectionClose(self):
+        """ CLASS CConnection close on destroy """
         # This module checks if the close() method of the module will be
         # called if the connection will be destroyed!
         dummy = DummyModule();

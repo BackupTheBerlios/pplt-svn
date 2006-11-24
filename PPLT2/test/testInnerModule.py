@@ -101,10 +101,10 @@ class dummy_root(core.CModule, core.IStreamModule):
 class testInnerModule(unittest.TestCase):
 
     def setUp(self):
-        self._d_importer = core.CImporter("test_modules");
+        self._d_importer = core.CImporter("../modules");
 
     def testConCloseAtModDestroy(self):
-        """ test if connection will be closed if child module is destroyed """
+        """ CLASS CInnerModule parent-connection close on module destroy """
         root = dummy_root()
 
         ch1 = dummy_inner(root, "1")
@@ -133,8 +133,8 @@ class testInnerModule(unittest.TestCase):
 
 
     def testSimpleInnerModule(self):
-        """ test if simple inner module works """
-        root = self._d_importer.load("reflection",{'timeout':'0.1'});
+        """ CLASS CInnerModule simple inner module test """
+        root = self._d_importer.load("stream_reflection", {'timeout':'0.1'})
         child = dummy_inner(root, "1");
 
         con1 = child.connect("aaa");
@@ -162,8 +162,8 @@ class testInnerModule(unittest.TestCase):
 
 
     def testSimpleDisposableModule(self):
-        """ test if simple disposable module works """
-        root = self._d_importer.load("reflection",{"timeout":'0.1'});
+        """ CLASS CDisposableModule simple disposable module test """
+        root = self._d_importer.load("stream_reflection", {"timeout":'0.1'})
         child = dummy_disposable(root,"1");
 
         con1 = child.connect("aaa");

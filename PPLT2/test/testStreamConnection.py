@@ -42,25 +42,23 @@ class DummyDisposable(IDisposable):
 
     def __init__(self, parent):
         self._d_data = "";
-        self._d_lock = threading.Lock();
-        self._d_lock.acquire();
+        self._d_lock = threading.Event();
+        self._d_lock.clear()
         self._d_connection = parent.connect(None,self);
     
     def get_connection(self): return self._d_connection;
 
     def notify_data(self):
         self._d_data = self._d_connection.read(1024);
-        self._d_lock.release();
+        self._d_lock.set();
 
     def reset(self):
         self._d_data = "";
-        self._d_lock.acquire();
+        self._d_lock.clear()
 
-    def wait(self):
-        self._d_lock.acquire();
-        self._d_lock.release();
-
-    def data(self): return self._d_data;
+    def wait(self,time):
+        self._d_lock.wait(time)
+        return self._d_data;
 
 
 
@@ -73,19 +71,8 @@ class testStreamConnection(unittest.TestCase):
         pass;
 
     
-    def testPushParameterConstance(self):
-        data = "1234567890";
-        dummy = DummyModule({});
-        con = dummy.connect();
-        con.reserve();
-        con.push(data, 3);
-        self.assert_(data == "1234567890");
-        self.assert_(con.read(3) == "123");
-        self.assert_(con.length() == 0);
-
-
-
     def testEventStatus(self):
+        """ CLASS CStreamConnection event status """
         dummy = DummyModule({});
         con = dummy.connect();
         
@@ -95,11 +82,12 @@ class testStreamConnection(unittest.TestCase):
         con.reserve()
         self.assert_(not con._d_events_enabled );
         con.release();
-        self.assert_(status == con._d_events_enabled);
+        self.assertEqual(status,con._d_events_enabled);
 
 
 
     def testEventThread(self):
+        """ CLASS CStreamConnection event thread on release()"""
         data    = "1234567890";
         dummy   = DummyModule({});
         dis     = DummyDisposable(dummy);
@@ -109,15 +97,13 @@ class testStreamConnection(unittest.TestCase):
         con.push(data,3);
         con.release();
 
-        dis.wait();
-        self.assert_(dis.data() == "123");
+        self.assertEqual(dis.wait(1), "123");
         dis.reset();
 
         con.reserve();
         con.push(data,3);
         con.release();
 
-        dis.wait();
-        self.assert_(dis.data() == "123");
+        self.assertEqual(dis.wait(1), "123");
         dis.reset();
 

@@ -5,12 +5,12 @@ from core import ItemBusy
 class testStreamHexlifyModule( unittest.TestCase ):
 
     def setUp(self):
-        self._d_importer = core.CImporter("test_modules");
+        self._d_importer = core.CImporter("../modules");
         
 
     def testHexlify(self):
         """ MODULE stream_hexlify (hexlify) """
-        root = self._d_importer.load("reflection",{'timeout':'0.1'})
+        root = self._d_importer.load("stream_reflection",{'timeout':'0.1'})
         hexly= self._d_importer.load("stream_hexlify",None, root, "1");
 
         con1 = hexly.connect("aaa");
@@ -22,7 +22,7 @@ class testStreamHexlifyModule( unittest.TestCase ):
         
     def testUnhexlify(self):
         """ MODULE stream_hexlify (unhexlify) """
-        root = self._d_importer.load("reflection",{'timeout':'0.1'})
+        root = self._d_importer.load("stream_reflection",{'timeout':'0.1'})
         hexl = self._d_importer.load("stream_hexlify", None, root, "1")
 
         con1 = hexl.connect("...");
@@ -36,7 +36,7 @@ class testStreamHexlifyModule( unittest.TestCase ):
 
     def testConnectionCount(self):
         """ MODULE stream_hexlify allows only one child """
-        root = self._d_importer.load("reflection",{'timeout':'0.1'})
+        root = self._d_importer.load("stream_reflection",{'timeout':'0.1'})
         hexl = self._d_importer.load("stream_hexlify", None, root, "1")
 
         con1 = hexl.connect("...");

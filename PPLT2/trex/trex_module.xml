@@ -1,20 +1,94 @@
 <?xml version="1.0"?>
 
+<!-- This file contians the Trax grammar of the module desription files. This file
+     belongs to the pyPPLT project (http://pplt.berlios.de). //-->
 
-
+<!-- The document-element "Module" defines that the desribed module is an core
+     module. I.e. a python script. //-->
 <element name="Module">
+    <!-- The attribute "version" of the "Module" tag specifies the version of
+         the description grammar. (This file) The current version is 1.0 //-->
     <attribute name="version"/>
+
     
+    <!-- The Author tag specifies the name and email of the author. This tag
+         is optional. //-->
+    <optional> <element name="Author"> <anyString/> </element> </optional>
     
-    <element name="Archive"> <anyString/> </element>
-    <element name="Class">   <anyString/> </element>
+    <!-- The Version tag specifies the version of the module. //-->
     <element name="Version"> <anyString/> </element>
-   
+
+    <!-- The element Archive specifies the zip archive where the module/class
+         of the pplt-module can be found. If the given path is relative it 
+         will be interpretet as relative to the module-description file! //-->
+    <element name="Archive"> <anyString/> </element>
+
+    <!-- The Class tag specifies the class and python-module name where the 
+         pplt-module can be found. So the classname and the name of the file,
+         that contains the class have to have the same name! ie. the 
+         "ReflectionModule" class have to be in the "ReflectionModule.py" file
+         in the archive given by the Archive tag. //-->
+    <element name="Class"> <anyString/> </element>
+
+    <!-- The Type tag specifies the "type" of the module. If the module is
+         an inner module, that menas if the module can be attached to others
+         this tag schould contain "inner". Other wise it is a root-module,
+         that means that the module can't be attached to others and have to
+         be at the root but other modules can be attached to this one. //-->
+    <element name="Type"> <anyString/> </element>
+
+
+    <!-- The optional Require block contains a number of python-modules, that 
+         have to exists and/or the list of parameter the module needs to be 
+         seted up. This element should not be empty! //-->
     <optional>
-        <element name="Author"> <anyString/> </element>
-    </optional>
+        <element name="Require">
+            
+            <!-- The PyModule element can contain the name of a python module 
+                 that is needed by the pplt-module. The importer will check 
+                 for this modules before loading the pplt-module! //-->
+            <zeroOrMore>
+                <element name="PyModule">
+                    <anyString/>
+                </element>
+            </zeroOrMore>
+
+            <!-- The Parameter element specifies an parameter, that is needed
+                 to set up the module. Please specify all parameters, even if
+                 there are optional. //-->
+            <zeroOrMore>
+                <element name="Parameter">
+                    <!-- The attribute "name" specifies the name of the 
+                         parameter //-->
+                    <attribute name="name"/>
+                    <!-- The optional attribute "default" specifies the 
+                         default value for the parameter. By specifieing this
+                         value, the parameter will be handled as optional. 
+                         //-->
+                    <optional><attribute name="default"/></optional>
+
+                    <zeroOrMore>
+                        <!-- A Description tag can contain a description of 
+                             the parameter in different languages. To specify
+                             the language please use the "lang" attribute of 
+                             this element. //-->
+                        <element name="Description">
+                            <attribute name="lang"/>
+                            <anyString/>
+                        </element>
+                    </zeroOrMore>                        
+                
+                </element>
+            </zeroOrMore>
+        
+        </element>
+    </optional>        
+    
 
     <oneOrMore>
+        <!-- This element can contain a description of the module in different
+             languages. Therefore please use the "lang" attribute to specify
+             the language of the description. //-->
         <element name="Description"> 
             <attribute name="lang"/>
             <anyString/>

@@ -33,8 +33,6 @@ class CInnerModule (CModule):
         # init super-class
         CModule.__init__(self, parameters)
 
-        #FIXME Test if the connection will be closed if the module is 
-        #      destroyed!
         self._d_parent_connection = parent.connect(address)
 
 

@@ -27,7 +27,9 @@
 # ########################################################################## #
 
 from Connection             import CConnection
-from Exceptions             import PPLTError, CorruptInterface, NotImplemented, ItemBusy, ItemNotFound
+from Exceptions             import PPLTError, CorruptInterface, NotImplemented
+from Exceptions             import ItemBusy, ItemNotFound, ModuleImportError
+from Exceptions             import InvalidGrammarVersion
 from Interfaces             import IDisposable, IStreamModule, ISequenceModule
 from Module                 import CModule
 from InnerModule            import CInnerModule, CDisposableModule
@@ -35,6 +37,9 @@ from Object                 import CObject
 from StreamConnection       import CStreamConnection
 from AsyncStreamConnection  import CAsyncStreamConnection
 from SequenceConnection     import CSequenceConnection
+from AsyncSequenceConnection import CAsyncSequenceConnection
 from Tools                  import _fmtid
 
-from Importer               import CImporter, ModuleMeta
+from Importer               import CImporter
+from ModuleMeta             import CModuleMeta
+from CoreModuleMeta         import CCoreModuleMeta

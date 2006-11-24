@@ -5,6 +5,8 @@
     <Class>StreamHexlifyModule</Class>
     <Version>0.1.0</Version>
 
+    <Type>inner</Type>
+
     <Description lang="en"> This module hexlifies all incomming data and
     unheylify all outgoing data. </Description>
 

@@ -49,13 +49,13 @@ class testAsyncStreamConnection(unittest.TestCase):
     _d_importer = None;
     
     def setUp(self):
-        self._d_importer = CImporter("test_modules");
+        self._d_importer = CImporter("../modules");
 
 
 
     def testTimeout(self):
         """ CLASS CAsyncStreamConnection timeout exception """
-        refl = self._d_importer.load("reflection", {'timeout':'0.0001'});
+        refl = self._d_importer.load("stream_reflection", {'timeout':'0.0001'});
 
         con1 = refl.connect("aaa");
         con2 = refl.connect("aaa");
@@ -65,7 +65,7 @@ class testAsyncStreamConnection(unittest.TestCase):
 
     def testConnectionCount(self):
         """ CLASS CAsyncStreamConnection connection count """
-        refl = self._d_importer.load("reflection", {'timeout':1});
+        refl = self._d_importer.load("stream_reflection", {'timeout':1});
 
         con1 = refl.connect("aaa");
         con2 = refl.connect("aaa");
@@ -88,7 +88,7 @@ class testAsyncStreamConnection(unittest.TestCase):
 
     def testDataIntegrity(self):
         """ CLASS CAsyncStreamConnection data integrity """
-        refl = self._d_importer.load("reflection", {'timeout':1});
+        refl = self._d_importer.load("stream_reflection", {'timeout':1});
          
         con1  = refl.connect("aaa");
         con2  = refl.connect("aaa");

@@ -102,7 +102,7 @@ class CAsyncStreamConnection (CStreamConnection):
         if length>0: data = data[0:length];
         self._d_buffer += data;
         
-        if self._d_events_enabled: 
+        if self._d_events_enabled:
             self._d_condition.release();
             self._d_child_module.notify_data();
             return;

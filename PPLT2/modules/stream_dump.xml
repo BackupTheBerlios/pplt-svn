@@ -5,5 +5,7 @@
     <Class>StreamDumpModule</Class>
     <Version>0.1.0</Version>
 
+    <Type>inner</Type>
+
     <Description lang="en"> TODO </Description>
 </Module>

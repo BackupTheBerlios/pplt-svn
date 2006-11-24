@@ -46,3 +46,16 @@ class ItemBusy (PPLTError):
 
 class ItemNotFound (PPLTError):
     def __init__(self, msg): PPLTError.__init__(self, msg);
+
+
+    
+class ModuleImportError( PPLTError ):
+    """ This exception will be raise if a module can't be imported or seted 
+        up. """
+    pass        
+
+class InvalidGrammarVersion( ModuleImportError ):
+    """ This exception will be raised if a module description has the wrong 
+        grammar version. """
+    pass
+

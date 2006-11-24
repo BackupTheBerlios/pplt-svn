@@ -5,8 +5,8 @@ from core import CImporter, ItemBusy;
 class testStreamDumpModule( unittest.TestCase ):
 
     def setUp(self):
-        self._d_importer = CImporter("test_modules");
-        self._d_root     = self._d_importer.load("reflection",{'timeout':'1'})
+        self._d_importer = CImporter("../modules");
+        self._d_root     = self._d_importer.load("stream_reflection",{'timeout':'1'})
 
 
 

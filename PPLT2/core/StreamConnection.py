@@ -170,8 +170,10 @@ class CStreamConnection (CConnection):
 
         if(self._d_events_enabled):
             self._d_events_enabled = False;
-            self._d_child_module.notify_data();
-            self._d_events_enabled = True;
+            try:
+                self._d_child_module.notify_data();
+            finally:
+                self._d_events_enabled = True;
 
 
 
@@ -184,7 +186,7 @@ class CStreamConnection (CConnection):
 
 
 
-    def length(self): 
+    def length(self):
         """ This method will return the number of bytes hold on buffer. """
         return len(self._d_buffer);
        

@@ -24,13 +24,13 @@
 
 from Connection import CConnection
 from Exceptions import CorruptInterface
-from Interfaces import ISequenceModule
+from Interfaces import IValueModule
 import threading
 import logging
 import weakref
 
 
-class CSequenceConnection (CConnection):
+class CValueConnection (CConnection):
     
     _d_buffer = None
     _d_buffer_lock = None
@@ -38,8 +38,8 @@ class CSequenceConnection (CConnection):
 
 
     def __init__(self, parent, child=None):
-        if not isinstance(parent, ISequenceModule):
-            raise CorruptInterface("Need a SequenceModule as parent!")
+        if not isinstance(parent, IValueModule):
+            raise CorruptInterface("Need a ValueModule as parent!")
         
         CConnection.__init__(self, parent, child)
             
@@ -59,22 +59,8 @@ class CSequenceConnection (CConnection):
         # call destructor of super-class
         CConnection.__del__(self)
 
-
-
-    def read(self, length):
-        
-        data = self.recv();
-
-        self._d_buffer_lock.acquire()
-        if length < len(data):
-            self._d_buffer.insert(0,data[length:])
-            data = data[:length];
-        self._d_buffer_lock.release()
-        return data
-
-
    
-    def recv(self):
+    def get(self):
         self._d_buffer_lock.acquire()
 
         if len(self._d_buffer) > 0:
@@ -88,24 +74,18 @@ class CSequenceConnection (CConnection):
             self._d_parent_module.reserve()
         
         try:
-            data = self._d_parent_module.recv(self.identifier())
+            data = self._d_parent_module.get()
         finally:
             if self.autolock():
                 self._d_parent_module.release()
         return data
 
 
-
-    def write(self, data):
-        self.send(data)
-
-
-
-    def send(self, data):
+    def set(self, data):
         if self.autolock():
             self._d_parent_module.reserve()
         try:
-            self._d_parent_module.send(self.identifier(), data)
+            self._d_parent_module.set(self.identifier(), data)
         finally:
             if self.autolock():
                 self._d_parent_module.release()

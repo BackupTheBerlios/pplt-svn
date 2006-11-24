@@ -1,4 +1,5 @@
 """ This module contains the L{CImporter} class. """
+
 # ########################################################################## #
 # Importer.py
 #
@@ -25,15 +26,16 @@
 
 from Exceptions import *
 import os.path
-from zipimport import zipimporter
 import xml.dom.minidom
 import sys
 import imp
 import xml.xpath
+from CoreModuleMeta import CCoreModuleMeta
+
 
 
 class CImporter:
-    """ This simple class can seqrch for modules and load them."""
+    """ This simple class can search for modules and load them."""
 
     _d_search_path = None;
 
@@ -69,7 +71,8 @@ class CImporter:
     def load(self, mod_name, parameters=None, parent=None, address=None):
         """ This method will try to load the given module from the base
             path(s) and to connect it (if given) to the parent with
-            the given address (you may need no address). 
+            the given address (you may need no address). If the module or its
+            meta-data can't be found a ItemNotFound will be raised. 
             
             @return: An instance of the module."""
 
@@ -78,66 +81,36 @@ class CImporter:
 
         # find and load meta-data
         (file_path, mod_meta) = self.getModuleMeta(mod_name)
-        mod_archive = mod_meta.getArchive()
+
+        #check if module is inner-module if parent is set:
+        if parent and not mod_meta.isInnerModule():
+            raise PPLTError("An root-module can't be attached to an other!")
+
+        #check and expand parameters:
+        if not parameters:
+            parameters = {}
+        mod_meta.checkAndExpandParams(parameters)
+
+        #check dependencies:
+        mod_meta.checkDependencies()
+
+        return mod_meta.instance(parameters, parent, address)
         
-        # if no absolute path is give im mod-meta -> take it relative to the
-        # meta-file
-        if not os.path.isabs(mod_archive):
-            mod_archive = os.path.join( os.path.dirname(file_path), mod_archive)
-            
-        # try to find module:
-        zipimp = zipimporter(mod_archive);
-        mod = zipimp.load_module(mod_meta.getClass());
-        
-        #load class from module
-        try:
-            cls = mod.__dict__[mod_meta.getClass()]
-        except:
-            raise ItemNotFound("Can't find class %s in %s [%s]"%
-                        (mod_meta.getClass(), mod_archive, mod.__dict__.keys()))
-
-        #instance class:
-        if not parent:
-            return cls(parameters)
-        else:
-            return cls(parent, address, parameters)
-
-
 
     def getModuleMeta(self, mod_name):
         file_path = self._find_module_meta(mod_name)
+    
+        xml_dom = xml.dom.minidom.parse(file_path).documentElement
 
-        mod_meta = ModuleMeta(file_path)
+        typ = xml.xpath.Evaluate("local-name(.)", xml_dom)
+        if typ == "Module":
+            mod_meta = CCoreModuleMeta(xml_dom, file_path)
+        elif typ == "Assembly":
+            mod_meta = CAssamblyMeta(xml_dom, self)
+        else:
+            raise ModuleImportError("Unknown module type %s in %s"%(typ,file_path))
+
         return file_path, mod_meta
 
-
-
-
-
-class ModuleMeta:
-    _d_dom = None;
-
-    def __init__(self, xml_file = None, xml_data=None):
-        if xml_file:
-            xml_data = open(xml_file).read()
-        if xml_data:
-            self._d_dom = xml.dom.minidom.parseString(xml_data)
-            
-
-    def getArchive(self):
-        node = xml.xpath.Evaluate("./Module/Archive/text()",self._d_dom)
-        return node[0].wholeText.strip()
-
-    def getClass(self):
-        node = xml.xpath.Evaluate("./Module/Class/text()",self._d_dom)
-        return node[0].wholeText.strip()
-
-    def getVersion(self):
-        node = xml.xpath.Evaluate("./Module/Version/text()",self._d_dom)
-        return node[0].wholeText.strip()
-
-    def getDescription(self, lang="en"):
-        node = xml.xpath.Evaluate("./Module/Description[@lang='%s']/text()"%lang, self._d_dom);
-        return node[0].wholeText.strip();
 
 

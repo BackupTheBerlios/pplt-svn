@@ -1,0 +1,104 @@
+<?xml version="1.0"?>
+
+
+<grammar>
+    <element name="Assambly">
+        <attribute name="version"/>
+
+        <optional><element name="Author"><anyString/></element></optional>
+        <element name="Version"><anyString/></element>
+
+
+        <zeroOrMore>
+            <ref name="DescrTag"/>
+        </zeroOrMore>
+
+    
+        <element name="Require">
+            <oneOrMore>
+                <element name="Module"><anyString/></element>
+            </oneOrMore>
+            <zeroOrMore>
+                <element name="Parameter">
+                    <attribute name="name"/>
+                    <optional><attribute name="default"/></optional>
+
+                    <zeroOrMore>
+                        <ref name="DescrTag"/>
+                    </zeroOrMore>                        
+                </element>
+            </zeroOrMore>
+         </element>
+
+         <element name="Setup">
+            <oneOrMore>
+                <ref name="ConfigWOAddr"/>
+            </oneOrMore>
+         </element>
+    </element>
+
+
+    <define name="DescrTag">
+        <element name="Description">
+            <attribute name="lang">
+            </anyString>
+        </element>            
+    </define>
+
+    
+    <define name="ConfigWOAddr">
+        <element name="Load">
+            <attribute name="module"/>
+            <optional><attribute name="namespace"/></optional>
+
+            <zeroOrMore>
+                <element name="Parameter">
+                    <choice>
+                        </anyString>
+                        <element name="Valueof">
+                            <anyString/>
+                        </element>
+                    </choice>
+                </element>
+            </zeroOrMore>
+
+            <zeroOrMore>
+                <ref name="Config"/>
+            </zeroOrMore>
+    </define>
+
+
+    <define name="Config">
+        <element name="Load">
+            <attribute name="module"/>
+            <optional><attribute name="namespace"/></optional>
+
+            <zeroOrMore>
+                <element name="Parameter">
+                    <choice>
+                        </anyString>
+                        <element name="Valueof">
+                            <anyString/>
+                        </element>
+                    </choice>
+                </element>
+            </zeroOrMore>
+
+            <optional>
+                <element name="Address">
+                    <choice>
+                        </anyString>
+                        <element name="Valueof">
+                            <anyString/>
+                        </element>                            
+                    </choice>
+                </element>
+            </optional>
+
+            <zeroOrMore>
+                <ref name="Config"/>
+            </zeroOrMore>
+        </element>
+    </define>
+
+</grammar>

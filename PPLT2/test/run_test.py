@@ -23,21 +23,25 @@
 #
 # ########################################################################## #
 
-import logging;
-import unittest;
-from testStreamConnection import testStreamConnection;
-from testConnection import testConnection;
-from testAsyncStreamConnection import testAsyncStreamConnection;
-from testImporter import testImporter;
+import logging
+import unittest
+from testStreamConnection import testStreamConnection
+from testConnection import testConnection
+from testSequenceConnection import testSequenceConnection
+from testAsyncStreamConnection import testAsyncStreamConnection
+from testModuleMeta import testModuleMeta
+from testImporter import testImporter
 from testInnerModule import testInnerModule
 from testStreamHexlifyModule import testStreamHexlifyModule
 from testStreamDumpModule import testStreamDumpModule
+from testSequenceReflectionModule import testSequenceReflectionModule
+from testCoreModuleMeta import testCoreModuleMeta
 
 
 if __name__ == "__main__":
     #config logging:
     con = logging.FileHandler("test.log")
-    con.setFormatter(logging.Formatter("%(levelname)-8s %(message)s"))
+    con.setFormatter(logging.Formatter("%(levelname)-8s %(filename)s:%(lineno)d %(message)s"))
     logging.getLogger("PPLT").addHandler(con)
     logging.getLogger("PPLT").setLevel(logging.DEBUG)
 
@@ -46,23 +50,37 @@ if __name__ == "__main__":
 
     #create suite:
     suite = unittest.TestSuite()
-    
+   
+    suite.addTest(testModuleMeta("testParameterExpand"))
+    suite.addTest(testModuleMeta("testCheckParameters"))
+    suite.addTest(testModuleMeta("testMetadata"))
+    suite.addTest(testModuleMeta("testInterface"))
+
+    suite.addTest(testCoreModuleMeta("testGrammarVersion"))
+    suite.addTest(testCoreModuleMeta("testDependencies"))
+
     suite.addTest(testImporter("testModuleFinding"))
     suite.addTest(testImporter("testModuleLoading"))
+    suite.addTest(testImporter("testInnerModuleLoading"))
 
     suite.addTest(testInnerModule("testConCloseAtModDestroy"))
     suite.addTest(testInnerModule("testSimpleInnerModule"))
     suite.addTest(testInnerModule("testSimpleDisposableModule"))
 
     suite.addTest(testConnection("testConnectionClose"))
-    
-    suite.addTest(testStreamConnection("testPushParameterConstance"))
+
+    suite.addTest(testSequenceConnection("testEventThread"))
+    suite.addTest(testSequenceConnection("testConnectionClose"))
+    suite.addTest(testSequenceConnection("testStreamInterface"))
+
     suite.addTest(testStreamConnection("testEventStatus"))
     suite.addTest(testStreamConnection("testEventThread"))
     
     suite.addTest(testAsyncStreamConnection("testConnectionCount"))
     suite.addTest(testAsyncStreamConnection("testTimeout"))
     suite.addTest(testAsyncStreamConnection("testDataIntegrity"))
+
+    suite.addTest(testSequenceReflectionModule("testSimpleIO"))
 
     suite.addTest(testStreamHexlifyModule("testHexlify"));
     suite.addTest(testStreamHexlifyModule("testUnhexlify"))

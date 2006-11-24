@@ -7,20 +7,24 @@ class testImporter(unittest.TestCase):
 
 
     def setUp(self):
-        self._d_importer = CImporter("test_modules");
+        self._d_importer = CImporter("../modules");
 
 
 
     def testModuleFinding(self):
-        (path, meta) = self._d_importer.getModuleMeta("reflection");
+        """ CLASS CImporter module finding """
+        (path, meta) = self._d_importer.getModuleMeta("stream_reflection");
 
         self.assertRaises(Exception, self._d_importer.getModuleMeta, "DoNotEx");
        
 
 
     def testModuleLoading(self):
-        self._d_importer.load("reflection");
+        """ CLASS CImporter module loading """
+        self._d_importer.load("stream_reflection");
 
 
     def testInnerModuleLoading(self):
-        self._d_importer.load("hexifier");
+        """ CLASS CImporter inner-module loading """
+        root = self._d_importer.load("stream_reflection")
+        self._d_importer.load("stream_hexlify", None, root, "1")
