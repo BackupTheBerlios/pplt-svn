@@ -66,7 +66,7 @@ import weakref
 class CConnectionDatabase:
     """ This class should be used to managed all connection of a module. All 
         modules have an instance of this class as the _d_connections 
-        attribute. Look at the L{core.ConnectionDatabase} module doc for more
+        attribute. Look at the L{ConnectionDatabase} module doc for more
         details."""
     _d_id_con_map = None
     _d_id_addr_map = None

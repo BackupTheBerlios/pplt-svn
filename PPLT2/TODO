@@ -1,3 +1,15 @@
+<<<<<<< .mine
+
+
+ *** Module Management ***
+ write a simple module management with following features:
+    1.) Based on setuptool's (PEAK) egg format. 
+    2.) Using the require() method from setuptools
+    3.) Define a xml that descibes the modules avaliable
+    3.b) Maybe a fingerprint of the egg should be added to the xml
+         to prevent the overriding of existing modules.
+=======
     - finish implementation of ValueConnection, ValueModule...
     - implement AssemblyMeta/Assembly
        
+>>>>>>> .r73

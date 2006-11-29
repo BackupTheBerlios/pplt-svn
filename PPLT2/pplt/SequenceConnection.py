@@ -1,4 +1,4 @@
-""" This module only contains of the class L{CSequenceConnection}.
+""" This module only contains the class L{CSequenceConnection}.
 
     The sequence connection can be used if a module proviedes sequences of
     data, i.e. datagrams in opposit to the L{CStreamConnection}. To recive a
@@ -103,13 +103,39 @@ import weakref
 
 
 class CSequenceConnection (CConnection):
-    """ The SequenceConnection can be used for datagram connections.  """    
+    """ The SequenceConnection can be used for datagram connections.
+    
+        To recive a datagram from a sequence-connection you have to call the 
+        recv() method. Otherwise to send a message you have to call the send()
+        method. Additional the SequenceConnection class provides an interface
+        identical to the on of the StreamModule, so an inner-module that 
+        requires a stream-connection can handle sequence-connections."""    
     _d_buffer = None
     _d_buffer_lock = None
     _d_event_threads = None
 
 
     def __init__(self, parent, child=None):
+        """ The constructor takes two arguments. The parent specifies the 
+            parent (destiantion) of the connection. This should be the module,
+            that create the connection instance. The second (optional) 
+            parameter child may specifiy the child (source) of the connection.
+            The child have to inherit from L{IDisposable} class. This will be
+            checked by the connection. The child have to implement the 
+            notify_data() method to satisfy the interface definition of the
+            L{IDisposable} interface. This method will be called by the 
+            connection if there is "sudden" data for the child. This data
+            will be stored into an internal buffer that will be obtained by
+            the next recv() or read() call. 
+
+            @param parent: The parent of the connection. This should be the 
+                           module that created the connection.
+            @type  parent: Any derived from L{ISequenceModule}                           
+            @param child:  The child of the connection, normaly an other 
+                           module. This instance will be notified about 
+                           sudden data.
+            @type child:   Any derived from L{IDisposable} """                           
+        
         if not isinstance(parent, ISequenceModule):
             raise CorruptInterface("Need a SequenceModule as parent!")
         
@@ -134,7 +160,21 @@ class CSequenceConnection (CConnection):
 
 
     def read(self, length):
-        
+        """ This method acts like the read() method of a L{CStreamConnection}
+            unsing the internal buffer. Therefore each module that needs a 
+            L{CStreamConnection} from its parent can deal with 
+            L{CSequenceConnection}. The parameter length specifies the max. 
+            number of bytes returned by the read() method. The method will 
+            return a string containing the obtained data on success or will 
+            raise an exception on error. 
+           
+            B{Note:} Please reserve() and release() the parent module by 
+            calling these methodes just bevore and after you to any IO! All 
+            connections inherit these methods from the L{CConnection} class.
+
+            @param length: Maximum number of bytes returned by the method.
+            @type length: integer
+            @return: String containing the obtained data """ 
         data = self.recv();
 
         self._d_buffer_lock.acquire()
@@ -147,6 +187,14 @@ class CSequenceConnection (CConnection):
 
    
     def recv(self):
+        """ This method will recieve a datagram from the parent of the 
+            connection or will raise an exception on error.
+
+            B{Note:} Please reserve() and release() the parent module by 
+            calling these methodes just bevore and after you to any IO! All 
+            connections inherit these methods from the L{CConnection} class.
+
+            @return: String containing the message. """
         self._d_buffer_lock.acquire()
 
         if len(self._d_buffer) > 0:
@@ -169,11 +217,32 @@ class CSequenceConnection (CConnection):
 
 
     def write(self, data):
+        """ This method simply calls the send() method. It exists to satisfy 
+            the interface of a L{CStreamConnection} to allow a module that 
+            expects a stream-connection to use a sequence-connection. This
+            method will raise an exception on error.
+            
+            B{Note:} Please reserve() and release() the parent module by 
+            calling these methodes just bevore and after you to any 
+            IO! All connections inherit these methods from the 
+            L{CConnection} class.
+
+            @param data: The data to send.
+            @type data: string """
         self.send(data)
 
 
 
     def send(self, data):
+        """ This method sends the given string to the parent of the 
+            connection. The method will raise an exception on error.
+            
+            B{Note:} Please reserve() and release() the parent module by 
+            calling these methodes just bevore and after you to any IO! All 
+            connections inherit these methods from the L{CConnection} class.
+
+            @param data: The message to send.
+            @type data: string """
         if self.autolock():
             self._d_parent_module.reserve()
         try:
@@ -185,6 +254,18 @@ class CSequenceConnection (CConnection):
 
 
     def push(self, data):
+        """ This method will be called by the parent module to notify the 
+            child module. The parameter data holda the message for the child 
+            this message will not be delivered directly to the child. The data
+            will be first stroed into an internal buffer. If the child inherit
+            from the L{IDisposable} class the child will be informed about the
+            sudden data by calling its notify_data() method. Otherwise nothing
+            happens and the data will be simply kept in the buffer until the 
+            next read() or recv() method call. You can also disable the 
+            notification by calling events_enabled(False).
+            
+            @param data: The message passed to the child.
+            @type data: string"""
         # store new data in buffer:
         self._d_buffer_lock.acquire()
         self._d_buffer.append(data)
@@ -206,6 +287,8 @@ class CSequenceConnection (CConnection):
 
 
     def _release(self):
+        """ Internal used method to release the parent module. Do not use this
+            method directly. Please use the release() method."""
         CConnection._release(self)
         if self._d_events_enabled and len(self._d_buffer)>0:
             # create a new thread that holds a weakref of self to process the 

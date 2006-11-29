@@ -1,4 +1,20 @@
-""" This module contains only the L{CStreamConnection} class. """
+""" This module contains only the L{CStreamConnection} class. 
+    The stream-connection will be used by modules that provide data streams.
+    The connection will be created by the connection() method of the 
+    destination (parent) module. The module have to implement the
+    L{IStreamModule} interface otherwise you are not able to create a stream
+    connection. So a sample connection method of a module can look like:
+    
+    >>> def connect(self, address, child=None):
+    >>>     # do something usefull
+    >>>     con = CStreamConnection(self, child)
+    >>>     self._d_connections.addConnection(con, address)
+    >>>     return con
+    
+    This example also shows the useage of the L{ConnectionDatabase}. This 
+    connection table should be used to handle all connection of a modle.
+    Look at the documentation of the L{CConnectionDatabase} class for more
+    details."""
 # ########################################################################## #
 # StreamConnection.py
 #
@@ -33,8 +49,8 @@ import weakref
 
 
 class CStreamConnection (CConnection):
-    """ This class represents the connection between modules, handleing with 
-        data streams. This module provide the read(), write() methods for the
+    """ This class represents the connection between modules, dealing with 
+        data streams. This connection provide the read(), write() methods for the
         child module and the push() method for the parent.
 
         A instance of this class will be created by the parent and will be 
@@ -193,11 +209,14 @@ class CStreamConnection (CConnection):
 
 
     def _release(self):
+        """ Internal used method to reserve the connection and the destination
+            module. Please do not use this method! Use the inhered method 
+            release() instead. """
         CConnection._release(self);
                     
         if(len(self._d_buffer)>0 and self._d_events_enabled):
             # create a new thread that holds a weakref of self to process the left data.
-            t = threading.Thread(target=CStreamConnection._start_event_thread, 
+            t = threading.Thread(target=CStreamConnection._start_event_thread,
                                  args=(weakref.proxy(self),));
             self._d_event_threads.append(t);
             t.start();

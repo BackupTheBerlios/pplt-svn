@@ -89,7 +89,10 @@ class CImporter:
         """ The base_path specifies the path where to search for modules. If 
             it is a string or a list of string the importer will try to find 
             the modules there. Otherwise the importer will look at 
-            "sys.prefix"/pplt/ or at ~/.pplt for modules. """
+            "sys.prefix"/pplt/ or at ~/.pplt for modules.
+            
+            @param base_path: A string or a list of strings specifieing where
+            to search for modules. """
 
         self._d_search_path=[os.path.abspath(os.path.expanduser('~/.pplt')),
                              os.path.abspath(os.path.join(sys.prefix, 'pplt'))]
@@ -102,6 +105,9 @@ class CImporter:
 
 
     def _find_module_meta(self, mod_name):
+        """ Internal used method to find module-metadata files. This method
+            searches for a file named mod_name+".xml" in all paths given to
+            the constructor. """
         file_path  = None;
         for path in self._d_search_path:
             if os.path.isfile( os.path.join(path, mod_name+".xml") ):
@@ -119,7 +125,17 @@ class CImporter:
             path(s) and to connect it (if given) to the parent with
             the given address (you may need no address). If the module or its
             meta-data can't be found a ItemNotFound will be raised. 
-            
+           
+            @param mod_name: The parameter specifies the name of the module
+                to load.
+            @param parameters: This argument specifies the parameter-dict used
+                to setup the module. This dict will be checked and extended by
+                the importer. Look at L{ModuleMeta} for more details.
+            @param parent: If you want to load an "inner"-module, you need to
+                specifiy the parent module instance the new module will be 
+                attached to.
+            @param address: Specifies the address of the connection to the
+                parent.
             @return: An instance of the module."""
 
         if (parent and not address) or (address and not parent):

@@ -57,7 +57,7 @@ class CModule (CObject):
         CObject.__init__(self)
         
         if None == parameters:
-            parameters == {}
+            parameters = {}
 
         self._d_module_lock = threading.Lock()
         self._d_module_parameters = parameters
