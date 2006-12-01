@@ -24,10 +24,10 @@
 
 
 
-from core import CModule, IStreamModule
-from core import CAsyncStreamConnection
-from core import PPLTError, ItemBusy
-from core import _fmtid;
+from pplt import CModule, IStreamModule
+from pplt import CAsyncStreamConnection
+from pplt import PPLTError, ItemBusy
+from pplt import _fmtid;
 import logging
 
 
@@ -46,7 +46,7 @@ class ReflectionModule(CModule, IStreamModule):
         self._d_logger.debug("Setup ReflectionModule with timeout %s"%self._d_timeout);
 
     def connect(self, addr, child=None):
-        if not isinstance(addr,str):
+        if not isinstance(addr, (str,unicode)):
             raise PPLTError("This module need addresses to connect.");
 
         self._d_logger.debug("connect with addr %s"%addr);

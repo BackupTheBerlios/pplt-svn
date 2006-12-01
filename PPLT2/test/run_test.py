@@ -25,11 +25,12 @@
 
 import logging
 import unittest
+from testModuleMeta import testModuleMeta
+from testAssemblyMeta import testAssemblyMeta
 from testStreamConnection import testStreamConnection
 from testConnection import testConnection
 from testSequenceConnection import testSequenceConnection
 from testAsyncStreamConnection import testAsyncStreamConnection
-from testModuleMeta import testModuleMeta
 from testImporter import testImporter
 from testInnerModule import testInnerModule
 from testStreamHexlifyModule import testStreamHexlifyModule
@@ -59,9 +60,16 @@ if __name__ == "__main__":
     suite.addTest(testCoreModuleMeta("testGrammarVersion"))
     suite.addTest(testCoreModuleMeta("testDependencies"))
 
+    suite.addTest(testAssemblyMeta("testGrammarVersion"))
+    suite.addTest(testAssemblyMeta("testDependencies"))
+    suite.addTest(testAssemblyMeta("testLoad"))
+    suite.addTest(testAssemblyMeta("testCmplxLoad"))
+    suite.addTest(testAssemblyMeta("testInnerLoad"))
+
     suite.addTest(testImporter("testModuleFinding"))
     suite.addTest(testImporter("testModuleLoading"))
     suite.addTest(testImporter("testInnerModuleLoading"))
+    suite.addTest(testImporter("testAssemblyLoading"))
 
     suite.addTest(testInnerModule("testConCloseAtModDestroy"))
     suite.addTest(testInnerModule("testSimpleInnerModule"))

@@ -1,6 +1,6 @@
 import xml.dom.minidom
 import unittest
-from core import CCoreModuleMeta
+from pplt import CCoreModuleMeta
 
 class testCoreModuleMeta (unittest.TestCase):
     _d_doc1 = """<?xml version="1.0"?>

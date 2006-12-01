@@ -1,5 +1,5 @@
 import unittest
-from core import CModuleMeta, ModuleImportError
+from pplt import CModuleMeta, ModuleImportError
 import xml.dom.minidom
 
 class testModuleMeta(unittest.TestCase):

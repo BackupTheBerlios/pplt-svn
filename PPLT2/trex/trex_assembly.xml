@@ -31,9 +31,7 @@
          </element>
 
          <element name="Setup">
-            <oneOrMore>
-                <ref name="ConfigWOAddr"/>
-            </oneOrMore>
+            <oneOrMore> <ref name="ConfigWOAddr"/> </oneOrMore>
          </element>
     </element>
 
@@ -53,6 +51,7 @@
 
             <zeroOrMore>
                 <element name="Parameter">
+                    <attribute name="name"/>
                     <choice>
                         </anyString>
                         <element name="Valueof">
@@ -75,6 +74,7 @@
 
             <zeroOrMore>
                 <element name="Parameter">
+                    <attribute name="name"/>
                     <choice>
                         </anyString>
                         <element name="Valueof">
@@ -85,7 +85,7 @@
             </zeroOrMore>
 
             <optional>
-                <element name="Address">
+            <element name="Address">
                     <choice>
                         </anyString>
                         <element name="Valueof">

@@ -70,8 +70,9 @@ import xml.dom.minidom
 import sys
 import imp
 import xml.xpath
+import logging
 from CoreModuleMeta import CCoreModuleMeta
-
+from AssemblyMeta   import CAssemblyMeta
 
 
 class CImporter:
@@ -97,9 +98,11 @@ class CImporter:
         self._d_search_path=[os.path.abspath(os.path.expanduser('~/.pplt')),
                              os.path.abspath(os.path.join(sys.prefix, 'pplt'))]
 
+        self._d_logger = logging.getLogger("PPLT.core")
+
         if isinstance(base_path, str):
             self._d_search_path = [base_path]
-        elif isinstance(base_path, [list, tuple]):
+        elif isinstance(base_path, (list, tuple)):
             self._d_search_path = base_path
 
 
@@ -155,7 +158,8 @@ class CImporter:
 
         #check dependencies:
         mod_meta.checkDependencies()
-
+        
+        self._d_logger.debug("Instance module %s with addr %s and params %s"%(mod_name,address,parameters))
         return mod_meta.instance(parameters, parent, address)
         
 
@@ -177,7 +181,7 @@ class CImporter:
         if typ == "Module":
             mod_meta = CCoreModuleMeta(xml_dom, file_path)
         elif typ == "Assembly":
-            mod_meta = CAssamblyMeta(xml_dom, self)
+            mod_meta = CAssemblyMeta(xml_dom, self)
         else:
             raise ModuleImportError("Unknown module type %s in %s"%(typ,file_path))
 

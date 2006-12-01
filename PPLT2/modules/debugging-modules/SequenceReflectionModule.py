@@ -24,10 +24,10 @@
 
 
 
-from core import CModule, ISequenceModule
-from core import CAsyncSequenceConnection
-from core import PPLTError, ItemBusy
-from core import _fmtid;
+from pplt import CModule, ISequenceModule
+from pplt import CAsyncSequenceConnection
+from pplt import PPLTError, ItemBusy
+from pplt import _fmtid;
 import logging
 
 

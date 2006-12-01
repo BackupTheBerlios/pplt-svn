@@ -13,7 +13,7 @@
     
     This example also shows the useage of the L{ConnectionDatabase}. This 
     connection table should be used to handle all connection of a modle.
-    Look at the documentation of the L{CConnectionDatabase} class for more
+    Look at the documentation of the L{ConnectionDatabase} class for more
     details."""
 # ########################################################################## #
 # StreamConnection.py

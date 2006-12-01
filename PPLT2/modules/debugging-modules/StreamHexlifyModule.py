@@ -23,9 +23,9 @@
 # ########################################################################## #
 
 
-from core import CDisposableModule, IStreamModule
-from core import CStreamConnection
-from core import ItemBusy
+from pplt import CDisposableModule, IStreamModule
+from pplt import CStreamConnection
+from pplt import ItemBusy
 import weakref
 import binascii
 

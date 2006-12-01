@@ -9,9 +9,13 @@ setup(  name = "pplt",
         author = "Hannes Matuschek",
         author_email = "hmatuschek@gmx.net",
         url = "http://pplt.berlios.de",
-        packages = ['core'],
-        package_dir = {'pplt':'core'},
-        data_files = {'pplt': ['modules/*.zip','modules/*.xml'],
-                      'pplt/trex': ['trex/*.xml']})
+        packages = ['pplt'],
+        data_files = [('pplt', ['modules/debugging-modules.zip',
+                                'modules/stream_reflection.xml',
+                                'modules/stream_hexlify.xml',
+                                'modules/stream_dump.xml',
+                                'modules/sequence_reflection.xml']),
+                      ('pplt/trex', ['trex/trex_assembly.xml',
+                                     'trex/trex_module.xml'])])
 
 

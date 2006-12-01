@@ -24,7 +24,7 @@
 
 
 import unittest;
-import core;
+import pplt as core;
 
 
 class dummy_inner(core.CInnerModule, core.IStreamModule):

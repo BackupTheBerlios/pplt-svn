@@ -1,5 +1,5 @@
 import unittest;
-from core import CImporter;
+from pplt import CImporter;
 
 
 class testImporter(unittest.TestCase):
@@ -24,7 +24,20 @@ class testImporter(unittest.TestCase):
         self._d_importer.load("stream_reflection");
 
 
+
     def testInnerModuleLoading(self):
         """ CLASS CImporter inner-module loading """
         root = self._d_importer.load("stream_reflection")
         self._d_importer.load("stream_hexlify", None, root, "1")
+
+
+    
+    def testAssemblyLoading(self):
+        """ CLASS CImporter simple assembly loading """
+        root = self._d_importer.load("test_assembly",{'timeout':'0.1'})
+
+        con1 = root.connect("refl:1")
+        con2 = root.connect("refl:1")
+
+        con1.write("123")
+        self.assertEqual(con2.read(3), "123")

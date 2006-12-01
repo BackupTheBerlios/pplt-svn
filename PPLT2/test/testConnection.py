@@ -24,7 +24,7 @@
 
 
 import unittest;
-import core;
+import pplt as core;
 
 class DummyModule(core.CModule):
     _d_con_count = 0;

@@ -43,3 +43,4 @@ from Tools                  import _fmtid
 from Importer               import CImporter
 from ModuleMeta             import CModuleMeta
 from CoreModuleMeta         import CCoreModuleMeta
+from AssemblyMeta           import CAssemblyMeta

@@ -1,5 +1,5 @@
 import unittest;
-from core import CImporter, ItemBusy;
+from pplt import CImporter, ItemBusy;
 
 
 class testStreamDumpModule( unittest.TestCase ):

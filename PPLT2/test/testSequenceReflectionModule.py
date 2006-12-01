@@ -1,7 +1,7 @@
 
 
 import unittest
-from core import CImporter
+from pplt import CImporter
 
 
 class testSequenceReflectionModule(unittest.TestCase):

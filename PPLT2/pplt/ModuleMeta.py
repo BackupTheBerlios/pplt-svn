@@ -22,25 +22,26 @@
 #
 # ########################################################################## #
 
+import logging
 import xml.dom.minidom
 import xml.xpath
 from Exceptions import ModuleImportError
 
 class CModuleMeta:
     _d_dom              = None
-
+    _d_logger           = None
     def __init__(self, xml_dom):
         self._d_dom = xml_dom
-
+        self._d_logger = logging.getLogger("PPLT.core")
 
     def getVersion(self):
-        node = xml.xpath.Evaluate("Version/text()",self._d_dom)
-        return node[0].wholeText.strip()
+        node = xml.xpath.Evaluate("string(Version/text())",self._d_dom)
+        return node.strip()
 
 
     def getAuthor(self):
-        node = xml.xpath.Evaluate("Author/text()",self._d_dom)
-        return node[0].wholeText.strip()
+        node = xml.xpath.Evaluate("string(Author/text())",self._d_dom)
+        return node.strip()
 
 
     def isInnerModule(self):
@@ -54,8 +55,9 @@ class CModuleMeta:
 
 
     def getDescription(self, lang="en"):
-        node = xml.xpath.Evaluate("Description[@lang='%s']/text()"%lang, self._d_dom)
-        return node[0].wholeText.strip()
+        query = "string(Description[@lang='%s']/text())"%lang
+        node = xml.xpath.Evaluate(query, self._d_dom)
+        return node.strip()
 
 
     def checkAndExpandParams(self, params):

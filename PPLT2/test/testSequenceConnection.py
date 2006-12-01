@@ -1,8 +1,8 @@
 
 import unittest
-from core import CImporter
-from core import IDisposable
-from core import ItemBusy
+from pplt import CImporter
+from pplt import IDisposable
+from pplt import ItemBusy
 import threading
 
 class Dummy(IDisposable):

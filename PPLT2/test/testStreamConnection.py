@@ -25,7 +25,7 @@
 
 
 import unittest;
-from core import *;
+from pplt import *;
 import threading;
 
 class DummyModule(CModule, IStreamModule):

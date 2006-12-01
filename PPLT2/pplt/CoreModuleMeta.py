@@ -54,7 +54,7 @@ class CCoreModuleMeta (CModuleMeta):
         return node[0].wholeText.strip()
 
 
-    def isInnerModule(self):
+    def isInnerModule(self):    # maybe obsolete
         node = xml.xpath.Evaluate("/Module/Type/text()",self._d_dom)
         return node[0].wholeText.strip()=="inner"
 
@@ -91,8 +91,10 @@ class CCoreModuleMeta (CModuleMeta):
 
         #instance class:
         if not self.isInnerModule():
+            self._d_logger.debug("Module %s instance with params %s"%(self.getClass(),parameters))
             return cls(parameters)
         else:
+            self._d_logger.debug("InnerModule %s instance with addr %s and params %s"%(self.getClass(), address, parameters))
             return cls(parent, address, parameters)
 
 

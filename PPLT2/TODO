@@ -1,15 +1,7 @@
-<<<<<<< .mine
 
+ + Implement a "assembly" class that holds several modules to an instance that
+   provide a CModule like interface. Modify CImporter so that it can load this
+   assemblies. The target is that a user should not need to know if he loads a
+   "normal" module or an assembly ob several modules. 
 
- *** Module Management ***
- write a simple module management with following features:
-    1.) Based on setuptool's (PEAK) egg format. 
-    2.) Using the require() method from setuptools
-    3.) Define a xml that descibes the modules avaliable
-    3.b) Maybe a fingerprint of the egg should be added to the xml
-         to prevent the overriding of existing modules.
-=======
-    - finish implementation of ValueConnection, ValueModule...
-    - implement AssemblyMeta/Assembly
-       
->>>>>>> .r73
+ + Finish the value-connection and module and write some tests!   

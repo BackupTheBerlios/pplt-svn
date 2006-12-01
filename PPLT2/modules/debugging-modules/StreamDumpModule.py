@@ -23,9 +23,9 @@
 # ########################################################################## #
 
 
-from core import IStreamModule, CDisposableModule
-from core import ItemBusy
-from core import CStreamConnection
+from pplt import IStreamModule, CDisposableModule
+from pplt import ItemBusy
+from pplt import CStreamConnection
 
 
 

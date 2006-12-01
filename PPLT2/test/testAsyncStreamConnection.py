@@ -1,12 +1,12 @@
 import unittest;
-from core import ItemBusy, PPLTError;
-from core import IDisposable;
-from core import CImporter;
+from pplt import ItemBusy, PPLTError;
+from pplt import IDisposable;
+from pplt import CImporter;
 import logging;
 import threading;
 import weakref;
 import sys;
-from core import _fmtid;
+from pplt import _fmtid;
 
 
 class DummyDisposable(IDisposable):

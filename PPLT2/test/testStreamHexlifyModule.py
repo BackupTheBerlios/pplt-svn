@@ -1,6 +1,6 @@
 import unittest
-import core
-from core import ItemBusy
+import pplt as core
+from pplt import ItemBusy
 
 class testStreamHexlifyModule( unittest.TestCase ):
 

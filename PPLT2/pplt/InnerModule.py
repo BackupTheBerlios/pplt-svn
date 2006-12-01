@@ -33,6 +33,7 @@ class CInnerModule (CModule):
         # init super-class
         CModule.__init__(self, parameters)
 
+        self._d_logger.debug("Create connection to parent with addr %s"%address)
         self._d_parent_connection = parent.connect(address)
 
 
@@ -44,6 +45,7 @@ class CDisposableModule (CModule, IDisposable):
         # init superclass
         CModule.__init__(self, parameters)
 
+        self._d_logger.debug("Create connection to parent with addr %s"%address)
         self._d_parent_connection = parent.connect(address, self)
 
 

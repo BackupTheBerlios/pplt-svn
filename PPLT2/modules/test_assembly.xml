@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+<Assembly version="1.0">
+    <Version>0.0.1</Version>
+    <Author>Hannes Matuschek &lt;hmatuschek AT gmx DOT net&gt;</Author>
+
+
+    <Require>
+        <Module>stream_reflection</Module>
+        <Parameter name="timeout"/>
+    </Require>
+
+
+    <Setup>
+        <Load module="stream_reflection" namespace="refl">
+            <Parameter name="timeout"><ValueOf>timeout</ValueOf></Parameter>
+        </Load>            
+    </Setup>
+</Assembly>
