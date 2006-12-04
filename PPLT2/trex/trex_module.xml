@@ -30,13 +30,6 @@
          in the archive given by the Archive tag. //-->
     <element name="Class"> <anyString/> </element>
 
-    <!-- The Type tag specifies the "type" of the module. If the module is
-         an inner module, that menas if the module can be attached to others
-         this tag schould contain "inner". Other wise it is a root-module,
-         that means that the module can't be attached to others and have to
-         be at the root but other modules can be attached to this one. //-->
-    <element name="Type"> <anyString/> </element>
-
 
     <!-- The optional Require block contains a number of python-modules, that 
          have to exists and/or the list of parameter the module needs to be 

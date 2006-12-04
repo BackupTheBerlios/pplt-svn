@@ -147,10 +147,6 @@ class CImporter:
         # find and load meta-data
         (file_path, mod_meta) = self.getModuleMeta(mod_name)
 
-        #check if module is inner-module if parent is set:
-        if parent and not mod_meta.isInnerModule():
-            raise PPLTError("An root-module can't be attached to an other!")
-
         #check and expand parameters:
         if not parameters:
             parameters = {}
@@ -175,7 +171,10 @@ class CImporter:
             load the assembly. """
         file_path = self._find_module_meta(mod_name)
     
-        xml_dom = xml.dom.minidom.parse(file_path).documentElement
+        try:
+            xml_dom = xml.dom.minidom.parse(file_path).documentElement
+        except DOMException, e:
+            raise ModuleImportError("Parse error: File %s: %s"%(file_path, str(e)))
 
         typ = xml.xpath.Evaluate("local-name(.)", xml_dom)
         if typ == "Module":

@@ -1,3 +1,29 @@
+
+# ########################################################################## #
+# AssemblyMeta.py
+#
+# 2006-12-03
+# Copyright 2006 Hannes Matuschek
+# hmatuschek@gmx.net
+# ########################################################################## #
+#
+# This program is free software; you can redistribute it and/or modify
+# it under the terms of the GNU General Public License as published by
+# the Free Software Foundation; either version 2 of the License, or
+# (at your option) any later version.
+#
+# This program is distributed in the hope that it will be useful,
+# but WITHOUT ANY WARRANTY; without even the implied warranty of
+# MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE. See the
+# GNU General Public License for more details.
+#
+# You should have received a copy of the GNU General Public License
+# along with this program; if not, write to the Free Software
+# Foundation, Inc., 59 Temple Place - Suite 330, Boston, MA 02111-1307, USA.
+#
+# ########################################################################## #
+
+
 import xml.xpath
 from ModuleMeta import CModuleMeta
 from Assembly import CAssembly
@@ -30,7 +56,7 @@ class CAssemblyMeta(CModuleMeta):
             try:
                 self._d_importer._find_module_meta(mod_name)
             except Exception, e:
-                raise ModuleImportError("Unresolved dependencies: Module %s not found"%mod_name)
+                raise MissingDependency("Module %s not found! [%s]"%(mod_name,str(e)))
 
 
 
@@ -110,10 +136,10 @@ class CAssemblyMeta(CModuleMeta):
 
     def _module_address(self, node, parameters):
         if xml.xpath.Evaluate("count(./Address)>1",node):
-            raise Exception("More that one address specified!")
+            raise ModuleImportError("Invalid assembly: More that one address specified!")
         
         if xml.xpath.Evaluate("count(./Address/ValueOf)>1",node):
-            raise Exception("There can only be on <ValueOf> inside a <Address>")
+            raise ModuleImportError("Invalid assembly: There can only be on <ValueOf> inside a <Address>")
 
         if xml.xpath.Evaluate("count(./Address/ValueOf)=1",node):
             var_name = xml.xpath.Evaluate("string(./Address/ValueOf/text())",node).strip()

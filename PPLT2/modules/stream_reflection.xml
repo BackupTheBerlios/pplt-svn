@@ -6,8 +6,6 @@
     <Class>ReflectionModule</Class>
     <Version>0.1.0</Version>
 
-    <Type>root</Type>
-
     <Description lang="de"> Das reflection-Modul ginb empfangene Daten an 
     andere Module weiter. Zwei Module, die mit der selben Adresse mit dem
     Reflection Modul verbunden sind, können so Daten austauschen. Sendet 

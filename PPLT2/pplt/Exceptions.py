@@ -34,8 +34,8 @@ class CorruptInterface (PPLTError):
     def __init__(self, msg): PPLTError.__init__(self, msg);
 
 
-class NotImplemented (CorruptInterface):
-    def __init__(self, msg): CorruptInterface.__init__(self, msg);
+#class NotImplemented (CorruptInterface):
+#    def __init__(self, msg): CorruptInterface.__init__(self, msg);
 
 
 
@@ -48,7 +48,13 @@ class ItemNotFound (PPLTError):
     def __init__(self, msg): PPLTError.__init__(self, msg);
 
 
-    
+
+
+#
+# Follwoing exceptions are used inside the importer subsystem. The base 
+# exception is ModuleImportError derived from PPLTError. All other import
+# related exceptions inhert from this class.
+#
 class ModuleImportError( PPLTError ):
     """ This exception will be raise if a module can't be imported or seted 
         up. """
@@ -59,3 +65,8 @@ class InvalidGrammarVersion( ModuleImportError ):
         grammar version. """
     pass
 
+class MissingDependency( ModuleImportError ):
+    """ This exception will be raised by the CImporter to indicate that a 
+        dependency of the module is not satisfied. """
+    def __init__(self, msg=""):
+        ModuleImportError.__init__(self, "Missing dependency: %s"%msg)

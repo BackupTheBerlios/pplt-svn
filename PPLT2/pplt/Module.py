@@ -24,7 +24,6 @@
 
 
 from Object import CObject
-from Exceptions import NotImplemented
 from ConnectionDatabase import CConnectionDatabase
 import threading
 import logging
@@ -41,9 +40,9 @@ class CModule (CObject):
         instance. Note: A module have to implement the connect() and 
         disconnect() methods."""
 
-    _d_module_lock = None;
-    _d_module_parameters = None;
-    _d_connections = None;
+    _d_module_lock = None
+    _d_module_parameters = None
+    _d_connections = None
 
 
     def __init__(self, parameters = None):

@@ -40,6 +40,8 @@ class IDisposable:
 
 
 
+
+
 class IStreamModule:
     """ This interface defines the methods have to be implemented to be a 
         StreamModule. This means that the module can provide data streams.
@@ -66,6 +68,8 @@ class IStreamModule:
 
 
 
+
+
 class ISequenceModule:
     """ """
     
@@ -75,3 +79,31 @@ class ISequenceModule:
     
     def send(self, con_id, msg):
         raise NotImplemented("This send() method have to be implemented!");
+
+
+
+
+
+class IValueModule:
+    """ This interface specifies the methods that are needed to be implemented
+        for an uniform interface for modules that provide single values.""" 
+
+    def set(self, con_id, value):
+        """ This method will be used by other modules or any application to 
+            set the value of the connection. This method should be implemented
+            by all modules that derive from the IValueModule interface. 
+
+            The first parameter specifies the connection id. This id can be 
+            used to determ what value should be set. The second parameter 
+            specifies the value set. """
+        raise NotImplemented("This set() method have to be implemented by the module!")
+
+    def get(self, con_id):
+        """ This method will be used by other modules or any application to get 
+            the actual value of a connection. This method should be implented 
+            by the module.
+
+            The first parameter specifies the connection id. This id can be 
+            used to determ which value is wanted. """
+        raise NotImplemented("This method should be implemented by the module!")
+

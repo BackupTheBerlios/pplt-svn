@@ -28,7 +28,7 @@ import os.path
 from zipimport import zipimporter
 from ModuleMeta import CModuleMeta
 from Exceptions import *
-
+from InnerModule import CInnerModule, CDisposableModule
 
 class CCoreModuleMeta (CModuleMeta):
     _d_file_path = None
@@ -54,11 +54,6 @@ class CCoreModuleMeta (CModuleMeta):
         return node[0].wholeText.strip()
 
 
-    def isInnerModule(self):    # maybe obsolete
-        node = xml.xpath.Evaluate("/Module/Type/text()",self._d_dom)
-        return node[0].wholeText.strip()=="inner"
-
-
     def checkDependencies(self):
         # to check all dependencies get all <PyModule> tags and try to find 
         # them using imp.find_module()
@@ -71,7 +66,6 @@ class CCoreModuleMeta (CModuleMeta):
  
 
     def instance(self, parameters, parent=None, address=None):
-
         # if no absolute path is given im mod-meta -> take it relative to the
         # meta-file
         mod_archive = self.getArchive()
@@ -90,7 +84,7 @@ class CCoreModuleMeta (CModuleMeta):
                         (self.getClass(), mod_archive, mod.__dict__.keys()))
 
         #instance class:
-        if not self.isInnerModule():
+        if not issubclass(cls, (CInnerModule,CDisposableModule)):
             self._d_logger.debug("Module %s instance with params %s"%(self.getClass(),parameters))
             return cls(parameters)
         else:

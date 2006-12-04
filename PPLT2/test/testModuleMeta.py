@@ -57,5 +57,4 @@ class testModuleMeta(unittest.TestCase):
         """ CLASS CModuleMeta abstract methods """
         self.assertRaises( Exception, self._d_meta.checkDependencies)
 
-        self.assertRaises( Exception, self._d_meta.isInnerModule)
 

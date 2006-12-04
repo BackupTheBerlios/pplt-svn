@@ -27,7 +27,7 @@
 # ########################################################################## #
 
 from Connection             import CConnection
-from Exceptions             import PPLTError, CorruptInterface, NotImplemented
+from Exceptions             import PPLTError, CorruptInterface
 from Exceptions             import ItemBusy, ItemNotFound, ModuleImportError
 from Exceptions             import InvalidGrammarVersion
 from Interfaces             import IDisposable, IStreamModule, ISequenceModule
