@@ -1,0 +1,20 @@
+This package contains a sample JVisu (http://jvisu.com) server. This server
+takes an pplt assembly and serve all its variables a JVisu applet or client.
+
+The usage is quite simply. Call:
+
+    pplt_jvs [options] assembly [--parameter=value, ... ]
+
+    The "assembly" specifies the name of the assembly to load. 
+        Note: This server has the restiction only to load one assembly. So you 
+        need to provide the complete configuration in one assembly. 
+
+    The parameter=value pairs define the parameters for the assembly. You may 
+    have to set the values into double-quotes. What parameters are available
+    or needed depends on the assembly you want to load. 
+        
+    There is currently only one option for the JVisu-Server: 
+        --port=PORT-NUMBER  This option specifies the number of the TCP port
+                            the server will listen for new connections. 
+
+

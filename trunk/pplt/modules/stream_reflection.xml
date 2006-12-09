@@ -1,0 +1,25 @@
+<?xml version="1.0"?>
+
+<Module version="1.0">
+    
+    <Archive type="zip">debugging-modules.zip</Archive>
+    <Class>ReflectionModule</Class>
+    <Version>0.1.0</Version>
+
+    <Description lang="de"> Das reflection-Modul ginb empfangene Daten an 
+    andere Module weiter. Zwei Module, die mit der selben Adresse mit dem
+    Reflection Modul verbunden sind, können so Daten austauschen. Sendet 
+    Modul A Daten, so kann Modul B diese lesen oder wird darüber informiert,
+    dass neue Daten zu emfangen sind.
+    </Description>
+
+    <Require>
+        <Parameter name="timeout" default="1.0">
+            <Description lang="en">
+                This parameter specifies the timeout for read() operations in
+                seconds. Also fractions of seconds are allowed.
+            </Description>
+        </Parameter>
+    </Require>        
+
+</Module>

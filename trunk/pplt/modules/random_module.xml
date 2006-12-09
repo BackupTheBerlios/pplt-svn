@@ -1,0 +1,14 @@
+<?xml version="1.0"?>
+
+<Module version="1.0">
+    <Version>0.1.0</Version>
+   
+    <Class>RandomGenerator</Class>
+    <Archive>debugging-modules.zip</Archive>
+
+    <Require>
+        <Parameter name="period" default="0"/>
+        <Parameter name="variance" default="0"/>
+    </Require>
+
+</Module>
