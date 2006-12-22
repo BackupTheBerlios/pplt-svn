@@ -1,9 +1,8 @@
-from pplt import CModule, IValueModule, CValueConnection
-from pplt import PPLTError
 import threading
 import random
-import random
 import time
+from pplt import CModule, IValueModule, CValueConnection
+from pplt import PPLTError
 
 
 class RandomGenerator (CModule, IValueModule):

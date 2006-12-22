@@ -7,8 +7,64 @@
     <Archive>debugging-modules.zip</Archive>
 
     <Require>
-        <Parameter name="period" default="0"/>
-        <Parameter name="variance" default="0"/>
+        <Parameter name="period" default="0">
+            <Description lang="en">
+                This parameter specifies the periode of event-generation. If
+                this parameter is obmitted or 0 no events are generated.
+            </Description>
+        </Parameter>
+        <Parameter name="variance" default="0">
+            <Description lang="en">
+                This parameter specifies the variance of event-generation.
+            </Descripion>
+        </Parameter>
     </Require>
 
+
+    <Provide>
+        <Address type="integer" mode="r">
+            integer
+            <Description lang="en">
+                The connection will return random integer values between 0 and
+                100.
+            </Description>
+        </Address>
+        <Address type="boolean" mode="r">
+            bool
+            <Description lang="en">
+                The connection will return random boolean values.
+            </Description>                
+        </Address>
+        <Address type="float" mode="r">
+            float
+            <Desrciption lang="en">
+                This connection will return random values between 0
+                and 1.
+            </Description>                
+        </Address>
+        <Address type="float" mode="rw">
+            period
+            <Description lang="en">
+                This connection can be used to reconfigure the module. You can
+                overwrite the parameter "period" writeing to this connection. 
+            </Description>
+        </Address>            
+        <Address type="float" mode="rw">
+            variance
+            <Description lang="en">
+                This connection can be used to reconfigure the module. You can
+                overwrite the parameter "variance" by writeing to this 
+                connection.
+            </Description>
+        </Address>
+    </Provide>
+
+
+    <Description lang="en">
+        The ranom_module provides random-values in different types. 
+        Additionally it is able to generate events. The period of the events
+        is specified by the "period" parameter. If the parameter variance is
+        specified, the period of the will vary around the period with an 
+        variance specified by the variance parameter.
+    </Description>
 </Module>

@@ -1,4 +1,12 @@
 This package contains a server-plugin for the lintouch (http://lintouch.org) 
 framework.
 
+To do this this package provides a C to python wrapper to write server-plugins
+using python. Additional there is a python plugin that enables you to load ONE
+pplt-assembly. The lintouch plugin will provide all defined addresses of the 
+assembly as variables to the lintouch server. 
+
+I hope that the general python server-plugin will be joined into the lintouch
+project.
+
 

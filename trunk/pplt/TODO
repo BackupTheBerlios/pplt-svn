@@ -1,0 +1,6 @@
+ - Write a polling module to generate "value-changed" events for modules that
+   does not support the event-mechanism. The parameter "freq" specifies the
+   frequency to check for changes. Only if the value change an event should be
+   generated.
+
+ - Check all inner-modules if they use reserve() and release()   

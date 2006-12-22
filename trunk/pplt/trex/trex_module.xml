@@ -77,6 +77,35 @@
         </element>
     </optional>        
     
+    <optional>
+        <!-- The optional <Provide> tag specifies the addresses the module 
+             provides. This can be simply a singe address or a addressrange 
+             specified by a pattern. Each address or all possible addresses of
+             a range have to have the same type and the same mode. Otherwise 
+             an other addressrange have to be defined! Basicly the pplt does 
+             not need to know what type a connection is of, but if a module or
+             assembly is used in other systems like JVisu or Lintouch, it is 
+             necessary to know the type of the values a connection will 
+             return. //-->
+        <element name="Provide">
+            <zeroOrMore>
+                <element name="Address">
+                    <parameter name="type"/>
+                    <parameter name="mode"/>
+                    <choise>
+                        <anyString/>
+                        <element name="Pattern"><anyString/></element>
+                    </choise>                        
+                    <oneOrMore>
+                        <element name="Description"> 
+                            <attribute name="lang"/>
+                            <anyString/>
+                        </element>
+                    </oneOrMore>
+                </element>
+            </zeroOrMore>
+        </element>
+    </optional>
 
     <oneOrMore>
         <!-- This element can contain a description of the module in different

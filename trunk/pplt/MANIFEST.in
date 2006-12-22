@@ -1,0 +1,6 @@
+include README INSTALL TODO ChangeLog
+include setup.py
+include core/*.py
+include test/*.py
+recursive-include modules *.py *.zip *.xml
+include trex/*

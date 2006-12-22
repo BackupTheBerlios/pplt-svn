@@ -1,3 +1,5 @@
+""" The CAssemblyMeta class specifies how to instance an assembly from a 
+    assembly description file. """ 
 
 # ########################################################################## #
 # AssemblyMeta.py
@@ -41,22 +43,26 @@ class CAssemblyMeta(CModuleMeta):
         self._d_importer = importer
         
         # check grammar version:
-        vers_attr = xml.xpath.Evaluate("string(/Assembly/@version)", self._d_dom)
+        vers_attr = xml.xpath.Evaluate("string(/Assembly/@version)", 
+                                       self._d_dom)
         if not vers_attr == "1.0":
-            raise InvalidGrammarVersion("Can't handle grammar version %s"%vers_attr)
+            raise InvalidGrammarVersion("Can't handle grammar version %s"%
+                                        vers_attr)
 
 
 
     def checkDependencies(self):
-        nodes = xml.xpath.Evaluate("/Assembly/Require/Module/text()", self._d_dom)
+        nodes = xml.xpath.Evaluate("/Assembly/Require/Module/text()", 
+                                   self._d_dom)
 
-        self._d_logger.debug("Checking %i dependencies"%len(nodes))
+        self._d_logger.debug("Checking %i dependencies"% len(nodes))
         for node in nodes:
             mod_name = node.wholeText.strip()
             try:
                 self._d_importer._find_module_meta(mod_name)
             except Exception, e:
-                raise MissingDependency("Module %s not found! [%s]"%(mod_name,str(e)))
+                raise MissingDependency("Module %s not found! [%s]"%
+                                        (mod_name,str(e)))
 
 
 
@@ -78,7 +84,7 @@ class CAssemblyMeta(CModuleMeta):
             if not parent:
                 mod = self._d_importer.load(mod_name, mod_param)
             else:
-                mod = self._d_importer.load(mod_name, mod_param, parent, address)
+                mod = self._d_importer.load(mod_name,mod_param,parent,address)
             asm._add_module(mod, namespace)
                 
             cnodes = xml.xpath.Evaluate("./Load",node)
@@ -102,7 +108,8 @@ class CAssemblyMeta(CModuleMeta):
             address = self._module_address(node, parameters)
 
         mod_para = self._module_parameters(node, parameters)
-        self._d_logger.debug("Try to load %s with addr %s and params %s"%(mod_name, address, mod_para))
+        self._d_logger.debug("Try to load %s with addr %s and params %s"%
+                             (mod_name, address, mod_para))
         mod = self._d_importer.load(mod_name, mod_para, parent, address)
         asm._add_module(mod, namespace, parent.identifier())
 
