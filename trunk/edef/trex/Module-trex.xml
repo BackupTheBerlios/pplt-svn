@@ -33,11 +33,13 @@
          </element>
 
         <element name="Inputs">
+            <attribute name="name"/>
             <attribute name="pattern"/>
             <attribute name="type"/>
         </element>
 
         <element name="Outputs">
+            <attribute name="name"/>
             <attribute name="pattern"/>
             <attribute name="type"/>
         </element>

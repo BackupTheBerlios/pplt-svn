@@ -1,0 +1,13 @@
+For edef-core:
+    * Disign and implement an assembly Object, that will be renerated by the 
+      an XML file that describes how to assemble modules and other assemblies 
+      to create a new module. An assembly should look and feel like a "normal"
+      module. 
+    
+    * Implement DTD or XML-Scheme validation of modules and assemblies.
+    
+    * Referecres to inputs in the event-queue of EventManager should be 
+      weak-refs. Because; if the an instance that owns the input is 
+      destroyed the instance will be alife until the event is processed!
+      With weak-refs the instance will be immediatly destroyed and events
+      submitted to it were no processed.

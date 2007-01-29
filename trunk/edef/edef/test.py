@@ -1,36 +1,41 @@
-from Output import ValueOutput
-from EventManager import EventManager
+import edef
 import time
-import logging
-from Module import DynamicModule, InputWrapper
-
-def my_callback(value):
-    print "Got %s"%value
 
 
-class NotModule(DynamicModule):
-    
+def TestOut(value):
+    print "Value: %s"%value
+
+
+class AND:
     def __init__(self):
-        DynamicModule.__init__(self)
-        self.o_out = ValueOutput(False)
-        self.i_in  = InputWrapper(self, "in")
+        self.o_out = edef.ValueOutput(False)
+        self._d_in_a = False
+        self._d_in_b = False
 
-    def input_dispacher(self, name, value, args):
-        self.o_out(not value)
+    @edef.BoolDeco
+    def i_a(self, value):
+        self._d_in_a = value
+        if self._d_in_a and self._d_in_b:
+            self.o_out(True)
+        else:
+            self.o_out(False)
 
-    def create_output(self, name):
-        return self.o_out
-       
+    @edef.IntegerDeco
+    def i_b(self, value):
+        self._d_in_b = value
+        if self._d_in_a and self._d_in_b:
+            self.o_out(True)
+        else:
+            self.o_out(False)
 
 
 
-mod = NotModule()
-
+# TEST
+edef.Logger()
+gate = AND()
 try:
-    mod.o_out += my_callback
-    mod.i_in(False)
-
+    gate.o_out += gate.i_a
+    gate.o_out += TestOut
 finally:
-    time.sleep(0.01)
-    EventManager.factory().stop()
-
+    time.sleep(0.1)
+    edef.EventManager().stop()

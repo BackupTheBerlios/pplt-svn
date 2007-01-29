@@ -50,4 +50,29 @@ class eDevArchiveTree(wx.TreeCtrl):
 
     def OnActivate(self, event):
         self._d_controller.OnArchiveFileOpen()
-                
+    
+
+    def removeFile(self):
+        item = self.GetSelection()
+        if item is None:
+            raise Exception("No item selected to remove!")
+        self.Delete(item)
+
+
+    def addFile(self, archive_name, filename):
+        item = self.getItemByData( ("Archive", archive_name), self.GetRootItem() )
+        if not item:
+            raise Exception("There is no archive named %s"%archive_name)
+        file_item = self.AppendItem(item, filename)
+        self.SetPyData(file_item, ("File", filename))
+
+
+    def getItemByData(self, data, item):
+        if self.GetPyData(item) == data: return item
+        (citem, cookie) = self.GetFirstChild(item)
+        
+        while citem:
+            ret = self.getItemByData(data, citem)
+            if ret != None: return ret
+            (citem, cookie) = self.GetNextChild(item,cookie)
+                    

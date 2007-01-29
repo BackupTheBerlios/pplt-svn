@@ -25,6 +25,7 @@ class eDevMainFrame(wx.Frame):
         undo_bmp = wx.ArtProvider_GetBitmap(wx.ART_UNDO, wx.ART_TOOLBAR, (16,16))
         quit_bmp = wx.ArtProvider_GetBitmap(wx.ART_QUIT, wx.ART_TOOLBAR, (16,16))
         about_bmp = wx.ArtProvider_GetBitmap(wx.ART_INFORMATION, wx.ART_TOOLBAR, (16,16))
+        conf_bmp = wx.ArtProvider_GetBitmap(wx.ART_HELP_SETTINGS, wx.ART_TOOLBAR, (16,16))
 
         # Assemble Menu
         self._d_menubar = wx.MenuBar()
@@ -32,6 +33,7 @@ class eDevMainFrame(wx.Frame):
         self._d_edit_menu    = wx.Menu()
         self._d_settings_menu= wx.Menu()
         self._d_help_menu    = wx.Menu()
+        
         # create items:
         self._d_menu_new     = wx.MenuItem(self._d_file_menu, wx.ID_NEW, "&New", "???")
         self._d_menu_open    = wx.MenuItem(self._d_file_menu, wx.ID_OPEN, "&Open", "???")
@@ -47,6 +49,7 @@ class eDevMainFrame(wx.Frame):
         self._d_menu_redo    = wx.MenuItem(self._d_edit_menu, wx.ID_REDO, "&Redo", "???")
         self._d_menu_undo    = wx.MenuItem(self._d_edit_menu, wx.ID_UNDO, "&Undo", "???")
 
+        self._d_menu_conf_editor = wx.MenuItem(self._d_settings_menu, wx.ID_PREFERENCES, "&Editor", "???")
         self._d_menu_about   = wx.MenuItem(self._d_help_menu, wx.ID_HELP, "&About", "About edef Developer")
 
         # Set Menuicons:
@@ -77,6 +80,7 @@ class eDevMainFrame(wx.Frame):
         self._d_edit_menu.AppendSeparator()
         self._d_edit_menu.AppendItem(self._d_menu_redo)
         self._d_edit_menu.AppendItem(self._d_menu_undo)
+        self._d_settings_menu.AppendItem(self._d_menu_conf_editor)
         self._d_help_menu.AppendItem(self._d_menu_about)
 
         #assemble menu-bar

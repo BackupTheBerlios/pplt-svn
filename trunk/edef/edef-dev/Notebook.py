@@ -3,13 +3,14 @@ import wx.stc as stc
 import keyword
 from Controller import eDevController
 import sys
+import traceback
 
-faces = { 'times': 'Times',
+faces = { 'times': 'Courier',
           'mono' : 'Courier',
-          'helv' : 'Helvetica',
-          'other': 'new century schoolbook',
-          'size' : 12,
-          'size2': 10}
+          'helv' : 'Courier',
+          'other': 'Courier',
+          'size' : 10,
+          'size2': 8}
 
 
 
@@ -25,26 +26,43 @@ class eDevNotebook(wx.Notebook):
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
 
     
-    def open_page(self, name, data=None):
-        if data is None:
-            new = True
-            data = ""
+    def openEditor(self, title, data, text=None):
+        page = eDevEditPage(self, -1, data, text)
+        self.AddPage(page, title, True)
+        self._d_controller.OnDocumentChanged()
+
+
+    def closePage(self, idx=None):
+        if idx is None: pos = self.GetSelection()
+        else: pos = idx
+        
+        if pos < 0: return
+
+        if pos == self.GetSelection():
+            self.DeletePage(pos)
+            self._d_controller.OnDocumentChanged()
         else:
-            new = False
-
-        if not name in self._d_pages.keys():
-            page = wx.Panel(self, -1)#eDevEditPage(self, -1, data, new)
-            self.AddPage(page, name, True)
-            #self._d_pages[name]=page
-  
-
-    def close_page(self):
-        print "try to close: %s"%self.GetSelection()
-        try:
-            self.DeletePage(self.GetSelection())
-        except:
-            print sys.print_exc()
+            self.DeletePage(pos)
     
+
+    def getPageNo(self, data):
+        for n in range(self.GetPageCount()):
+            if self.GetPage(n).getData() == data:
+                return n
+        return -1
+
+
+    def hasPage(self, data):
+        if self.getPageNo(data) > 0:
+            return True
+        return False                
+
+
+    def selectPage(self, data):
+        self.SetSelection(self.getPageNo(data))
+
+
+
     def OnPageChanged(self, event):
         self._d_controller.OnDocumentChanged()
 
@@ -53,10 +71,9 @@ class eDevNotebook(wx.Notebook):
         if self.GetPageCount() > 0: return True
         return False
 
-    def isPageModified(self):
-        # returns False if the current page was saved so it is save to
-        #   close this tab.
-        page = self.GetCurrentPage()
+    def isPageModified(self, idx=None):
+        if idx is None: page = self.GetCurrentPage()
+        else: page = self.GetPage(idx)
         if page is None: return False
         return page.isModified()
 
@@ -77,11 +94,12 @@ class eDevNotebook(wx.Notebook):
 
 class eDevEditPage(stc.StyledTextCtrl):
     _d_is_modified = None
+    _d_data = None
 
-    def __init__(self, parent, ID, data="", new=False):
+    def __init__(self, parent, ID, data, text=""):
         stc.StyledTextCtrl.__init__(self, parent, ID, style=0)
-
-        self._d_is_modified = new
+        self._d_data = data
+        self._d_controller = eDevController.instance()
 
         self.SetLexer(stc.STC_LEX_PYTHON)
         self.SetKeyWords(0, " ".join(keyword.kwlist))
@@ -112,20 +130,27 @@ class eDevEditPage(stc.StyledTextCtrl):
         self.SetCaretForeground("BLUE")
 
         
-        self.SetText(data)
+        self.SetText(text)
         self.EmptyUndoBuffer()
         self.Colourise(0, -1)
 
         self.Bind(stc.EVT_STC_MODIFIED, self.OnModified)
     
     
-    def OnModified(self, evt):
-        self._d_is_modified = True
-        self._d_controller.OnDocumentModified()
+    def getData(self):
+        return self._d_data
+    def setData(self, data):
+        self._d_data = data
 
+    def OnModified(self, evt):
+        self.setModified()
 
     def isModified(self):
         return self._d_is_modified
-    
+
+    def setModified(self, mod=True):
+        self._d_is_modified = mod
+        if mod == True:
+            self._d_controller.OnDocumentModified()
 
 

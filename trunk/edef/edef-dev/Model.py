@@ -21,7 +21,7 @@ class eDevModel:
 
     def __init__(self):
         #FIXME if local path not exists -> create
-        self._d_local_mod_path = os.path.abspath(os.path.expanduser("~/.pplt"))
+        self._d_local_mod_path = os.path.abspath(os.path.expanduser("~/.edef"))
 
         self._d_archive_list = {}
 
@@ -45,4 +45,17 @@ class eDevModel:
     def getArchives(self):
         return self._d_archive_list.keys()
 
+    def isArchive(self, name):
+        return name in self._d_archive_list.keys()
+
+    def addArchive(self, name):
+        filename = os.path.join(self._d_local_mod_path, name+".zip")
+        if os.path.isFile(filename):
+            raise Exception("File allready exists!")
+        # create file:
+        zf = zipfile.ZipFile(filename, "w")
+        zf.close()
+        # create model
+        archive = eDevModelArchive(filename)
+        self._d_archive_list[archive.getName()]=archive
 

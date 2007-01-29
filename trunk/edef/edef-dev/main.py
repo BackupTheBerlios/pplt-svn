@@ -1,6 +1,11 @@
+import wxversion
+wxversion.select("2.8")
 import wx
+
 from MainFrame import eDevMainFrame
 from Model import eDevModel
+
+print "Using wxPython version %s"%wx.__version__
 
 class eDeveloper(wx.App):
 

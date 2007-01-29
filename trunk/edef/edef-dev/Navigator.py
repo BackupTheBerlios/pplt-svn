@@ -40,10 +40,19 @@ class eDevNavigator(wx.SplitterWindow):
         self._d_controller.setArchiveTree(self._d_archive_tree)
 
         self._d_archive_label.Bind(wx.EVT_LEFT_DCLICK, self.OnToggleArchive)
-        self._d_module_label.Bind(wx.EVT_LEFT_DCLICK, self.OnToggleArchive)
+        self._d_module_label.Bind(wx.EVT_LEFT_DCLICK, self.OnToggleModules)
 
 
     def OnToggleArchive(self, evt):
+        pos = self.GetSashPosition()
+        (tmp, size) = self.GetSize()
+        (tmp, lsize) = self._d_module_label.GetSize()
+        if pos < size-lsize-10:
+            self.max_archive()
+        else:
+            self.max_modules()
+
+    def OnToggleModules(self, evt):
         size = self.GetSashPosition()
         (tmp, lsize) = self._d_archive_label.GetSize()
         if size > lsize+4:
@@ -51,6 +60,7 @@ class eDevNavigator(wx.SplitterWindow):
         else:
             self.max_archive()
 
+        
 
     def max_archive(self):
         (tmp, size) = self.GetSize()
