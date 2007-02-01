@@ -1,0 +1,8 @@
+2007-02-01:	Hannes Matuschek <hmatuschek@gmail.com> (rev. 82)
+	* trex/Module-1.0-trex.xml:
+		Completed the TREX definition of "module" grammar
+
+	* edef/EventManager.py (add_event, add_scheduled_event):
+		event-queue now holds only weakrefs to callbacks
+	
+

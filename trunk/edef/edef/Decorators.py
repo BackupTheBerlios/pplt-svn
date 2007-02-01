@@ -1,3 +1,11 @@
+""" Decoratros are used to specify the I{type} of an input. 
+    
+    Normally an imput would be something callable. Like a function or class 
+    implementing the __call__ method. To enable the output to check the "type"
+    of an input added to it, this decorators are used. Decorate your input 
+    with one of this to avoid warning of the outputs that no type is 
+    specified. """
+
 
 def BoolDecorator(f):
     def _wrapper(*args):

@@ -1,0 +1,70 @@
+<?xml version="1.0"?>
+<!-- FIXME use some of the elements defined in Module-trex.xml to extend this
+    gammar. //-->
+<element name="Assembly">
+    <attribute name="version"/> <!-- Grammar-version //-->
+    
+    <optional><element name="Author"><anyString/></element></optional>
+
+    <element name="Version"><anyString/></element>
+
+    <element name="Requires">
+        <optional>                
+            <element name="Parameter">
+                <attribute name="name"/>
+                <optional><attribute name="default"/></optional> 
+            </element>
+        </optional>
+            
+        <oneOrMore>
+            <element name="Module"><anyString/></element>
+        </oneOrMore>
+    </element>
+
+
+
+    <element name="Provides">
+        <element name="Input">
+            <attribute name="name"/>
+            <attribute name="type"/>
+            <element name="Redirect">
+                <attribute name="to"/>  <!-- "alias:name" //-->
+            </element>                
+        </element>
+        
+        <element name="Output"> 
+            <attribute name="name"/>
+            <attribute name="type"/>
+            <element name="Redirect">
+                <attribute name="to"/>
+            </element>                
+         </element>
+    </element>
+
+
+    <element name="Setup">
+        <oneOrMore>
+            <element name="Module">
+                <attribute name="name"/>
+                <attribute name="alias"/>
+                <optional>
+                    <element name="Parameter">
+                        <attribute name="name">
+                        <choice>
+                            <anyString/>
+                            <element name="ValueOf"><anyString></element>
+                        </choice>
+                    </element>                    
+                </optional>
+            </element>
+        </oneOrMore>
+
+        <optional>
+            <element name="Link">
+                <attribute name="from"/>
+                <attribute name="to"/>
+            </element>
+        </optional>            
+    </element>
+
+</eement>

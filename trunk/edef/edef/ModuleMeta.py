@@ -15,6 +15,11 @@
     Booth types implement methods to load (or assemble) the module described.
     """
 
+#TODO
+#   - first of all; implement the AssemblyMeta
+#   - extend ModuleMeta to provide all data 
+#   - write some tools to check a module or assembly files
+#   - find and solve all FIXMEs
 
 
 import logging
@@ -49,7 +54,7 @@ class ModuleBaseMeta:
         return node.strip()
 
 
-    def getDescription(self):
+    def getDescription(self, lang="en"):
         query = "string(Description[@lang='%s']/text())"%lang
         node = xml.xpath.Evaluate(query, self._d_dom)
         return node.strip()
@@ -75,6 +80,17 @@ class ModuleBaseMeta:
             defval = node.getAttribute("default")
             if not name in params.keys():
                 params[name] = defval
+
+
+    def getElement(self, xp_query):
+        return xml.xpath.Evaluate(xp_query, self._d_dom)
+
+
+    def instance(self, paramters):
+        raise NotImplemented("This method should be implemented by Module- or AssemblyMeta!")
+
+    def checkDependencies(self):
+        raise NotImplemented("This method should be implemented by Module- or AssemblyMeta!")
 
 
 
@@ -144,3 +160,7 @@ class ModuleMeta(ModuleBaseMeta):
         
 
 
+
+
+# FIXME Implement AssemblyMeta-Class!
+class AssemblyMeta(ModuleBaseMeta): pass

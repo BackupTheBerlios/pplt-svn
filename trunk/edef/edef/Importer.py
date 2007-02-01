@@ -1,7 +1,7 @@
 """ The importer can be used to import modules and assemblies. 
     An module is a python-script zipped into an archive. Additionally there 
     should be a description-file containing meta-data about the module. In 
-    contrast an assembly consists only of a xml file that describe how to
+    contrast, an assembly consists only of a xml file that describe how to
     assemble one or more module or assemblies to get a new one. 
     
     To find out how to write a module, please check U{http://pplt.berlios.de}"""
@@ -10,7 +10,7 @@
 
 # ########################################################################## #
 # Importer.py
-#
+#  
 # 2007-01-24
 # Copyright 2007 Hannes Matuschek
 # hmatuschek@gmx.net
@@ -44,8 +44,11 @@ import os.path
 from glob import glob
 import sys
 from ModuleMeta import ModuleMeta
+from Singleton import Singleton
 
-class Importer:
+
+
+class Importer(Singleton):
     """ The importer searches by default the paths C{~/.edef} and 
     C{sys.prefix+"/edef/} for the module to load. But you can define
     some new searchpaths by instanceing the Importer with a list of 

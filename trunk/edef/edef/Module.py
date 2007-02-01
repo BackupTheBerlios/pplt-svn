@@ -30,6 +30,7 @@
                 self.o_out = edef.ValueOutput(False)
 
             # Input "a":
+            @edef.BoolDecorator
             def i_a(self, value):
                 self._in_a = value
                 if self._in_a and self._in_b:
@@ -38,6 +39,7 @@
                     self.o_out(False)
 
             # Input "b":
+            @edef.BoolDecorator
             def i_b(self, value):
                 self._in_b = value
                 if self._in_a and self._in_b:
@@ -50,6 +52,7 @@
         # Testcode:
         #
         # Callback for output:
+        @edef.BoolDecorator
         def my_cb(self, value):
             print "Output is now: %s"%Value
 

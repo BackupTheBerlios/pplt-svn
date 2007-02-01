@@ -17,6 +17,8 @@
     need an instance to stop the eventmanager. To stop an eventmanager do:
     C{edef.EventManager().stop()}. """
 
+
+
 # ########################################################################## #
 # EventManager.py
 #
@@ -45,6 +47,7 @@
 import threading
 import logging
 import time
+import weakref
 from Singleton import Singleton
 
 
@@ -81,10 +84,6 @@ class EventManager(threading.Thread):
         self._d_is_alive = True
         self._d_condition = threading.Condition()
         self._d_logger = logging.getLogger("edef.core")
-
-        # Fix for windows: It needs to call the time.clock() function at 
-        #   least once to start the clock-counter!
-        #time.clock()
 
         threading.Thread.__init__(self)
         self._d_logger.info("Init event-handler (id:%i)"%id(self))
@@ -133,9 +132,11 @@ class EventManager(threading.Thread):
             if self._sched_event_pending():
                 (to, callback, params) = self._d_sched_events.pop(0)
                 self._d_condition.release()
-                self._d_logger.debug("Process scheduled event: %s(%s)"%(callback.__name__, params))
-                try: callback(**params)
-                except: self._d_logger.exception("Exeption while exec event-callback")
+                try:
+                    self._d_logger.debug("Process scheduled event: %s(%s)"%(callback.__name__, params))
+                    callback(**params)
+                except:
+                    self._d_logger.exception("Exeption while exec event-callback")
                 continue
 
             elif len(self._d_event_list) > 0:
@@ -146,8 +147,8 @@ class EventManager(threading.Thread):
                 self._d_condition.release()
                 continue
            
-            self._d_logger.debug("Calling %s(%s)"%(callback.__name__,value))
             try:
+                self._d_logger.debug("Calling %s(%s)"%(callback.__name__,value))
                 callback(value)
             except Exception, e:
                 self._d_logger.exception("Exeption while exec event-callback")
@@ -166,10 +167,13 @@ class EventManager(threading.Thread):
         if not self._d_is_alive:
             raise Exception("EventManager stoped: No events where processed.")
         
+        # store event-callback as a weak-reference:
+        cb = weakref.proxy(cb)
+
         self._d_condition.acquire()
         self._d_event_list.append((cb,value))
         self._d_condition.notify()
-        self._d_logger.info("Added %s(%s); Event queue contains now: %i elments."%(cb.__name__, value, len(self._d_event_list)))
+        self._d_logger.debug("Added %s(%s); Event queue contains now: %i elments."%(cb.__name__, value, len(self._d_event_list)))
         self._d_condition.release()
 
 
@@ -178,6 +182,9 @@ class EventManager(threading.Thread):
         """ This method adds a scheduled event to the queue. The event-manager
             will call cb(**kwargs) after a period of time defined by time. """
         # FIXME make an scheduled event cancelable?
+        # store callback as a weak-reference:
+        cb = weakref.proxy(cb)
+
         self._d_condition.acquire()
         self._d_sched_events.append( (time.time()+timeout, cb, params) )
         self._d_sched_events.sort(cmp=_EventManager_sched_compare)
