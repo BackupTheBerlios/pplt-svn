@@ -79,7 +79,7 @@
         """ 
 
 import re
-
+import logging
 
 
 class InputWrapper:
@@ -100,15 +100,14 @@ class InputWrapper:
 
 class DynamicModule:
     def __init__(self):
-        pass
+        self._d_logger = logging.getLogger("edef.core")
 
     def __getattr__(self, name):
-        if re.match("^i_",name):
-            return self.create_input(name)
-        elif re.match("^o_",name):
-            return self.create_output(name)
-        else:
-            raise AttributeError("Attribute %s not found"%name)
+        if re.match("^i_",name): pin = self.create_input(name)
+        elif re.match("^o_",name): pin = self.create_output(name)
+        else: raise AttributeError("Attribute %s not found"%name)
+        setattr(self, name, pin)
+        return pin
 
     
     def create_output(self, name):

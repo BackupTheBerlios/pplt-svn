@@ -11,6 +11,9 @@ from testValueOutput import testValueOutput
 from testEventManager import testEventManager
 from testSimpleModule import testSimpleModule
 from testDecorators import testDecorators
+from testAssembly import testAssembly
+from testSingleton import testSingleton
+
 
 
 if __name__ == '__main__':
@@ -23,6 +26,8 @@ if __name__ == '__main__':
     suite = unittest.TestSuite()
     
     # add tests
+    suite.addTest(testSingleton("testSingle"))
+
     suite.addTest(testValueOutput("testEventOnConnect"))
     suite.addTest(testValueOutput("testEventOrder"))
 
@@ -32,7 +37,9 @@ if __name__ == '__main__':
     
     suite.addTest(testDecorators("testArguments"))
     suite.addTest(testDecorators("testType"))
-    
+   
+    suite.addTest(testAssembly("testInitAssembly"))
+
     # run tests
     try:
         unittest.TextTestRunner(verbosity=2).run(suite)

@@ -9,5 +9,7 @@ from Module import InputWrapper, DynamicModule
 from Decorators import BoolDecorator, IntegerDecorator, FloatDecorator
 from Decorators import ComplexDecorator, StringDecorator, StreamDecorator
 
-# Tess only:
+# Test only:
 from Decorators import BoolDecorator
+from ModuleMeta import AssemblyMeta
+from Singleton import Singleton

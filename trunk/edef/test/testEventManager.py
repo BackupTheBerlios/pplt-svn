@@ -12,7 +12,7 @@ class testEventManager(unittest.TestCase):
         
         try:
             evt.add_scheduled_event(dummy.release, 0.1, {'value':True} )
-            self.assertEqual(dummy.wait(20), True)
+            self.assertEqual(dummy.wait(1), True)
         finally:
             logging.getLogger("edef.test").debug("End of EventManager test")
 

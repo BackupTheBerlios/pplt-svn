@@ -148,7 +148,7 @@ class EventManager(threading.Thread):
                 continue
            
             try:
-                self._d_logger.debug("Calling %s(%s)"%(callback.__name__,value))
+                self._d_logger.debug("Calling %s(%s)"%(getattr(callback,"__name__",callback),value))
                 callback(value)
             except Exception, e:
                 self._d_logger.exception("Exeption while exec event-callback")
@@ -173,8 +173,8 @@ class EventManager(threading.Thread):
         self._d_condition.acquire()
         self._d_event_list.append((cb,value))
         self._d_condition.notify()
-        self._d_logger.debug("Added %s(%s); Event queue contains now: %i elments."%(cb.__name__, value, len(self._d_event_list)))
         self._d_condition.release()
+        self._d_logger.debug("Added %s(%s); Event queue contains now: %i elments."%(getattr(cb,"__name__",cb), value, len(self._d_event_list)))
 
 
 

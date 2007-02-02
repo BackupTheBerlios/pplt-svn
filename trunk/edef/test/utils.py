@@ -21,6 +21,8 @@ class DummyHandler:
             return self._d_values.pop(0)
         self._d_lock.wait(timeout)
         self._d_lock.clear()
+        if len(self._d_values) == 0:
+            return None
         return self._d_values.pop(0)
 
 

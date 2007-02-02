@@ -1,0 +1,6 @@
+To install the edef library and applications simply call as root:
+
+    > python setup.py install
+
+The simulation application is named "edef-sim" and the edef developer is
+named "edef-dev". 

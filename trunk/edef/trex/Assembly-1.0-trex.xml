@@ -15,20 +15,18 @@
             </zeroOrMore>
 
 
-            <optional>
-                <element name="Requires">
-                    <zeroOrMore>
-                        <element name="Parameter">
-                            <attribute name="name"/>
-                            <optional><attribute name="default"/></optional> 
-                            <zeroOrMore><ref name="description"/></zeroOrMore>
-                        </element>
-                    </zeroOrMore>
-                    <zeroOrMore>
-                        <element name="Module"><anyString/></element>
-                    </zeroOrMore>
-                </element>
-            </optional>
+            <element name="Requires">
+                <zeroOrMore>
+                    <element name="Parameter">
+                        <attribute name="name"/>
+                        <optional><attribute name="default"/></optional> 
+                        <zeroOrMore><ref name="description"/></zeroOrMore>
+                    </element>
+                </zeroOrMore>
+                <zeroOrMore>
+                    <element name="Module"><anyString/></element>
+                </zeroOrMore>
+            </element>
 
 
             <element name="Setup">

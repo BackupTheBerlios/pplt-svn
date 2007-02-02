@@ -43,12 +43,12 @@ import os
 import os.path
 from glob import glob
 import sys
-from ModuleMeta import ModuleMeta
+from ModuleMeta import ModuleMeta, AssemblyMeta
 from Singleton import Singleton
 
 
 
-class Importer(Singleton):
+class Importer:
     """ The importer searches by default the paths C{~/.edef} and 
     C{sys.prefix+"/edef/} for the module to load. But you can define
     some new searchpaths by instanceing the Importer with a list of 
@@ -56,6 +56,7 @@ class Importer(Singleton):
 
     _d_search_path = None
     
+    __metaclass__ = Singleton
     def __init__(self, base_path=None):
         """ The constructor takes the optional parameter C{base_path} which
             can define the new searchpaths. This should be C{None}, for the

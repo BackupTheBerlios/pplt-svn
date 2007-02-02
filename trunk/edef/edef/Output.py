@@ -150,7 +150,7 @@ class BaseOutput:
             calling this method directly. Also the __call__method will provide
             some eye-candy for you. Simple do C{output(new_value)} to set the 
             new value to the output. """
-        self._d_logger.debug("Set output %s to %s"%(id(self),value))
+        self._d_logger.debug("Set output %s => %s"%(getattr(self,"__name__",self),value))
 
         for inp in self._d_inputs.values():
             self._d_event_manager.add_event(inp, value)

@@ -1,8 +1,19 @@
-2007-02-01:	Hannes Matuschek <hmatuschek@gmail.com> (rev. 82)
+2007-02-02: Hannes Matuschek <hmatuschek@gmail.com> (rev. 86)
+	* edef/Assembly.py (Assembly):
+		implemented Assambly-container
+	* edef/ModuleMeta.py (AssemblyMeta):
+		implemented AssemblyMeta class
+
+	* INSTALL/TODO:
+		extened the todo-list and install description
+
+	* trex/Assembly-1.0-trex.xml:
+		finisched definition of "Assembly" grammar
+
+
+2007-02-01:	Hannes Matuschek <hmatuschek@gmail.com> (rev. 85)
 	* trex/Module-1.0-trex.xml:
 		Completed the TREX definition of "module" grammar
 
 	* edef/EventManager.py (add_event, add_scheduled_event):
 		event-queue now holds only weakrefs to callbacks
-	
-
