@@ -227,7 +227,8 @@ class ValueOutput(BaseOutput):
             self._d_logger.exception("Bad callback-type")
 
         BaseOutput.add_input(self, callback)
-        self._d_event_manager.add_event(callback, self._d_last_value)
+        if not self._d_last_value is None:
+            self._d_event_manager.add_event(callback, self._d_last_value)
 
 
     def last_value(self):

@@ -6,15 +6,17 @@ from utils import DummyHandler
 class testEventManager(unittest.TestCase):
     
     def testScheduledEvent(self):
-        logging.getLogger("edef.test").debug("Start EventManager test")
+        logging.getLogger("edef.core").debug("Start EventManager test")
         evt = edef.EventManager()    # get ref to evt-mangr
         dummy = DummyHandler()
+        cb = dummy.release
+        evt.add_scheduled_event(cb, 0.1, {'value':True} )
         
-        try:
-            evt.add_scheduled_event(dummy.release, 0.1, {'value':True} )
-            self.assertEqual(dummy.wait(1), True)
-        finally:
-            logging.getLogger("edef.test").debug("End of EventManager test")
+        #evt.finish(10)
+       
+        self.assertEqual(dummy.wait(1), True)
+      
+        logging.getLogger("edef.core").debug("End of EventManager test")
 
 
 

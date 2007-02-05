@@ -1,4 +1,4 @@
-=== Tasks for release 0.1 ===
+= Tasks for release 0.1 =
     This release should be nearly beta! So it should be more or less feature-
     complete. It should be possible to write modules simply using the 
     "edef-dev" application and to play around with the simulation-engine 
@@ -27,14 +27,13 @@
 
 === Tasks for edef-core ===
     * Implement DTD or XML-Scheme validation of modules and assemblies.
-
+    * Test new EventManager features!
 
 === Tasks for edef-dev ===
     * Create mask to edit/create a module-description. This mask should be 
       shown instead of an editor tab inside edef-dev. 
     * Make it possible to cretate/delete archives.
     * Make the editor configurable. (Only basic stuff like; tabs, fonts, ...)
-     
 
 === Tasks for edef-sim === (the simulation env.)
     * Write it.
@@ -42,5 +41,5 @@
 
 
 
-=== Long term tasks ===
+= Long term tasks =
     * Do all the stuff above...

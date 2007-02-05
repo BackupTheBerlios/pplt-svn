@@ -3,6 +3,7 @@ from edef import AssemblyMeta
 import xml.dom.minidom
 import time
 import xml.xpath
+from utils import DummyHandler
 
 xml1 = """<?xml version="1.0"?>
     <Assembly version="1.0">
@@ -39,11 +40,11 @@ class testAssembly(unittest.TestCase):
         asmm = AssemblyMeta(dom)
        
         asm = asmm.instance({})
+        dummy = DummyHandler()
 
-        def test_out(value):
-            print "Value %s"%value
-        
-        asm.o_out += test_out
+        asm.o_out += dummy.release
         asm.i_a(True)
         asm.i_b(True)
-        time.sleep(0.01)
+      
+        self.assertEqual(dummy.wait(1), False)
+        self.assertEqual(dummy.wait(1), True)

@@ -63,43 +63,104 @@ class EventManager(threading.Thread):
         instance it or will get a reference on it. 
         
         Note that you need to stop the eventmanager by calling 
-        C{EventManager().stop()}!"""
+        C{EventManager().shutdown()}!"""
 
     _d_event_list   = None
     _d_sched_events = None
-    _d_is_alive     = None
-    _d_condition    = None
-    _d_logger       = None
-    _d_instance     = None
-    
+    _d_finish_events= False
 
+    _d_is_alive     = None
+
+    _d_condition    = None
+    
+    _d_pause_lock   = None
+    _d_signal_pause = None
+    
+    _d_logger       = None
+   
 
     __metaclass__=Singleton
-    def __init__(self):
+    def __init__(self, starts_now=False):
         """ Constructor. This constructor will init the instance and the 
-            event-thread. This thread of control will wait until an event
-            arrives. The thread will process it. """
-        self._d_event_list = []
-        self._d_sched_events = []
-        self._d_is_alive = True
-        self._d_condition = threading.Condition()
-        self._d_logger = logging.getLogger("edef.core")
+            event-thread. If the optional argument is left or C{False} the 
+            EventManager will be started in pause mode."""
+
+        self._d_event_list      = []
+        self._d_sched_events    = []
+        self._d_finish_events   = False
+
+        self._d_is_alive        = True
+        self._d_condition       = threading.Condition()
+        self._d_logger          = logging.getLogger("edef.core")
+        
+        self._d_pause_lock      = threading.Event()
+        self._d_signal_paused   = threading.Event()
 
         threading.Thread.__init__(self)
         self._d_logger.info("Init event-handler (id:%i)"%id(self))
-        self.start()
-   
+        
+        self._d_pause_lock.clear()  # set event-mngr into pause-mode
+        self._d_signal_paused.clear()
+        
+        if starts_now:
+            self._d_pause_lock.set()# resume from pause
+
+        threading.Thread.start(self)# start event-manager thread
+         
+
+    def start(self):
+        """ This method will start the event-handler. It should be called 
+            after the event-manager was instanced and to resume the 
+            event-manager after a C{pause()} call. """
+        self._d_pause_lock.set()    # resume paused EventManager
+
+    
+    def pause(self):
+        """ This method will pause the event-manager. This method blocks until
+            the current event was processed. You can resume the 
+            event-processing by calling the C{start()} method. """
+        if self.isPaused():
+            self._d_logger.debug("EventManager allready paused!")
+            return
+
+        self._d_pause_lock.clear()   # set state to pause
+        self._d_condition.notify()   # signal "event"
+        self._d_signal_paused.wait() # wait for evt-mngr to be paused
 
 
-    def stop(self):
+    def finish(self, timeout=1.0):
+        """ This method will block until all queued events are processed or 
+            the given timeout elaps. The default timeout is 1 sec. This method
+            will allways left the EventManager in a pause state. You can 
+            resume the EventManager by calling the C{start()} method. This 
+            method returns C{True} if the event-manager successfully finished 
+            his job or C{False] if a timeout occures."""
+        if self.isPaused(): return True # If it is allready paused
+        
+        self._d_condition.acquire()
+        self._d_finish_events = True    # tell event-manager to finisch
+        self._d_condition.notify()      # signal "event"
+        self._d_condition.release()
+
+        self._d_signal_paused.wait(timeout) # wait until he gets paused 
+                                            # (by him self)
+        self._d_finish_events = False   # reset finish-flag
+        if not self.isPaused():         # if event-mgr is not paused (timeout)
+            self.pause()                # force him to pause even if there 
+            return False                # are events left to process
+        return True
+
+
+    def shutdown(self):
         """ This method will stop the event-thread and waits until the thread 
             joined. Also it will destroy the singeton. But there may survive 
-            some references to the EventManager, but it will not longer accept 
-            any events. """
+            some references to the EventManager, but they will not longer 
+            accept any events. """
         # Notify event-handler-thread to exit:
         self._d_condition.acquire()
-        self._d_is_alive = False
-        self._d_condition.notify()
+        self._d_is_alive = False    # signal to shutdown
+        self._d_pause_lock.set()    # wakeup paused EventManager
+        self._d_condition.notify()  # signal "event"
         self._d_condition.release()
         # Wait for thread to join
         if self.isAlive():
@@ -108,15 +169,41 @@ class EventManager(threading.Thread):
         EventManager._d_instance = None
 
 
+    def clear(self):
+        """ Removes all events from event-queue. """
+        self._d_condition.acquire()
+        if len(self._d_event_list) > 0:
+            del self._d_event_list[0:]
+        if len(self._d_sched_events) > 0:
+            del self._d_sched_events[0:]
+        self._d_condition.release()
+
+
+    def isPaused(self):
+        """ This method will return C{True} if the EventManager is in the
+            pause mode. This method will event return C{True} if the last
+            event is still processed. """
+        return not self._d_pause_lock.isSet()
+
 
     def run(self):
         """ This method will be called by the contructor as a new thread. 
-            Never call this method direct! Simply forget that it exists! 
-            """
+            Never call this method directly! Simply forget that it exists! """
+        
         self._d_logger.debug("Start event-handler")
         # Event-Loop
         while (self._d_is_alive):
+            # blocks here if state is "paused"
+            self._blocks_on_pause()
+            if not self._d_is_alive: continue
+
             self._d_condition.acquire()
+            # if there are no events and finish() was called:
+            if len(self._d_event_list) == 0 and len(self._d_sched_events) == 0 and self._d_finish_events:
+                self._d_pause_lock.clear()  # set my self into pause
+                self._d_condition.release()
+                continue
+
             if len(self._d_event_list) == 0 and not self._sched_event_pending():
                 if len(self._d_sched_events) > 0:
                     (nxt_event, cb, args) = self._d_sched_events[0]
@@ -126,9 +213,10 @@ class EventManager(threading.Thread):
                 self._d_condition.wait(timeout)
             
             if not self._d_is_alive:
-                self._d_logger.debug("Eventhandler stopped...")
-                return
+                self._d_condition.release()
+                continue
             
+            # process pending schduled events:
             if self._sched_event_pending():
                 (to, callback, params) = self._d_sched_events.pop(0)
                 self._d_condition.release()
@@ -138,23 +226,23 @@ class EventManager(threading.Thread):
                 except:
                     self._d_logger.exception("Exeption while exec event-callback")
                 continue
-
+            
+            # process "normal" events:
             elif len(self._d_event_list) > 0:
                 (callback, value) = self._d_event_list.pop(0)
                 self._d_condition.release()
-            
+                try:
+                    self._d_logger.debug("Calling %s(%s)"%(getattr(callback,"__name__",callback),value))
+                    callback(value)
+                except Exception, e:
+                    self._d_logger.exception("Exeption while exec event-callback")
+             
+            # this should not happen:
             else:
                 self._d_condition.release()
-                continue
-           
-            try:
-                self._d_logger.debug("Calling %s(%s)"%(getattr(callback,"__name__",callback),value))
-                callback(value)
-            except Exception, e:
-                self._d_logger.exception("Exeption while exec event-callback")
-        
+            
+            #END OF "while self._d_is_alive"
         self._d_logger.debug("Stop event-handler")
-
 
 
     def add_event(self, cb, value):
@@ -182,6 +270,8 @@ class EventManager(threading.Thread):
         """ This method adds a scheduled event to the queue. The event-manager
             will call cb(**kwargs) after a period of time defined by time. """
         # FIXME make an scheduled event cancelable?
+        self._d_logger.debug("Add scheduled event: %s(%s) in %fs"%(getattr(cb,'__name__',cb), params, timeout))
+        
         # store callback as a weak-reference:
         cb = weakref.proxy(cb)
 
@@ -190,7 +280,6 @@ class EventManager(threading.Thread):
         self._d_sched_events.sort(cmp=_EventManager_sched_compare)
         self._d_condition.notify()
         self._d_condition.release()
-
 
 
     def _sched_event_pending(self):
@@ -204,7 +293,12 @@ class EventManager(threading.Thread):
         if timestamp <= time.time():
             return True
 
-
+    
+    def _blocks_on_pause(self):
+        if not self.isPaused(): return
+        self._d_signal_paused.set()   # signals that EventManager gets paused
+        self._d_pause_lock.wait()     # wait for resume
+        self._d_signal_paused.clear() # signals EventManager resumed    
 
 
 

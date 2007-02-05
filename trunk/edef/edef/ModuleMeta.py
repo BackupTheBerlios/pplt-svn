@@ -34,10 +34,14 @@ from Assembly import Assembly
 
 
 class ModuleBaseMeta:
+    """ This is the base-class for the L{ModuleMeta} and L{AssemblyMeta} 
+        classes. Normaly these classes are instanced by the L{Importer} and 
+        you will never need to instance these classes directly. """
     _d_logger = None
     _d_dom    = None
 
     def __init__(self, xml_dom):
+        """ Constructor. Takes only an XML-DOM tree. """
         self._d_logger = logging.getLogger("edef.core")
         # FIXME check if dom is a valid XML-DOM
         self._d_dom = xml_dom
@@ -45,23 +49,41 @@ class ModuleBaseMeta:
 
     
     def getAuthor(self):
+        """ This method returns the name of the author of the module/assembly,
+            if defined. Otherwise it will return an empty string. """
+        # FIXME test me
         node = xml.xpath.Evaluate("string(Author/text())",self._d_dom)
         if not node: return None
         return node.strip()
 
 
     def getVersion(self):
+        """ Returns the version-string of the module."""
+        # FIXME test me
         node = xml.xpath.Evaluate("string(Version/text())",self._d_dom)
         return node.strip()
 
 
     def getDescription(self, lang="en"):
+        """ This method will return the description of the module/assembly.
+            If it is not defined it will return an empty string. The optional
+            attribute I{lang} specifies the language of the description 
+            returned. Note: If there is no description specified in the given
+            language the method will return an empty string. """
+        # FIXME test me
         query = "string(Description[@lang='%s']/text())"%lang
         node = xml.xpath.Evaluate(query, self._d_dom)
         return node.strip()
 
 
     def checkAndExpandParameters(self, params):
+        """ This method can be used to expand the given parameters in respect 
+            to this module. This method will be used by the Importer to expand
+            the given parameters before instanceing the module/assembly. So
+            the module-developer doesn't need to care about if there are all
+            (even optional) parameters present. 
+            This method will raise a I{ModuleImportError] if a non-optional
+            parameter is missing. """
         # to check if all "needed" parameters are present:
         #   - get all parameter names from the meta that have no "default" 
         #     attribute
@@ -84,6 +106,7 @@ class ModuleBaseMeta:
 
 
     def getParameterDescription(self, name, lang="en"):
+        # FIXME test me
         """ This method will return the description-string for the given 
             parameter. The language can be selected. """
         query = "string(Requires/Parameter[@name='%s']/Description[@lang=%s]/text())"%(name, lang)
@@ -91,14 +114,37 @@ class ModuleBaseMeta:
         return node.strip()
 
 
+    def getIODescription(self, name, lang="en"):
+        # FIXME test me
+        """ This method can be used to get the description of an input or
+            output. In the meta-data of a module you can describe a input or
+            output. This method take a complete name like C{i_input} and an 
+            optional parameter I{lang}. The method will return a string if
+            there is a description of the give pin in the proper language."""
+        if re.match(name, "^o_"):
+            query = "string(Provides/Output[name='%s']/Description[@lang='%s'])"%(name, lang)
+            return xml.xpath.Evaluate(query, self._d_dom)
+        elif re.match(name, "^i_"):
+            query = "string(Provides/Input[name='%s']/Description[@lang='%s'])"%(name, lang)
+            return xml.xpath.Evaluate(query, self._d_dom)
+        raise Exception("Invalid name for an input or output: %s"%name)
+
+
     def getElement(self, xp_query):
+        """ This method can be used to query elements of the module/assembly
+            xml-description. This can be used to access elements that are not
+            defined in the Module/Assembly grammar. """
+        # FIXME test me
         return xml.xpath.Evaluate(xp_query, self._d_dom)
 
 
     def instance(self, paramters):
+        """ This method should be overridden to implement the instanceing. """
         raise NotImplemented("This method should be implemented by Module- or AssemblyMeta!")
 
     def checkDependencies(self):
+        """ This method should be overridden to check if all defined 
+            Dependencies are satisfied """
         raise NotImplemented("This method should be implemented by Module- or AssemblyMeta!")
 
 
@@ -220,6 +266,7 @@ class AssemblyMeta(ModuleBaseMeta):
 
 
     def checkDependencies(self):
+        # FIXME test me
         # get list of neede modules:
         nodes = xml.xpath.Evaluate("/Assembly/Require/Module/text()", self._d_dom)
         mod_list = self._d_importer.listModules()

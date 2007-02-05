@@ -1,3 +1,9 @@
+""" This package contains the edef-core library. """
+#FIXME complete documentation:
+#   * important classes
+#   * examples
+#   * licence
+
 from Output import ValueOutput, StreamOutput, FrameOutput
 from Output import BoolOutput, IntegerOutput, FloatOutput, ComplexOutput
 from Output import StringOutput, BoolSeqOutput, IntegerSeqOutput

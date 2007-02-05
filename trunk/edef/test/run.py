@@ -19,8 +19,12 @@ from testSingleton import testSingleton
 if __name__ == '__main__':
     print ""
     # init logger
-    log_file = open("test.log","w")
+    log_file = open("test.log","a")
     edef.Logger(logging.DEBUG, log_file)
+
+    # init/start EventManager:
+    evt = edef.EventManager()
+    evt.start()
 
     # create suite:
     suite = unittest.TestSuite()
@@ -44,6 +48,5 @@ if __name__ == '__main__':
     try:
         unittest.TextTestRunner(verbosity=2).run(suite)
     finally:
-        # stop Eventhandler
-        time.sleep(0.1)
-        edef.EventManager().stop()
+        evt.finish()
+        evt.shutdown()

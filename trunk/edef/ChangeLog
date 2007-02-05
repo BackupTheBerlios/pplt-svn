@@ -1,3 +1,14 @@
+2007-02-05: Hannes Matuschek <hmatuschek@gmail.com> (rev. 87)
+	* edef/Output.py (ValueOutput):
+		fixed emission of None on add_input()
+
+	* edef/EventManager.py:
+		implemented start(), pause(), finish(), isPaused() methods
+
+	* edef/EventManager.py (EventManager.shutdown):
+		renamed stop() into shutdown()
+
+
 2007-02-02: Hannes Matuschek <hmatuschek@gmail.com> (rev. 86)
 	* edef/Assembly.py (Assembly):
 		implemented Assambly-container
