@@ -24,7 +24,7 @@ if __name__ == '__main__':
 
     # init/start EventManager:
     evt = edef.EventManager()
-    evt.start()
+    evt.resume()
 
     # create suite:
     suite = unittest.TestSuite()
@@ -36,6 +36,8 @@ if __name__ == '__main__':
     suite.addTest(testValueOutput("testEventOrder"))
 
     suite.addTest(testEventManager("testScheduledEvent"))
+    suite.addTest(testEventManager("testFinish"))
+    suite.addTest(testEventManager("testPause"))
 
     suite.addTest(testSimpleModule("testSingleModule"))
     

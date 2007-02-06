@@ -22,6 +22,7 @@ class DummyHandler:
         self._d_lock.wait(timeout)
         self._d_lock.clear()
         if len(self._d_values) == 0:
+            self._d_logger.info("Timeout!")
             return None
         return self._d_values.pop(0)
 

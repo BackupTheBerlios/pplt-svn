@@ -48,5 +48,5 @@ class Logger:
 
         # set output:
         hdl = logging.StreamHandler(output)
-        hdl.setFormatter(logging.Formatter("%(levelname)-8s %(filename)s:%(lineno)d %(message)s"))
+        hdl.setFormatter(logging.Formatter("%(levelname)-8s %(filename)s(%(thread)d):%(lineno)d %(message)s"))
         logger.addHandler(hdl)

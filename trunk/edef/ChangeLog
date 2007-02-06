@@ -1,3 +1,10 @@
+2007-02-06: Hannes Matuschek <hmatuschek@gmail.com> (rev. 88)
+	* edef/EventManager.py:
+		- fixed some dead-locks in pause()/finish()/run()/resume()
+		- renamed start() -> resume()
+		- fixed missing acquire/release in pause
+
+
 2007-02-05: Hannes Matuschek <hmatuschek@gmail.com> (rev. 87)
 	* edef/Output.py (ValueOutput):
 		fixed emission of None on add_input()

@@ -93,39 +93,52 @@ class EventManager(threading.Thread):
         self._d_condition       = threading.Condition()
         self._d_logger          = logging.getLogger("edef.core")
         
-        self._d_pause_lock      = threading.Event()
-        self._d_signal_paused   = threading.Event()
+        self._d_signal_toresume = threading.Event()
+        self._d_signal_ispaused = threading.Event()
+        self._d_signal_isresumed= threading.Event()
 
         threading.Thread.__init__(self)
         self._d_logger.info("Init event-handler (id:%i)"%id(self))
         
-        self._d_pause_lock.clear()  # set event-mngr into pause-mode
-        self._d_signal_paused.clear()
+        self._d_signal_toresume.clear()
+        self.start()    # start event-manager thread
+        
+        # wait untill mngr is paused:
+        self._d_logger.debug("On init: Pause evt-mngr!")
+        self._d_signal_ispaused.wait()
         
         if starts_now:
-            self._d_pause_lock.set()# resume from pause
-
-        threading.Thread.start(self)# start event-manager thread
+            self.resume()
          
 
-    def start(self):
+    def resume(self):
         """ This method will start the event-handler. It should be called 
             after the event-manager was instanced and to resume the 
             event-manager after a C{pause()} call. """
-        self._d_pause_lock.set()    # resume paused EventManager
+        self._d_logger.debug("Signal mngr to resume")
+        self._d_signal_toresume.set()   # resume paused EventManager
+        #self._d_logger.debug("Wait until mngr is resumed")
+        self._d_signal_isresumed.wait() # wait for thread to resume 
+        self._d_logger.debug("Mngr is running")
+       
 
-    
     def pause(self):
         """ This method will pause the event-manager. This method blocks until
             the current event was processed. You can resume the 
             event-processing by calling the C{start()} method. """
         if self.isPaused():
-            self._d_logger.debug("EventManager allready paused!")
+            self._d_logger.info("Mngr allready paused!")
             return
 
-        self._d_pause_lock.clear()   # set state to pause
-        self._d_condition.notify()   # signal "event"
-        self._d_signal_paused.wait() # wait for evt-mngr to be paused
+        self._d_condition.acquire()
+        self._d_logger.debug("Signal mngr to pause")
+        self._d_signal_toresume.clear() # set state to pause
+        self._d_condition.notify()      # signal "event"
+        self._d_condition.release()
+        
+        #self._d_logger.debug("Wait until mngr sleeps")
+        self._d_signal_ispaused.wait() # wait for evt-mngr to be paused
+        self._d_logger.debug("Mngr is paused")
 
 
     def finish(self, timeout=1.0):
@@ -135,15 +148,29 @@ class EventManager(threading.Thread):
             resume the EventManager by calling the C{start()} method. This 
             method returns C{True} if the event-manager successfully finished 
             his job or C{False] if a timeout occures."""
-        if self.isPaused(): return True # If it is allready paused
+        self._d_logger.debug("Let mngr finish his job")
+        if self.isPaused():
+            self._d_logger.debug("Mngr is paued -> seems like his finished")
+            return True # If it is allready paused
         
         self._d_condition.acquire()
         self._d_finish_events = True    # tell event-manager to finisch
         self._d_condition.notify()      # signal "event"
         self._d_condition.release()
 
-        self._d_signal_paused.wait(timeout) # wait until he gets paused 
-                                            # (by him self)
+        if self._d_signal_ispaused.isSet():
+            # if mngr should run but not reseted pause signal
+            # wait until he runs and then retry to finish:
+            self._d_logger.debug("Mngr not paused and not running again -> wait for!")
+            self._d_signal_isresumed.wait()
+            return self.finish(timeout)
+
+        #self._d_logger.debug("Is signal_paused (%s) and isPaused (%s)?"%(self._d_signal_ispaused.isSet(), self.isPaused()))
+        
+        #self._d_logger.debug("Wait until mngr is paused")
+        self._d_signal_ispaused.wait(float(timeout)) # wait until he gets paused (by him self)
+        #self._d_logger.debug("Manager is paused now -> finished")
+        
         self._d_finish_events = False   # reset finish-flag
         if not self.isPaused():         # if event-mgr is not paused (timeout)
             self.pause()                # force him to pause even if there 
@@ -159,7 +186,7 @@ class EventManager(threading.Thread):
         # Notify event-handler-thread to exit:
         self._d_condition.acquire()
         self._d_is_alive = False    # signal to shutdown
-        self._d_pause_lock.set()    # wakeup paused EventManager
+        self._d_signal_toresume.set()    # wakeup paused EventManager
         self._d_condition.notify()  # signal "event"
         self._d_condition.release()
         # Wait for thread to join
@@ -183,7 +210,7 @@ class EventManager(threading.Thread):
         """ This method will return C{True} if the EventManager is in the
             pause mode. This method will event return C{True} if the last
             event is still processed. """
-        return not self._d_pause_lock.isSet()
+        return not self._d_signal_toresume.isSet()
 
 
     def run(self):
@@ -200,19 +227,21 @@ class EventManager(threading.Thread):
             self._d_condition.acquire()
             # if there are no events and finish() was called:
             if len(self._d_event_list) == 0 and len(self._d_sched_events) == 0 and self._d_finish_events:
-                self._d_pause_lock.clear()  # set my self into pause
+                self._d_signal_toresume.clear()  # set my self into pause
                 self._d_condition.release()
                 continue
 
-            if len(self._d_event_list) == 0 and not self._sched_event_pending():
+            if len(self._d_event_list) == 0 and not self._sched_event_pending() and not self.isPaused():
                 if len(self._d_sched_events) > 0:
                     (nxt_event, cb, args) = self._d_sched_events[0]
                     timeout = nxt_event - time.time()
-                    self._d_logger.debug("Events pending, check in %f sec.",timeout)
+                    #self._d_logger.debug("Events pending, check in %f sec.",timeout)
                 else: timeout = None                
+                #self._d_logger.debug("Wait for events (%s)"%timeout)
                 self._d_condition.wait(timeout)
+                #self._d_logger.debug("Got an event -> process")
             
-            if not self._d_is_alive:
+            if not self._d_is_alive or self.isPaused():
                 self._d_condition.release()
                 continue
             
@@ -296,10 +325,14 @@ class EventManager(threading.Thread):
     
     def _blocks_on_pause(self):
         if not self.isPaused(): return
-        self._d_signal_paused.set()   # signals that EventManager gets paused
-        self._d_pause_lock.wait()     # wait for resume
-        self._d_signal_paused.clear() # signals EventManager resumed    
-
+        #self._d_logger.debug("Signal to wait for resume")
+        self._d_signal_ispaused.set()   # signals that EventManager gets paused
+        self._d_signal_isresumed.clear()
+        #self._d_logger.debug("Wait for resume")
+        self._d_signal_toresume.wait()     # wait for resume
+        #self._d_logger.debug("Resumed! Signal this...")
+        self._d_signal_ispaused.clear() # signals EventManager resumed    
+        self._d_signal_isresumed.set()
 
 
 def _EventManager_sched_compare(tpl1, tpl2):

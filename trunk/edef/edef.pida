@@ -8,14 +8,14 @@ name = edef
 # browse_directory
 # Select a source directory for the project
 # default value = /
-browse_directory = /home/hannes/Projekte/edef/edef
+browse_directory = /home/hannes/Projekte/edef
 
 
 [source]
 # uses
 # Whether the project has source code
 # default value = True
-uses = 1
+uses = True
 
 # directory
 # Select a source directory for the project
@@ -25,7 +25,7 @@ directory = /home/hannes/Projekte/edef
 # uses_vc
 # Whether the project uses version control
 # default value = True
-uses_vc = 1
+uses_vc = True
 
 
 [build]
@@ -56,7 +56,7 @@ command_base =
 # uses
 # Whether this project uses unit testing
 # default value = False
-uses = 1
+uses = True
 
 # command_base
 # The testing command
