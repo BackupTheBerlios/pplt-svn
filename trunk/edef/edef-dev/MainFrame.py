@@ -134,7 +134,11 @@ class eDevMainFrame(wx.Frame):
         self.bindSave()
         self.bindSaveAs()
         self.bindClose()
-
+        self.bindUndo()
+        self.bindRedo()
+        self.bindCopy()
+        self.bindCut()
+        self.bindPaste()
 
     def OnExit(self, evt):
         self.Close()
@@ -197,5 +201,38 @@ class eDevMainFrame(wx.Frame):
             self.Bind(wx.EVT_TOOL, cb, id=wx.ID_CLOSE)
             self._d_toolbar.EnableTool(wx.ID_CLOSE, True)
 
+    def bindUndo(self, cb=None):
+        if cb is None:
+            self._d_toolbar.EnableTool(wx.ID_UNDO, False)
+        else:
+            self.Bind(wx.EVT_TOOL, cb, id=wx.ID_UNDO)
+            self._d_toolbar.EnableTool(wx.ID_UNDO, True)
+
+    def bindRedo(self, cb=None):
+        if cb is None:
+            self._d_toolbar.EnableTool(wx.ID_REDO, False)
+        else:
+            self.Bind(wx.EVT_TOOL, cb, id=wx.ID_REDO)
+            self._d_toolbar.EnableTool(wx.ID_REDO, True)
+
+    def bindCopy(self, cb=None):
+        if cb is None:
+            self._d_toolbar.EnableTool(wx.ID_COPY, False)
+        else:
+            self.Bind(wx.EVT_TOOL, cb, id=wx.ID_COPY)
+            self._d_toolbar.EnableTool(wx.ID_COPY, True)
+
+    def bindCut(self, cb=None):
+        if cb is None:
+            self._d_toolbar.EnableTool(wx.ID_CUT, False)
+        else:
+            self.Bind(wx.EVT_TOOL, cb, id=wx.ID_CUT)
+            self._d_toolbar.EnableTool(wx.ID_CUT, True)
     
+    def bindPaste(self, cb=None):
+        if cb is None:
+            self._d_toolbar.EnableTool(wx.ID_PASTE, False)
+        else:
+            self.Bind(wx.EVT_TOOL, cb, id=wx.ID_PASTE)
+            self._d_toolbar.EnableTool(wx.ID_PASTE, True)
 

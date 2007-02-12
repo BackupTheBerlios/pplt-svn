@@ -56,10 +56,6 @@ class eDevDiscardDialog(wx.Dialog):
         self.Bind(wx.EVT_BUTTON, self.OnButtonClick, yes_btn)
         btnbox.AddButton(yes_btn)
         
-        no_btn = wx.Button(self, wx.ID_NO)
-        self.Bind(wx.EVT_BUTTON, self.OnButtonClick, no_btn)
-        btnbox.AddButton(no_btn)
-        
         c_btn = wx.Button(self, wx.ID_CANCEL)
         self.Bind(wx.EVT_BUTTON, self.OnButtonClick, c_btn)
         btnbox.AddButton(c_btn)

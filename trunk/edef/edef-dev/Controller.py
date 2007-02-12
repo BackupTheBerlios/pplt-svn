@@ -102,17 +102,16 @@ class eDevController:
         self._d_archive_tree.removeFile()
        
 
+
     def OnDocumentClose(self, event=None):
         doc = self._d_notebook.GetCurrentPage()
         if doc is None:
             raise Exception("No document selected to save")
 
-        #FIXME if document is modified: ask for saveing!
         if doc.isModified():
             # Ask for saveing
             dlg = eDevDiscardDialog(self._d_main_frame, -1)
             ret = dlg.ShowModal()
-            print "RET: %s ==? %s"%(ret,wx.ID_YES)
             # if cancel was clicked -> abort
             if ret == wx.ID_CANCEL: return
             # if Yes was clicked -> close and return
@@ -125,6 +124,7 @@ class eDevController:
             self._d_notebook.closePage()
         else:
             self._d_notebook.closePage()
+
 
     def OnDocumentSave(self, event=None):
         # get the current selected document-page:
@@ -177,30 +177,45 @@ class eDevController:
             ar.writeFile(filename, doc.GetText())
             self._d_notebook.SetPageText(doc, filename)
             doc.setData( (archive, filename) )
+            doc.setModified(False)
         else:
             ar.createFile(filename, doc.GetText())
             self._d_notebook.SetPageText(doc, filename)
             doc.setData( (archive, filename) )
             self._d_archive_tree.addFile(archive, filename)
+            doc.setModified(False)
 
 
     def OnDocumentModified(self, event=None):
-        (arc, fname) = self._d_notebook.GetCurrentPage().getData()
+        print "page modified"
+        pg = self._d_notebook.GetCurrentPage()
+        (arc, fname) = pg.getData()
         if not fname is None:
             self._d_main_frame.bindSave(self.OnDocumentSave)
-        # self._d_main_frame.bindUndo()
-        # self._d_main_frame.bindRedo()
+        if self._d_notebook.isPageCanUndo():
+            self._d_main_frame.bindUndo(self._d_notebook.OnPageUndo)
+        if self._d_notebook.isPageCanRedo():
+            self._d_main_frame.bindRedo(self._d_notebook.OnPageRedo)
+
+        if self._d_notebook.isPageCanCopy():
+            self._d_main_frame.bindCopy(self._d_notebook.OnPageCopy)
+        if self._d_notebook.isPageCanCut():
+            self._d_main_frame.bindCut(self._d_notebook.OnPageCut)
+        if self._d_notebook.isPageCanPaste():
+            self._d_main_frame.bindPaste(self._d_notebook.OnPagePaste)
+
 
 
     def OnDocumentChanged(self, event=None):
+        print "page changed"
         # disable all editor-tools:
         self._d_main_frame.bindSave()
         self._d_main_frame.bindSaveAs()
-        #self._d_main_frame.bindCopy()
-        #self._d_main_frame.bindCut()
-        #self._d_main_frame.bindPaste()
-        #self._d_main_frame.bindRedo()
-        #self._d_main_frame.bindUndo()
+        self._d_main_frame.bindCopy()
+        self._d_main_frame.bindCut()
+        self._d_main_frame.bindPaste()
+        self._d_main_frame.bindRedo()
+        self._d_main_frame.bindUndo()
         self._d_main_frame.bindClose()
 
         if self._d_notebook.isPage():
@@ -212,15 +227,15 @@ class eDevController:
             if filename == None: return
             self._d_main_frame.bindSave(self.OnDocumentSave)
 
-        #if self._d_notebook.isPageCanCopy():
-        #    self._d_main_frame.bindCopy()   #FIXME
-        #if self._d_notebook.isPageCanCut():
-        #    self._d_main_frame.bindCut()   #FIXME
-        #if self._d_notebook.isPageCanPaste():
-        #    self._d_main_frame.bindPaste()   #FIXME
+        if self._d_notebook.isPageCanCopy():
+            self._d_main_frame.bindCopy(self._d_notebook.OnPageCopy)
+        if self._d_notebook.isPageCanCut():
+            self._d_main_frame.bindCut(self._d_notebook.OnPageCut)
+        if self._d_notebook.isPageCanPaste():
+            self._d_main_frame.bindPaste(self._d_notebook.OnPagePaste)
 
-        #if self._d_notebook.isPageCanUndo():
-        #    self._d_main_frame.bindUndo()   #FIXME
-        #if self._d_notebook.isPageCanRedo():
-        #    self._d_main_frame.bindRedo()   #FIXME
+        if self._d_notebook.isPageCanUndo():
+            self._d_main_frame.bindUndo(self._d_notebook.OnPageUndo)
+        if self._d_notebook.isPageCanRedo():
+            self._d_main_frame.bindRedo(self._d_notebook.OnPageRedo)
                 

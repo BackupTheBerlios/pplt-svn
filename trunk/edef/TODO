@@ -42,4 +42,6 @@
 
 
 = Long term tasks =
+    * rewrite edef/EventManager.py: it is an ungly, complex chunk of code!
     * Do all the stuff above...
+

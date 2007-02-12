@@ -51,21 +51,16 @@ class eDevNotebook(wx.Notebook):
                 return n
         return -1
 
-
     def hasPage(self, data):
         if self.getPageNo(data) > 0:
             return True
         return False                
 
-
     def selectPage(self, data):
         self.SetSelection(self.getPageNo(data))
 
-
-
     def OnPageChanged(self, event):
         self._d_controller.OnDocumentChanged()
-
     
     def isPage(self):
         if self.GetPageCount() > 0: return True
@@ -83,13 +78,47 @@ class eDevNotebook(wx.Notebook):
     def isPageCanPaste(self):
         return False
 
-    def isPageCanRedo(self):
-        return False
-    
-    def isPageCanUndo(self):
-        return True
-            
+    def isPageCanRedo(self, idx=None):
+        if idx is None: page = self.GetCurrentPage()
+        else: page = self.GetPage(idx)
+        if page is None: return False
+        return page.canRedo()
 
+    def isPageCanUndo(self, idx=None):
+        if idx is None: page = self.GetCurrentPage()
+        else: page = self.GetPage(idx)
+        if page is None: return False
+        return page.canUndo()
+
+    def isPageCanCopy(self, idx=None):
+        if idx is None: page = self.GetCurrentPage()
+        else: page = self.GetPage(idx)
+        if page is None: return False
+        return page.canCopy()
+
+    def isPageCanCut(self, idx=None):
+        if idx is None: page = self.GetCurrentPage()
+        else: page = self.GetPage(idx)
+        if page is None: return False
+        return page.canCut()
+
+    def isPageCanPaste(self, idx=None):
+        if idx is None: page = self.GetCurrentPage()
+        else: page = self.GetPage(idx)
+        if page is None: return False
+        return page.canPaste()
+    
+    def OnPageUndo(self, evt=None):
+        self.GetCurrentPage().undo()
+    def OnPageRedo(self, evt=None):
+        self.GetCurrentPage().redo()
+    def OnPageCopy(self, evt=None):
+        self.GetCurrentPage().copy()
+    def OnPageCut(self, evt=None):
+        self.GetCurrentPage().cut()
+    def OnPagePaste(self, evt=None):
+        self.GetCurrentPage().paste()
+        
 
 
 class eDevEditPage(stc.StyledTextCtrl):
@@ -134,8 +163,7 @@ class eDevEditPage(stc.StyledTextCtrl):
         self.EmptyUndoBuffer()
         self.Colourise(0, -1)
 
-        self.Bind(stc.EVT_STC_MODIFIED, self.OnModified)
-    
+        self.Bind(stc.EVT_STC_CHANGE, self.OnModified)
     
     def getData(self):
         return self._d_data
@@ -147,6 +175,22 @@ class eDevEditPage(stc.StyledTextCtrl):
 
     def isModified(self):
         return self._d_is_modified
+
+    def canRedo(self): return self.CanRedo()
+    def canUndo(self): return self.CanUndo()
+    def canCopy(self): return True
+    def canCut(self):  return True
+    def canPaste(self): return self.CanPaste()
+
+    def redo(self, evt=None): self.Redo()
+    def undo(self, evt=None): self.Undo()
+
+    def copy(self, evt=None):
+        self._d_controller.OnDocumentChanged()
+        self.Copy()
+    
+    def cut(self, evt=None): self.Cut()
+    def paste(self, evt=None): self.Paste()
 
     def setModified(self, mod=True):
         self._d_is_modified = mod

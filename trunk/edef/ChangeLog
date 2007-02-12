@@ -1,3 +1,7 @@
+2007-02-12: Hannes Matuschek <hmatuschek@gmail.com> (rev. 89)
+	* edef-dev/*.py:
+		implmeneted copy/cut/paste/redo/undo
+
 2007-02-06: Hannes Matuschek <hmatuschek@gmail.com> (rev. 88)
 	* edef/EventManager.py:
 		- fixed some dead-locks in pause()/finish()/run()/resume()

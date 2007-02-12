@@ -5,6 +5,7 @@ import logging
 import unittest
 import edef
 import time
+import pycallgraph
 
 # import Tests:
 from testValueOutput import testValueOutput
@@ -18,6 +19,7 @@ from testSingleton import testSingleton
 
 if __name__ == '__main__':
     print ""
+    
     # init logger
     log_file = open("test.log","a")
     edef.Logger(logging.DEBUG, log_file)
@@ -52,3 +54,4 @@ if __name__ == '__main__':
     finally:
         evt.finish()
         evt.shutdown()
+
