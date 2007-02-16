@@ -7,6 +7,8 @@ import re
 import logging
 from edef import Singleton
 import Tools
+from zipfile import ZipFile
+
 
 class eDevModel:
     _d_local_mod_path = None
@@ -78,8 +80,8 @@ class eDevModel:
     def saveURI(self, uri, txt):
         print "Save %s"%uri
         (proto, path) = Tools.splitURI(uri)
-        if not proto in ["py","mod"]:
-            raise Exception("Unknown protocol"%proto)
+        if not proto in ["py","mod","zip"]:
+            raise Exception("Unknown protocol %s"%proto)
         if path == "":
             raise Exception("Path not set!")
         
@@ -106,7 +108,14 @@ class eDevModel:
             # save module
             mod = self._d_module_list[uri]
             mod.setText(txt)
-
+        elif proto=="zip":
+            if uri in self._d_archive_list.keys():
+                raise Exception("Archive %s allready known!"%uri)
+            name = Tools.getArchive(uri)
+            zip_path = os.path.join(self._d_local_mod_path, name)
+            ZipFile(zip_path, "w")
+            ar = eDevModelArchive(zip_path)
+            self._d_archive_list[uri] = ar
 
     def checkURI(self, uri):
         (proto, path) = Tools.splitURI(uri)
@@ -140,4 +149,7 @@ class eDevModel:
             os.unlink(self._d_module_list[uri].getPath())
             del self._d_module_list[uri]
         elif proto == "zip":
-            raise Exception("Not Implemented")
+            if not uri in self._d_archive_list.keys():
+                raise Exception("Unknown archive %s"%uri)
+            os.unlink(self._d_archive_list[uri].getPath())
+            del self._d_archive_list[uri]

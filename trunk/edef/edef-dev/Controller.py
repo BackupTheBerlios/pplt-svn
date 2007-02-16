@@ -54,6 +54,8 @@ class eDevController:
             text = self._d_model.openURI(uri)
             mod_name = Tools.getModule(uri)
             self._d_notebook.openModule(mod_name, uri,text)
+        elif proto == "shell":
+            self._d_notebook.openShell("Shell", uri, "edef Developer shell")
         else: return
         self._d_main_frame.bindClose(self.OnDocumentClose)
 

@@ -6,7 +6,7 @@ import Events
 from Controller import eDevController
 from PythonEditor import eDevPythonEditor
 from ModuleEditor import eDevModuleEditor
-
+from Shell import eDevShell
 
 
 class eDevNotebook(wx.Notebook):
@@ -61,6 +61,12 @@ class eDevNotebook(wx.Notebook):
         page = eDevModuleEditor(self, -1, uri, text)
         self.AddPage(page, title, True)
         self.Bind(Events.EVT_PAGE_MODIFIED, self._onPageModified, page)
+        self._emmitChanged(page)
+
+
+    def openShell(self, title, uri, text=None):
+        page = eDevShell(self, -1, uri, text)
+        self.AddPage(page, title, True)
         self._emmitChanged(page)
 
 

@@ -11,6 +11,12 @@ class eDevModuleTree(wx.TreeCtrl):
         wx.TreeCtrl.__init__(self, parent, ID, size=wx.Size(-1,-1),
                              style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_NO_LINES|wx.TR_FULL_ROW_HIGHLIGHT)
         
+        self._d_imgs = wx.ImageList(16,16)
+        self._bmp_class = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16,16)) )
+        self._bmp_class_open = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16,16)) )
+        self._bmp_module = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, (16,16)) )
+        self.SetImageList(self._d_imgs)
+
         self._d_model = eDevModel()
         self._d_controller = eDevController()
         self._d_mainframe  = self._d_controller.getMainFrame()
@@ -34,7 +40,6 @@ class eDevModuleTree(wx.TreeCtrl):
         
         def class_filter(uri): return re.match("^%s/\w+/.+$"%prefix, uri)
         modules = filter(class_filter, mods)
-        print "classes in %s: %s of %s"%(prefix, modules, mods)
         for mod_uri in modules:
             m = re.match("^%s/(\w+)/.+$"%prefix, mod_uri)
             class_name = m.group(1)
@@ -45,8 +50,10 @@ class eDevModuleTree(wx.TreeCtrl):
                 self.popModules(mods,citem)
                 continue
             
-            citem = self.AppendItem(item, "c "+class_name)
+            citem = self.AppendItem(item, class_name)
             self.SetPyData(citem, ("Class", uri) )
+            self.SetItemImage(citem, self._bmp_class, wx.TreeItemIcon_Normal)
+            self.SetItemImage(citem, self._bmp_class_open, wx.TreeItemIcon_Expanded)
             self.popClasses(mods, citem)
 
         self.popModules(mods, item)
@@ -59,13 +66,14 @@ class eDevModuleTree(wx.TreeCtrl):
         (typ, prefix) = self.GetPyData(item)
         def module_filter(uri): return re.match("^%s/(\w+)$"%prefix, uri)
         modules = filter(module_filter, mods)
-        print "Modules in %s: %s"%(prefix, modules)
         for module in modules:
             if self.hasURI(module, self._d_root): continue
             m = re.match("^%s/(\w+)"%prefix, module)
             mod_name = m.group(1)
-            citem = self.AppendItem(item, "m "+mod_name)
+            citem = self.AppendItem(item, mod_name)
             self.SetPyData(citem, ("Module", module) )
+            self.SetItemImage(citem, self._bmp_module, wx.TreeItemIcon_Normal)
+            self.SetItemImage(citem, self._bmp_module, wx.TreeItemIcon_Expanded)
    
 
     def addURI(self, uri):

@@ -11,7 +11,7 @@ def GetXMLContent(node):
 # ====== URI stuff ======
 
 def splitURI(uri):
-    m = re.match("^(zip|py|mod)://(.*)$", uri)
+    m = re.match("^(zip|py|mod|shell)://(.*)$", uri)
     return (m.group(1), m.group(2))
 
 def splitArchive(path):

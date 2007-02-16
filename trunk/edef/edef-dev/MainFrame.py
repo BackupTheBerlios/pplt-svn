@@ -3,14 +3,14 @@ from MainSplitter import eDevMainSplitter
 from Navigator import eDevNavigator
 from Notebook import eDevNotebook
 from Controller import eDevController
-
+from Config import eDevConfigDialog
 
 
 class eDevMainFrame(wx.Frame):
     
     def __init__(self, parent, title):
         wx.Frame.__init__(self, parent, -1, title,
-                          size=(640,480))
+                          size=(930,660))
         
         new_bmp = wx.ArtProvider_GetBitmap(wx.ART_NEW, wx.ART_TOOLBAR, (16,16))
         open_bmp = wx.ArtProvider_GetBitmap(wx.ART_FILE_OPEN, wx.ART_TOOLBAR, (16,16))
@@ -32,10 +32,12 @@ class eDevMainFrame(wx.Frame):
         self._d_file_menu    = wx.Menu()
         self._d_edit_menu    = wx.Menu()
         self._d_settings_menu= wx.Menu()
+        self._d_tool_menu    = wx.Menu()
         self._d_help_menu    = wx.Menu()
         
         # create items:
         self._d_menu_new     = wx.MenuItem(self._d_file_menu, wx.ID_NEW, "&New", "???")
+        self._d_menu_new_arch= wx.MenuItem(self._d_file_menu, -1, "New Archive", "creates a new archve")
         self._d_menu_open    = wx.MenuItem(self._d_file_menu, wx.ID_OPEN, "&Open", "???")
         self._d_menu_save    = wx.MenuItem(self._d_file_menu, wx.ID_SAVE, "&Save", "???")
         self._d_menu_save_as = wx.MenuItem(self._d_file_menu, wx.ID_SAVEAS, "Save &as...", "???")
@@ -50,10 +52,13 @@ class eDevMainFrame(wx.Frame):
         self._d_menu_undo    = wx.MenuItem(self._d_edit_menu, wx.ID_UNDO, "&Undo", "???")
 
         self._d_menu_conf_editor = wx.MenuItem(self._d_settings_menu, wx.ID_PREFERENCES, "&Editor", "???")
+        self._d_menu_open_shell = wx.MenuItem(self._d_tool_menu, -1, "Open Shell", "")
         self._d_menu_about   = wx.MenuItem(self._d_help_menu, wx.ID_HELP, "&About", "About edef Developer")
 
         # Set Menuicons:
         self._d_menu_new.SetBitmap(new_bmp)
+        self._d_menu_new_arch.SetBitmap(new_bmp)
+        self._d_menu_open.SetBitmap(open_bmp)
         self._d_menu_open.SetBitmap(open_bmp)
         self._d_menu_save.SetBitmap(save_bmp)
         self._d_menu_save_as.SetBitmap(save_as_bmp)
@@ -73,6 +78,8 @@ class eDevMainFrame(wx.Frame):
         self._d_file_menu.AppendItem(self._d_menu_save_as)
         self._d_file_menu.AppendItem(self._d_menu_delete)
         self._d_file_menu.AppendSeparator()
+        self._d_file_menu.AppendItem(self._d_menu_new_arch)
+        self._d_file_menu.AppendSeparator()
         self._d_file_menu.AppendItem(self._d_menu_quit)
         self._d_edit_menu.AppendItem(self._d_menu_copy)
         self._d_edit_menu.AppendItem(self._d_menu_cut)
@@ -82,11 +89,13 @@ class eDevMainFrame(wx.Frame):
         self._d_edit_menu.AppendItem(self._d_menu_undo)
         self._d_settings_menu.AppendItem(self._d_menu_conf_editor)
         self._d_help_menu.AppendItem(self._d_menu_about)
+        self._d_tool_menu.AppendItem(self._d_menu_open_shell)
 
         #assemble menu-bar
         self._d_menubar.Append(self._d_file_menu, "&File")
         self._d_menubar.Append(self._d_edit_menu, "&Edit")
         self._d_menubar.Append(self._d_settings_menu, "&Settings")
+        self._d_menubar.Append(self._d_tool_menu, "&Tools")
         self._d_menubar.Append(self._d_help_menu, "&Help")
         self.SetMenuBar(self._d_menubar)
 
@@ -129,6 +138,7 @@ class eDevMainFrame(wx.Frame):
         # connect events:
         self.Bind(wx.EVT_MENU, self.OnExit, id=wx.ID_EXIT)
         self.bindNew()
+        self.bindNewArch()
         self.bindOpen()
         self.bindDelete()
         self.bindSave()
@@ -140,10 +150,27 @@ class eDevMainFrame(wx.Frame):
         self.bindCut()
         self.bindPaste()
 
+        self.Bind(wx.EVT_MENU, self.OnEditorSettings, id=wx.ID_PREFERENCES)
+        self.Bind(wx.EVT_MENU, self.OnOpenShell, self._d_menu_open_shell)
+
+
+
     def OnExit(self, evt):
         self.Close()
 
+    def OnEditorSettings(self, evt):
+        dlg = eDevConfigDialog(self, -1)
+        dlg.ShowModal()
 
+    def OnOpenShell(self, evt):
+        self._d_controller.DocumentOpen("shell://")
+
+    def bindNewArch(self, cb=None):
+        if not cb: self._d_menu_new_arch.Enable(False)
+        else:
+            self.Bind(wx.EVT_MENU, cb, self._d_menu_new_arch)
+            self._d_menu_new_arch.Enable(True)
+    
     def bindNew(self, cb=None):
         if cb is None:
             self._d_toolbar.EnableTool(wx.ID_NEW, False)

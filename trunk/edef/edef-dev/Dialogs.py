@@ -82,3 +82,27 @@ class eDevDiscardDialog(wx.Dialog):
         box.Fit(self)
 
 
+
+
+class eDevNewArchiveDialog(wx.Dialog):
+    def __init__(self, parent, ID):
+        wx.Dialog.__init__(self,parent, ID, title="Create a new archive")
+
+        box = wx.BoxSizer(wx.VERTICAL)
+
+        txt = wx.StaticText(self, -1, "Enter name of new archive:")
+        box.Add(txt, 0, wx.ALL, 10)
+
+        self._name = wx.TextCtrl(self, -1)
+        box.Add(self._name, 1, wx.EXPAND|wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 20)
+
+        bbox = self.CreateStdDialogButtonSizer(wx.OK|wx.CANCEL)
+        box.Add(bbox, 1, wx.ALIGN_CENTER|wx.ALL, 10)
+
+        self.SetSizer(box)
+        box.Fit(self)
+
+    def getSelection(self):
+        return "zip://"+self._name.GetValue()
+
+

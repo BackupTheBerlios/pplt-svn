@@ -3,20 +3,28 @@ from Model import eDevModel
 import fnmatch
 from Controller import eDevController
 import Tools
+import Dialogs
 
 class eDevArchiveTree(wx.TreeCtrl):
     
-
     def __init__(self, parent, ID):
         wx.TreeCtrl.__init__(self, parent, ID, size=wx.Size(-1,-1),
                              style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_NO_LINES|wx.TR_FULL_ROW_HIGHLIGHT)
         
+        self._d_imgs = wx.ImageList(16,16)
+        self._bmp_class = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16,16)) )
+        self._bmp_class_open = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16,16)) )
+        self._bmp_module = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, (16,16)) )
+        self.SetImageList(self._d_imgs)
+
         self._d_model = eDevModel()
         self._d_controller = eDevController()
         self._d_mainframe = self._d_controller.getMainFrame()
 
         self._d_root = self.AddRoot("root")
         self.SetPyData(self._d_root, (None,None))
+        
+
 
         #Add all archives:
         archives = self._d_model.openURI("zip://")
@@ -26,16 +34,24 @@ class eDevArchiveTree(wx.TreeCtrl):
             archive_name = Tools.getArchive(archive_uri)
             arch_item = self.AppendItem(self._d_root, archive_name)
             self.SetPyData(arch_item, ("Archive", archive_uri) )
+            self.SetItemImage(arch_item, self._bmp_class, wx.TreeItemIcon_Normal)
+            self.SetItemImage(arch_item, self._bmp_class_open, wx.TreeItemIcon_Expanded)
 
             for file_uri in uri_list:
                 file_name = Tools.getPyFile(file_uri)
                 file_item = self.AppendItem(arch_item, file_name)
                 self.SetPyData(file_item, ("File", file_uri))
+                self.SetItemImage(file_item, self._bmp_module, wx.TreeItemIcon_Normal)
+                self.SetItemImage(file_item, self._bmp_module, wx.TreeItemIcon_Expanded)
+        
+        self._d_mainframe.bindNewArch(self.NewArchive)
 
         # Events:
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelection)
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate)
         self.Bind(wx.EVT_SET_FOCUS, self.OnFocus)
+
+
 
     def removeURI(self, uri):
         item = self.getItemByURI(uri,self._d_root)
@@ -51,9 +67,13 @@ class eDevArchiveTree(wx.TreeCtrl):
             item = self.getItemByURI("zip://"+ar, self._d_root)
             fitem = self.AppendItem(item, py)
             self.SetPyData(fitem, ("File", uri))
+            self.SetItemImage(fitem, self._bmp_module, wx.TreeItemIcon_Normal)
+            self.SetItemImage(fitem, self._bmp_module, wx.TreeItemIcon_Expanded)
         elif proto == "zip":
             item = self.AppendItem(self._d_root, path)
             self.SetPyData(item, ("Archive",uri))
+            self.SetItemImage(item, self._bmp_class, wx.TreeItemIcon_Normal)
+            self.SetItemImage(item, self._bmp_class_open, wx.TreeItemIcon_Expanded)
         else: raise Exception("Unkonw URI %s"%uri)
         
 
@@ -85,7 +105,7 @@ class eDevArchiveTree(wx.TreeCtrl):
 
     def _updateMainFrame(self, item=None):
         if not item: item = self.GetSelection()
-        
+        self._d_mainframe.bindNewArch(self.NewArchive)
         self._d_mainframe.bindNew()
         self._d_mainframe.bindOpen()
         self._d_mainframe.bindDelete()
@@ -99,7 +119,7 @@ class eDevArchiveTree(wx.TreeCtrl):
         elif typ is "Archive":
             self._d_mainframe.bindNew(self.NewFile)
             self._d_mainframe.bindOpen(self.OpenArchive)
-            #self._d_mainframe.bindDelete(self.DeleteArchive)
+            self._d_mainframe.bindDelete(self.DeleteArchive)
   
 
     def OnActivate(self, event):
@@ -137,4 +157,28 @@ class eDevArchiveTree(wx.TreeCtrl):
         (typ, uri) = self.GetPyData(item)
         if not typ=="Archive": return
         self.Expand(item)
-    
+   
+    def NewArchive(self, evt=None):
+        selected = False
+        while not selected:
+            dlg = Dialogs.eDevNewArchiveDialog(self, -1)
+            if dlg.ShowModal() == wx.ID_CANCEL: return
+            uri = dlg.getSelection()
+            dlg.Destroy()
+
+            if self._d_model.checkURI(uri):
+                # FIXME ask for overwrite
+                continue
+            selected = True
+        self._d_model.saveURI(uri,"")
+        self.addURI(uri)
+
+    def DeleteArchive(self, evt=None):
+        item = self.GetSelection()
+        (typ, uri) = self.GetPyData(item)
+
+        py_list = self._d_model.openURI(uri)
+        for py in py_list:
+           self._d_controller.DocumentDelete(py)
+        self._d_model.deleteURI(uri)
+        self.Delete(item)

@@ -4,16 +4,10 @@ import keyword
 import Events
 from EditorInterface import eDevEditorInterface
 from Controller import eDevController
+from Config import eDevConfig
 from Model import eDevModel
 import Dialogs
 import Tools
-
-faces = { 'times': 'Courier',
-          'mono' : 'Courier',
-          'helv' : 'Courier',
-          'other': 'Courier',
-          'size' : 10,
-          'size2': 8}
 
 
 
@@ -21,6 +15,8 @@ class eDevPythonEditor(stc.StyledTextCtrl, eDevEditorInterface):
     def __init__(self, parent, ID, uri, text=""):
         stc.StyledTextCtrl.__init__(self, parent, ID, style=0)
         eDevEditorInterface.__init__(self, False, uri)
+        
+        self._d_config = eDevConfig()
 
         self._d_controller = eDevController()
         self._d_mainframe  = self._d_controller.getMainFrame()
@@ -30,6 +26,16 @@ class eDevPythonEditor(stc.StyledTextCtrl, eDevEditorInterface):
 
         self.SetLexer(stc.STC_LEX_PYTHON)
         self.SetKeyWords(0, " ".join(keyword.kwlist))
+
+        # config:
+        font = self._d_config.getEditorFont()
+        fsize = self._d_config.getEditorFontSize()
+        sdfsize = self._d_config.getEditorSecondFontSize()
+        faces = { 'times': font, 'mono' : font, 'helv' : font, 'other': font,
+                  'size' : fsize, 'size2': sdfsize}
+
+        self.SetTabWidth(self._d_config.getEditorTabSpace())
+        self.SetUseTabs(not self._d_config.getEditorExpandTab())
         
         self.StyleSetSpec(stc.STC_STYLE_DEFAULT,     "face:%(helv)s,size:%(size)d" % faces)
         self.StyleClearAll()  # Reset all to be like the default
@@ -65,6 +71,7 @@ class eDevPythonEditor(stc.StyledTextCtrl, eDevEditorInterface):
    
 
     def OnModified(self, evt):
+        if self.isModified(): return
         self.setModified()
         event = Events.PageModifiedEvent(Events._event_page_modified, self.GetId())
         event.SetPage(self)
@@ -132,7 +139,19 @@ class eDevPythonEditor(stc.StyledTextCtrl, eDevEditorInterface):
         self.Copy()
         self._updateMainFrame()
 
-    def OnCut(self, evt=None): self.Cut()
-    def OnPaste(self, evt=None): self.Paste()
-    def OnRedo(self, evt=None): self.Redo()
-    def OnUndo(self, evt=None): self.Undo()
+    def OnCut(self, evt=None):
+        self.Cut()
+        self._updateMainFrame()
+
+    def OnPaste(self, evt=None):
+        self.Paste()
+        self._updateMainFrame()
+
+    def OnRedo(self, evt=None):
+        self.Redo()
+        self._updateMainFrame()
+
+    def OnUndo(self, evt=None):
+        self.Undo()
+        self._updateMainFrame()
+
