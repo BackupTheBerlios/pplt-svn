@@ -2,6 +2,7 @@ import wx
 from Model import eDevModel
 import fnmatch
 from Controller import eDevController
+import Tools
 
 class eDevArchiveTree(wx.TreeCtrl):
     
@@ -10,69 +11,130 @@ class eDevArchiveTree(wx.TreeCtrl):
         wx.TreeCtrl.__init__(self, parent, ID, size=wx.Size(-1,-1),
                              style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_NO_LINES|wx.TR_FULL_ROW_HIGHLIGHT)
         
-        self._d_model = eDevModel.instance()
-        self._d_controller = eDevController.instance()
+        self._d_model = eDevModel()
+        self._d_controller = eDevController()
+        self._d_mainframe = self._d_controller.getMainFrame()
 
         self._d_root = self.AddRoot("root")
-        self.SetPyData(self._d_root, None)
+        self.SetPyData(self._d_root, (None,None))
 
         #Add all archives:
-        archives = self._d_model.getArchives()
-        for archive_name in archives:
-            archive = self._d_model.getArchive(archive_name)
+        archives = self._d_model.openURI("zip://")
+        print "Found archives: %s"%archives
+        for archive_uri in archives:
+            uri_list = self._d_model.openURI(archive_uri)
+            archive_name = Tools.getArchive(archive_uri)
             arch_item = self.AppendItem(self._d_root, archive_name)
-            self.SetPyData(arch_item, ("Archive",archive_name))
+            self.SetPyData(arch_item, ("Archive", archive_uri) )
 
-            for file_name in archive.getFileList("*.py"):
+            for file_uri in uri_list:
+                file_name = Tools.getPyFile(file_uri)
                 file_item = self.AppendItem(arch_item, file_name)
-                self.SetPyData(file_item, ("File", file_name))
+                self.SetPyData(file_item, ("File", file_uri))
 
         # Events:
-        #self.Bind(wx.EVT_LEFT_DCLICK, self.OnOpen)
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelection)
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate)
+        self.Bind(wx.EVT_SET_FOCUS, self.OnFocus)
 
+    def removeURI(self, uri):
+        item = self.getItemByURI(uri,self._d_root)
+        if not item: raise Exception("Item %s not found"%uri)
+        self.Delete(item)
+
+    def addURI(self, uri):
+        if self.getItemByURI(uri, self._d_root): return
+        (proto, path) = Tools.splitURI(uri)
+        
+        if proto == "py":
+            (ar, py) = Tools.splitPyFile(path)
+            item = self.getItemByURI("zip://"+ar, self._d_root)
+            fitem = self.AppendItem(item, py)
+            self.SetPyData(fitem, ("File", uri))
+        elif proto == "zip":
+            item = self.AppendItem(self._d_root, path)
+            self.SetPyData(item, ("Archive",uri))
+        else: raise Exception("Unkonw URI %s"%uri)
+        
+
+    def getItemByURI(self, uri, item):
+        (typ, iuri) = self.GetPyData(item)
+        if iuri==uri: return item
+        (citem, cookie) = self.GetFirstChild(item)
+        
+        while citem:
+            ret = self.getItemByURI(uri, citem)
+            if ret != None: return ret
+            (citem, cookie) = self.GetNextChild(item,cookie)
+ 
+
+    
+    #
+    # CONTROLLER PART
+    #
+    def OnFocus(self, evt):
+       self._updateMainFrame()
+       evt.Skip()
 
 
     def OnSelection(self, event):
         item = event.GetItem()
-        
-        if self.GetPyData(item) is None: return
-        (typ, name) = self.GetPyData(item)
-            
-        if typ is "File":
-            self._d_controller.OnArchiveFileSelected()
-        elif typ is "Archive":
-            self._d_controller.OnArchiveSelected()
-        else:
-            self._d_controller.OnArchiveDeselected()
+        self._updateMainFrame(item)
+        event.Skip()
 
+
+    def _updateMainFrame(self, item=None):
+        if not item: item = self.GetSelection()
+        
+        self._d_mainframe.bindNew()
+        self._d_mainframe.bindOpen()
+        self._d_mainframe.bindDelete()
+        
+        if not item: return
+        (typ, uri) = self.GetPyData(item)
+
+        if typ is "File":
+            self._d_mainframe.bindOpen(self.OpenFile)
+            self._d_mainframe.bindDelete(self.DeleteFile)
+        elif typ is "Archive":
+            self._d_mainframe.bindNew(self.NewFile)
+            self._d_mainframe.bindOpen(self.OpenArchive)
+            #self._d_mainframe.bindDelete(self.DeleteArchive)
+  
 
     def OnActivate(self, event):
-        self._d_controller.OnArchiveFileOpen()
-    
+        item = event.GetItem()
+        (typ, uri) = self.GetPyData(item)
+        if typ == "File":
+            self._d_controller.DocumentOpen(uri)
+        event.Skip()
 
-    def removeFile(self):
+
+    def OpenFile(self, evt=None):
         item = self.GetSelection()
-        if item is None:
-            raise Exception("No item selected to remove!")
-        self.Delete(item)
+        if not item: return
+        (typ, uri) = self.GetPyData(item)
+        if not typ == "File": return
+        self._d_controller.DocumentOpen(uri)
+
+    def DeleteFile(self, evt=None):
+        item = self.GetSelection()
+        if not item: return
+        (typ, uri) = self.GetPyData(item)
+        if not typ == "File": return
+        try:
+            self._d_controller.DocumentDelete(uri)
+            self.removeURI(uri)
+        except: pass            
 
 
-    def addFile(self, archive_name, filename):
-        item = self.getItemByData( ("Archive", archive_name), self.GetRootItem() )
-        if not item:
-            raise Exception("There is no archive named %s"%archive_name)
-        file_item = self.AppendItem(item, filename)
-        self.SetPyData(file_item, ("File", filename))
-
-
-    def getItemByData(self, data, item):
-        if self.GetPyData(item) == data: return item
-        (citem, cookie) = self.GetFirstChild(item)
-        
-        while citem:
-            ret = self.getItemByData(data, citem)
-            if ret != None: return ret
-            (citem, cookie) = self.GetNextChild(item,cookie)
-                    
+    def NewFile(self, evt=None):
+        self._d_controller.DocumentOpen("py://")
+    
+    def OpenArchive(self, evt=None):
+        item = self.GetSelection()
+        if not item: return
+        (typ, uri) = self.GetPyData(item)
+        if not typ=="Archive": return
+        self.Expand(item)
+    

@@ -1,6 +1,7 @@
 import wx
-import wx.lib.foldpanelbar as fpb
+#import wx.lib.foldpanelbar as fpb
 from ArchiveTree import eDevArchiveTree
+from ModuleTree import eDevModuleTree
 from Controller import eDevController
 
 
@@ -9,13 +10,14 @@ class eDevNavigator(wx.SplitterWindow):
     def __init__(self, parent, ID):
         wx.SplitterWindow.__init__(self, parent, ID)
 
-        self._d_controller = eDevController.instance()
+        self._d_controller = eDevController()
         
         # Create Archive-panel
         self._d_archive_panel = wx.Panel(self, -1)
         self._d_archive_panel.SetBackgroundColour(wx.Colour(0xef,0xef,0xff))
         box = wx.BoxSizer(wx.VERTICAL)
         self._d_archive_label = wx.StaticText(self._d_archive_panel, -1,"Archives")
+        self._d_archive_label.SetFont( wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.BOLD) )
         self._d_archive_tree  = eDevArchiveTree(self._d_archive_panel, -1)
         box.Add(self._d_archive_label, 0, wx.ALL|wx.EXPAND, 2)
         box.Add(self._d_archive_tree, 1, wx.GROW|wx.EXPAND|wx.LEFT|wx.RIGHT|wx.BOTTOM, 2)
@@ -27,7 +29,10 @@ class eDevNavigator(wx.SplitterWindow):
         self._d_module_panel.SetBackgroundColour(wx.Colour(0xef,0xef,0xff))
         box = wx.BoxSizer(wx.VERTICAL)
         self._d_module_label = wx.StaticText(self._d_module_panel, -1, "Modules")
+        self._d_module_label.SetFont( wx.Font(10, wx.DEFAULT, wx.NORMAL, wx.BOLD) )
+        self._d_module_tree = eDevModuleTree(self._d_module_panel, -1)
         box.Add(self._d_module_label, 0, wx.ALL|wx.EXPAND, 2)
+        box.Add(self._d_module_tree, 1, wx.GROW|wx.EXPAND|wx.LEFT|wx.RIGHT|wx.BOTTOM, 2)
         self._d_module_panel.SetSizer(box)
         box.Fit(self._d_module_panel)
 
@@ -38,6 +43,7 @@ class eDevNavigator(wx.SplitterWindow):
         self.max_archive()
 
         self._d_controller.setArchiveTree(self._d_archive_tree)
+        self._d_controller.setModuleTree(self._d_module_tree)
 
         self._d_archive_label.Bind(wx.EVT_LEFT_DCLICK, self.OnToggleArchive)
         self._d_module_label.Bind(wx.EVT_LEFT_DCLICK, self.OnToggleModules)

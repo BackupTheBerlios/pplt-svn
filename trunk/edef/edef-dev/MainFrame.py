@@ -110,7 +110,7 @@ class eDevMainFrame(wx.Frame):
         self._d_toolbar.AddSimpleTool(wx.ID_UNDO, undo_bmp, "Undo")
         
 
-        self._d_controller = eDevController.instance()
+        self._d_controller = eDevController()
         self._d_controller.setMainFrame(self)
 
         # status-bar:
@@ -204,35 +204,50 @@ class eDevMainFrame(wx.Frame):
     def bindUndo(self, cb=None):
         if cb is None:
             self._d_toolbar.EnableTool(wx.ID_UNDO, False)
+            self._d_menu_undo.Enable(False)
         else:
             self.Bind(wx.EVT_TOOL, cb, id=wx.ID_UNDO)
+            self.Bind(wx.EVT_MENU, cb, id=wx.ID_UNDO)
             self._d_toolbar.EnableTool(wx.ID_UNDO, True)
+            self._d_menu_undo.Enable(True)
 
     def bindRedo(self, cb=None):
         if cb is None:
             self._d_toolbar.EnableTool(wx.ID_REDO, False)
+            self._d_menu_redo.Enable(False)
         else:
             self.Bind(wx.EVT_TOOL, cb, id=wx.ID_REDO)
+            self.Bind(wx.EVT_MENU, cb, id=wx.ID_REDO)
             self._d_toolbar.EnableTool(wx.ID_REDO, True)
+            self._d_menu_redo.Enable(True)
 
     def bindCopy(self, cb=None):
         if cb is None:
             self._d_toolbar.EnableTool(wx.ID_COPY, False)
+            self._d_menu_copy.Enable(False)
         else:
             self.Bind(wx.EVT_TOOL, cb, id=wx.ID_COPY)
+            self.Bind(wx.EVT_MENU, cb, id=wx.ID_COPY)
             self._d_toolbar.EnableTool(wx.ID_COPY, True)
+            self._d_menu_copy.Enable(True)
 
     def bindCut(self, cb=None):
         if cb is None:
             self._d_toolbar.EnableTool(wx.ID_CUT, False)
+            self._d_menu_cut.Enable(False)
         else:
             self.Bind(wx.EVT_TOOL, cb, id=wx.ID_CUT)
+            self.Bind(wx.EVT_MENU, cb, id=wx.ID_CUT)
             self._d_toolbar.EnableTool(wx.ID_CUT, True)
+            self._d_menu_cut.Enable(True)
     
     def bindPaste(self, cb=None):
         if cb is None:
             self._d_toolbar.EnableTool(wx.ID_PASTE, False)
+            self._d_menu_paste.Enable(False)
         else:
             self.Bind(wx.EVT_TOOL, cb, id=wx.ID_PASTE)
+            self.Bind(wx.EVT_MENU, cb, id=wx.ID_PASTE)
             self._d_toolbar.EnableTool(wx.ID_PASTE, True)
+            self._d_menu_paste.Enable(True)
 

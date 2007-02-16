@@ -28,12 +28,21 @@
 === Tasks for edef-core ===
     * Implement DTD or XML-Scheme validation of modules and assemblies.
     * Test new EventManager features!
+    * Check if there can be some dead-locks in EventManager!
+
 
 === Tasks for edef-dev ===
     * Create mask to edit/create a module-description. This mask should be 
       shown instead of an editor tab inside edef-dev. 
     * Make it possible to cretate/delete archives.
+        - This may be done by context-menus and the main-menu.
     * Make the editor configurable. (Only basic stuff like; tabs, fonts, ...)
+    * Make "editors" to be components -> an editor-comp, description-comp and
+        later may be a circuit-comp (simulation)
+        This does not make the edef-dev modular because the controller is 
+        quite monolithic. 
+    * Write a simple shell using PyShell(wx) with initalized edef.Logger, edef.EventManager (edef.Importer)
+      Put it under [MainMenu] -> [Tools] -> [Shell]
 
 === Tasks for edef-sim === (the simulation env.)
     * Write it.
@@ -43,5 +52,4 @@
 
 = Long term tasks =
     * rewrite edef/EventManager.py: it is an ungly, complex chunk of code!
-    * Do all the stuff above...
 
