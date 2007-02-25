@@ -113,6 +113,32 @@ class ModuleBaseMeta:
         node = xml.xpath.Evaluate(query, self._d_dom)
         return node.strip()
 
+    
+    def getInputs(self, token=".*"):
+        # FIXME test me
+        """ This method returns a list of inputs. You can specify a regexp. 
+            that should match the name of the input """
+        query = "Provides/Input"
+        qlst = xml.xpath.Evaluate(query, self._d_dom)
+        lst = []
+        for node in qlst:
+            if re.match(token, node.getAttribute("name")):
+                lst.append(node.getAttribute("name"))
+        return lst
+
+    def getOutputs(self, token=".*"):
+        # FIXME test me
+        """ This method returns (like getInputs) the list of outputs, that
+            match the given regexp. If non is given all outputs are retuned. 
+            """
+        query = "Provides/Output"
+        qlst = xml.xpath.Evaluate(query, self._d_dom)
+        lst = []
+        for node in qlst:
+            if re.match(token, node.getAttribute("name")):
+                lst.append(node.getAttribute("name"))
+        return lst
+
 
     def getIODescription(self, name, lang="en"):
         # FIXME test me
@@ -121,11 +147,13 @@ class ModuleBaseMeta:
             output. This method take a complete name like C{i_input} and an 
             optional parameter I{lang}. The method will return a string if
             there is a description of the give pin in the proper language."""
-        if re.match(name, "^o_"):
-            query = "string(Provides/Output[name='%s']/Description[@lang='%s'])"%(name, lang)
+        mo = re.match(name, "^o_(.*)$")
+        mi = re.match(name, "^i_(.*)$")
+        if mo:
+            query = "string(Provides/Output[name='%s']/Description[@lang='%s'])"%(mo.group(1), lang)
             return xml.xpath.Evaluate(query, self._d_dom)
-        elif re.match(name, "^i_"):
-            query = "string(Provides/Input[name='%s']/Description[@lang='%s'])"%(name, lang)
+        elif m1:
+            query = "string(Provides/Input[name='%s']/Description[@lang='%s'])"%(mi.group(1), lang)
             return xml.xpath.Evaluate(query, self._d_dom)
         raise Exception("Invalid name for an input or output: %s"%name)
 
@@ -196,7 +224,9 @@ class ModuleMeta(ModuleBaseMeta):
         # try to find module in module-archive
         full_class_name = self.getClass()
         if re.match("^\w+\.\w+$", full_class_name):
-            (file_name, class_name) = re.split("^(\w+).(\w+)$", full_class_name,2)
+            m = re.match("^(\w+).(\w+)$", full_class_name)
+            file_name = m.group(1)
+            class_name = m.group(2)
         elif re.match("^\w+$", full_class_name):
             file_name = full_class_name
             class_name = full_class_name

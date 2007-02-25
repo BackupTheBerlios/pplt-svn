@@ -11,9 +11,8 @@ class eDevShell(py.shell.Shell, eDevEditorInterface):
         self._controller = eDevController()
         self._mainframe = self._controller .getMainFrame()
 
-
     def OnSelected(self):
         self._mainframe.bindClose(self.onClose)
 
     def onClose(self, evt=None):
-        self._controller.DocumentClose("shell://")
+        self._controller.DocumentClose()

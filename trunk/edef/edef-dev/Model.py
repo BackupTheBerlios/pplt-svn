@@ -1,8 +1,8 @@
 import os
 import os.path
 import fnmatch
-from ModelArchive import eDevModelArchive
-from ModelModule import eDevModelModule
+from pyeditor.ModelArchive import eDevModelArchive
+from modeditor.ModelModule import eDevModelModule
 import re
 import logging
 from edef import Singleton

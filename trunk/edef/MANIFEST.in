@@ -1,0 +1,11 @@
+include INSTALL
+include README
+
+include epydoc.conf
+
+recursive-include edef *.py
+recursive-include edef-dev *.py
+recursive-include test *.py
+recursive-include tools *.py
+
+graft trex

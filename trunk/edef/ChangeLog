@@ -1,17 +1,32 @@
+2007-02-25: Hannes Matuschek <hmatiuschek@gmail.com> (rev.92)
+	* edef-dev/circuit/*:
+		wrote a poore circuit-editor (needs to be implemented as a compoent
+		for edef-dev)
+	* edef-dev/*:
+		cleanup directory-structure; now each component has it's own
+		subpackage
+	* edef/ModuleMeta.py (ModuleMeta.instance()):
+		bug fixed 
+	* edef/ModuleMeta.py:
+		added getInputs() and getOutputs()
+
 2007-02-17: Hannes Matuschek <hmatuschek@gmail.com> (rev.91)
 	* edef-dev/Shell.py:
 		added a simple python-shell
 	* edef-dev/*.py:
 		add/delete archives
 
+
 2007-02-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 90)
 	* edef-def/*.py:
 		redesign of edef-Developer, Now you can edit python and module
 		descriptions.
 
+
 2007-02-12: Hannes Matuschek <hmatuschek@gmail.com> (rev. 89)
 	* edef-dev/*.py:
 		implemented copy/cut/paste/redo/undo
+
 
 2007-02-06: Hannes Matuschek <hmatuschek@gmail.com> (rev. 88)
 	* edef/EventManager.py:

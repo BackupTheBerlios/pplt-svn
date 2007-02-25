@@ -4,9 +4,9 @@ import traceback
 
 import Events
 from Controller import eDevController
-from PythonEditor import eDevPythonEditor
-from ModuleEditor import eDevModuleEditor
-from Shell import eDevShell
+from pyeditor.PythonEditor import eDevPythonEditor
+from modeditor.ModuleEditor import eDevModuleEditor
+from Shell import eDevShell #FIXME shell.Shell
 
 
 class eDevNotebook(wx.Notebook):

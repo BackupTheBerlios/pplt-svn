@@ -1,7 +1,7 @@
 import wx
 #import wx.lib.foldpanelbar as fpb
-from ArchiveTree import eDevArchiveTree
-from ModuleTree import eDevModuleTree
+from pyeditor.ArchiveTree import eDevArchiveTree
+from modeditor.ModuleTree import eDevModuleTree
 from Controller import eDevController
 
 
