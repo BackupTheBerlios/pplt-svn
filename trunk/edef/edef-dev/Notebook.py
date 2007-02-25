@@ -6,7 +6,7 @@ import Events
 from Controller import eDevController
 from pyeditor.PythonEditor import eDevPythonEditor
 from modeditor.ModuleEditor import eDevModuleEditor
-from Shell import eDevShell #FIXME shell.Shell
+from shell.Shell import eDevShell
 
 
 class eDevNotebook(wx.Notebook):

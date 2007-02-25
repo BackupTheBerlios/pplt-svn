@@ -8,11 +8,6 @@
     First of all the edef-core should be completed. Then the "edef-dev" and
     at the end the "edef-sim" application.
 
-    * write a simple simulation environment. Using A* algorithm to route 
-      "wires" between modules. Some simple IO widgets like buttons, lamps,
-      text-fields. The application should have a xml-format to save and load
-      old sessions. 
-
     * All bases on a stabile simulation framework "edef-core". Means that it 
       have to be well tested.
 
@@ -28,10 +23,6 @@
         later may be a circuit-comp (simulation)
         This does not make the edef-dev modular because the controller is 
         quite monolithic. 
-
-=== Tasks for edef-sim === (the simulation env.)
-    * Write it.
-
 
 
 

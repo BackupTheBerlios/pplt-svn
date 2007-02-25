@@ -1,4 +1,8 @@
-2007-02-25: Hannes Matuschek <hmatiuschek@gmail.com> (rev.92)
+2007-02-25: Hannes Matuschek <hmatuschek@gmail.com> (rev.93)
+	* dev-dev/shell/Shell.py:
+		moved edef-dev/Shell.py to edef-dev/shell/Shell.py
+
+2007-02-25: Hannes Matuschek <hmatuschek@gmail.com> (rev.92)
 	* edef-dev/circuit/*:
 		wrote a poore circuit-editor (needs to be implemented as a compoent
 		for edef-dev)
