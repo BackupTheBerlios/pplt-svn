@@ -5,8 +5,8 @@ import xml.xpath
 from ListCtrl import eDevListCtrl
 from ModuleEditorBasic import eDevModDescriptionListCtrl
 from DescriptionDialog import eDevDescriptionDialog
-from Tools import GetXMLContent
-import Events
+from edef.dev.Tools import GetXMLContent
+from edef.dev import Events
 
 class eDevModuleListCtrl(eDevListCtrl):
 
@@ -227,7 +227,7 @@ class eDevModuleEditorRequire(wx.Panel):
 
 
     def ToXML(self, dom):
-        req = dom.createElement("Require")
+        req = dom.createElement("Requires")
 
         node_list = self._py_list.ToXML(dom)
         node_list += self._para_list.ToXML(dom)

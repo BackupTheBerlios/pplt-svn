@@ -1,6 +1,6 @@
 import wx
 import wx.lib.mixins.listctrl as listmix
-import Events
+from edef.dev import Events
 
 class eDevListCtrl(wx.ListCtrl,
                    listmix.ListCtrlAutoWidthMixin,

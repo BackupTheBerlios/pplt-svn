@@ -1,9 +1,20 @@
 import wx
-from Model import eDevModel
-from Controller import eDevController
+from edef.dev import Model, Controller, NavigatorPanel
 import os.path
 import re
-import Tools
+from edef.dev import Tools
+
+class ModuleTreePanel(NavigatorPanel):
+    def __init__(self, parent, ID):
+        NavigatorPanel.__init__(self, parent, ID, "Modules")
+        self._tree = eDevModuleTree(self, -1)
+        box = self.GetSizer()
+        box.Add(self._tree, 1, wx.EXPAND)
+
+    def getModuleTree(self): return self._tree
+
+
+
 
 class eDevModuleTree(wx.TreeCtrl):
     
@@ -17,8 +28,8 @@ class eDevModuleTree(wx.TreeCtrl):
         self._bmp_module = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, (16,16)) )
         self.SetImageList(self._d_imgs)
 
-        self._d_model = eDevModel()
-        self._d_controller = eDevController()
+        self._d_model = Model()
+        self._d_controller = Controller()
         self._d_mainframe  = self._d_controller.getMainFrame()
 
         self._d_root = self.AddRoot("root")

@@ -4,7 +4,7 @@ wxversion.select("2.8")
 import wx
 import sys
 import edef
-from ElementMap import ElementMap
+from circuit.ElementMap import ElementMap
 
 
 

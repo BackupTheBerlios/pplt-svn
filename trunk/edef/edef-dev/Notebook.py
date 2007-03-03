@@ -4,10 +4,7 @@ import traceback
 
 import Events
 from Controller import eDevController
-from pyeditor.PythonEditor import eDevPythonEditor
-from modeditor.ModuleEditor import eDevModuleEditor
-from shell.Shell import eDevShell
-
+import Tools
 
 class eDevNotebook(wx.Notebook):
 
@@ -16,6 +13,7 @@ class eDevNotebook(wx.Notebook):
         
         self._d_controller = eDevController()
         self._d_mainframe  = self._d_controller.getMainFrame()
+        self._editors      = dict()
 
         #self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self.OnPageChanged)
         self.Bind(wx.EVT_NOTEBOOK_PAGE_CHANGED, self._onPageChanged)
@@ -50,23 +48,19 @@ class eDevNotebook(wx.Notebook):
         self.GetEventHandler().ProcessEvent(event)
         
 
-    def openEditor(self, title, uri, text=None):
-        page = eDevPythonEditor(self, -1, uri, text)
+    def registerEditorClass(self, proto, edit_class):
+        self._editors[proto] = edit_class
+
+    def openURI(self, uri):
+        (proto, path) = Tools.splitURI(uri)
+        if not proto in self._editors.keys():
+            raise Exception("Unknown protocol %s"%proto)
+
+        page = self._editors[proto](self, -1, uri)
+        title = page.getTitle()
         self.AddPage(page, title, True)
+        
         self.Bind(Events.EVT_PAGE_MODIFIED, self._onPageModified, page)
-        self._emmitChanged(page)
-
-
-    def openModule(self, title, uri, text=None):
-        page = eDevModuleEditor(self, -1, uri, text)
-        self.AddPage(page, title, True)
-        self.Bind(Events.EVT_PAGE_MODIFIED, self._onPageModified, page)
-        self._emmitChanged(page)
-
-
-    def openShell(self, title, uri, text=None):
-        page = eDevShell(self, -1, uri, text)
-        self.AddPage(page, title, True)
         self._emmitChanged(page)
 
 
@@ -109,4 +103,5 @@ class eDevNotebook(wx.Notebook):
 
     def setPageTitleByURI(self, uri, title):
         page = self.getPageByURI(uri)
+        if page<0: return
         self.SetPageText(page, title)

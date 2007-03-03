@@ -23,6 +23,7 @@ class eDevConfig:
         self._d_config.write(f)
         f.close()
 
+    def getBasePath(self): return self._d_base_path
     
     def getEditorTabSpace(self):
         if not self._d_config.has_option("Editor","TabSpace"): return 4

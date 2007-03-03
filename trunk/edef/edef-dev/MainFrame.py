@@ -1,6 +1,7 @@
 import wx
 from MainSplitter import eDevMainSplitter
 from Navigator import eDevNavigator
+from NavigatorPanel import NavigatorPanel
 from Notebook import eDevNotebook
 from Controller import eDevController
 from Config import eDevConfigDialog
@@ -32,7 +33,7 @@ class eDevMainFrame(wx.Frame):
         self._d_file_menu    = wx.Menu()
         self._d_edit_menu    = wx.Menu()
         self._d_settings_menu= wx.Menu()
-        self._d_tool_menu    = wx.Menu()
+        #self._d_tool_menu    = wx.Menu()
         self._d_help_menu    = wx.Menu()
         
         # create items:
@@ -52,7 +53,7 @@ class eDevMainFrame(wx.Frame):
         self._d_menu_undo    = wx.MenuItem(self._d_edit_menu, wx.ID_UNDO, "&Undo", "???")
 
         self._d_menu_conf_editor = wx.MenuItem(self._d_settings_menu, wx.ID_PREFERENCES, "&Editor", "???")
-        self._d_menu_open_shell = wx.MenuItem(self._d_tool_menu, -1, "Open Shell", "")
+        #self._d_menu_open_shell = wx.MenuItem(self._d_tool_menu, -1, "Open Shell", "")
         self._d_menu_about   = wx.MenuItem(self._d_help_menu, wx.ID_HELP, "&About", "About edef Developer")
 
         # Set Menuicons:
@@ -89,13 +90,13 @@ class eDevMainFrame(wx.Frame):
         self._d_edit_menu.AppendItem(self._d_menu_undo)
         self._d_settings_menu.AppendItem(self._d_menu_conf_editor)
         self._d_help_menu.AppendItem(self._d_menu_about)
-        self._d_tool_menu.AppendItem(self._d_menu_open_shell)
+        #self._d_tool_menu.AppendItem(self._d_menu_open_shell)
 
         #assemble menu-bar
         self._d_menubar.Append(self._d_file_menu, "&File")
         self._d_menubar.Append(self._d_edit_menu, "&Edit")
         self._d_menubar.Append(self._d_settings_menu, "&Settings")
-        self._d_menubar.Append(self._d_tool_menu, "&Tools")
+        #self._d_menubar.Append(self._d_tool_menu, "&Tools")
         self._d_menubar.Append(self._d_help_menu, "&Help")
         self.SetMenuBar(self._d_menubar)
 
@@ -151,7 +152,7 @@ class eDevMainFrame(wx.Frame):
         self.bindPaste()
 
         self.Bind(wx.EVT_MENU, self.OnEditorSettings, id=wx.ID_PREFERENCES)
-        self.Bind(wx.EVT_MENU, self.OnOpenShell, self._d_menu_open_shell)
+        #self.Bind(wx.EVT_MENU, self.OnOpenShell, self._d_menu_open_shell)
 
 
 
@@ -166,6 +167,7 @@ class eDevMainFrame(wx.Frame):
         self._d_controller.DocumentOpen("shell://")
 
     def bindNewArch(self, cb=None):
+        # FIXME move to pyeditor/__init__.py
         if not cb: self._d_menu_new_arch.Enable(False)
         else:
             self.Bind(wx.EVT_MENU, cb, self._d_menu_new_arch)
@@ -277,4 +279,5 @@ class eDevMainFrame(wx.Frame):
             self.Bind(wx.EVT_MENU, cb, id=wx.ID_PASTE)
             self._d_toolbar.EnableTool(wx.ID_PASTE, True)
             self._d_menu_paste.Enable(True)
+
 

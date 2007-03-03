@@ -4,8 +4,8 @@ import xml.dom.minidom
 import xml.xpath
 from ListCtrl import eDevListCtrl
 from DescriptionDialog import eDevDescriptionDialog
-from Tools import GetXMLContent
-import Events
+from edef.dev.Tools import GetXMLContent
+from edef.dev import Events
 
 class eDevInputListCtrl(eDevListCtrl):
     def __init__(self, parent, ID):

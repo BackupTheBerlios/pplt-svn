@@ -1,12 +1,24 @@
 import wx
-from Model import eDevModel
 import fnmatch
-from Controller import eDevController
-import Tools
-import Dialogs
+from edef.dev import Model, Controller
+from edef.dev.NavigatorPanel import NavigatorPanel
+from Tools import getArchive, getPyFile, isArchiveURI, isPyFileURI, splitPyFile
+from edef.dev import Tools
+from edef.dev import Dialogs
 
-class eDevArchiveTree(wx.TreeCtrl):
-    
+
+class ArchiveTreePanel(NavigatorPanel):
+    def __init__(self, parent, ID):
+        NavigatorPanel.__init__(self, parent, ID, "Archives")
+        self._tree = ArchiveTree(self, -1)
+        box = self.GetSizer()
+        box.Add(self._tree,1,wx.EXPAND)
+         
+    def getArchiveTree(self): return self._tree
+
+
+
+class ArchiveTree(wx.TreeCtrl):
     def __init__(self, parent, ID):
         wx.TreeCtrl.__init__(self, parent, ID, size=wx.Size(-1,-1),
                              style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_NO_LINES|wx.TR_FULL_ROW_HIGHLIGHT)
@@ -17,28 +29,28 @@ class eDevArchiveTree(wx.TreeCtrl):
         self._bmp_module = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, (16,16)) )
         self.SetImageList(self._d_imgs)
 
-        self._d_model = eDevModel()
-        self._d_controller = eDevController()
+        self._d_model = Model()
+        self._d_controller = Controller()
         self._d_mainframe = self._d_controller.getMainFrame()
 
         self._d_root = self.AddRoot("root")
         self.SetPyData(self._d_root, (None,None))
-        
+        self._logger = self._d_controller.getLogger()
 
 
         #Add all archives:
         archives = self._d_model.openURI("zip://")
-        print "Found archives: %s"%archives
+        self._logger.debug("Found archives: %s"%archives)
         for archive_uri in archives:
             uri_list = self._d_model.openURI(archive_uri)
-            archive_name = Tools.getArchive(archive_uri)
+            archive_name = getArchive(archive_uri)
             arch_item = self.AppendItem(self._d_root, archive_name)
             self.SetPyData(arch_item, ("Archive", archive_uri) )
             self.SetItemImage(arch_item, self._bmp_class, wx.TreeItemIcon_Normal)
             self.SetItemImage(arch_item, self._bmp_class_open, wx.TreeItemIcon_Expanded)
 
             for file_uri in uri_list:
-                file_name = Tools.getPyFile(file_uri)
+                file_name = getPyFile(file_uri)
                 file_item = self.AppendItem(arch_item, file_name)
                 self.SetPyData(file_item, ("File", file_uri))
                 self.SetItemImage(file_item, self._bmp_module, wx.TreeItemIcon_Normal)
@@ -60,16 +72,16 @@ class eDevArchiveTree(wx.TreeCtrl):
 
     def addURI(self, uri):
         if self.getItemByURI(uri, self._d_root): return
-        (proto, path) = Tools.splitURI(uri)
-        
-        if proto == "py":
-            (ar, py) = Tools.splitPyFile(path)
+
+        if isPyFileURI(uri):
+            (ar, py) = splitPyFile(uri)
             item = self.getItemByURI("zip://"+ar, self._d_root)
             fitem = self.AppendItem(item, py)
             self.SetPyData(fitem, ("File", uri))
             self.SetItemImage(fitem, self._bmp_module, wx.TreeItemIcon_Normal)
             self.SetItemImage(fitem, self._bmp_module, wx.TreeItemIcon_Expanded)
-        elif proto == "zip":
+        elif isArchiveURI(uri):
+            path = getArchive(uri)
             item = self.AppendItem(self._d_root, path)
             self.SetPyData(item, ("Archive",uri))
             self.SetItemImage(item, self._bmp_class, wx.TreeItemIcon_Normal)
@@ -139,17 +151,20 @@ class eDevArchiveTree(wx.TreeCtrl):
 
     def DeleteFile(self, evt=None):
         item = self.GetSelection()
-        if not item: return
+        if not item:
+            self._logger.warning("No item selected to delete")
+            return
         (typ, uri) = self.GetPyData(item)
         if not typ == "File": return
         try:
             self._d_controller.DocumentDelete(uri)
             self.removeURI(uri)
-        except: pass            
+        except:
+            self._logger.exception("Unable to remove file %s"%uri)
 
 
     def NewFile(self, evt=None):
-        self._d_controller.DocumentOpen("py://")
+        self._d_controller.DocumentOpen("zip://")
     
     def OpenArchive(self, evt=None):
         item = self.GetSelection()

@@ -1,36 +1,44 @@
+import sys
 import wx
 from wx.lib.scrolledpanel import ScrolledPanel
 import xml.dom.minidom
 import xml.xpath
-from Model import eDevModel
+
 from ModuleEditorBasic import eDevModuleEditorBasic
 from ModuleEditorRequire import eDevModuleEditorRequire
 from ModuleEditorProvide import eDevModuleEditorProvide
 from EditorInterface import eDevEditorInterface
-from Model import eDevModel
-from Controller import eDevController
-import Events
-import sys
-import Dialogs
-import Tools
+
+from edef.dev import Model, Controller, ComponentManager
+from edef.dev import Events     #FIXME write own events
+from edef.dev import Dialogs
+from Tools import getModuleName
+from edef.dev import Tools
 
 
 class eDevModuleEditor(ScrolledPanel, eDevEditorInterface):
     _d_txt  = None
 
-    def __init__(self, parent, ID, uri, txt):
+    def __init__(self, parent, ID, uri):
         ScrolledPanel.__init__(self, parent, ID)
-        eDevEditorInterface.__init__(self, False, uri)
+        eDevEditorInterface.__init__(self, parent, False, uri)
 
-        self._controller = eDevController()
-        self._model      = eDevModel()
+        self._controller = Controller()
+        self._model      = Model()
         self._mainframe  = self._controller.getMainFrame()
-        self._moduletree = self._controller.getModuleTree()
+        self._component_manager = ComponentManager()
+        self._moduletree = self._component_manager.getComponent("modeditor").getModuleTree()
         self._notebook   = self._controller.getNotebook()
 
 
         if uri == "mod://":
             txt = '<?xml version="1.0"?><Module version="1.0"/>'
+            title = "unsaved"
+        else:
+            txt = self._model.openURI(uri)
+            title = getModuleName(uri)
+        self.setTitle(title)
+        
         self._d_doc = xml.dom.minidom.parseString(txt)
 
         vert_box = wx.BoxSizer(wx.VERTICAL)
@@ -77,6 +85,7 @@ class eDevModuleEditor(ScrolledPanel, eDevEditorInterface):
             self._mainframe.bindSave(self.OnSave)
         else: self._mainframe.bindSave()
 
+
     def _toXML(self):
         impl = xml.dom.minidom.getDOMImplementation()
         dom  = impl.createDocument(None, "Module", None)
@@ -93,6 +102,7 @@ class eDevModuleEditor(ScrolledPanel, eDevEditorInterface):
 
         return dom.toprettyxml("    ")
 
+
     def OnSave(self, evt=None):
         if self.getURI() == "mod://": return
         
@@ -100,6 +110,7 @@ class eDevModuleEditor(ScrolledPanel, eDevEditorInterface):
         self._controller.DocumentSave(self.getURI(),txt)
         self.setModified(False)
         self._updateMainFrame()
+
 
     def OnSaveAs(self, evt=None):
         selected = False
@@ -120,5 +131,5 @@ class eDevModuleEditor(ScrolledPanel, eDevEditorInterface):
         else:
             self._controller.DocumentSave(uri, self._toXML())
         self.setURI(uri)
-        self._notebook.setPageTitleByURI(uri, Tools.getModule(uri))
+        self.setTitle( getModuleName(uri) )
 

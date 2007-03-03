@@ -1,6 +1,13 @@
+2007-03-03: Hannes Matuschek <hmatuschek@gmail.com> (rev.94)
+	* edef-dev/*:
+		made edef-dev some more component based
+		disabled shell
+
+
 2007-02-25: Hannes Matuschek <hmatuschek@gmail.com> (rev.93)
-	* dev-dev/shell/Shell.py:
+	* edef-dev/shell/Shell.py:
 		moved edef-dev/Shell.py to edef-dev/shell/Shell.py
+
 
 2007-02-25: Hannes Matuschek <hmatuschek@gmail.com> (rev.92)
 	* edef-dev/circuit/*:
@@ -13,6 +20,7 @@
 		bug fixed 
 	* edef/ModuleMeta.py:
 		added getInputs() and getOutputs()
+
 
 2007-02-17: Hannes Matuschek <hmatuschek@gmail.com> (rev.91)
 	* edef-dev/Shell.py:

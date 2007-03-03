@@ -10,8 +10,9 @@ setup(  name = "edef",
         author_email = "hmatuschek@gmx.net",
         url = "http://pplt.berlios.de",
         packages = ['edef',
-                    'edef-dev', 'edef-dev.pyeditor', 'edef-dev.modeditor',
-                                'edef-dev.circuit', 'edef-dev.shell',
-                                'edef-dev.bitmaps', 'edef-dev.cursors'])
+                    'edef.dev', 'edef.dev.pyeditor', 'edef.dev.modeditor',
+                                'edef.dev.circuit', 'edef.dev.shell',
+                                'edef.dev.bitmaps', 'edef.dev.cursors'],
+        package_dir = {"edef.dev":"edef-dev"})
 
 

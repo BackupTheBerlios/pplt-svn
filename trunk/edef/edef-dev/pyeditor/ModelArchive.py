@@ -1,8 +1,107 @@
-import os.path
 import os
+import os.path
 import fnmatch
 from zipfile import ZipFile, is_zipfile
 from tempfile import TemporaryFile
+import logging
+import fnmatch
+from edef.dev.Config import eDevConfig as Config
+from Tools import splitPyFile, getPyFile, isPyFileURI
+from Tools import getArchive, isArchiveURI
+
+
+
+class Model:
+    def __init__(self):
+        self._logger = logging.getLogger("edef.dev")
+        self._base_path = Config().getBasePath()
+        self._archive_list = dict()
+
+        # search for zip files:
+        file_list = os.listdir(self._base_path)
+        zipfile_list = fnmatch.filter(file_list, "*.zip")
+        for filename in zipfile_list:
+            self._logger.debug("Found archive: %s"%filename)
+            path = os.path.abspath( os.path.join(self._base_path, filename ) )
+            try:
+                archive = eDevModelArchive(path)
+            except:
+                self._d_logger.exception("Exception while load zip %s"%path)
+                continue
+            self._archive_list["zip://"+filename] = archive
+
+
+    def openURI(self, uri):
+        # open "zip://" retunrs a list of all known zip files
+        if uri == "zip://":
+            return self._archive_list.keys()
+        # open "zip://archive_name.zip" returns a list of pythonfiles of the 
+        # given archive
+        elif uri in self._archive_list.keys():
+            archive = self._archive_list[uri]
+            lst = archive.getFileList("*.py")
+            for i in range(len(lst)):
+                lst[i] = uri+"/"+lst[i]
+            return lst
+        # open "zip://archive-name.zip/path/to/python-file.py" returns the 
+        # content of the given python file.
+        (aname, fname) = splitPyFile(uri)
+        try: archive = self._archive_list["zip://"+aname]
+        except: raise Exception("Archive zip://%s not known"%aname)
+        return archive.readFile(fname)
+
+
+    def saveURI(self, uri, data=""):
+        # save "zip://archive-name.zip" will creat a new archive
+        if isArchiveURI(uri):
+            if uri in self._archive_list.keys():
+                return
+            archive = getArchive(uri)
+            path = os.path.join(self._base_path, archive)
+            ZipFile(path,"w")
+            self._archive_list[uri] = eDevModelArchive(path)
+        # save "zip://archive-name.zip/path/to/python-file.py creates a new 
+        # python file with given content or overrides existing ones
+        elif isPyFileURI(uri):
+            self._logger.debug("save pyfile %s"%uri)
+            (aname, fname) = splitPyFile(uri)
+            try: archive = self._archive_list["zip://"+aname]
+            except: raise Exception("Archive zip://&s not found"%aname)
+            if not fname in archive.getFileList("*.py"):
+                archive.createFile(fname, data)
+            else:
+                archive.writeFile(fname, data)
+        else: raise Exception("Unable to write %s: Invalid URI?"%uri)
+
+
+    def deleteURI(self, uri):
+        if isArchiveURI(uri):
+            if not uri in self._archive_list.keys():
+                raise Exception("Unknown archive %s"%uri)
+            aname = getArchive(uri)
+            path = os.path.join(self._base_path, aname)
+            os.unlink(path)
+            del self._archive_list[uri]
+        elif isPyFileURI(uri):
+            (aname, fname) = splitPyFile(uri)
+            if not "zip://"+aname in self._archive_list.keys():
+                raise Exception("Unknown archive zip://%s"%aname)
+            archive = self._archive_list["zip://"+aname]
+            if not fname in archive.getFileList("*.py"):
+                raise Exception("Unknown file %s in zip://%s"%(fname, aname))
+            archive.deleteFile(fname)
+        else:
+            raise Exception("Invalid URI %s?"%uri)
+
+
+    def checkURI(self, uri):
+        if isArchiveURI(uri): return uri in self._archive_list.keys()
+        elif isPyFileURI(uri):
+            (aname, fname) = splitPyFile(uri)
+            try: archive = self._archive_list["zip://"+aname]
+            except: return False
+            return fname in archive.getFileList("*.py")
+                
 
 
 class eDevModelArchive:
@@ -21,8 +120,6 @@ class eDevModelArchive:
         (folder, filename) = os.path.split(self._d_path)
         (self._d_name ,ext) = os.path.splitext(filename)
         
-
-
 
     def getName(self):
         return self._d_name

@@ -3,10 +3,10 @@ import wx
 import xml.dom.minidom
 import xml.xpath
 from ListCtrl import eDevListCtrl
-from Model import eDevModel
-from Tools import GetXMLContent
-import Events
-import Tools
+from edef.dev import Model
+from edef.dev.Tools import GetXMLContent
+from edef.dev import Events
+from edef.dev import Tools
 
 class eDevModDescriptionListCtrl(eDevListCtrl):
     
@@ -72,7 +72,7 @@ class eDevModuleEditorBasic(wx.Panel):
         wx.Panel.__init__(self, parent, ID)
         
         self._d_dom = dom
-        self._d_model = eDevModel()
+        self._d_model = Model()
         
         self._d_static_box = wx.StaticBox(self, ID, "BasicData")
         

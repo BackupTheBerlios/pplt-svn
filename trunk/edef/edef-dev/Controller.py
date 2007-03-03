@@ -1,9 +1,11 @@
 from Model import eDevModel
 from Dialogs import eDevSaveAsDialog
 from Dialogs import eDevDiscardDialog
+from NavigatorPanel import NavigatorPanel
 import wx
 from edef import Singleton
 import Tools
+import logging
 
 
 class eDevController:
@@ -11,29 +13,39 @@ class eDevController:
     __metaclass__ = Singleton
     def __init__(self):
         self._d_notebook = None
-        self._d_archive_tree = None
-        self._d_module_tree = None
         self._d_main_frame = None
         self._d_model = eDevModel()
+        self._navigator = None
+        self._editors = dict()
+        self._logger = logging.getLogger("edef.dev")
 
     def getNotebook(self):
         return self._d_notebook
     def setNotebook(self, nb):
         self._d_notebook = nb
-    def getArchiveTree(self):
-        return self._d_archive_tree
-    def setArchiveTree(self, t):
-        self._d_archive_tree = t
-    def setModuleTree(self, t):
-        self._d_module_tree = t
-    def getModuleTree(self):
-        return self._d_module_tree
     def getMainFrame(self):
         return self._d_main_frame
     def setMainFrame(self, frm):
         self._d_main_frame = frm
+    def getNavigator(self):
+        return self._navigator
+    def setNavigator(self, nav):
+        self._navigator = nav
+    def getLogger(self):
+        return self._logger
 
-   
+
+    def registerEditorClass(self, proto, edit_class):
+        self._d_notebook.registerEditorClass( proto, edit_class )
+    
+    def addNavigatorClass(self, navic):
+        navi = navic(self._navigator, -1)
+        if not isinstance(navi, NavigatorPanel):
+            raise Exception("Invalid navigator panel! Not an instance of 'NavigatorPanel'")
+        self._navigator.addNavigatorPanel(navi)
+        return navi
+
+
     def DocumentOpen(self, uri):
         (proto, path) = Tools.splitURI(uri)
             
@@ -41,22 +53,7 @@ class eDevController:
             self._d_notebook.selectPageByURI( uri )
             return 
         
-        if path == "" and proto == "py":
-            self._d_notebook.openEditor("Unsaved", uri, "")
-        elif path == "" and proto == "mod":
-            self._d_notebook.openModule("Unsaved", uri, "")
-
-        elif proto == "py":
-            text = self._d_model.openURI(uri)
-            filename = Tools.getPyFile(uri)
-            self._d_notebook.openEditor(filename, uri, text)
-        elif proto == "mod":
-            text = self._d_model.openURI(uri)
-            mod_name = Tools.getModule(uri)
-            self._d_notebook.openModule(mod_name, uri,text)
-        elif proto == "shell":
-            self._d_notebook.openShell("Shell", uri, "edef Developer shell")
-        else: return
+        self._d_notebook.openURI(uri)
         self._d_main_frame.bindClose(self.OnDocumentClose)
 
 
@@ -73,6 +70,7 @@ class eDevController:
 
 
     def DocumentClose(self):
+        # FIXME this should be handled by an editor
         doc = self._d_notebook.GetCurrentPage()
         if doc is None: None
 

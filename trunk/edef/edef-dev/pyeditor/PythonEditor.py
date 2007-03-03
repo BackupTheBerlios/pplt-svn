@@ -1,28 +1,36 @@
 import wx
 import wx.stc as stc
 import keyword
-import Events
-from EditorInterface import eDevEditorInterface
-from Controller import eDevController
-from Config import eDevConfig
-from Model import eDevModel
-import Dialogs
-import Tools
 
+from edef.dev import Events
+from edef.dev import EditorInterface, Controller, Model, Config
+from edef.dev import Dialogs
+from Tools import splitPyFile, isPyFileURI, getPyFile
+from edef.dev import ComponentManager
 
-
-class eDevPythonEditor(stc.StyledTextCtrl, eDevEditorInterface):
-    def __init__(self, parent, ID, uri, text=""):
+class PythonEditor(stc.StyledTextCtrl, EditorInterface):
+    def __init__(self, parent, ID, uri):
         stc.StyledTextCtrl.__init__(self, parent, ID, style=0)
-        eDevEditorInterface.__init__(self, False, uri)
+       
+        if uri == "zip://":
+            modified = True
+            title = "unsaved"
+        else:
+            modified = False
+            (aname, title) = splitPyFile(uri)
         
-        self._d_config = eDevConfig()
+        EditorInterface.__init__(self, parent, False, uri)
+        self.setTitle(title)
 
-        self._d_controller = eDevController()
+        self._d_config = Config()
+
+        self._d_controller = Controller()
+        self._logger = self._d_controller.getLogger()
         self._d_mainframe  = self._d_controller.getMainFrame()
-        self._d_model      = eDevModel()
-        self._d_archive_tree = self._d_controller.getArchiveTree()
+        self._d_model      = Model()
         self._d_notebook    = self._d_controller.getNotebook()
+        self._pyedit_component = ComponentManager().getComponent("pyeditor")
+        self._archive_tree = self._pyedit_component.getArchiveTree()
 
         self.SetLexer(stc.STC_LEX_PYTHON)
         self.SetKeyWords(0, " ".join(keyword.kwlist))
@@ -62,7 +70,8 @@ class eDevPythonEditor(stc.StyledTextCtrl, eDevEditorInterface):
         self.StyleSetSpec(stc.STC_P_STRINGEOL, "fore:#000000,face:%(mono)s,back:#E0C0E0,eol,size:%(size)d" % faces)
         self.SetCaretForeground("BLUE")
 
-        
+        if isPyFileURI(uri): text = self._d_model.openURI(uri)
+        else: text = ""
         self.SetText(text)
         self.EmptyUndoBuffer()
         self.Colourise(0, -1)
@@ -100,7 +109,7 @@ class eDevPythonEditor(stc.StyledTextCtrl, eDevEditorInterface):
         if self.CanPaste(): self._d_mainframe.bindPaste(self.OnPaste)
 
         self._d_mainframe.bindSaveAs(self.OnSaveAs)
-        if self.isModified() and self.getURI()!="py://":
+        if self.isModified() and self.getURI()!="zip://":
             self._d_mainframe.bindSave(self.OnSave)
 
 
@@ -110,7 +119,7 @@ class eDevPythonEditor(stc.StyledTextCtrl, eDevEditorInterface):
             dlg = Dialogs.eDevSaveAsDialog(self, -1)
             if dlg.ShowModal() != wx.ID_OK:
                 return
-            uri = "py://%s/%s"%dlg.getSelection()
+            uri = "zip://%s/%s"%dlg.getSelection()
             dlg.Destroy()
             if self._d_model.checkURI(uri):
                 # FIXME Override?
@@ -119,12 +128,12 @@ class eDevPythonEditor(stc.StyledTextCtrl, eDevEditorInterface):
         
         if not self._d_model.checkURI(uri):
             self._d_controller.DocumentSave(uri, self.GetText())
-            self._d_archive_tree.addURI(uri)
+            self._archive_tree.addURI(uri)
         else:
             self._d_controller.DocumentSave(uri, self.GetText())
         self.setURI(uri)
-        print "rename to "+uri
-        self._d_notebook.setPageTitleByURI(uri,Tools.getPyFile(uri))
+        self._logger.debug("rename to "+uri)
+        self._d_notebook.setPageTitleByURI(uri, getPyFile(uri))
 
 
     def OnSave(self, evt=None):
