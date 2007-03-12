@@ -15,7 +15,7 @@
     Booth types implement methods to load (or assemble) the module described.
     """
 
-#TODO
+#FIXME
 #   - extend ModuleMeta to provide all data 
 #   - write some tools to check a module or assembly files
 #   - find and solve all FIXMEs
@@ -74,6 +74,21 @@ class ModuleBaseMeta:
         query = "string(Description[@lang='%s']/text())"%lang
         node = xml.xpath.Evaluate(query, self._d_dom)
         return node.strip()
+
+
+    def getParameters(self):
+        """ This method returns a list of parameter-names and default-values.
+            If no defaultvalue is specified None is used as the default value.
+            """
+        params = list()
+        nodes = xml.xpath.Evaluate("Requires/Parameter", self._d_dom)
+        
+        for node in nodes:
+            if node.hasAttribute("default"):
+                params.append( (node.getAttribute("name"), node.getAttribute("default")) )
+            else:
+                params.append( (node.getAttribute("name"), None) )
+        return params
 
 
     def checkAndExpandParameters(self, params):
@@ -168,12 +183,19 @@ class ModuleBaseMeta:
 
     def instance(self, paramters):
         """ This method should be overridden to implement the instanceing. """
-        raise NotImplemented("This method should be implemented by Module- or AssemblyMeta!")
+        raise NotImplemented, "This method should be implemented by Module- or AssemblyMeta!"
+
+
+    def instanceGrafical(self, canvas, coordinates, parameters):
+        """ This method should be overrridden to implement the instancing of 
+            the grafical representation. """
+        raise NotImplemented, "This method should be implemented by Module- or AssemblyMeta!"
+
 
     def checkDependencies(self):
         """ This method should be overridden to check if all defined 
             Dependencies are satisfied """
-        raise NotImplemented("This method should be implemented by Module- or AssemblyMeta!")
+        raise NotImplemented, "This method should be implemented by Module- or AssemblyMeta!"
 
 
 
@@ -195,7 +217,13 @@ class ModuleMeta(ModuleBaseMeta):
     def getClass(self):
         node = xml.xpath.Evaluate("string(Class/text())",self._d_dom)
         return node.strip()
-        
+       
+
+    def getGraficClass(self):
+        node = xml.xpath.Evaluate("Layout/@class",self._d_dom)
+        if node: return node.strip()
+        return None
+
 
     def checkDependencies(self):
         # to check all dependencies get all <PyModule> tags and try to find 
@@ -244,7 +272,43 @@ class ModuleMeta(ModuleBaseMeta):
         return cls(**parameters)
         
 
-
+    def instanceGrafical(self, canvas, coord, parameters):
+        # find archive:
+        mod_archive = self.getArchive()
+        if not os.path.isabs(mod_archive):
+            mod_archive = os.path.join( os.path.dirname(self._d_file_path), mod_archive)
+         
+        # try to find module-archive:
+        try: zipimp = zipimporter(mod_archive)
+        except Exception, e:
+            raise ModuleImportError("Unable to open module-archive %s: %s"
+                    %(mod_archive, str(e)))
+        
+        # try to find module in module-archive
+        full_class_name = self.getGraficalClass()
+        if not full_class_name:
+            raise Exception("No grafic-class specified!")
+        
+        # try to import module-class:
+        if re.match("^\w+\.\w+$", full_class_name):
+            m = re.match("^(\w+).(\w+)$", full_class_name)
+            file_name = m.group(1)
+            class_name = m.group(2)
+        elif re.match("^\w+$", full_class_name):
+            file_name = full_class_name
+            class_name = full_class_name
+        else:
+            raise ModuleImportError("Invalid %s class-name in %s!"%(full_class_name, self._d_file_path) )
+        mod = zipimp.load_module(file_name);
+        #load class from module
+        try:
+            cls = mod.__dict__[class_name]
+        except:
+            raise ModuleImportError("Can't find class %s in %s [%s]"%
+                        (full_class_name, mod_archive, mod.__dict__.keys()))
+        
+        return cls(canvas, coord, **parameters)
+        
 
 
 # FIXME test AssemblyMeta-Class!
@@ -293,6 +357,19 @@ class AssemblyMeta(ModuleBaseMeta):
 
         # instance an Assembly 
         return Assembly(mod_table, io_list)
+
+    def getGraficClass(self): return None
+
+    def instanceGrafical(self, canvas, coord, parameters):
+        try: from edef.dev.circuit import DefaultGraficalModule
+        except:
+            self._d_logger.exception("Unable to import grafical default assembly!")
+            raise ModuleImportError("Unable to import grafical default assembly!")
+        outs = self.getOutputs()
+        for i in range(len(outs)): outs[i] = "o_"+outs[i]
+        ins  = self.getInputs()
+        for i in range(len(ins)): ins[i] = "i_"+ins[i]
+        return DefaultGraficalModule(canvas, coord, self.instance(parameters), outs+ins)
 
 
     def checkDependencies(self):

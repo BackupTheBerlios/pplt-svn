@@ -102,7 +102,7 @@ class BaseOutput:
     def __init__(self):
         """ Constructor of an output pin. This constructor takes a referece to
             the event-manager. """
-        self._d_inputs = dict()
+        self._d_inputs = list()
         self._d_event_manager = EventManager()
         self._d_logger = logging.getLogger("edef.core")
 
@@ -152,7 +152,7 @@ class BaseOutput:
             new value to the output. """
         self._d_logger.debug("Set output %s => %s"%(getattr(self,"__name__",self),value))
 
-        for inp in self._d_inputs.values():
+        for inp in self._d_inputs:
             self._d_event_manager.add_event(inp, value)
 
 
@@ -164,8 +164,9 @@ class BaseOutput:
             C{output += new_input} or C{output >> another_input}. The imput 
             should be a I{callable} that takes only one argument, may be a 
             function or a method of a class. """
-        if not id(callback) in self._d_inputs.keys():
-            self._d_inputs[id(callback)] = callback
+        if not callback in self._d_inputs:
+            self._d_logger.debug("Adding input %s (%s) to list"%(callback, id(callback)))
+            self._d_inputs.append(callback)
 
 
     def rem_input(self, callback):
@@ -175,7 +176,8 @@ class BaseOutput:
             Example: C{output -= any_input_added_first}
             If the given input was not added to the output first, this method
             will raise an exception. """
-        del self._d_inputs[id(callback)]
+        self._d_logger.debug("Remove input %s (%s) from list"%(callback, id(callback)))
+        del self._d_inputs[self._d_inputs.index(callback)]
 
 
     def has_input(self, callback):
@@ -183,7 +185,7 @@ class BaseOutput:
             output and False otherwise. Please do not use this method direct. 
             Use the overwritten operator C{in} instead: 
             C{if any_input in output: do_somethin()} """
-        return id(callback) in self._d_inputs.keys()
+        return callback in self._d_inputs
 
 
 

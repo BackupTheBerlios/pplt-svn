@@ -1,28 +1,11 @@
-= Tasks for release 0.1 =
-    This release should be nearly beta! So it should be more or less feature-
-    complete. It should be possible to write modules simply using the 
-    "edef-dev" application and to play around with the simulation-engine 
-    unsing "edef-sim". Therefor there have to be the basic GUI stuff like
-    saving the current session, ... 
-
-    First of all the edef-core should be completed. Then the "edef-dev" and
-    at the end the "edef-sim" application.
-
-    * All bases on a stabile simulation framework "edef-core". Means that it 
-      have to be well tested.
-
-
-
-=== Tasks for edef-core ===
+== Tasks for edef-core ===
     * Implement DTD or XML-Scheme validation of modules and assemblies.
-    * Check if there can be some dead-locks in EventManager!
+    * Check if there are some dead-locks in EventManager!
 
 
 === Tasks for edef-dev ===
     * Make "editors" to be components -> an editor-comp, description-comp and
         later may be a circuit-comp (simulation)
-        This does not make the edef-dev modular because the controller is 
-        quite monolithic. 
 
 
 

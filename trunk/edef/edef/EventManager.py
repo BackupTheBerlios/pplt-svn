@@ -126,6 +126,8 @@ class EventManager(threading.Thread):
         """ This method will pause the event-manager. This method blocks until
             the current event was processed. You can resume the 
             event-processing by calling the C{start()} method. """
+        # FIXME DEADLOCK> check if the calling thread isn't the event-handling
+        #                 thread! 
         if self.isPaused():
             self._d_logger.info("Mngr allready paused!")
             return
@@ -148,6 +150,8 @@ class EventManager(threading.Thread):
             resume the EventManager by calling the C{start()} method. This 
             method returns C{True} if the event-manager successfully finished 
             his job or C{False] if a timeout occures."""
+        # FIXME DEADLOCK> check if the calling thread isn't the event-handling
+        #                 thread! 
         self._d_logger.debug("Let mngr finish his job")
         if self.isPaused():
             self._d_logger.debug("Mngr is paued -> seems like his finished")
@@ -183,6 +187,8 @@ class EventManager(threading.Thread):
             joined. Also it will destroy the singeton. But there may survive 
             some references to the EventManager, but they will not longer 
             accept any events. """
+        # FIXME DEADLOCK> check if the calling thread isn't the event-handling
+        #                 thread! 
         # Notify event-handler-thread to exit:
         self._d_condition.acquire()
         self._d_is_alive = False    # signal to shutdown

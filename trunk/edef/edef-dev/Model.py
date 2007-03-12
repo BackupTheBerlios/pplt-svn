@@ -1,14 +1,12 @@
 import os
+import re
 import os.path
 import fnmatch
-#from pyeditor.ModelArchive import eDevModelArchive
-#from modeditor.ModelModule import eDevModelModule
-import re
 import logging
 from edef import Singleton
 import Tools
 from zipfile import ZipFile
-
+from Config import eDevConfig as Config
 
 class eDevModel:
     _logger             = None
@@ -16,9 +14,13 @@ class eDevModel:
 
     __metaclass__ = Singleton
     def __init__(self):
-        #FIXME if local path not exists -> create
-        self._protocol_handler = dict()
         self._logger = logging.getLogger("edef.Developer")
+        self._protocol_handler = dict()
+        # create base_path if not exists:
+        self._base_path = os.path.normpath( os.path.expanduser("~/.edef") )
+        if not os.path.isdir(self._base_path):
+            self._logger.debug("Private edef-dir %s doesn't extist -> create")
+            os.mkdir(self._base_path)
 
 
     def registerProtocol(self, proto, handler):
@@ -64,6 +66,23 @@ class eDevModel:
         
         self._protocol_handler[proto].deleteURI(uri)
 
-        #FIXME
-        #if proto == "mod":
+
+    def isEditable(self, uri):
+        self._logger.debug("check if %s is editable")
+        (proto, path) = Tools.splitURI(uri)
+        if not proto in self._protocol_handler.keys():
+            raise Exception("Unknonw protocol %S"%proto)
+        
+        self._protocol_handler[proto].isURIEditable(uri)
+
+
+    def isWriteable(self, uri):
+        self._logger.debug("check if %s is editable")
+        (proto, path) = Tools.splitURI(uri)
+        if not proto in self._protocol_handler.keys():
+            raise Exception("Unknonw protocol %S"%proto)
+        
+        self._protocol_handler[proto].isURIEditable(uri)
+        
+
 

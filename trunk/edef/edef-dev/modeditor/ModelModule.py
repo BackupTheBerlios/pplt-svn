@@ -2,6 +2,7 @@ import os.path
 import xml.dom.minidom
 import xml.xpath
 import logging
+import edef
 from edef.dev import Config
 import fnmatch
 from Tools import getModuleName
@@ -13,11 +14,15 @@ class Model:
         self._base_path = Config().getBasePath()
         self._module_list = dict()
 
-        file_list = os.listdir(self._base_path)
-        xmlfile_list = fnmatch.filter(file_list, "*.xml")
-        for filename in xmlfile_list:
-            self._logger.debug("Found xml file %s"%filename)
-            path = os.path.abspath( os.path.join(self._base_path, filename) )
+        imp = edef.Importer()
+        xmlfile_list = list()
+        mod_list = imp.listModules()
+        for mod in mod_list:
+            xmlfile_list.append(imp._find_module_meta(mod))
+
+        for path in xmlfile_list:
+            self._logger.debug("Found xml file %s"%path)
+            #path = os.path.abspath( os.path.join(self._base_path, filename) )
             try:
                 module = eDevModelModule(path)
             except:
@@ -61,6 +66,18 @@ class Model:
         os.unlink(self._module_list[uri].getPath())
         del self._module_list[uri]
 
+    def isURIWriteable(self, uri):
+        if uri == "mod://": return False
+        if not uri in self._module_list.keys():
+            raise Exception("Module %s not known"%uri)
+        return self._module_list[uri].isWriteable()
+
+    def isURIEditable(self, uri):
+        if uri == "mod://": return False
+        if not uri in self._module_list.keys():
+            raise Exception("Module %s not known"%uri)
+        return self._module_list[uri].isEditable()
+
 
 
 class eDevModelModule:
@@ -75,11 +92,22 @@ class eDevModelModule:
         (tmp, self._d_name) = os.path.splitext(name)
         if self._d_name == "": self._d_name = tmp
         self._d_uri = "mod://"+"/".join(name.split("."))
+        self._editable  = False
+        self._writeable = False
 
         # FIXME replace by TREX
         dom = xml.dom.minidom.parse(path)
-        if len(xml.xpath.Evaluate("/Module", dom))==0:
-            raise Exception("Not an module!")
+        # if module:
+        if len(xml.xpath.Evaluate("/Module", dom))==1:
+            self._editable = True
+            if os.access(path, os.W_OK): self._writeable = True
+        # if assembly
+        elif len(xml.xpath.Evaluate("/Assembly", dom))==1:
+            self._editable = False
+            self._writeable = False
+        else:
+            raise Exception("Invalid module description: %s"%path)
+
 
     def GetURI(self): return self._d_uri
     def getName(self): return self._d_name
@@ -96,4 +124,8 @@ class eDevModelModule:
         f = open(self._d_full_path, "w")
         f.write(xml_txt)
         f.close()
+
+    def isEditable(self): return self._editable
+    def isWriteable(self): return self._writeable
+
 

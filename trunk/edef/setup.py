@@ -12,7 +12,8 @@ setup(  name = "edef",
         packages = ['edef',
                     'edef.dev', 'edef.dev.pyeditor', 'edef.dev.modeditor',
                                 'edef.dev.circuit', 'edef.dev.shell',
-                                'edef.dev.bitmaps', 'edef.dev.cursors'],
+                                'edef.dev.bitmaps', 'edef.dev.cursors',
+                                'edef.dev.eventmanager'],
         package_dir = {"edef.dev":"edef-dev"})
 
 

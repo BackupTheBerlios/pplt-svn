@@ -11,6 +11,6 @@ def GetXMLContent(node):
 # ====== URI stuff ======
 
 def splitURI(uri):
-    m = re.match("^(zip|py|mod|shell)://(.*)$", uri)
+    m = re.match("^(\w+)://(.*)$", uri)
     return (m.group(1), m.group(2))
 

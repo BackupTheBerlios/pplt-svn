@@ -2,39 +2,22 @@ import sys
 import Events
 from SimpleCanvas import SimpleCanvas
 from Costmap import CanvasCostmap
-from SimpleCanvasObjects import gModule, gPin
-from CanvasObjects import coConnection
+from SimpleCanvasObjects import gModule, gPin, gWire
 
-
-class InsortList:
-    _list = None 
-    def __init__(self):
-        self._list = []
-
-    def insert(self, cost, item):
-        for i in range(len(self._list)):
-            (icost, iitem) = self._list[i]
-            if icost > cost:
-                self._list.insert( i, (cost,item) )
-                return
-        self._list.append( (cost, item) )
-
-    def pop(self):
-        return self._list.pop(0)
-
-    def __len__(self): return len(self._list)
 
 
 class Canvas(SimpleCanvas):
     
     def __init__(self, parent, ID):
         SimpleCanvas.__init__(self, parent, ID)
-        self._cost_map = CanvasCostmap( (0,0) )
+        self._cost_map = None #CanvasCostmap( (0,0) )
         self._corner_cost = 5
-        self.Bind(Events.EVT_CAN_CONNECT, self._c_OnConnect)
 
 
-    def _route(self, frm, to, gc=None):
+    def route(self, frm_pin, to_pin, gc=None):
+        frm = frm_pin.getPosition()
+        to  = to_pin.getPosition()
+
         self._cost_map.setTarget(to)
         todo_stack = InsortList()
         back_track = CanvasCostmap( (0,0) )
@@ -42,11 +25,11 @@ class Canvas(SimpleCanvas):
         mod_list = self.getObjects(gModule)
         def pinHit( coord ):
             if coord == frm or coord == to:
-                print "hit but start/end"
+                self._logger.debug("hit but start/end")
                 return False
             for mod in mod_list:
                 if isinstance(mod.hitTest( coord ), gPin):
-                    print "PinHit! at %s (%s<->%s)"%(coord, frm, to)
+                    self._logger.debug("PinHit! at %s (%s<->%s)"%(coord, frm, to))
                     return True
             return False
 
@@ -91,16 +74,14 @@ class Canvas(SimpleCanvas):
             if len(todo_stack)==0:
                 raise Exception("No route found from %s to %s"%(frm,to))
 
-        #print "found -> calling back_track"
         return self._back_route(frm, to, back_track, gc)
 
 
     def _back_route(self, frm, to, back_track, gc):
         if gc: back_track.draw(gc)
-        #return [frm, to]
+        
         route = [to]
         cx,cy = to
-        #cost = back_track.getPure( (cx,cy) )
         
         while True:
             best_dir = None
@@ -123,40 +104,11 @@ class Canvas(SimpleCanvas):
                 best_dir = (cx,cy-1)
             
             if (cx, cy) == frm: break 
-            if best_dir == None: raise Exception("Opps")
+            if best_dir == None: raise Exception("Oops")
             route.insert(0, best_dir)
             (cx, cy) = best_dir
         
         return route
-
-
-    def addConnection(self, frm, to, auto_redraw=False):
-        if self.isConnection(frm, to): return
-        print "Add connection %s -> %s"%(frm,to)
-        con = coConnection(frm, to)
-        if auto_redraw: self.redraw()
-
-
-    def isConnection(self, frm, to):
-        connections = self.getObjects( coConnection )
-        for con in connections:
-            if (frm, to) == (con.getFrom(), con.getTo()):
-                return True
-        return False
-
-    def getConnectionsFrom(self, obj):
-        lst = []
-        connections = self.getObjects( coConnection )
-        for con in connections:
-            if obj == con.getFrom().getModule(): lst.append(con)
-        return lst
-
-    def getConnectionsTo(self, obj):
-        lst = []
-        connections = self.getObjects( coConnection )
-        for con in connections:
-            if obj == con.getTo().getModule(): lst.append(con)
-        return lst
 
 
     def draw(self, dc):
@@ -166,20 +118,52 @@ class Canvas(SimpleCanvas):
         
         connections = self.getObjects( coConnection )
         for con in connections:
-            route = self._route( con.getFromPos(), con.getToPos(), dc)
-            con.setNodes( route[1:-1] )
+            con.reroute(dc)
             self._cost_map.addWire( con )
         
-        #self._cost_map.draw(dc)
         SimpleCanvas.draw(self, dc)
 
+    
 
-    def _c_OnConnect(self, evt):
-        frm = evt.GetFrom()
-        to  = evt.GetTo()
+class coConnection (gWire):
+    """ Extends the L{gWire} class to use the routing algorithm of the 
+        L{Canvas} class to find it's way throught the canvas. """
 
-        if not self.isConnection( frm, to ):
-            self.addConnection( frm, to )
-        self.redraw()
+    def __init__(self, frm, to):
+        """ Constructor needs the start and end "pin". """
+        can = frm.getCanvas()
+        if not isinstance(can, Canvas):
+          raise Exception("coConnection needs a Canvas instance as canvas")
+        gWire.__init__(self, frm, to, [])
 
 
+    def reroute(self, dc=None):
+        """ Will be called by the redraw() method of Canvas to reroute the 
+            wire. """
+        can = self.getCanvas()
+        route = can.route( self.getFrom(), self.getTo(), dc )
+        self.setNodes(route[1:-1])
+
+
+
+class InsortList:
+    """ Internal used I{insort}-sorted lis}. """
+    _list = None 
+    def __init__(self):
+        self._list = []
+
+    def insert(self, cost, item):
+        for i in range(len(self._list)):
+            (icost, iitem) = self._list[i]
+            if icost >= cost:
+                self._list.insert( i, (cost,item) )
+                return
+        self._list.append( (cost, item) )
+
+    def pop(self):
+        return self._list.pop(0)
+
+    def __len__(self): return len(self._list)
+
+
+       

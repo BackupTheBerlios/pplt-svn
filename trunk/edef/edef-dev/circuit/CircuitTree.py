@@ -4,19 +4,19 @@ import os.path
 import re
 from edef.dev import Tools
 
-class ModuleTreePanel(NavigatorPanel):
+class CircuitTreePanel(NavigatorPanel):
     def __init__(self, parent, ID):
-        NavigatorPanel.__init__(self, parent, ID, "Modules")
-        self._tree = eDevModuleTree(self, -1)
+        NavigatorPanel.__init__(self, parent, ID, "Circuits")
+        self._tree = CircuitTree(self, -1)
         box = self.GetSizer()
         box.Add(self._tree, 1, wx.EXPAND)
 
-    def getModuleTree(self): return self._tree
+    def getCircuitTree(self): return self._tree
 
 
 
 
-class eDevModuleTree(wx.TreeCtrl):
+class CircuitTree(wx.TreeCtrl):
     
     def __init__(self, parent, ID):
         wx.TreeCtrl.__init__(self, parent, ID, size=wx.Size(-1,-1),
@@ -34,60 +34,55 @@ class eDevModuleTree(wx.TreeCtrl):
         self._logger = self._d_controller.getLogger()
 
         self._d_root = self.AddRoot("root")
-        self.SetPyData(self._d_root, ("Class","mod:/") )
+        self.SetPyData(self._d_root, ("Class","circ:/") )
 
-        mods = self._d_model.openURI("mod://")
-        self.popClasses(mods)
-
-        self._left_down_uri = None
+        circs = self._d_model.openURI("circ://")
+        self.popClasses(circs)
 
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelection)
         self.Bind(wx.EVT_TREE_ITEM_ACTIVATED, self.OnActivate)
         self.Bind(wx.EVT_SET_FOCUS, self.OnFocus)
-        self.Bind(wx.EVT_LEFT_DOWN, self.OnLeftDown)
-        self.Bind(wx.EVT_LEFT_UP, self.OnLeftUp)
-        self.Bind(wx.EVT_MOTION, self.OnMove)
 
 
-    def popClasses(self, mods, item=None):
+    def popClasses(self, circs, item=None):
         if item == None:
             item = self._d_root
         (typ, prefix) = self.GetPyData(item)
         
         def class_filter(uri): return re.match("^%s/\w+/.+$"%prefix, uri)
-        modules = filter(class_filter, mods)
-        for mod_uri in modules:
-            m = re.match("^%s/(\w+)/.+$"%prefix, mod_uri)
+        circuits = filter(class_filter, circs)
+        for circ_uri in circuits:
+            m = re.match("^%s/(\w+)/.+$"%prefix, circ_uri)
             class_name = m.group(1)
             uri = "%s/%s"%(prefix,class_name)
             
             if self.hasClassURI(uri, self._d_root):
                 citem = self.getItemByURI(uri, self._d_root)
-                self.popModules(mods,citem)
+                self.popCircuits(circs,citem)
                 continue
             
             citem = self.AppendItem(item, class_name)
             self.SetPyData(citem, ("Class", uri) )
             self.SetItemImage(citem, self._bmp_class, wx.TreeItemIcon_Normal)
             self.SetItemImage(citem, self._bmp_class_open, wx.TreeItemIcon_Expanded)
-            self.popClasses(mods, citem)
+            self.popClasses(circs, citem)
 
-        self.popModules(mods, item)
+        self.popCircuits(circs, item)
 
 
-    def popModules(self, mods, item=None):
+    def popCircuits(self, circs, item=None):
         if item == None:
             item = self._d_root
 
         (typ, prefix) = self.GetPyData(item)
-        def module_filter(uri): return re.match("^%s/(\w+)$"%prefix, uri)
-        modules = filter(module_filter, mods)
-        for module in modules:
-            if self.hasURI(module, self._d_root): continue
-            m = re.match("^%s/(\w+)"%prefix, module)
-            mod_name = m.group(1)
-            citem = self.AppendItem(item, mod_name)
-            self.SetPyData(citem, ("Module", module) )
+        def circuit_filter(uri): return re.match("^%s/(\w+)$"%prefix, uri)
+        circuits = filter(circuit_filter, circs)
+        for circuit in circuits:
+            if self.hasURI(circuit, self._d_root): continue
+            m = re.match("^%s/(\w+)"%prefix, circuit)
+            circ_name = m.group(1)
+            citem = self.AppendItem(item, circ_name)
+            self.SetPyData(citem, ("Circuit", circuit) )
             self.SetItemImage(citem, self._bmp_module, wx.TreeItemIcon_Normal)
             self.SetItemImage(citem, self._bmp_module, wx.TreeItemIcon_Expanded)
    
@@ -95,7 +90,7 @@ class eDevModuleTree(wx.TreeCtrl):
     def addURI(self, uri):
         if self.hasURI(uri,self._d_root): return
         (proto, path) = Tools.splitURI(uri)
-        if not proto == "mod": return
+        if not proto == "circ": return
         self.popClasses([uri])
 
 
@@ -106,7 +101,7 @@ class eDevModuleTree(wx.TreeCtrl):
         if self.ItemHasChildren(item): return
         
         (typ, iuri) = self.GetPyData(item)
-        if iuri == "mod:/": return
+        if iuri == "circ:/": return
         self.Delete(item)
         
         pitem = self.GetItemParent(item)
@@ -160,27 +155,6 @@ class eDevModuleTree(wx.TreeCtrl):
         evt.Skip()
 
 
-    def OnLeftDown(self, evt):
-        (item,flag) = self.HitTest(evt.GetPosition())
-        if item and flag&(wx.TREE_HITTEST_ONITEMLABEL|wx.TREE_HITTEST_ONITEMICON):
-            (typ, uri) = self.GetPyData(item)
-            if typ == "Module": self._left_down_uri = uri
-        evt.Skip()
-
-    def OnLeftUp(self, evt):
-        self._left_down_uri = None
-
-    def OnMove(self, evt):
-        if self._left_down_uri:
-            self._logger.debug("begin dragging module: %s"%self._left_down_uri)
-            drag_uri = wx.TextDataObject(self._left_down_uri)
-            dragSrc = wx.DropSource(self)
-            dragSrc.SetData(drag_uri)
-            dragSrc.DoDragDrop( True )
-            self._left_down_uri = None
-        evt.Skip()
-
-
     def _updateMainFrame(self, item=None):
         if not item: item = self.GetSelection()
         self._d_mainframe.bindNew()
@@ -189,12 +163,12 @@ class eDevModuleTree(wx.TreeCtrl):
         
         if not item: return
         (typ, uri) = self.GetPyData(item)
-        if typ == "Module":
-            self._d_mainframe.bindOpen(self.OnModuleOpen)
-            self._d_mainframe.bindDelete(self.OnModuleDelete)
+        if typ == "Circuit":
+            self._d_mainframe.bindOpen(self.OnCircuitOpen)
+            self._d_mainframe.bindDelete(self.OnCircuitDelete)
         elif typ == "Class":
             self._d_mainframe.bindOpen(self.OnClassOpen)
-        self._d_mainframe.bindNew(self.OnNewModule)
+        self._d_mainframe.bindNew(self.OnNewCircuit)
 
     def OnActivate(self, evt):
         item = evt.GetItem()
@@ -204,11 +178,11 @@ class eDevModuleTree(wx.TreeCtrl):
             return
         self._d_controller.DocumentOpen(uri)
 
-    def OnModuleOpen(self, evt=None):
+    def OnCircuitOpen(self, evt=None):
         item = self.GetSelection()
         if not item: return
         (typ, uri) = self.GetPyData(item)
-        if typ=="Module":
+        if typ=="Circuit":
             self._d_controller.DocumentOpen(uri)
 
     def OnClassOpen(self, evt=None):
@@ -218,10 +192,10 @@ class eDevModuleTree(wx.TreeCtrl):
         if typ == "Class":
             self.Expand(item)
 
-    def OnNewModule(self, evt=None):
-        self._d_controller.DocumentOpen("mod://")
+    def OnNewCircuit(self, evt=None):
+        self._d_controller.DocumentOpen("circ://")
 
-    def OnModuleDelete(self, evt=None):
+    def OnCircuitDelete(self, evt=None):
         item = self.GetSelection()
         if not item: return
         (typ, uri) = self.GetPyData(item)

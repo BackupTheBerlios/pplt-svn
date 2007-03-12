@@ -1,9 +1,6 @@
-from SimpleCanvasObjects import gWire
+#from SimpleCanvasObjects import gWire
+# FIXME rease this file it is obsolete
 
-
-class coConnection (gWire):
-    def __init__(self, frm, to , nodes=[]):
-        gWire.__init__(self, frm, to, nodes)
 
 
 

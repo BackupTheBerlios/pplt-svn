@@ -103,6 +103,15 @@ class Model:
             return fname in archive.getFileList("*.py")
                 
 
+    def isURIEditable(self, uri):
+        if not isPyFileURI(uri): return False
+        return True
+
+    def isURIWriteable(self, uri):
+        # FIXME if archive is writeable -> return True
+        return True
+
+
 
 class eDevModelArchive:
     _d_path = None

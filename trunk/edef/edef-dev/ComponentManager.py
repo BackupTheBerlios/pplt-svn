@@ -10,8 +10,13 @@ class ComponentManager:
 
         from edef.dev.pyeditor import component as pyEditComponent
         from edef.dev.modeditor import component as modEditComponent
+        from edef.dev.circuit import component as circEditComponent
+        from edef.dev.eventmanager import component as evtManagerComponent
+
         self.initComponent("pyeditor", pyEditComponent )
         self.initComponent("modeditor", modEditComponent )
+        self.initComponent("circuit", circEditComponent )
+        self.initComponent("eventmanager", evtManagerComponent )
 
     def getComponent(self, name):
         return self._components[name]

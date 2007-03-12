@@ -40,7 +40,6 @@ class ArchiveTree(wx.TreeCtrl):
 
         #Add all archives:
         archives = self._d_model.openURI("zip://")
-        self._logger.debug("Found archives: %s"%archives)
         for archive_uri in archives:
             uri_list = self._d_model.openURI(archive_uri)
             archive_name = getArchive(archive_uri)

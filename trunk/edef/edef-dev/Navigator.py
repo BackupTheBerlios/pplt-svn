@@ -27,7 +27,7 @@ class eDevNavigator(MultiSplitterWindow):
         (tmp, max_height) = self.GetSize()
 
         for i in range(max_idx):
-            if i == idx: pos = max_height - (max_idx+1)*height+4
+            if i == idx: pos = max_height - (max_idx+1)*height
             else: pos = height
             self.SetSashPosition(i, pos)
 

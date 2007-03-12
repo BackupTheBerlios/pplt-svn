@@ -1,3 +1,10 @@
+2007-03-12: Hannes Matuschek <hmatuschek@gmail.com> (rev.95)
+	* edef-dev/circuit/*:
+		circuit editor integrated into edef-dev
+	* edef-dev/eventmanager/*:
+		EventManager component added
+
+
 2007-03-03: Hannes Matuschek <hmatuschek@gmail.com> (rev.94)
 	* edef-dev/*:
 		made edef-dev some more component based
@@ -16,7 +23,7 @@
 	* edef-dev/*:
 		cleanup directory-structure; now each component has it's own
 		subpackage
-	* edef/ModuleMeta.py (ModuleMeta.instance()):
+	* edef/ModuleMeta.py ModuleMeta.instance(): 
 		bug fixed 
 	* edef/ModuleMeta.py:
 		added getInputs() and getOutputs()
@@ -29,25 +36,25 @@
 		add/delete archives
 
 
-2007-02-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 90)
+2007-02-16: Hannes Matuschek <hmatuschek@gmail.com> (rev.90)
 	* edef-def/*.py:
 		redesign of edef-Developer, Now you can edit python and module
 		descriptions.
 
 
-2007-02-12: Hannes Matuschek <hmatuschek@gmail.com> (rev. 89)
+2007-02-12: Hannes Matuschek <hmatuschek@gmail.com> (rev.89)
 	* edef-dev/*.py:
 		implemented copy/cut/paste/redo/undo
 
 
-2007-02-06: Hannes Matuschek <hmatuschek@gmail.com> (rev. 88)
+2007-02-06: Hannes Matuschek <hmatuschek@gmail.com> (rev.88)
 	* edef/EventManager.py:
 		- fixed some dead-locks in pause()/finish()/run()/resume()
 		- renamed start() -> resume()
 		- fixed missing acquire/release in pause
 
 
-2007-02-05: Hannes Matuschek <hmatuschek@gmail.com> (rev. 87)
+2007-02-05: Hannes Matuschek <hmatuschek@gmail.com> (rev.87)
 	* edef/Output.py (ValueOutput):
 		fixed emission of None on add_input()
 
@@ -58,7 +65,7 @@
 		renamed stop() into shutdown()
 
 
-2007-02-02: Hannes Matuschek <hmatuschek@gmail.com> (rev. 86)
+2007-02-02: Hannes Matuschek <hmatuschek@gmail.com> (rev.86)
 	* edef/Assembly.py (Assembly):
 		implemented Assambly-container
 	* edef/ModuleMeta.py (AssemblyMeta):
@@ -71,7 +78,7 @@
 		finisched definition of "Assembly" grammar
 
 
-2007-02-01:	Hannes Matuschek <hmatuschek@gmail.com> (rev. 85)
+2007-02-01:	Hannes Matuschek <hmatuschek@gmail.com> (rev.85)
 	* trex/Module-1.0-trex.xml:
 		Completed the TREX definition of "module" grammar
 

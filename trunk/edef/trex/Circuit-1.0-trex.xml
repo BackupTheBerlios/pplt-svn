@@ -1,0 +1,35 @@
+<?xml version="1.0"?>
+
+<element name="Circuit">
+    <attribute name="version"><string>1.0</string></attribute>
+
+    <oneOrMore>
+        <element name="Module">
+            <attribute name="id"/>
+            <attribute name="name"/>
+            <attribute name="x"/>
+            <attribute name="y"/>
+
+            <zeroOrMore>
+                <element name="Parameter">
+                    <attribute name="name">
+                    <anyString>
+                </element>                    
+            </zeroOrMore>
+        </element>
+    </oneOrMore>        
+
+    <zeroOrMore>
+        <element name="Wire">
+            <element name="From">
+                <attribute name="id"/>
+                <attribute name="pin"/>
+            </element>
+            <element name="To">
+                <attribute name="id"/>
+                <attribute name="pin"/>
+            </element>
+        </element>
+    </zeroOrMore>
+    
+</Element>

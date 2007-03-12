@@ -23,6 +23,12 @@ class eDeveloper(wx.App):
         return True
 
 
+    def OnExit(self):
+        evt_hdl = edef.EventManager()
+        evt_hdl.shutdown()
+
+
+
 # init logging
 edef.Logger(logging.DEBUG)
 

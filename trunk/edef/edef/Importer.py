@@ -113,6 +113,32 @@ class Importer:
         return mod_meta.instance(parameters)
 
 
+    def loadGrafical(self, canvas, coordinates, name, parameters=None):
+        """ Loads a module as it's grafical representaion. The instance 
+            behaves like a normal module. """
+        # find module meta:
+        (file_path, mod_meta) = self.getModuleMeta(name)
+
+        #check and expand parameters:
+        if not parameters: parameters = {}
+        mod_meta.checkAndExpandParameters(parameters)
+
+        #check dependencies:
+        mod_meta.checkDependencies()
+
+        if not mod_meta.getGraficClass():
+            self._d_logger.debug("Instance default grafic")
+            # if no grafic-class is specified -> load default grafic-module
+            try: from edef.dev.circuit import DefaultGraficModule
+            except:
+                self._d_logger.exception("Unabel to load default grafic module!")
+                raise ModuleImportError("Unable to load defualt grafic for %s"%name)
+            return DefaultGraficModule(canvas, coordinates, name, parameters)
+        # if a graficmodule is specified
+        self._d_logger.debug("Instance defined graficmodule %s with params %s"%(mod_name,parameters))
+        return mod_meta.instanceGrafical(canvas, coordinates, parameters)
+   
+
     def getModuleMeta(self, mod_name):
         """ This method will return either a L{ModuleMeta} or L{AssemblyMeta} 
             instance depending on if you specified a module or an assembly 
