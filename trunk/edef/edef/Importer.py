@@ -134,6 +134,7 @@ class Importer:
                 self._d_logger.exception("Unabel to load default grafic module!")
                 raise ModuleImportError("Unable to load defualt grafic for %s"%name)
             return DefaultGraficModule(canvas, coordinates, name, parameters)
+        
         # if a graficmodule is specified
         self._d_logger.debug("Instance defined graficmodule %s with params %s"%(mod_name,parameters))
         return mod_meta.instanceGrafical(canvas, coordinates, parameters)

@@ -1,17 +1,20 @@
 import xml.dom.minidom
 import xml.xpath
+import logging
+
 
 class CircuitMeta:
     def __init__(self, xml_string):
         self._dom = xml.dom.minidom.parseString(xml_string)
+        self._logger = logging.getLogger("edef.dev")
 
     def getModules(self):
         mod_table = dict()
         mods = xml.xpath.Evaluate("/Circuit/Module",self._dom)
         for mod in mods:
-            (ID, name, pos, param) = self._getModule(mod)
+            (ID, name, pos, param) = self._getModule(mod.getAttribute("id"))
             mod_table[ID] = (name, pos, param)
-
+        self._logger.debug("Found %s"%mod_table)
         return mod_table
 
 
@@ -27,19 +30,21 @@ class CircuitMeta:
         return wire_list
 
 
-    def _getModule(self, node):
+    def _getModule(self, ID):
+        node = xml.xpath.Evaluate("/Circuit/Module[@id=%s]"%ID, self._dom)[0]
         ID = node.getAttribute("id")
         name = node.getAttribute("name")
         pos = ( int(node.getAttribute("x")), int(node.getAttribute("y")) )
-        params = self._getParameterDict(node)
+        params = self._getParameterDict(ID)
         return (ID, name, pos, params)
 
-    def _getParameterDict(self, node):
+    def _getParameterDict(self, ID):
         params = dict()
         
-        nodes = xml.xpath.Evaluate("Module/Parameter", node)
+        nodes = xml.xpath.Evaluate("/Circuit/Module[@id=%s]/Parameter"%ID, self._dom)
+        self._logger.debug("Found %i params for mod (id %s)"%(len(nodes), ID))
         for node in nodes:
-            name = node.getAttribute("name")
+            name = str(node.getAttribute("name"))
             try: value = node.firstChild.wholeText.strip()
             except: raise Exception("Parameter %s has no value"%name)
             params[name] = value

@@ -260,6 +260,7 @@ class ModuleMeta(ModuleBaseMeta):
             class_name = full_class_name
         else:
             raise ModuleImportError("Invalid %s class-name in %s!"%(full_class_name, self._d_file_path) )
+        self._d_logger.debug("(Try to) open %s in %s"%(file_name, mod_archive))
         mod = zipimp.load_module(file_name);
 
         #load class from module

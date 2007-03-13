@@ -32,6 +32,7 @@ import re
 from PrimitiveCanvas import PrimitiveCanvas
 import logging
 import Events
+import sys
 
 
 class SimpleCanvas(PrimitiveCanvas):
@@ -181,7 +182,7 @@ class SimpleCanvas(PrimitiveCanvas):
         # add object and optional redraw
         self._logger.debug("Add object %s(%s) to canvas"%(obj,id(obj)))
         self._objects.append(obj)
-        self._logger.debug("Object list now: %s"%self._objects)
+        #self._logger.debug("Object list now: %s"%self._objects)
         if auto_redraw: self.redraw()
 
 
@@ -208,8 +209,14 @@ class SimpleCanvas(PrimitiveCanvas):
     def delObject(self, obj, auto_redraw=False):
         """ This method will remove the given object from list. 
             If C{auto_redraw} is C{True} it will redraw the canvas. """
-        self._logger.debug("Remove %s(%s) from list: %s"%(obj,id(obj),self._objects))
+        self._logger.debug("Remove %s from list"%id(obj))
+        
         if not obj in self._objects: raise Exception("No object %s(%s) found in list"%(obj,id(obj)))
+        if self._selected_object == obj: self._selected_object = None
+        if self._mouse_over_object == obj: self._mouse_over_object = None
+        if self._begin_drag_object == obj: self._begin_drag_object = None
+        if sys.getrefcount(obj) > 2: self._logger.warning("Referencecount (%i) of object > 2!"%sys.getrefcount(obj))
+        
         del self._objects[self._objects.index(obj)]
         if auto_redraw: self.redaw()
 
@@ -245,7 +252,10 @@ class SimpleCanvas(PrimitiveCanvas):
     def unsetSelection(self):
         """ Unset the selection. This method does NOT raise an 
             EVT_CAN_DESELECT. """
-        self._selected_object
+        self._selected_object = None
+
+
+    def OnModified(self): pass
 
 
     ### tool-methods for emmiting events:
@@ -544,8 +554,9 @@ class SimpleCanvas(PrimitiveCanvas):
 
     def _sc_OnToolTipTimer(self, evt):
         self._tool_tip_showed = True
-        self._emmitCanvasShowToolTip(self._mouse_over_coord,
-                                     self._mouse_over_object)
+        if self._mouse_over_object:
+            self._emmitCanvasShowToolTip(self._mouse_over_coord,
+                                         self._mouse_over_object)
     
     def _sc_OnBeginDrag(self, evt):
         obj = evt.GetObject()
@@ -570,12 +581,14 @@ class SimpleCanvas(PrimitiveCanvas):
                 # set position and redraw
                 start_obj.setPosition(evt.GetCoordinates())
                 self.redraw()
+                self.OnModified()
         
         # handle connectable objects (ie. Pins):            
         elif isinstance(start_obj, gConnectable) \
           and not start_obj == evt.GetObject()   \
           and isinstance(evt.GetObject(), gConnectable):
             self._emmitCanvasConnect(start_obj, evt.GetObject())
+            self.OnModified()
         
         # precess remaining handlers
         evt.Skip()
@@ -615,12 +628,14 @@ class gObject:
             So if you derive from this class please also call allways this 
             constructor. 
             @param canvas: An instance of L{SimpleCanvas}. """
+        
+        self._logger = logging.getLogger("edef.dev")
+        
         if not isinstance(canvas, SimpleCanvas):
             raise Exception("Bad type: Canvas should be a instance of SimpleCanvas. Got: %s"%type(canvas))
         self._canvas = canvas
         self._canvas.addObject(self)
-        self._logger = logging.getLogger("edef.dev")
-
+        
 
     def getCanvas(self):
         """ Returns the canvas associated with the object. """
@@ -660,7 +675,7 @@ class gMoveable(gObject):
             """
         self._coordinates = coordinates
         gObject.__init__(self, canvas)
-
+        
 
     def setPosition(self, coordinates):
         """ This method should be overridden! It should reset the internal 

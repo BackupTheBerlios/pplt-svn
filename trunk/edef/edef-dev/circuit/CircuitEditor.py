@@ -23,7 +23,7 @@ class CircuitEditor(EditorInterface, ElementMap):
         self._model      = Model()
         self._circtree   = ComponentManager().getComponent("circuit").getCircuitTree()
         self._importer   = edef.Importer()
-        self._mainframe = self._controller.getMainFrame()
+        self._mainframe  = self._controller.getMainFrame()
         
         self.setTitle(uri)
        
@@ -107,6 +107,7 @@ class CircuitEditor(EditorInterface, ElementMap):
         txt = self._to_xml().toprettyxml("  ")
         self._model.saveURI(uri, txt)
         self.setURI(uri)
+        self.setTitle(uri)
         self._circtree.addURI(uri)
         self.setModified(False)
         self._updateMainFrame()

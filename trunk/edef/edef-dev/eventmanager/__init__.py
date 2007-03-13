@@ -1,7 +1,8 @@
 import wx
 import edef
 from edef.dev import Controller
-
+from play import getBitmap as getPlayBitmap
+from pause import getBitmap as getPauseBitmap
 
 class EventManagerComponent:
     
@@ -22,8 +23,13 @@ class EventManagerComponent:
         # append
         self._menu = wx.Menu()
         menu_bar.Append(self._menu, "EventManager")
-        self._menu.Append(self._start_id, "Start")
-        self._menu.Append(self._pause_id, "Pause")
+        start_item = wx.MenuItem(self._menu, self._start_id, "Start")
+        pause_item = wx.MenuItem(self._menu, self._pause_id, "Pause")
+        start_item.SetBitmap(getPlayBitmap())
+        pause_item.SetBitmap(getPauseBitmap())
+        self._menu.AppendItem(start_item)
+        self._menu.AppendItem(pause_item)
+
         self._update_menu()
 
         self._main_frame.Bind(wx.EVT_MENU, self.OnStart, id=self._start_id)
@@ -40,7 +46,7 @@ class EventManagerComponent:
 
    
     def OnStart(self, evt):
-        self._event_manager.restart()
+        self._event_manager.resume()
         self._update_menu()
    
 

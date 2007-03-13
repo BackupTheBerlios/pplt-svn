@@ -30,6 +30,8 @@ import wx
 import re
 from copy import copy
 from SimpleCanvas import SimpleCanvas, gObject, gMoveable, gConnectable
+import weakref
+
 
 #
 # Specialized grafic objects.
@@ -139,14 +141,14 @@ class gModule(gMoveable):
 
 class gPin(gConnectable):
     def __init__(self, module, name):
-        self._module = module
+        self._module_ref = weakref.ref(module)
         self._canvas = module.getCanvas()
         self._name = name
         m = re.match("^(i_|o_)(.+)$",name)
         self._display_name = m.group(2)
         self._position = wx.LEFT
         self._x, self._y = (0,0)
-        self._module.addPin(self)
+        self._module_ref().addPin(self)
 
 
     def draw(self, dc):
@@ -181,7 +183,7 @@ class gPin(gConnectable):
 
     
     def getName(self): return self._name
-    def getModule(self): return self._module
+    def getModule(self): return self._module_ref()
 
 
 
@@ -197,8 +199,8 @@ class gWire(gObject):
     def getFrom(self): return self._from
     def getTo(self): return self._to
 
-    def getFromPos(self): return self._from.getPosition()   # (self._from._x, self._from._y)
-    def getToPos(self): return self._to.getPosition()       # (self._to._x, self._to._y)
+    def getFromPos(self): return self._from.getPosition()
+    def getToPos(self): return self._to.getPosition()
     
     def getNodes(self): return self._nodes
     def setNodes(self, nodes):
@@ -207,7 +209,7 @@ class gWire(gObject):
 
     def between(self, w, a, b):
         if a > b and w <= a and w >= b: return True
-        elif w >= a and w <= b: return True
+        elif a < b and w >= a and w <= b: return True
         return False
 
     def _reduceNodes(self, nodes):
@@ -216,7 +218,7 @@ class gWire(gObject):
         reduced = [nodes[0]]
         lx,ly = reduced[-1]
         
-        x,y   = self.getFromPos()                           #self._from._x, self._from._y
+        x,y   = self.getFromPos()
         if lx == x: dir_updown = False
         else: dir_updown = True
 
@@ -232,21 +234,30 @@ class gWire(gObject):
 
 
     def draw(self, dc):
-        sx,sy = self.getFromPos()                                   #self._from._x, self._from._y
+        sx,sy = self.getFromPos()
         for (tx,ty) in self._nodes:
             self._canvas.drawLine(dc, (sx,sy), (tx,ty))
             sx,sy = tx,ty
-        tx,ty = self.getToPos()                                     #self._to._x,self._to._y
+        tx,ty = self.getToPos()
         self._canvas.drawLine(dc, (sx,sy), (tx,ty))
+
+    def drawSelected(self, dc):
+        sx,sy = self.getFromPos()
+        for (tx,ty) in self._nodes:
+            self._canvas.drawLine(dc, (sx,sy), (tx,ty), "RED")
+            sx,sy = tx,ty
+        tx,ty = self.getToPos()
+        self._canvas.drawLine(dc, (sx,sy), (tx,ty), "RED")
+
 
     def hitTest(self, coord):
         x,y = coord
-        sx,sy = self.getFromPos()                                   #self._from._x, self._from._y
+        sx,sy = self.getFromPos()
         for (tx,ty) in self._nodes:
-            if self.between(x, sx, tx) and sy == ty: return self
-            elif self.between(y, sy, ty) and sx == tx: return self
+            if self.between(x, sx, tx) and sy == ty and y == sy: return self
+            elif self.between(y, sy, ty) and sx == tx and x == sx: return self
             sy,sx = ty,tx
-        ty,tx = self.getToPos()                                     #self._to._x, self._to._y
+        ty,tx = self.getToPos()
         if self.between(x, sx, tx) and sy == ty: return self
         elif self.between(y, sy, ty) and sx == tx: return self
         return None            

@@ -49,7 +49,8 @@ import logging
 import time
 import weakref
 from Singleton import Singleton
-
+import sys
+import types
 
 class EventManager(threading.Thread):
     """ This is the event-manager. The event-manager is the central part of
@@ -286,12 +287,14 @@ class EventManager(threading.Thread):
             will call cb(value). Norally this method will be invoked by 
             outputs to emmit a changed value. Call this only if you know what
             you are doing. """
-
         if not self._d_is_alive:
             raise Exception("EventManager stoped: No events where processed.")
         
         # store event-callback as a weak-reference:
-        cb = weakref.proxy(cb)
+        if type(cb) == types.MethodType:
+            cb = InstanceMethodProxy(cb)
+            # cb = weakref.proxy(cb)
+        else: self._d_logger.warning("No reference created for %s"%cb)
 
         self._d_condition.acquire()
         self._d_event_list.append((cb,value))
@@ -307,9 +310,15 @@ class EventManager(threading.Thread):
         # FIXME make an scheduled event cancelable?
         self._d_logger.debug("Add scheduled event: %s(%s) in %fs"%(getattr(cb,'__name__',cb), params, timeout))
         
+        if not self._d_is_alive:
+            raise Exception("EventManager stoped: No events where processed.")
+        
         # store callback as a weak-reference:
-        cb = weakref.proxy(cb)
+        if type(cb) == types.MethodType:
+            cb = InstanceMethodProxy(cb)
+            # cb = weakref.proxy(cb)
 
+        # store event:
         self._d_condition.acquire()
         self._d_sched_events.append( (time.time()+timeout, cb, params) )
         self._d_sched_events.sort(cmp=_EventManager_sched_compare)
@@ -350,5 +359,28 @@ def _EventManager_sched_compare(tpl1, tpl2):
     elif time1 < time2: return -1
     elif time2 < time1: return 1
 
+
+
+
+class InstanceMethodProxy:
+    _object_ref = None
+    _funct_name = None
+
+    def __init__(self, meth):
+        self._logger = logging.getLogger("edef.core")
+        assert type(meth) == types.MethodType
+        self._object_ref = weakref.ref(meth.im_self)
+        self._funct_name = meth.im_func.__name__
+        self.__name__ = self._funct_name
+        
+        self._logger.debug("Refcount of instance %s"%sys.getrefcount(meth.im_self))
+
+
+    def __call__(self, *args, **kwargs):
+        if not self._object_ref():
+            self._logger.info("Input destucted -> skip event")
+            return
+        meth = getattr(self._object_ref(), self._funct_name)
+        meth(*args, **kwargs)
 
 

@@ -1,3 +1,10 @@
+2007-03-13: Hannes Matuschek <hmatuschek@gmail.com> (rev.96)
+	* edef/EventManager.py:
+		fixed a weakref bug
+	* edef-dev/ElementMap.py:
+		added some message-dialogs
+
+
 2007-03-12: Hannes Matuschek <hmatuschek@gmail.com> (rev.95)
 	* edef-dev/circuit/*:
 		circuit editor integrated into edef-dev

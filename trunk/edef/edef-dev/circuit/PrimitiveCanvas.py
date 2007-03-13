@@ -166,7 +166,7 @@ class PrimitiveCanvas(wx.ScrolledWindow):
         dc.DrawRectangle(x,y, w,h)
         
 
-    def drawLine(self, dc, frm, to):
+    def drawLine(self, dc, frm, to, color="BLUE"):
         """ This method will draw a line.
             
             @param dc: The drawing context to draw on. You can get it from 
@@ -183,7 +183,7 @@ class PrimitiveCanvas(wx.ScrolledWindow):
         x2 = x2*5+2
         y2 = y2*5+2
         # draw
-        dc.SetPen( wx.Pen("YELLOW",1) )
+        dc.SetPen( wx.Pen(color,1) )
         dc.DrawLine( x1,y1, x2,y2 )
 
 

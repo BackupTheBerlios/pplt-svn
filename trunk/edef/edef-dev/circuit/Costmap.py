@@ -18,8 +18,8 @@ class CanvasCostmap:
         x1,y1 = self.getTarget()
         x2,y2 = pos
         dx, dy = ( x1-x2, y1-y2 )
-        return abs(dx)+abs(dy)
-        #return math.sqrt( dx*dx +dy*dy )
+        #return abs(dx)+abs(dy)
+        return math.sqrt( dx*dx +dy*dy )
     
     def setTarget( self, pos ):
         self._target_x, self._target_y = pos

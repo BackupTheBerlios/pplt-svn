@@ -12,6 +12,7 @@ print "Using wxPython version %s"%wx.__version__
 class eDeveloper(wx.App):
     _components = None
     def OnInit(self):
+        wx.InitAllImageHandlers()
         self._d_main_frame = MainFrame(None, "edef Developer")
         
         self._components = ComponentManager()

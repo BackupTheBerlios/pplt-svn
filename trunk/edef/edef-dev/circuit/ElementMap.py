@@ -59,7 +59,7 @@ class ElementMap( Canvas ):
         self._logger.debug("Get prameter for module %s"%name)
         (path, meta) = self._importer.getModuleMeta(name)
         
-        if len(meta.getParameters()) > 0:
+        if len(meta.getParameters()) > 0 and params==None:
             param_dialog = ParameterDialog(self, -1, name)
             if not wx.ID_OK == param_dialog.ShowModal():
                 self._logger.info("Module load aborted!")
@@ -67,32 +67,52 @@ class ElementMap( Canvas ):
                 return
             params = param_dialog.parameters
             param_dialog.Destroy()
-        else:
+        elif params==None:
             params = dict()
 
         self._logger.debug("Instance and place module with params: %s"%params)
-        mod = self._importer.loadGrafical(self, (x,y), name, params)
+        try:
+            mod = self._importer.loadGrafical(self, (x,y), name, params)
+        except Exception, e:
+            wx.MesageBox("Unable to load/import module \"%s\""%name,
+                         "Import Error",
+                         wx.OK|wx.ICON_ERROR, self, -1)
+            raise e
+
         self.redraw()
         self.OnModified()
+        
         return mod
 
 
     def delObject(self, obj):
-        self._logger.debug("Delete object: %s"%id(obj))
         if isinstance(obj, emModule):
+            self._logger.debug("Delete module: %s"%id(obj))
             cons  = self.getConnectionsFrom(obj)
             for con in self.getConnectionsTo(obj):
                 if not con in cons: cons.append(con)
             for con in cons: self.delObject( con )
+        else:
+            self._logger.debug("Delete non-module: %s"%id(obj))
+            
         Canvas.delObject( self, obj )
         self.OnModified()   #
    
 
     def connect(self, frm, to, auto_redraw=False):
         if self.isConnection(frm, to): return
-        con = emConnection(frm,to)
+        
+        try:
+            con = emConnection(frm,to)
+        except Exception, e:
+            wx.MessageBox("Unable to connect %s with %s"%(frm.getName(),to.getName()),
+                          "Connection error",
+                          wx.OK|wx.ICON_ERROR, self, -1)
+            raise e
+
         if auto_redraw: self.redraw()
         self.OnModified()   #
+        
         return con
    
     
@@ -199,10 +219,11 @@ class ParameterDialog(wx.Dialog):
 
 
     def OnOK(self, evt):
+        self.parameters = dict()
         for (name, tctrl) in self._params.items():
             value = tctrl.GetValue()
             if not value.strip() == "":
-                self.parameters[name] = value
+                self.parameters[str(name)] = value
         self.EndModal(wx.ID_OK)
 
 

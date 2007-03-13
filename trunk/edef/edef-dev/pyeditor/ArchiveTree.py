@@ -13,7 +13,7 @@ class ArchiveTreePanel(NavigatorPanel):
         self._tree = ArchiveTree(self, -1)
         box = self.GetSizer()
         box.Add(self._tree,1,wx.EXPAND)
-         
+
     def getArchiveTree(self): return self._tree
 
 
@@ -55,7 +55,7 @@ class ArchiveTree(wx.TreeCtrl):
                 self.SetItemImage(file_item, self._bmp_module, wx.TreeItemIcon_Normal)
                 self.SetItemImage(file_item, self._bmp_module, wx.TreeItemIcon_Expanded)
         
-        self._d_mainframe.bindNewArch(self.NewArchive)
+        # FIXME self._d_mainframe.bindNewArch(self.NewArchive)
 
         # Events:
         self.Bind(wx.EVT_TREE_SEL_CHANGED, self.OnSelection)
@@ -116,7 +116,6 @@ class ArchiveTree(wx.TreeCtrl):
 
     def _updateMainFrame(self, item=None):
         if not item: item = self.GetSelection()
-        self._d_mainframe.bindNewArch(self.NewArchive)
         self._d_mainframe.bindNew()
         self._d_mainframe.bindOpen()
         self._d_mainframe.bindDelete()
