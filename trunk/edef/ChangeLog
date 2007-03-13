@@ -1,3 +1,12 @@
+2007-03-??: Hannes Matuschek <hmatuschek@gmail.com> (rev.97)
+	* edef-dev/eventmanager/__init__.py:
+		insert menu before "Help"
+	* edef-dev/pyeditor/__init__.py:
+		insert menu-item before "Quit"
+	* edef-dev/MainFrame.py:
+		added "about" dialog
+
+
 2007-03-13: Hannes Matuschek <hmatuschek@gmail.com> (rev.96)
 	* edef/EventManager.py:
 		fixed a weakref bug

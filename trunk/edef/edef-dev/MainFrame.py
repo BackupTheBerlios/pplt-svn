@@ -5,7 +5,7 @@ from NavigatorPanel import NavigatorPanel
 from Notebook import eDevNotebook
 from Controller import eDevController
 from Config import eDevConfigDialog
-
+from InfoDialog import InfoDialog
 
 class eDevMainFrame(wx.Frame):
     
@@ -143,7 +143,7 @@ class eDevMainFrame(wx.Frame):
         self.bindPaste()
 
         self.Bind(wx.EVT_MENU, self.OnEditorSettings, id=wx.ID_PREFERENCES)
-
+        self.Bind(wx.EVT_MENU, self.OnShowAbout, id=wx.ID_HELP)
 
 
     def OnExit(self, evt):
@@ -152,6 +152,11 @@ class eDevMainFrame(wx.Frame):
     def OnEditorSettings(self, evt):
         dlg = eDevConfigDialog(self, -1)
         dlg.ShowModal()
+
+    def OnShowAbout(self, evt):
+        dlg = InfoDialog(self, -1)
+        dlg.ShowModal()
+
 
     def bindNew(self, cb=None):
         if cb is None:

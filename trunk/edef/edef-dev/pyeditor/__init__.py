@@ -25,8 +25,10 @@ class PyEditComponent:
         main_frame = self._controller.getMainFrame()
         menu_bar = main_frame.GetMenuBar()
         menu = menu_bar.GetMenu(menu_bar.FindMenu("File"))
-        menu.AppendSeparator()
-        menu.Append(self._new_archive_id, "New Archive")
+        pos = menu.GetMenuItemCount()-2
+        if pos < 0: pos=0
+        menu.InsertSeparator(pos)
+        menu.Insert(pos+1,self._new_archive_id, "New Archive")
         
         main_frame.Bind(wx.EVT_MENU, self.OnNewArchive, id=self._new_archive_id)
 

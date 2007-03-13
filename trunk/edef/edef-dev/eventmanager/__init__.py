@@ -22,7 +22,9 @@ class EventManagerComponent:
 
         # append
         self._menu = wx.Menu()
-        menu_bar.Append(self._menu, "EventManager")
+        pos = menu_bar.GetMenuCount()-1
+        if pos < 0: pos = 0
+        menu_bar.Insert(pos, self._menu, "EventManager")
         start_item = wx.MenuItem(self._menu, self._start_id, "Start")
         pause_item = wx.MenuItem(self._menu, self._pause_id, "Pause")
         start_item.SetBitmap(getPlayBitmap())
