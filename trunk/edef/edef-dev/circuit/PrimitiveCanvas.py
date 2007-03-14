@@ -269,6 +269,25 @@ class PrimitiveCanvas(wx.ScrolledWindow):
         dc.DrawRectangle(x,y,w,h)
 
 
+    def eraseRect(self, dc, coord, size):
+        """ Simply draws a white filled rectangle.
+            
+            @param dc: The drawing context to draw on. You can get it from 
+                beginDrawing() method.
+            @param coord: A (x,y) tuple specifies the upper-left coordinates 
+                of the rectangle.
+            @param size: A (w,h) tuple defines the width and height of the 
+                rectangle. """
+        (x,y) = coord
+        (w,h) = size
+        
+        x *= 5; y *= 5; w *= 5; h *= 5
+        
+        dc.SetBrush( wx.Brush("WHITE") )
+        dc.SetPen( wx.Pen("WHITE", 1))
+        dc.DrawRectangle(x,y,w,h)
+
+
 
     def drawBMP(self, dc, bmp, coord, shift=(0,0)):
         """ Simply draws a given bmp at given position """

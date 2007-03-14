@@ -12,8 +12,8 @@ class CircuitMeta:
         mod_table = dict()
         mods = xml.xpath.Evaluate("/Circuit/Module",self._dom)
         for mod in mods:
-            (ID, name, pos, param) = self._getModule(mod.getAttribute("id"))
-            mod_table[ID] = (name, pos, param)
+            (ID, name, label, pos, param) = self._getModule(mod.getAttribute("id"))
+            mod_table[ID] = (name, label, pos, param)
         self._logger.debug("Found %s"%mod_table)
         return mod_table
 
@@ -34,9 +34,10 @@ class CircuitMeta:
         node = xml.xpath.Evaluate("/Circuit/Module[@id=%s]"%ID, self._dom)[0]
         ID = node.getAttribute("id")
         name = node.getAttribute("name")
+        label = node.getAttribute("label")
         pos = ( int(node.getAttribute("x")), int(node.getAttribute("y")) )
         params = self._getParameterDict(ID)
-        return (ID, name, pos, params)
+        return (ID, name, label, pos, params)
 
     def _getParameterDict(self, ID):
         params = dict()

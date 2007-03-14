@@ -186,7 +186,7 @@ class ModuleBaseMeta:
         raise NotImplemented, "This method should be implemented by Module- or AssemblyMeta!"
 
 
-    def instanceGrafical(self, canvas, coordinates, parameters):
+    def instanceGrafical(self, canvas, coordinates, parameters, label=""):
         """ This method should be overrridden to implement the instancing of 
             the grafical representation. """
         raise NotImplemented, "This method should be implemented by Module- or AssemblyMeta!"
@@ -273,7 +273,7 @@ class ModuleMeta(ModuleBaseMeta):
         return cls(**parameters)
         
 
-    def instanceGrafical(self, canvas, coord, parameters):
+    def instanceGrafical(self, canvas, coord, parameters, label=""):
         # find archive:
         mod_archive = self.getArchive()
         if not os.path.isabs(mod_archive):
@@ -308,7 +308,7 @@ class ModuleMeta(ModuleBaseMeta):
             raise ModuleImportError("Can't find class %s in %s [%s]"%
                         (full_class_name, mod_archive, mod.__dict__.keys()))
         
-        return cls(canvas, coord, **parameters)
+        return cls(canvas, coord, label, **parameters)
         
 
 
@@ -359,18 +359,12 @@ class AssemblyMeta(ModuleBaseMeta):
         # instance an Assembly 
         return Assembly(mod_table, io_list)
 
+
     def getGraficClass(self): return None
 
-    def instanceGrafical(self, canvas, coord, parameters):
-        try: from edef.dev.circuit import DefaultGraficalModule
-        except:
-            self._d_logger.exception("Unable to import grafical default assembly!")
-            raise ModuleImportError("Unable to import grafical default assembly!")
-        outs = self.getOutputs()
-        for i in range(len(outs)): outs[i] = "o_"+outs[i]
-        ins  = self.getInputs()
-        for i in range(len(ins)): ins[i] = "i_"+ins[i]
-        return DefaultGraficalModule(canvas, coord, self.instance(parameters), outs+ins)
+
+    def instanceGrafical(self, canvas, coord, parameters, label=""):
+        raise Exception("Assembly can be loaded grafical")
 
 
     def checkDependencies(self):

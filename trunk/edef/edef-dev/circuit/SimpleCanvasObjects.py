@@ -44,8 +44,11 @@ class gModule(gMoveable):
     _rules          = None
     _pins           = None
     
-    def __init__(self, can, coord, name, rules):
-        self._name = name
+    def __init__(self, can, coord, name, label, rules):
+        self.setName(name)
+        if not label: self.setLabel(name.split(".")[-1])
+        else: self.setLabel(label)
+
         self._rules = rules #FIXME
 
         self._pins = {}
@@ -60,6 +63,17 @@ class gModule(gMoveable):
    
     def setName(self, name): self._name = name
     def getName(self): return self._name
+
+
+    def getLabel(self): return self._label
+    def setLabel(self, label, auto_redraw=False):
+        self._label = label
+        if auto_redraw:
+            dc = self.getCanvas().beginDrawing()
+            self.getCanvas().eraseRect(dc, self.getPosition(), self.getSize())
+            self.draw(dc)
+            self.getCanvas().endDrawing(dc)
+
 
     def setPosition(self, pos):
         gMoveable.setPosition(self, pos)
@@ -80,8 +94,7 @@ class gModule(gMoveable):
         _x,_y = self.getPosition()
         _w,_h = self.getSize()
 
-        name = self.getName()
-        name = name.split(".")[-1]
+        name = self.getLabel()
         self._canvas.drawTitle(dc, name, (_x+int(_w/2), _y+1) )
     
     

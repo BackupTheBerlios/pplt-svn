@@ -29,6 +29,7 @@
 
 import wx
 from ElementMapObjects import emModule, emConnection
+from SimpleCanvasObjects import gModule
 from Canvas import Canvas, coConnection
 import Events
 import edef
@@ -50,7 +51,7 @@ class ElementMap( Canvas ):
         self.Bind( Events.EVT_CAN_CONNECT, self.OnCanConnect)
         
 
-    def loadModule(self, uri, x, y, params=None): #FIXME handle params
+    def loadModule(self, uri, x, y, label="", params=None):
         self._logger.debug("load module %s @ (%s %s)"%(uri, x,y))
         
         (proto, path) = Tools.splitURI(uri)
@@ -72,7 +73,7 @@ class ElementMap( Canvas ):
 
         self._logger.debug("Instance and place module with params: %s"%params)
         try:
-            mod = self._importer.loadGrafical(self, (x,y), name, params)
+            mod = self._importer.loadGrafical(self, (x,y), name, label, params)
         except Exception, e:
             showExceptionDialog(self, -1, "Unable to load/import module \"%s\""%name)
 
@@ -140,8 +141,10 @@ class ElementMap( Canvas ):
             return
 
         _id_remove = wx.NewId()
+        
         _ctx_menu = wx.Menu()
         _ctx_menu.Append(_id_remove, "remove connection")
+        
         self.Bind(wx.EVT_MENU, self.OnRemove, id=_id_remove)
         
         self.PopupMenu(_ctx_menu)
@@ -152,10 +155,16 @@ class ElementMap( Canvas ):
         if not isinstance(evt.GetObject(), emModule):
             evt.Skip()
             return
+        
         _id_remove = wx.NewId()
+        _id_edit_label = wx.NewId()
+        
         _ctx_menu = wx.Menu()
         _ctx_menu.Append(_id_remove, "remove module")
+        _ctx_menu.Append(_id_edit_label, "edit label")
+        
         self.Bind(wx.EVT_MENU, self.OnRemove, id=_id_remove)
+        self.Bind(wx.EVT_MENU, self.OnEditLabel, id=_id_edit_label)
         
         self.PopupMenu(_ctx_menu)
         evt.Skip()
@@ -171,6 +180,21 @@ class ElementMap( Canvas ):
         self.delObject(self.getSelection())
         self.unsetSelection()
         self.redraw()
+
+
+    def OnEditLabel(self, evt):
+        assert isinstance(self.getSelection(), gModule)
+        old_label = self.getSelection().getLabel()
+
+        dlg = EditLabelDialog(self, -1, old_label)
+        if wx.ID_CANCEL == dlg.ShowModal():
+            dlg.Destroy()
+            return
+        new_label = dlg.getLabel()
+        dlg.Destroy()
+
+        self.getSelection().setLabel(new_label, True)
+        self.OnModified()
 
 
     def OnModified(self):
@@ -222,3 +246,27 @@ class ParameterDialog(wx.Dialog):
 
 
 
+
+
+
+class EditLabelDialog(wx.Dialog):
+    def __init__(self, parent, ID, old_label):
+        wx.Dialog.__init__(self, parent, ID, "Edit label of Module")
+        
+        box = wx.BoxSizer(wx.VERTICAL)
+
+        txt = wx.StaticText(self, -1, "Enter (new) label of module:")
+        box.Add(txt, 0, wx.EXPAND|wx.ALL|wx.ALIGN_CENTER, 10)
+
+        self._label = wx.TextCtrl(self, -1, old_label)
+        box.Add(self._label, 0, wx.EXPAND|wx.LEFT|wx.BOTTOM|wx.RIGHT|wx.ALIGN_CENTER, 10)
+    
+        bbox = self.CreateStdDialogButtonSizer(wx.OK|wx.CANCEL)
+        box.Add(bbox, 1, wx.EXPAND|wx.ALL|wx.ALIGN_CENTER,10)
+
+        self.SetSizer(box)
+        box.Fit(self)
+
+
+    def getLabel(self):
+        return self._label.GetValue()

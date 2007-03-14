@@ -32,14 +32,14 @@ class emConnection( coConnection ):
 
 class emModule( gModule ):
 
-    def __init__(self, canvas, pos, name, parameters):
+    def __init__(self, canvas, pos, name, label, parameters):
         #self._logger = logging.getLogger("edef.dev")
         imp = edef.Importer()
         (path, module_meta) = imp.getModuleMeta(name)
 
         #FIXME: layout_rules = meta.getLayoutRules()
         layout_rules = None
-        gModule.__init__(self, canvas, pos, name, layout_rules)
+        gModule.__init__(self, canvas, pos, name, label, layout_rules)
 
         for pin in module_meta.getInputs(): gPin(self, "i_"+pin)
         for pin in module_meta.getOutputs(): gPin(self, "o_"+pin)
@@ -53,13 +53,13 @@ class DefaultGraficModule(emModule):
     _name   = None
     _parameters = None
 
-    def __init__(self, canvas, pos, name, parameters):
+    def __init__(self, canvas, pos, name, label, parameters):
         # instance the edef-module to be wrapped
         imp = edef.Importer()
         self._module = imp.load(name, parameters)
         self._parameters = parameters
         self._name = name
-        emModule.__init__(self, canvas, pos, name, parameters)
+        emModule.__init__(self, canvas, pos, name, label, parameters)
 
     def __del__(self):
         self._logger.debug("Destroy DefaultGraficalModule")
@@ -76,6 +76,7 @@ class DefaultGraficModule(emModule):
 
         mod_node.setAttribute("id", str(ID))
         mod_node.setAttribute("name", self.getName())
+        mod_node.setAttribute("label", self.getLabel())
         mod_node.setAttribute("x", str(x))
         mod_node.setAttribute("y", str(y))
         

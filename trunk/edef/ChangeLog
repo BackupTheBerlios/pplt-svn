@@ -1,3 +1,7 @@
+2007-03-??: Hannes Matuschek <hmatuschek@gmail.com> (rev.98)
+	* edef-dev/circuit/*, edef/Importer.py, edef/ModuleMeta.py:
+		gModules have labels now
+
 2007-03-14: Hannes Matuschek <hmatuschek@gmail.com> (rev.98)
 	* edef-dev/circuit/*:
 		- added some dialogs/message-boxes
