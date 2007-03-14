@@ -517,7 +517,7 @@ class SimpleCanvas(PrimitiveCanvas):
         obj = self.hitTest(coord)
         
         # handle dragging:
-        if self._mouse_left_down and not self._dragging:
+        if obj and self._mouse_left_down and not self._dragging:
             self._emmitCanvasBeginDrag(coord, obj)
         elif self._dragging:
             self._emmitCanvasDragging(coord)
@@ -565,8 +565,15 @@ class SimpleCanvas(PrimitiveCanvas):
         evt.Skip()
 
     def _sc_OnDragging(self, evt):
-        # FIXME maybe we should show here a simple square  
-        pass
+        if not isinstance(self._begin_drag_object, gMoveable):
+            evt.Skip(); return
+        pos  = evt.GetCoordinates()
+        size = self._begin_drag_object.getSize()
+        dc = self.beginDrawing()
+        dc.Clear()
+        SimpleCanvas.draw(self, dc)
+        self.drawRectangle(dc, pos, size)
+        self.endDrawing(dc)
 
     def _sc_OnEndDrag(self, evt):
         start_obj = self._begin_drag_object
@@ -645,7 +652,7 @@ class gObject:
     def draw(self, dc):
         """ This method have to be overridden to implement darwing of the 
             object """
-        raise Exception("Not inplemented yet")
+        pass
     
 
     def drawSelected(self, dc):
@@ -658,6 +665,13 @@ class gObject:
         """ This method have to be overridden. It should return self if it is
             hited by the given coordinates. """
         raise Exception("Not implemented yet")
+
+
+    def toXML(self, dom):
+        """ This method should be overridden! It should assemble and return an
+            XML Element """
+        raise Exception("Not implemented yet")
+
 
 
 
@@ -674,6 +688,7 @@ class gMoveable(gObject):
                 coordinates. Can be reseted by the C{setPosition()} method.
             """
         self._coordinates = coordinates
+        self._size = (0,0)
         gObject.__init__(self, canvas)
         
 
@@ -681,8 +696,8 @@ class gMoveable(gObject):
         """ This method should be overridden! It should reset the internal 
             used coordinates (C{self._coordinates}). So if the module's draw()
             method is called, it will be drawn at the new position! """
+        assert isinstance(coordinates, tuple)
         self._coordinates = coordinates
-
 
     def getPosition(self):
         """ Retunrn the current coordinates. """
@@ -692,7 +707,12 @@ class gMoveable(gObject):
     def getSize(self):
         """ This method should return the size (width, height) of the 
             object. """
-        raise Exception("Not implmeneted yet")
+        return self._size
+
+    def setSize(self, size):
+        """ This method can be used to set the size. """
+        assert isinstance(size, tuple)
+        self._size = size
 
 
 

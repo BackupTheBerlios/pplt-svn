@@ -32,7 +32,7 @@ from ElementMapObjects import emModule, emConnection
 from Canvas import Canvas, coConnection
 import Events
 import edef
-from edef.dev import Tools
+from edef.dev import Tools, showExceptionDialog
 
 
 class ElementMap( Canvas ):
@@ -74,10 +74,7 @@ class ElementMap( Canvas ):
         try:
             mod = self._importer.loadGrafical(self, (x,y), name, params)
         except Exception, e:
-            wx.MesageBox("Unable to load/import module \"%s\""%name,
-                         "Import Error",
-                         wx.OK|wx.ICON_ERROR, self, -1)
-            raise e
+            showExceptionDialog(self, -1, "Unable to load/import module \"%s\""%name)
 
         self.redraw()
         self.OnModified()
@@ -105,10 +102,7 @@ class ElementMap( Canvas ):
         try:
             con = emConnection(frm,to)
         except Exception, e:
-            wx.MessageBox("Unable to connect %s with %s"%(frm.getName(),to.getName()),
-                          "Connection error",
-                          wx.OK|wx.ICON_ERROR, self, -1)
-            raise e
+            showExceptionDialog(self, -1, "Unable to connect %s with %s"%(frm.getName(),to.getName()))
 
         if auto_redraw: self.redraw()
         self.OnModified()   #

@@ -136,7 +136,7 @@ class Importer:
             return DefaultGraficModule(canvas, coordinates, name, parameters)
         
         # if a graficmodule is specified
-        self._d_logger.debug("Instance defined graficmodule %s with params %s"%(mod_name,parameters))
+        self._d_logger.debug("Instance defined graficmodule %s with params %s"%(name,parameters))
         return mod_meta.instanceGrafical(canvas, coordinates, parameters)
    
 

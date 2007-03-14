@@ -31,6 +31,8 @@ import re
 from copy import copy
 from SimpleCanvas import SimpleCanvas, gObject, gMoveable, gConnectable
 import weakref
+from leftarrow import getBitmap as getLeftArrowBitmap
+from rightarrow import getBitmap as getRightArrowBitmap
 
 
 #
@@ -41,7 +43,6 @@ class gModule(gMoveable):
     _name           = None
     _rules          = None
     _pins           = None
-    _width, _height = None, None
     
     def __init__(self, can, coord, name, rules):
         self._name = name
@@ -53,14 +54,66 @@ class gModule(gMoveable):
         
         self._apply_position_rules()
         
-        self._width = 20
-        self._height = self._calcHeight()
-        
-
-
-    def getSize( self ): return (self._width, self._height)
+        self.setSize( (20,self._calcHeight()) )
+    
 
    
+    def setName(self, name): self._name = name
+    def getName(self): return self._name
+
+    def setPosition(self, pos):
+        gMoveable.setPosition(self, pos)
+        self._apply_position_rules()
+
+
+    def getPin(self, name): return self._pins[name]
+    def addPin(self, pin):
+        name = pin.getName()
+        if name in self._pins.keys(): raise Exception("Pin allready exists")
+        self._pins[name] = pin
+        self._apply_position_rules()
+        (w,h) = self.getSize()
+        self.setSize( (w,self._calcHeight()) )
+
+    
+    def drawTitle(self, dc):
+        _x,_y = self.getPosition()
+        _w,_h = self.getSize()
+
+        name = self.getName()
+        name = name.split(".")[-1]
+        self._canvas.drawTitle(dc, name, (_x+int(_w/2), _y+1) )
+    
+    
+    def draw(self, dc):
+        _x, _y = self.getPosition()
+        _w, _h = self.getSize()
+        self._canvas.drawRectangle(dc, self.getPosition(), self.getSize() )
+        
+        self.drawTitle(dc)
+
+        for name in self._left_side_pins: self._pins[name].draw(dc)
+        for name in self._right_side_pins: self._pins[name].draw(dc)
+
+
+    def drawSelected(self, dc):
+        self._canvas.drawRectangle(dc, self.getPosition(), self.getSize(), "RED")
+
+
+    def hitTest(self, coord):
+        mx, my = coord
+        _x,_y = self.getPosition()
+        _w,_h = self.getSize()
+        for name in self._left_side_pins:
+            pin = self._pins[name].hitTest(coord)
+            if pin: return pin
+        for name in self._right_side_pins:
+            pin = self._pins[name].hitTest(coord)
+            if pin: return pin
+        if (mx >= _x and mx <= _x+_w) and (my >= _y and my <= _y+_h):
+            return self
+
+
     def _apply_position_rules(self):
         """ This method applyes the defined layout-rules and fills the
             left or right side lists of pins """
@@ -70,6 +123,7 @@ class gModule(gMoveable):
         self._right_side_pins = []
         
         _x,_y = self.getPosition()
+        _w,_h = self.getSize()
 
         for pin_name in pins:
             in_m = re.match("^i_(.+)$",pin_name)
@@ -82,7 +136,7 @@ class gModule(gMoveable):
                 self._left_side_pins.append( pin_name )
             elif out_m:
                 y = _y+7+len(self._right_side_pins)*3
-                x = _x+self._width
+                x = _x+_w
                 self._pins[pin_name].setPosition((x,y))
                 self._pins[pin_name].setOrientation(wx.RIGHT)
                 self._right_side_pins.append( pin_name )
@@ -95,48 +149,7 @@ class gModule(gMoveable):
             max_len = len(self._right_side_pins)
         return max_len*3+8
 
-
-    def addPin(self, pin):
-        name = pin.getName()
-        if name in self._pins.keys(): raise Exception("Pin allready exists")
-        self._pins[name] = pin
-        self._apply_position_rules()
-        self._height = self._calcHeight()
-
-    
-    def getPin(self, name): return self._pins[name]
-
-    
-    def draw(self, dc):
-        _x, _y = self.getPosition()
-        self._canvas.drawRectangle(dc, self.getPosition(), self.getSize() )
-        self._canvas.drawTitle(dc, self._name, (_x+int(self._width/2), _y+1) )
-        
-        for name in self._left_side_pins: self._pins[name].draw(dc)
-        for name in self._right_side_pins: self._pins[name].draw(dc)
-
-
-    def drawSelected(self, dc):
-        self._canvas.drawRectangle(dc, self.getPosition(), self.getSize(), "RED")
-
-
-    def hitTest(self, coord):
-        mx, my = coord
-        _x,_y = self.getPosition()
-        for name in self._left_side_pins:
-            pin = self._pins[name].hitTest(coord)
-            if pin: return pin
-        for name in self._right_side_pins:
-            pin = self._pins[name].hitTest(coord)
-            if pin: return pin
-        if (mx >= _x and mx <= _x+self._width) and (my >= _y and my <= _y+self._height):
-            return self
-
-
-    def setPosition(self, pos):
-        gMoveable.setPosition(self, pos)
-        self._apply_position_rules()
-
+ 
 
 
 class gPin(gConnectable):
@@ -149,14 +162,22 @@ class gPin(gConnectable):
         self._position = wx.LEFT
         self._x, self._y = (0,0)
         self._module_ref().addPin(self)
+        self._left_bmp = getLeftArrowBitmap()
+        self._right_bmp = getRightArrowBitmap()
 
 
     def draw(self, dc):
         if self._position == wx.LEFT:
-            self._canvas.drawText(dc, self._display_name, (self._x+2,self._y), wx.LEFT)
+            if re.match("^i_", self._name): bmp = self._right_bmp
+            else: bmp = self._left_bmp
+            self._canvas.drawBMP(dc, bmp, (self._x+2,self._y), (-1,0))
+            self._canvas.drawText(dc, self._display_name, (self._x+3,self._y), wx.LEFT)
             self._canvas.drawPin(dc, (self._x,self._y) )
         else:
-            self._canvas.drawText(dc, self._display_name, (self._x-1,self._y), wx.RIGHT)
+            if re.match("^i_", self._name): bmp = self._left_bmp
+            else: bmp = self._right_bmp
+            self._canvas.drawBMP(dc, bmp, (self._x-2,self._y))
+            self._canvas.drawText(dc, self._display_name, (self._x-2,self._y), wx.RIGHT)
             self._canvas.drawPin(dc, (self._x,self._y), wx.RIGHT)
 
     

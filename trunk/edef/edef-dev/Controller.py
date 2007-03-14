@@ -1,6 +1,5 @@
 from Model import eDevModel
-from Dialogs import eDevSaveAsDialog
-from Dialogs import eDevDiscardDialog
+from Dialogs import eDevDiscardDialog, showExceptionDialog
 from NavigatorPanel import NavigatorPanel
 import wx
 from edef import Singleton
@@ -53,8 +52,12 @@ class eDevController:
             self._d_notebook.selectPageByURI( uri )
             return 
         
-        self._d_notebook.openURI(uri)
-        self._d_main_frame.bindClose(self.OnDocumentClose)
+        try:
+            self._d_notebook.openURI(uri)
+            self._d_main_frame.bindClose(self.OnDocumentClose)
+        except:
+            showExceptionDialog(self._d_notebook, -1,
+                                "Unable to open document %s"%uri)
 
 
     def DocumentDelete(self, uri):
@@ -63,11 +66,17 @@ class eDevController:
                                 "delete?", wx.YES|wx.NO)
         if dlg.ShowModal() == wx.ID_NO:
             raise Exception("Delete aborted")
+        
         # delete
-        self._d_model.deleteURI( uri )
-        if self._d_notebook.hasPageURI( uri ):
-            self._d_notebook.closePage( self._d_notebook.getPageByURI( uri ) )
-
+        try:
+            self._d_model.deleteURI( uri )
+            if self._d_notebook.hasPageURI( uri ):
+                self._d_notebook.closePage( self._d_notebook.getPageByURI( uri ) )
+        except:
+            showExceptionDialog(self._d_notbook, -1,
+                                "Unable to delete document %s"%uri)
+            raise Exception("Delete aborted")
+        
 
     def DocumentClose(self):
         # FIXME this should be handled by an editor

@@ -220,7 +220,7 @@ class ModuleMeta(ModuleBaseMeta):
        
 
     def getGraficClass(self):
-        node = xml.xpath.Evaluate("Layout/@class",self._d_dom)
+        node = xml.xpath.Evaluate("string(Layout/@class)",self._d_dom)
         if node: return node.strip()
         return None
 
@@ -286,7 +286,7 @@ class ModuleMeta(ModuleBaseMeta):
                     %(mod_archive, str(e)))
         
         # try to find module in module-archive
-        full_class_name = self.getGraficalClass()
+        full_class_name = self.getGraficClass()
         if not full_class_name:
             raise Exception("No grafic-class specified!")
         
@@ -421,3 +421,12 @@ class AssemblyMeta(ModuleBaseMeta):
 
         return self._d_importer.load(mod_name, mod_parameters)
 
+
+
+
+
+def validateMetaString(xml_str): pass   # FIXME implement
+def validateMetaFile(file_path): pass   # FIXME implement
+
+def validateModuleMeta(dom): pass       # FIXME implement
+def validateAssemblyMeta(dom): pass     # FIXME implement

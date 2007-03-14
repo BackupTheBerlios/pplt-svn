@@ -1,3 +1,4 @@
+from SimpleCanvasObjects import gModule, gPin
 from ElementMapObjects import DefaultGraficModule
 import edef
 import edef.dev

@@ -4,3 +4,5 @@ from NavigatorPanel import NavigatorPanel
 from EditorInterface import eDevEditorInterface as EditorInterface
 from Config import eDevConfig as Config
 from ComponentManager import ComponentManager
+
+from Dialogs import ExceptionDialog, showExceptionDialog

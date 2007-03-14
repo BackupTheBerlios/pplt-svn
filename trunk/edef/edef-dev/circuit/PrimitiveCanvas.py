@@ -214,7 +214,7 @@ class PrimitiveCanvas(wx.ScrolledWindow):
                 beginDrawing() method.
             @param txt: The string to draw.
             @param where: A (x,y) tuple where to put the text. """
-        dc.SetFont( wx.Font(12, wx.SWISS, wx.NORMAL, wx.BOLD) )
+        dc.SetFont( wx.Font(10, wx.SWISS, wx.NORMAL, wx.BOLD) )
         dc.SetTextForeground( wx.Colour(0x00,0x00,0x00) )
        
         (w,h) = dc.GetTextExtent(txt)
@@ -269,3 +269,10 @@ class PrimitiveCanvas(wx.ScrolledWindow):
         dc.DrawRectangle(x,y,w,h)
 
 
+
+    def drawBMP(self, dc, bmp, coord, shift=(0,0)):
+        """ Simply draws a given bmp at given position """
+        (x,y) = coord
+        (dx, dy) = shift
+        x,y = x*5+dx,y*5+dy
+        dc.DrawBitmap(bmp, x, y)

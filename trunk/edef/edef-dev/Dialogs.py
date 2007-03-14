@@ -1,6 +1,9 @@
 import wx
 from Model import eDevModel
 import Tools
+import sys
+import traceback
+
 
 class eDevSaveAsDialog(wx.Dialog):
     def __init__(self, parent, ID):
@@ -81,6 +84,37 @@ class eDevDiscardDialog(wx.Dialog):
         self.SetSizer(box)
         box.Fit(self)
 
+
+
+class ExceptionDialog(wx.Dialog):
+    def __init__(self, parent, ID, message):
+        wx.Dialog.__init__(self, parent, ID, "Exception")
+
+        box = wx.BoxSizer(wx.VERTICAL)
+        
+        msg = wx.StaticText(self, -1, message)
+        msg.SetFont(wx.Font(14, wx.SWISS, wx.NORMAL, wx.NORMAL))
+        box.Add(msg, 0, wx.CENTER|wx.ALL, 10)
+
+        (ex_type, ex_value, ex_tb) = sys.exc_info()
+        ex  = wx.StaticText(self, -1, "Exception: %s \n  reason: %s"%(str(ex_type), str(ex_value)))
+        box.Add(ex, 0, wx.CENTER|wx.LEFT|wx.RIGHT, 10)
+
+        tb = wx.TextCtrl(self, -1, traceback.format_exc(ex_tb),
+                         style = wx.TE_READONLY|wx.TE_MULTILINE|wx.TE_DONTWRAP)
+        box.Add(tb, 1, wx.CENTER|wx.GROW|wx.ALL, 10)
+        del ex_tb
+
+        bbox = self.CreateStdDialogButtonSizer(wx.OK)
+        box.Add(bbox, 0, wx.CENTER|wx.ALL, 10)
+
+        self.SetSizer(box)
+        box.Fit(self)
+   
+
+def showExceptionDialog(parent, ID, message):
+    dlg = ExceptionDialog(parent, ID, message)
+    return dlg.ShowModal()
 
 
 

@@ -5,11 +5,10 @@ from edef.dev.EditorInterface import eDevEditorInterface as EditorInterface
 from ElementMap import ElementMap
 from ElementMapObjects import emModule
 from edef.dev import Controller, Model, ComponentManager
-from edef.dev import Tools
+from edef.dev import Tools, showExceptionDialog
 from CircuitMeta import CircuitMeta
 from xml.dom.minidom import getDOMImplementation
-
-
+from Dialogs import SaveAsDialog
 
 
 class CircuitEditor(EditorInterface, ElementMap):
@@ -94,18 +93,19 @@ class CircuitEditor(EditorInterface, ElementMap):
 
 
     def OnSaveAs(self, evt):
-        selected = False
-        while not selected:
-            dlg = SaveAsDialog(self, -1)
-            if wx.ID_CANCEL == dlg.ShowModal(): return
-            uri = "circ://"+dlg.getSelection()
-            if self._model.checkURI(uri):
-                # FIXME override-dialog
-                continue
-            selected = True
-        
-        txt = self._to_xml().toprettyxml("  ")
-        self._model.saveURI(uri, txt)
+        dlg = SaveAsDialog(self, -1)
+        if dlg.ShowModal()==wx.ID_CANCEL:
+            dlg.Destroy()
+            return
+        uri = dlg.getSelection()
+        dlg.Destroy()
+
+        try:
+            txt = self._to_xml().toprettyxml("  ")
+            self._model.saveURI(uri, txt)
+        except:
+            showExceptionDialog(self, -1, "Unable to save file to %s"%uri)
+
         self.setURI(uri)
         self.setTitle(uri)
         self._circtree.addURI(uri)
@@ -160,27 +160,6 @@ class CircuitDropTarget(wx.TextDropTarget):
         self._editor.loadModule(uri, x, y)
 
 
-
-class SaveAsDialog(wx.Dialog):
-    def __init__(self, parent, ID):
-        wx.Dialog.__init__(self,parent, ID, title="Save circuit as")
-
-        box = wx.BoxSizer(wx.VERTICAL)
-
-        txt = wx.StaticText(self, -1, "Enter new (full) circuit name:")
-        box.Add(txt, 0, wx.ALL, 10)
-
-        self._name = wx.TextCtrl(self, -1)
-        box.Add(self._name, 1, wx.EXPAND|wx.ALIGN_CENTER|wx.LEFT|wx.RIGHT|wx.BOTTOM, 20)
-
-        bbox = self.CreateStdDialogButtonSizer(wx.OK|wx.CANCEL)
-        box.Add(bbox, 1, wx.ALIGN_CENTER|wx.ALL, 10)
-
-        self.SetSizer(box)
-        box.Fit(self)
-
-    def getSelection(self):
-        return "/".join(self._name.GetValue().split("."))
 
 
 

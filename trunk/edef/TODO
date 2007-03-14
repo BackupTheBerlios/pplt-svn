@@ -3,12 +3,25 @@
     * Check if there are some dead-locks in EventManager!
 
 
-=== Tasks for edef-dev ===
-    * Make "editors" to be components -> an editor-comp, description-comp and
-        later may be a circuit-comp (simulation)
+== Tasks for edef-dev ==
+    * All "models" should validate threre data!
+    * A module can specify a grafical representation as a python-class!
+        - define an interface 
+        - test if "normal" wxWindows can be placed into the canvas
+    * Improove the A* algorithm in edef-dev/circuit/Canvas.py! 
+    * Add a logger-window
+    * Write an Assembly-editor
+    * Support dynamic inputs/outputs
+    
+
+=== Bugs ===
+    * There are sometimes import-errors while loading a module from an archive
+      that was edited. Workaround: Restart edef-dev to get rid of import 
+      errors.
 
 
 
 = Long term tasks =
+    * Add a component to check boolean modules by a value-table
     * rewrite edef/EventManager.py: it is an ungly, complex chunk of code!
-
+    * Find and solve all FIXMEs 

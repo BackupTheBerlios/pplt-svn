@@ -1,4 +1,5 @@
 import sys
+import wx
 import Events
 from SimpleCanvas import SimpleCanvas
 from Costmap import CanvasCostmap
@@ -15,6 +16,9 @@ class Canvas(SimpleCanvas):
 
 
     def route(self, frm_pin, to_pin, gc=None):
+        self._logger.debug("Begin routing. Set cursor")
+        wx.BusyCursor()
+
         frm = frm_pin.getPosition()
         to  = to_pin.getPosition()
 
@@ -141,7 +145,7 @@ class coConnection (gWire):
         """ Will be called by the redraw() method of Canvas to reroute the 
             wire. """
         can = self.getCanvas()
-        route = can.route( self.getFrom(), self.getTo(), dc )
+        route = can.route( self.getFrom(), self.getTo())#, dc )
         self.setNodes(route[1:-1])
 
 

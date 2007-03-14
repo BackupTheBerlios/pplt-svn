@@ -1,4 +1,11 @@
-2007-03-??: Hannes Matuschek <hmatuschek@gmail.com> (rev.97)
+2007-03-14: Hannes Matuschek <hmatuschek@gmail.com> (rev.98)
+	* edef-dev/circuit/*:
+		- added some dialogs/message-boxes
+		- now shows a wx.BusyCursor while calc route
+		- added icons to Pins
+
+
+2007-03-13: Hannes Matuschek <hmatuschek@gmail.com> (rev.97)
 	* edef-dev/eventmanager/__init__.py:
 		insert menu before "Help"
 	* edef-dev/pyeditor/__init__.py:
