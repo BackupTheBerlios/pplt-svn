@@ -44,10 +44,9 @@ class gModule(gMoveable):
     _rules          = None
     _pins           = None
     
-    def __init__(self, can, coord, name, label, rules):
+    def __init__(self, can, coord, name, rules):
         self.setName(name)
-        if not label: self.setLabel(name.split(".")[-1])
-        else: self.setLabel(label)
+        self.setLabel(name.split(".")[-1])
 
         self._rules = rules #FIXME
 

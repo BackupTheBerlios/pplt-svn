@@ -45,8 +45,10 @@ class CircuitEditor(EditorInterface, ElementMap):
         mods = meta.getModules()
         
         for (ID, (name, label, (x,y), params)) in mods.items():
+            self._logger.debug("Load module %s as %s @ %s,%s"%(name, label, x,y))
             moduri = "mod://"+"/".join(name.split("."))
-            mod_table[ID] = self.loadModule(moduri, x,y, label, params)
+            mod_table[ID] = self.loadModule(moduri, x,y, params)
+            mod_table[ID].setLabel(label)
             wire_list += meta.getWires(ID)
             
         for ( frm, to ) in wire_list:
@@ -157,7 +159,7 @@ class CircuitDropTarget(wx.TextDropTarget):
         if not re.match("^mod://",uri):
             raise Exception("Can only place modules here!")
         (x,y) = self._editor._convertCoords( (x,y) )
-        self._editor.loadModule(uri, x, y, "")
+        self._editor.loadModule(uri, x, y)
 
 
 

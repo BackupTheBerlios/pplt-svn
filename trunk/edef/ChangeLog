@@ -1,4 +1,9 @@
-2007-03-??: Hannes Matuschek <hmatuschek@gmail.com> (rev.98)
+2007-03-15: Hannes Matuschek <hmatuschek@gmail.com> (rev.100)
+	* edef-dev/*: 
+		- added some icons
+		- simplified usage of labels
+
+2007-03-14: Hannes Matuschek <hmatuschek@gmail.com> (rev.99)
 	* edef-dev/circuit/*, edef/Importer.py, edef/ModuleMeta.py:
 		gModules have labels now
 

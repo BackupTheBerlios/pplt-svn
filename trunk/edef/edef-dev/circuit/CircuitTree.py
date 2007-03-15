@@ -3,6 +3,8 @@ from edef.dev import Model, Controller, NavigatorPanel
 import os.path
 import re
 from edef.dev import Tools
+from icon_circuit import getBitmap as getCircuitBitmap
+
 
 class CircuitTreePanel(NavigatorPanel):
     def __init__(self, parent, ID):
@@ -25,7 +27,7 @@ class CircuitTree(wx.TreeCtrl):
         self._d_imgs = wx.ImageList(16,16)
         self._bmp_class = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16,16)) )
         self._bmp_class_open = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16,16)) )
-        self._bmp_module = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, (16,16)) )
+        self._bmp_module = self._d_imgs.Add( getCircuitBitmap() )
         self.SetImageList(self._d_imgs)
 
         self._d_model = Model()

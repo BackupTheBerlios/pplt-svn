@@ -5,6 +5,9 @@ from edef.dev.NavigatorPanel import NavigatorPanel
 from Tools import getArchive, getPyFile, isArchiveURI, isPyFileURI, splitPyFile
 from edef.dev import Tools
 from edef.dev import Dialogs
+from icon_archive import getBitmap as getArchiveBitmap
+from icon_python import getBitmap as getPythonBitmap
+
 
 
 class ArchiveTreePanel(NavigatorPanel):
@@ -24,9 +27,9 @@ class ArchiveTree(wx.TreeCtrl):
                              style=wx.TR_HAS_BUTTONS|wx.TR_HIDE_ROOT|wx.TR_NO_LINES|wx.TR_FULL_ROW_HIGHLIGHT)
         
         self._d_imgs = wx.ImageList(16,16)
-        self._bmp_class = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16,16)) )
-        self._bmp_class_open = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_FOLDER, wx.ART_OTHER, (16,16)) )
-        self._bmp_module = self._d_imgs.Add( wx.ArtProvider_GetBitmap(wx.ART_NORMAL_FILE, wx.ART_OTHER, (16,16)) )
+        self._bmp_class = self._d_imgs.Add( getArchiveBitmap() )
+        self._bmp_class_open = self._d_imgs.Add( getArchiveBitmap() )
+        self._bmp_module = self._d_imgs.Add( getPythonBitmap() )
         self.SetImageList(self._d_imgs)
 
         self._d_model = Model()

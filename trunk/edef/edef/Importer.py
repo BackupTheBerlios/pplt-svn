@@ -113,7 +113,7 @@ class Importer:
         return mod_meta.instance(parameters)
 
 
-    def loadGrafical(self, canvas, coordinates, name, label="", parameters=None):
+    def loadGrafical(self, canvas, coordinates, name, parameters=None):
         """ Loads a module as it's grafical representaion. The instance 
             behaves like a normal module. """
         # find module meta:
@@ -133,11 +133,11 @@ class Importer:
             except:
                 self._d_logger.exception("Unabel to load default grafic module!")
                 raise ModuleImportError("Unable to load defualt grafic for %s"%name)
-            return DefaultGraficModule(canvas, coordinates, name, label, parameters)
+            return DefaultGraficModule(canvas, coordinates, name, parameters)
         
         # if a graficmodule is specified
         self._d_logger.debug("Instance defined graficmodule %s with params %s"%(name,parameters))
-        return mod_meta.instanceGrafical(canvas, coordinates, parameters, label)
+        return mod_meta.instanceGrafical(canvas, coordinates, parameters)
    
 
     def getModuleMeta(self, mod_name):

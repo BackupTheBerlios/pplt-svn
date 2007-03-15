@@ -6,7 +6,7 @@ from edef.dev import NavigatorPanel
 from ArchiveTree import ArchiveTreePanel
 from PythonEditor import PythonEditor
 import ModelArchive
-
+from icon_add_archive import getBitmap as getAddArchiveBitmap
 
 class PyEditComponent:
 
@@ -28,8 +28,10 @@ class PyEditComponent:
         pos = menu.GetMenuItemCount()-2
         if pos < 0: pos=0
         menu.InsertSeparator(pos)
-        menu.Insert(pos+1,self._new_archive_id, "New Archive")
-        
+        item = wx.MenuItem(menu, self._new_archive_id, "New Archive")
+        item.SetBitmap( getAddArchiveBitmap() )
+        menu.InsertItem(pos+1, item)
+
         main_frame.Bind(wx.EVT_MENU, self.OnNewArchive, id=self._new_archive_id)
 
 

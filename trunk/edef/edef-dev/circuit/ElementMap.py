@@ -51,8 +51,8 @@ class ElementMap( Canvas ):
         self.Bind( Events.EVT_CAN_CONNECT, self.OnCanConnect)
         
 
-    def loadModule(self, uri, x, y, label="", params=None):
-        self._logger.debug("load module %s @ (%s %s)"%(uri, x,y))
+    def loadModule(self, uri, x, y, params=None):
+        self._logger.debug("load module %s @ (%s %s) with %s"%(uri, x,y, params))
         
         (proto, path) = Tools.splitURI(uri)
         name = ".".join(path.split("/"))
@@ -73,7 +73,7 @@ class ElementMap( Canvas ):
 
         self._logger.debug("Instance and place module with params: %s"%params)
         try:
-            mod = self._importer.loadGrafical(self, (x,y), name, label, params)
+            mod = self._importer.loadGrafical(self, (x,y), name, params)
         except Exception, e:
             showExceptionDialog(self, -1, "Unable to load/import module \"%s\""%name)
 

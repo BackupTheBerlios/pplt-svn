@@ -85,9 +85,9 @@ class ModuleBaseMeta:
         
         for node in nodes:
             if node.hasAttribute("default"):
-                params.append( (node.getAttribute("name"), node.getAttribute("default")) )
+                params.append( (str(node.getAttribute("name")), node.getAttribute("default")) )
             else:
-                params.append( (node.getAttribute("name"), None) )
+                params.append( (str(node.getAttribute("name")), None) )
         return params
 
 
@@ -114,7 +114,7 @@ class ModuleBaseMeta:
         # and add the rest
         nodes = xml.xpath.Evaluate("Requires/Parameter[@default]", self._d_dom)
         for node in nodes:
-            name = node.getAttribute("name")
+            name = str(node.getAttribute("name"))
             defval = node.getAttribute("default")
             if not name in params.keys():
                 params[name] = defval
@@ -124,7 +124,7 @@ class ModuleBaseMeta:
         # FIXME test me
         """ This method will return the description-string for the given 
             parameter. The language can be selected. """
-        query = "string(Requires/Parameter[@name='%s']/Description[@lang=%s]/text())"%(name, lang)
+        query = "string(Requires/Parameter[@name='%s']/Description[@lang=%s]/text())"%(str(name), lang)
         node = xml.xpath.Evaluate(query, self._d_dom)
         return node.strip()
 
@@ -138,7 +138,7 @@ class ModuleBaseMeta:
         lst = []
         for node in qlst:
             if re.match(token, node.getAttribute("name")):
-                lst.append(node.getAttribute("name"))
+                lst.append(str(node.getAttribute("name")))
         return lst
 
     def getOutputs(self, token=".*"):
@@ -151,7 +151,7 @@ class ModuleBaseMeta:
         lst = []
         for node in qlst:
             if re.match(token, node.getAttribute("name")):
-                lst.append(node.getAttribute("name"))
+                lst.append(str(node.getAttribute("name")))
         return lst
 
 
@@ -186,7 +186,7 @@ class ModuleBaseMeta:
         raise NotImplemented, "This method should be implemented by Module- or AssemblyMeta!"
 
 
-    def instanceGrafical(self, canvas, coordinates, parameters, label=""):
+    def instanceGrafical(self, canvas, coordinates, parameters):
         """ This method should be overrridden to implement the instancing of 
             the grafical representation. """
         raise NotImplemented, "This method should be implemented by Module- or AssemblyMeta!"
@@ -273,7 +273,7 @@ class ModuleMeta(ModuleBaseMeta):
         return cls(**parameters)
         
 
-    def instanceGrafical(self, canvas, coord, parameters, label=""):
+    def instanceGrafical(self, canvas, coord, parameters):
         # find archive:
         mod_archive = self.getArchive()
         if not os.path.isabs(mod_archive):
@@ -308,7 +308,7 @@ class ModuleMeta(ModuleBaseMeta):
             raise ModuleImportError("Can't find class %s in %s [%s]"%
                         (full_class_name, mod_archive, mod.__dict__.keys()))
         
-        return cls(canvas, coord, label, **parameters)
+        return cls(canvas, coord, **parameters)
         
 
 
@@ -363,8 +363,8 @@ class AssemblyMeta(ModuleBaseMeta):
     def getGraficClass(self): return None
 
 
-    def instanceGrafical(self, canvas, coord, parameters, label=""):
-        raise Exception("Assembly can be loaded grafical")
+    def instanceGrafical(self, canvas, coord, parameters):
+        raise Exception("Assembly can not be loaded grafical")
 
 
     def checkDependencies(self):
