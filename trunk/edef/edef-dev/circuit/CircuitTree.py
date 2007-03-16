@@ -166,11 +166,11 @@ class CircuitTree(wx.TreeCtrl):
         if not item: return
         (typ, uri) = self.GetPyData(item)
         if typ == "Circuit":
-            self._d_mainframe.bindOpen(self.OnCircuitOpen)
-            self._d_mainframe.bindDelete(self.OnCircuitDelete)
+            self._d_mainframe.bindOpen(self.OnCircuitOpen, "&Open circuit")
+            self._d_mainframe.bindDelete(self.OnCircuitDelete, "&Delete circuit")
         elif typ == "Class":
-            self._d_mainframe.bindOpen(self.OnClassOpen)
-        self._d_mainframe.bindNew(self.OnNewCircuit)
+            self._d_mainframe.bindOpen(self.OnClassOpen, "&Open class")
+        self._d_mainframe.bindNew(self.OnNewCircuit, "&New circuit")
 
     def OnActivate(self, evt):
         item = evt.GetItem()

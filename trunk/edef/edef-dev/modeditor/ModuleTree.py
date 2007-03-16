@@ -192,11 +192,12 @@ class eDevModuleTree(wx.TreeCtrl):
         if not item: return
         (typ, uri) = self.GetPyData(item)
         if typ == "Module":
-            self._d_mainframe.bindOpen(self.OnModuleOpen)
-            self._d_mainframe.bindDelete(self.OnModuleDelete)
+            self._d_mainframe.bindOpen(self.OnModuleOpen, "&Open module")
+            self._d_mainframe.bindDelete(self.OnModuleDelete, "&Delete module")
         elif typ == "Class":
-            self._d_mainframe.bindOpen(self.OnClassOpen)
-        self._d_mainframe.bindNew(self.OnNewModule)
+            self._d_mainframe.bindOpen(self.OnClassOpen, "&Open class")
+        self._d_mainframe.bindNew(self.OnNewModule, "&New module")
+
 
     def OnActivate(self, evt):
         item = evt.GetItem()

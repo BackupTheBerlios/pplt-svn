@@ -1,3 +1,10 @@
+2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 102)
+	* edef-dev/circuit/SimpleCanvas.py:
+		updated doc-strings
+	* edef-dev/MainFrame.py:
+		made menu-labels variable
+
+
 2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev.101)
 	* edef/ModuleMeta.py edef/EventManager.py edef/Logger.py edef/Output.py:
 		fixed docstrings

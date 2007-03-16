@@ -42,72 +42,76 @@ class SimpleCanvas(PrimitiveCanvas):
         emmit all of it's events. But additionally it may emmit events defined
         in C{edef.dev.circuit.Events}. In the following section I will 
         describe them and when they are emmited. 
-        
-        Mouseevents
-        -----------
-        - L{EVT_CAN_MOUSE} - This event will be emited if any mouse event is
-            noticed. I.e. moveing, left-click, ... The event-class is 
-            L{CanvasMouseEvent}. You can get the coordinates of the event
-            by GetCoordinates().
-        - L{EVT_CAN_CLICK} - This event will be emited on a left click. But 
-            only if a grafical object was click. In this case the event 
-            contains the coordinates and the clicked object. You can get the
-            coordinates by calling C{GetCoordinates()} and the object by 
-            calling GetObject(). The event will be an instance of 
-            L{CanvasClick}. 
-        - L{EVT_CAN_RCLICK} - Same like L{EVT_CAN_CLICK} but for a 
-            right-click. But the event will be an instance of 
-            L{CanvasRClick}.
-        - L{EVT_CAN_DCLICK} - Same like L{EVT_CAN_CLICK} but for a
-            double-click. And the event will be an instance of 
-            L{CanvasDClick}.
-        - L{EVT_CAN_MOUSE_OVER} - This event will be emmited if the mouse 
-            enters a grafical object. Like L{EVT_CAN_CLICK} you can get the 
-            coordinates of the mouse and the entered object. Eventclass:
-            L{CanvasMouseOver}
-        - L{EVT_CAN_MOUSE_LEFT} - This event will be emmited if the mouse 
-            left a grafical object. Like C{EVT_CAN_MOUSE_OVER} you can get the
-            coordinates and the object left from the event instance. This will
-            be an instance of the L{CanvasMouseLeft} class.
-            
-        Tooltip Events
-        --------------
-        - L{EVT_CAN_SHOW_TOOL_TIP} - This event will be emitted if the mouse 
-            rest above a grafical object. The event-instance holds the 
-            coordinates of the mouse and the object under the mouse.
-            Eventclass: L{CanvasShowToolTip}
-        - L{EVT_CAN_HIDE_TOOL_TIP} - This event will be emmited if a 
-            "show tooltip" event was emitted and the mouse was moved or a 
-            button was hit. Use this event to hide the tooltip (if any shown).
-            Eventclass: L{CanvasHideToolTip}
-        
-        Moving Events
-        -------------
-        - L{EVT_CAN_BEGIN_DRAG} - This event will be emited if the left 
-            mousebutton is hold above a graficobject and the mose is moved.
-            The event holds the coordinates of the mouse and the object 
-            dragged. Evtenclass: L{CanvasBeginDrag}
-        - L{EVT_CAN_DRAGGING} - This event will be emitted while dragging an
-            grafica object. The event-instance only holds the coordinates of
-            the mouse. Eventclass: L{CanvasDragging}
-        - L{EVT_CAN_END_DRAG} - This event will be emitted if the left mouse
-            button is release after dragging an object. The event instance
-            holds the coordinates and the grafic object at this coordinates
-            if there is one otherwise it will hold the object dragged.
-        - L{EVT_CAN_CONNECT} - This event will be emitted if you drag a grafic
-            object that is an instance of L{gConnectable} to an other object,
-            also an instance of C{gConnectable}. In this case the 
-            event-instance holds the two C{gConnectable} objects.
-            Evtenclass: L{CanvasConnectEvent}
+       
+        Events
+        ======
+            Following event may obmitted by a SimpleCanvas instance.
 
-        Selection Events
-        ----------------
-        - L{EVT_CAN_SELECTED} - This event will be emmited if a grafical 
-            object was selected. The event-class L{CanvasSelectEvent} is 
-            derived from L{CanvasObjectEvent}, so you get the object selected 
-            and the coordinates of the mouse.
-        - L{EVT_CAN_DESELECTED} - This event will be emmited if a grafical 
-            object got deselected.
+            Mouseevents
+            -----------
+            - L{EVT_CAN_MOUSE} - This event will be emited if any mouse event 
+              is noticed. I.e. moveing, left-click, ... The event-class is 
+              L{CanvasMouseEvent}. You can get the coordinates of the event
+              by GetCoordinates().
+            - L{EVT_CAN_CLICK} - This event will be emited on a left click. 
+              But only if a grafical object was click. In this case the event
+              contains the coordinates and the clicked object. You can get the
+              coordinates by calling C{GetCoordinates()} and the object by 
+              calling GetObject(). The event will be an instance of 
+              L{CanvasClick}. 
+            - L{EVT_CAN_RCLICK} - Same like L{EVT_CAN_CLICK} but for a
+              right-click. But the event will be an instance of 
+              L{CanvasRClick}.
+            - L{EVT_CAN_DCLICK} - Same like L{EVT_CAN_CLICK} but for a
+              double-click. And the event will be an instance of 
+              L{CanvasDClick}.
+            - L{EVT_CAN_MOUSE_OVER} - This event will be emmited if the mouse
+              enters a grafical object. Like L{EVT_CAN_CLICK} you can get the
+              coordinates of the mouse and the entered object. Eventclass:
+              L{CanvasMouseOver}
+            - L{EVT_CAN_MOUSE_LEFT} - This event will be emmited if the mouse
+              left a grafical object. Like C{EVT_CAN_MOUSE_OVER} you can get 
+              the coordinates and the object left from the event instance. 
+              This will be an instance of the L{CanvasMouseLeft} class.
+            
+            Tooltip Events
+            --------------
+            - L{EVT_CAN_SHOW_TOOL_TIP} - This event will be emitted if the mouse 
+              rest above a grafical object. The event-instance holds the 
+              coordinates of the mouse and the object under the mouse.
+              Eventclass: L{CanvasShowToolTip}
+            - L{EVT_CAN_HIDE_TOOL_TIP} - This event will be emmited if a 
+              "show tooltip" event was emitted and the mouse was moved or a 
+              button was hit. Use this event to hide the tooltip (if any shown).
+              Eventclass: L{CanvasHideToolTip}
+        
+            Moving Events
+            -------------
+            - L{EVT_CAN_BEGIN_DRAG} - This event will be emited if the left 
+              mousebutton is hold above a graficobject and the mose is moved.
+              The event holds the coordinates of the mouse and the object 
+              dragged. Evtenclass: L{CanvasBeginDrag}
+            - L{EVT_CAN_DRAGGING} - This event will be emitted while dragging an
+              grafical object. The event-instance only holds the coordinates of
+              the mouse. Eventclass: L{CanvasDragging}
+            - L{EVT_CAN_END_DRAG} - This event will be emitted if the left mouse
+              button is release after dragging an object. The event instance
+              holds the coordinates and the grafic object at this coordinates
+              if there is one otherwise it will hold the object dragged.
+            - L{EVT_CAN_CONNECT} - This event will be emitted if you drag a grafic
+              object that is an instance of L{gConnectable} to an other object,
+              also an instance of C{gConnectable}. In this case the 
+              event-instance holds the two C{gConnectable} objects.
+              Evtenclass: L{CanvasConnectEvent}
+
+            Selection Events
+            ----------------
+            - L{EVT_CAN_SELECTED} - This event will be emmited if a grafical 
+              object was selected. The event-class L{CanvasSelectEvent} is 
+              derived from L{CanvasObjectEvent}, so you get the object selected 
+              and the coordinates of the mouse.
+            - L{EVT_CAN_DESELECTED} - This event will be emmited if a grafical 
+              object got deselected.
         """
    
 
@@ -158,7 +162,10 @@ class SimpleCanvas(PrimitiveCanvas):
 
 
     ### Overridden operators:
-    def __contains__(self, obj): return self.hasObject(obj)
+    def __contains__(self, obj):
+        """ Overridden operator C{in}. You can use the C{in} operator to check
+            if the canvas holds a specific grafical object. """ 
+        return self.hasObject(obj)
     
 
     ### handleing objects 
@@ -255,7 +262,11 @@ class SimpleCanvas(PrimitiveCanvas):
         self._selected_object = None
 
 
-    def OnModified(self): pass
+    def OnModified(self):
+        """ This method will be called if something has changed on the cavas.
+            I.e a object was moved, added or removed. By default this method
+            does nothing. """
+        pass
 
     
     def collisionTest(self, pos, size, exclude=[]):
@@ -270,7 +281,9 @@ class SimpleCanvas(PrimitiveCanvas):
             @param size: This (w,h) tuple specifies the width and height of
                 the rectange.
             @param exclude: This optional list can contain modules, that are 
-                not tested for collision with the specified  rectange. """
+                not tested for collision with the specified  rectange. 
+            @return: A list of L{gMovable}s that collide whith the given 
+                rectangle."""
         assert isinstance(pos, tuple)
         assert isinstance(size, tuple)
         assert isinstance(exclude, list)

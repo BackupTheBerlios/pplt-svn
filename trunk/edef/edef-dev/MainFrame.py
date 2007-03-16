@@ -36,19 +36,19 @@ class eDevMainFrame(wx.Frame):
         self._d_help_menu    = wx.Menu()
         
         # create items:
-        self._d_menu_new     = wx.MenuItem(self._d_file_menu, wx.ID_NEW, "&New", "???")
-        self._d_menu_open    = wx.MenuItem(self._d_file_menu, wx.ID_OPEN, "&Open", "???")
-        self._d_menu_save    = wx.MenuItem(self._d_file_menu, wx.ID_SAVE, "&Save", "???")
-        self._d_menu_save_as = wx.MenuItem(self._d_file_menu, wx.ID_SAVEAS, "Save &as...", "???")
-        self._d_menu_delete  = wx.MenuItem(self._d_file_menu, wx.ID_DELETE, "&Delete", "???")
-        self._d_menu_quit    = wx.MenuItem(self._d_file_menu, wx.ID_EXIT, "&Quit", "???")
+        self._d_menu_new     = wx.MenuItem(self._d_file_menu, wx.ID_NEW, "&New", "FIXME")
+        self._d_menu_open    = wx.MenuItem(self._d_file_menu, wx.ID_OPEN, "&Open", "FIXME")
+        self._d_menu_save    = wx.MenuItem(self._d_file_menu, wx.ID_SAVE, "&Save", "FIXME")
+        self._d_menu_save_as = wx.MenuItem(self._d_file_menu, wx.ID_SAVEAS, "Save &as...", "FIXME")
+        self._d_menu_delete  = wx.MenuItem(self._d_file_menu, wx.ID_DELETE, "&Delete", "FIXME")
+        self._d_menu_quit    = wx.MenuItem(self._d_file_menu, wx.ID_EXIT, "&Quit", "FIXME")
        
-        self._d_menu_copy    = wx.MenuItem(self._d_edit_menu, wx.ID_COPY, "&Copy", "???")
-        self._d_menu_cut     = wx.MenuItem(self._d_edit_menu, wx.ID_CUT, "Cut", "???")
-        self._d_menu_paste   = wx.MenuItem(self._d_edit_menu, wx.ID_PASTE, "&Paste", "???")
+        self._d_menu_copy    = wx.MenuItem(self._d_edit_menu, wx.ID_COPY, "&Copy", "FIXME")
+        self._d_menu_cut     = wx.MenuItem(self._d_edit_menu, wx.ID_CUT, "Cut", "FIXME")
+        self._d_menu_paste   = wx.MenuItem(self._d_edit_menu, wx.ID_PASTE, "&Paste", "FIXME")
         self._d_edit_menu.AppendSeparator()
-        self._d_menu_redo    = wx.MenuItem(self._d_edit_menu, wx.ID_REDO, "&Redo", "???")
-        self._d_menu_undo    = wx.MenuItem(self._d_edit_menu, wx.ID_UNDO, "&Undo", "???")
+        self._d_menu_redo    = wx.MenuItem(self._d_edit_menu, wx.ID_REDO, "&Redo", "FIXME")
+        self._d_menu_undo    = wx.MenuItem(self._d_edit_menu, wx.ID_UNDO, "&Undo", "FIXME")
 
         self._d_menu_conf_editor = wx.MenuItem(self._d_settings_menu, wx.ID_PREFERENCES, "&Editor", "???")
         self._d_menu_about   = wx.MenuItem(self._d_help_menu, wx.ID_HELP, "&About", "About edef Developer")
@@ -158,7 +158,7 @@ class eDevMainFrame(wx.Frame):
         dlg.ShowModal()
 
 
-    def bindNew(self, cb=None):
+    def bindNew(self, cb=None, label="&New"):
         if cb is None:
             self._d_toolbar.EnableTool(wx.ID_NEW, False)
             self._d_menu_new.Enable(False)
@@ -166,9 +166,10 @@ class eDevMainFrame(wx.Frame):
             self.Bind(wx.EVT_MENU, cb, id=wx.ID_NEW)
             self.Bind(wx.EVT_TOOL, cb, id=wx.ID_NEW)
             self._d_toolbar.EnableTool(wx.ID_NEW, True)
+            self._d_menu_new.SetText(label)
             self._d_menu_new.Enable(True)
 
-    def bindOpen(self, cb=None):
+    def bindOpen(self, cb=None, label="&Open"):
         if cb is None:
             self._d_toolbar.EnableTool(wx.ID_OPEN, False)
             self._d_menu_open.Enable(False)
@@ -176,9 +177,10 @@ class eDevMainFrame(wx.Frame):
             self.Bind(wx.EVT_MENU, cb, id=wx.ID_OPEN)
             self.Bind(wx.EVT_TOOL, cb, id=wx.ID_OPEN)
             self._d_toolbar.EnableTool(wx.ID_OPEN, True)
+            self._d_menu_open.SetText(label)
             self._d_menu_open.Enable(True)
 
-    def bindDelete(self, cb=None):
+    def bindDelete(self, cb=None, label="&Delete"):
         if cb is None:
             self._d_toolbar.EnableTool(wx.ID_DELETE, False)
             self._d_menu_delete.Enable(False)
@@ -186,6 +188,7 @@ class eDevMainFrame(wx.Frame):
             self.Bind(wx.EVT_MENU, cb, id=wx.ID_DELETE)
             self.Bind(wx.EVT_TOOL, cb, id=wx.ID_DELETE)
             self._d_toolbar.EnableTool(wx.ID_DELETE, True)
+            self._d_menu_delete.SetText(label)
             self._d_menu_delete.Enable(True)
 
     def bindSave(self, cb=None):

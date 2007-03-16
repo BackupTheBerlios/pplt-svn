@@ -127,12 +127,12 @@ class ArchiveTree(wx.TreeCtrl):
         (typ, uri) = self.GetPyData(item)
 
         if typ is "File":
-            self._d_mainframe.bindOpen(self.OpenFile)
-            self._d_mainframe.bindDelete(self.DeleteFile)
+            self._d_mainframe.bindOpen(self.OpenFile, "&Open file")
+            self._d_mainframe.bindDelete(self.DeleteFile, "&Delete file")
         elif typ is "Archive":
-            self._d_mainframe.bindNew(self.NewFile)
-            self._d_mainframe.bindOpen(self.OpenArchive)
-            self._d_mainframe.bindDelete(self.DeleteArchive)
+            self._d_mainframe.bindNew(self.NewFile, "&New file")
+            self._d_mainframe.bindOpen(self.OpenArchive, "&Open archive")
+            self._d_mainframe.bindDelete(self.DeleteArchive, "&Delete archive")
   
 
     def OnActivate(self, event):

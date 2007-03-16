@@ -1,20 +1,27 @@
-== Tasks for edef-core ===
-    * Implement DTD or XML-Scheme validation of modules and assemblies.
-    * Check if there are some dead-locks in EventManager!
+= Tasks for 0.1 Release =
+    * simple boolean input and ouput module (button, lamp)
+    * some basic (boolean) modules should be installed
 
 
-== Tasks for edef-dev ==
-    * All "models" should validate threre data!
-    * A module can specify a grafical representation as a python-class!
-        - define an interface 
-        - test if "normal" wxWindows can be placed into the canvas
-    * Improove the A* algorithm in edef-dev/circuit/Canvas.py! 
-    * Add a logger-window
-    * Write an Assembly-editor
-    * Support dynamic inputs/outputs
+
+= Things to be done =
+
+    == Tasks for edef-core ==
+        * Implement DTD or XML-Scheme validation of modules and assemblies.
+        * Check if there are some dead-locks in EventManager!
+
+    == Tasks for edef-dev ==
+        * All "models" should validate there data!
+        * A module can specify a grafical representation as a python-class!
+            - define an interface 
+        * Improove the A* algorithm in edef-dev/circuit/Canvas.py! 
+        * Add a logger-window
+        * Write an Assembly-editor
+        * Support dynamic inputs/outputs
     
 
-=== Bugs ===
+
+= Bugs =
     * There are sometimes import-errors while loading a module from an archive
       that was edited. Workaround: Restart edef-dev to get rid of import 
       errors.
