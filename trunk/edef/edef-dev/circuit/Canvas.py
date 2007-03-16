@@ -127,7 +127,8 @@ class Canvas(SimpleCanvas):
         
         SimpleCanvas.draw(self, dc)
 
-    
+       
+
 
 class coConnection (gWire):
     """ Extends the L{gWire} class to use the routing algorithm of the 

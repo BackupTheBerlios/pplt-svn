@@ -152,14 +152,14 @@ class PrimitiveCanvas(wx.ScrolledWindow):
                 rectnagle. """
         # convert coordinates from raster to real
         (x, y) = where
-        x=x*5+2
-        y=y*5+2
+        x= (x*5) + 2
+        y= (y*5) + 2
         # convert size from rater to real
         (w, h) = size
         assert w >= 1
         assert h >= 1
-        w = w*5-3
-        h = h*5-3
+        w = (w*5) - 3
+        h = (h*5) - 3
         # draw
         dc.SetBrush( wx.TRANSPARENT_BRUSH )
         dc.SetPen(wx.Pen(color,2))

@@ -4,9 +4,9 @@
    
     There are differen output types for different cases. For example there is
     an output for simple values (L{ValueOutput}) for data streams 
-    (L{StreamOutput)) and for sequences of values (L{FrameOutput}). 
+    (L{StreamOutput}) and for sequences of values (L{FrameOutput}). 
 
-    An simple example how to use the L{ValueOutput} in any context may be:
+    An simple example how to use the L{ValueOutput} in any context may be ::
         import edef
         import time
 

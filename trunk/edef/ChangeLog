@@ -1,11 +1,20 @@
+2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev.101)
+	* edef/ModuleMeta.py edef/EventManager.py edef/Logger.py edef/Output.py:
+		fixed docstrings
+	* edef-dev/circuit/SimpleCanvas.py:
+		- added collision test -> prevent collision while moveing modules
+
+
 2007-03-15: Hannes Matuschek <hmatuschek@gmail.com> (rev.100)
 	* edef-dev/*: 
 		- added some icons
 		- simplified usage of labels
 
+
 2007-03-14: Hannes Matuschek <hmatuschek@gmail.com> (rev.99)
 	* edef-dev/circuit/*, edef/Importer.py, edef/ModuleMeta.py:
 		gModules have labels now
+
 
 2007-03-14: Hannes Matuschek <hmatuschek@gmail.com> (rev.98)
 	* edef-dev/circuit/*:

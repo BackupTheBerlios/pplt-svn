@@ -97,7 +97,7 @@ class ModuleBaseMeta:
             the given parameters before instanceing the module/assembly. So
             the module-developer doesn't need to care about if there are all
             (even optional) parameters present. 
-            This method will raise a I{ModuleImportError] if a non-optional
+            This method will raise a I{ModuleImportError} if a non-optional
             parameter is missing. """
         # to check if all "needed" parameters are present:
         #   - get all parameter names from the meta that have no "default" 

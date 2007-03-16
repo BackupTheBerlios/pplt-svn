@@ -150,7 +150,7 @@ class EventManager(threading.Thread):
             will allways left the EventManager in a pause state. You can 
             resume the EventManager by calling the C{start()} method. This 
             method returns C{True} if the event-manager successfully finished 
-            his job or C{False] if a timeout occures."""
+            his job or C{False} if a timeout occures."""
         # FIXME DEADLOCK> check if the calling thread isn't the event-handling
         #                 thread! 
         self._d_logger.debug("Let mngr finish his job")

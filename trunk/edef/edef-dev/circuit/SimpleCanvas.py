@@ -257,6 +257,38 @@ class SimpleCanvas(PrimitiveCanvas):
 
     def OnModified(self): pass
 
+    
+    def collisionTest(self, pos, size, exclude=[]):
+        """ This method proves a collision test for gMoveables. This method 
+            will return all I{movables} that are touched by the given area.
+
+            @bug: There is a bug, that makes the checked area 4 heigher, 
+                and wider as it is.
+            
+            @param pos: This (x,y) tuple specifies the upper-left corner of
+                the rectange.
+            @param size: This (w,h) tuple specifies the width and height of
+                the rectange.
+            @param exclude: This optional list can contain modules, that are 
+                not tested for collision with the specified  rectange. """
+        assert isinstance(pos, tuple)
+        assert isinstance(size, tuple)
+        assert isinstance(exclude, list)
+
+        dx,dy = size
+        x,y   = pos
+        
+        def filterRange(mod):
+            if mod in exclude: return False
+            mx,my = mod.getPosition()
+            mdx,mdy = mod.getSize()
+            if ((x >= mx and x <= mx+mdx) or (mx >= x and mx <= x+dx)) and ((y >= my and y <= my+mdy) or (my >= y and my <= y+dy)):
+                print " %s,%s +(%s,%s) hits %s,%s +(%s,%s)"%(x,y,dx,dy,mx,my,mdx,mdy)
+                return True
+
+        mod_list = self.getObjects(gMoveable)
+        return filter(filterRange, mod_list)
+ 
 
     ### tool-methods for emmiting events:
     def _emmitCanvasMouseEvent(self, coord):
@@ -564,16 +596,26 @@ class SimpleCanvas(PrimitiveCanvas):
             self._begin_drag_object = obj
         evt.Skip()
 
+
     def _sc_OnDragging(self, evt):
         if not isinstance(self._begin_drag_object, gMoveable):
             evt.Skip(); return
+        # get position and size of movable
         pos  = evt.GetCoordinates()
         size = self._begin_drag_object.getSize()
-        dc = self.beginDrawing()
-        dc.Clear()
-        SimpleCanvas.draw(self, dc)
-        self.drawRectangle(dc, pos, size)
-        self.endDrawing(dc)
+        
+        x,y = pos; w,h = size
+        if x<=2: x-=2
+        if y<=2: y-=2
+        w+=4; h+=4
+        # if there are no collisions:
+        if len(self.collisionTest((x,y),(w,h), [self._begin_drag_object])) == 0:
+            dc = self.beginDrawing()
+            dc.Clear()
+            SimpleCanvas.draw(self, dc)
+            self.drawRectangle(dc, pos, size)
+            self.endDrawing(dc)
+
 
     def _sc_OnEndDrag(self, evt):
         start_obj = self._begin_drag_object
@@ -581,15 +623,16 @@ class SimpleCanvas(PrimitiveCanvas):
         
         # handle moveable objects (ie. Modules):
         if isinstance(start_obj, gMoveable):
-            self._logger.debug("move object to %s,%s"%(x,y))
+            self._logger.debug("try to move object to %s,%s"%(x,y))
             # prevet to move to close to border
             (w,h) = start_obj.getSize()
-            if x >= 2 and x+w<=198 and y>=2 and y+h<=198:
+            if x >= 2 and x+w<=198 and y>=2 and y+h<=198 and len(self.collisionTest( (x-2,y-2), (w+4,h+4), [start_obj]))==0:
                 # set position and redraw
                 start_obj.setPosition(evt.GetCoordinates())
                 self.redraw()
                 self.OnModified()
-        
+            else: self.redraw()
+
         # handle connectable objects (ie. Pins):            
         elif isinstance(start_obj, gConnectable) \
           and not start_obj == evt.GetObject()   \
@@ -600,6 +643,7 @@ class SimpleCanvas(PrimitiveCanvas):
         # precess remaining handlers
         evt.Skip()
         self._begin_drag_object = None 
+
 
     def _sc_OnSelect(self, evt):
         self._logger.debug("Object selected -> draw")
@@ -616,7 +660,6 @@ class SimpleCanvas(PrimitiveCanvas):
         obj.draw(dc)
         self.endDrawing(dc)
         evt.Skip()
-
 
 
 

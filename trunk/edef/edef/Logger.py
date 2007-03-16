@@ -32,7 +32,7 @@ import sys
 class Logger:
     """ This class can be used to setup the logger. Specify the logging level
         and also the output file. """
-    def __init__(self, level=logging.WARNING, output=sys.stderr):
+    def __init__(self, level=logging.INFO, output=sys.stderr):
         """ The contructor. The contructor take two optional areuments. The 
             first C{level} specifies the logging-level for the root-logger. 
             This should be one of ALL, DEBUG, INFO, WARNING, ERROR of the 
