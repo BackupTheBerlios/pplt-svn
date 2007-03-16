@@ -1,0 +1,29 @@
+<?xml version="1.0"?>
+
+
+<Module version="1.0">
+
+    <Author> Hannes Matuschek </Author>
+    <Version> 1.0.0 </Version>
+    <Archive>logic-modules.zip</Archive>
+
+    <Class>AND</Class>
+
+    <Description lang="en">An AND Gate</Description>
+    <Description lang="de">Ein UND Gatter</Description>
+
+    <Provides>
+        <Input name="a" type="bool">
+            <Description lang="de">Eingang A</Description>
+            <Description lang="en">Input A</Description>
+        </Input>
+        <Input name="b" type="bool">
+            <Description lang="de">Eingang B</Description>
+            <Description lang="en">Input B</Description>
+        </Input>
+        <Output name="out" type="bool">
+            <Description lang="de">Ausgang</Description>
+            <Description lang="en">Output</Description>
+        </Output>
+    </Provides>
+</Module>

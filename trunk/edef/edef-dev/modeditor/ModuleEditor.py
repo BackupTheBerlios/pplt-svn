@@ -7,7 +7,7 @@ import xml.xpath
 from ModuleEditorBasic import eDevModuleEditorBasic
 from ModuleEditorRequire import eDevModuleEditorRequire
 from ModuleEditorProvide import eDevModuleEditorProvide
-from EditorInterface import eDevEditorInterface
+from edef.dev.EditorInterface import eDevEditorInterface
 
 from edef.dev import Model, Controller, ComponentManager
 from edef.dev import Events     #FIXME write own events

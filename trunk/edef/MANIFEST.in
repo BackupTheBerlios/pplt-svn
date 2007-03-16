@@ -2,10 +2,14 @@ include INSTALL
 include README
 
 include epydoc.conf
+include edef-dev.py
 
 recursive-include edef *.py
 recursive-include edef-dev *.py
 recursive-include test *.py
 recursive-include tools *.py
 
-graft trex
+include modules/*.zip
+include modules/*.xml
+
+graft schema

@@ -511,6 +511,9 @@ class SimpleCanvas(PrimitiveCanvas):
                     self._emmitCanvasDeselected(coord, self._selected_object)
                 self._selected_object = obj
                 self._emmitCanvasSelected(coord, obj)
+            else:
+                try: obj.OnClick()
+                except: self._logger.exception("Exception while OnClick() of module!")
             self._emmitCanvasClick(coord, obj)
         elif self._selected_object:
             if self.hasObject(self._selected_object):
@@ -532,6 +535,8 @@ class SimpleCanvas(PrimitiveCanvas):
                 self._selected_object = obj
                 self._emmitCanvasSelected(coord, obj)
             self._emmitCanvasDClick(coord, obj)
+            try: obj.OnDClick()
+            except: self._logger.exception("Exception while OnDClick()")
         elif self._selected_object:
             if self.hasObject(self._selected_object):
                 self._emmitCanvasDeselected(coord, self._selected_object)
@@ -550,6 +555,8 @@ class SimpleCanvas(PrimitiveCanvas):
                 self._selected_object = obj
                 self._emmitCanvasSelected(coord, obj)
             self._emmitCanvasRClick(coord, obj)
+            try: obj.OnRClick()
+            except: self._logger.exception("Exception while OnRClick()")
         elif self._selected_object:
             if self.hasObject(self._selected_object):
                 self._emmitCanvasDeselected(coord, self._selected_object)
@@ -728,6 +735,20 @@ class gObject:
             XML Element """
         raise Exception("Not implemented yet")
 
+
+    def OnClick(self):
+        """ This method will be called if a object was left-clicked. """
+        pass
+
+
+    def OnRClick(self):
+        """ This method will be called if a obejct was right-clicked. """
+        pass
+
+
+    def OnDClick(self):
+        """ This method will be called if a object was double-clicked. """
+        pass
 
 
 

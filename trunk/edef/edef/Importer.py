@@ -50,9 +50,9 @@ from Singleton import Singleton
 
 class Importer:
     """ The importer searches by default the paths C{~/.edef} and 
-    C{sys.prefix+"/edef/} for the module to load. But you can define
-    some new searchpaths by instanceing the Importer with a list of 
-    strings containg the new search-paths. """
+    C{sys.prefix+"share/edef/} for the module to load. But you can define
+    some new searchpaths by instanceing the Importer with a list of strings
+    containg the new search-paths. """
 
     _d_search_path = None
     
@@ -63,7 +63,7 @@ class Importer:
             default searchpaths or a list of strings. For example:
             C{imp = Importer( ['/path/to/modules', '/other/path'] )}. """
         self._d_search_path=[os.path.abspath(os.path.expanduser('~/.edef')),
-                             os.path.abspath(os.path.join(sys.prefix, 'edef'))]
+                             os.path.abspath(os.path.join(sys.prefix, 'share/edef'))]
 
         self._d_logger = logging.getLogger("edef.core")
 

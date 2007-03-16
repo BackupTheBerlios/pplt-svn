@@ -1,3 +1,11 @@
+2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 103)
+	* modules/*:
+		added a small std. module distribution
+	* edef-dev/circuit/SimpleCanvas.py:
+		gObject has now callbacks for mouse events
+	* edef-dev/modeditor/ModuleEditor.py:
+		fixed import bug 
+
 2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 102)
 	* edef-dev/circuit/SimpleCanvas.py:
 		updated doc-strings
