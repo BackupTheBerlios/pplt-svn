@@ -7,14 +7,16 @@
         1.0
     </Version>
     <Archive>
-        logic-modules.zip
+        gui-modules.zip
     </Archive>
     <Class>
-        IDT
+        button
     </Class>
+    
     <Requires/>
     <Provides>
-        <Input name="in"/>
         <Output name="out"/>
     </Provides>
+
+    <Layout class="button"/>
 </Module>

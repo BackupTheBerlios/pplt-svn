@@ -136,13 +136,14 @@ class PrimitiveCanvas(wx.ScrolledWindow):
         cdc = wx.ClientDC(self)
         self.PrepareDC(cdc)
         dc = wx.BufferedDC(cdc, self.buffer)
-        dc.BeginDrawing()
+        #dc.BeginDrawing()
         return dc
 
 
     def endDrawing(self, dc):
         """ This method will finalize the given drawingcontext. """
-        dc.EndDrawing()
+        
+        #dc.EndDrawing()
 
 
     def drawRectangle(self, dc, where, size, color="BLACK"):
@@ -252,7 +253,7 @@ class PrimitiveCanvas(wx.ScrolledWindow):
         dc.DrawText(txt, x, y)
 
 
-    def drawFilledRect(self, dc, coord, size):
+    def drawFilledRect(self, dc, coord, size, color="LIGHTGRAY"):
         """ Simply draws a light-gray filled rectangle. (Used to draw the 
             costmap). 
             
@@ -269,8 +270,8 @@ class PrimitiveCanvas(wx.ScrolledWindow):
         w *= 5
         h *= 5
         
-        dc.SetBrush( wx.Brush("LIGHTGREY") )
-        dc.SetPen( wx.Pen("RED", 1))
+        dc.SetBrush( wx.Brush(color) )
+        dc.SetPen( wx.Pen(color, 1))
         dc.DrawRectangle(x,y,w,h)
 
 

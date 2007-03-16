@@ -3,6 +3,7 @@ import re
 import edef
 from edef.dev.EditorInterface import eDevEditorInterface as EditorInterface
 from ElementMap import ElementMap
+from SimpleCanvasObjects import gModule
 from ElementMapObjects import emModule
 from edef.dev import Controller, Model, ComponentManager
 from edef.dev import Tools, showExceptionDialog
@@ -121,7 +122,7 @@ class CircuitEditor(EditorInterface, ElementMap):
         doc = dom_impl.createDocument(None, "Circuit", None)
         root = doc.documentElement
 
-        mods = self.getObjects(emModule)
+        mods = self.getObjects(gModule)
         for idx in range(len(mods)):
             mod = mods[idx]
             mod_node = mod._to_xml(doc, idx)

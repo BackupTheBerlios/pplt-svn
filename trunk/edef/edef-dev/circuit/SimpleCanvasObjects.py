@@ -136,18 +136,19 @@ class gModule(gMoveable):
         
         _x,_y = self.getPosition()
         _w,_h = self.getSize()
+        pin_offset = self._getPinOffset()
 
         for pin_name in pins:
             in_m = re.match("^i_(.+)$",pin_name)
             out_m = re.match("^o_(.+)$",pin_name)
             if in_m:
-                y = _y+7+len(self._left_side_pins)*3
+                y = _y+pin_offset+len(self._left_side_pins)*3
                 x = int(_x)
                 self._pins[pin_name].setPosition((x,y))
                 self._pins[pin_name].setOrientation(wx.LEFT)
                 self._left_side_pins.append( pin_name )
             elif out_m:
-                y = _y+7+len(self._right_side_pins)*3
+                y = _y+pin_offset+len(self._right_side_pins)*3
                 x = _x+_w
                 self._pins[pin_name].setPosition((x,y))
                 self._pins[pin_name].setOrientation(wx.RIGHT)
@@ -159,9 +160,31 @@ class gModule(gMoveable):
         max_len = len(self._left_side_pins)
         if max_len < len(self._right_side_pins):
             max_len = len(self._right_side_pins)
-        return max_len*3+8
+        return max_len*3+self._getPinOffset()
 
- 
+
+    def _getPinOffset(self):
+        """ This method should return the pin-offset. This offset specified 
+            the space between the top of the module an the first pin. 
+            @return: The pinoffset. By default 7. """ 
+        return 7 
+
+
+    def _to_xml(self, doc, idx):
+        """ This method creates a xml DOM node of the module. By deafult 
+            without parameters. You need to override this method to append
+            I{Parameter} tags to this node. """
+        elm = doc.createElement("Module")
+        (x,y) = self.getPosition()
+        
+        elm.setAttribute("id",str(idx))
+        elm.setAttribute("label",unicode(self.getLabel()))
+        elm.setAttribute("name", str(self.getName()))
+        elm.setAttribute("x", str(x))
+        elm.setAttribute("y", str(y))
+        
+        return elm
+
 
 
 class gPin(gConnectable):
@@ -170,6 +193,8 @@ class gPin(gConnectable):
         self._canvas = module.getCanvas()
         self._name = name
         m = re.match("^(i_|o_)(.+)$",name)
+        if not m:
+            raise Exception("Invalid pin name: %s (not 'i_*' or 'o_*')"%name)
         self._display_name = m.group(2)
         self._position = wx.LEFT
         self._x, self._y = (0,0)

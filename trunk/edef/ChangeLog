@@ -1,3 +1,13 @@
+2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 104)
+	* modules/gui/lamp.py, modules/gui/button.py:
+		- added two simple grafical modules a button and a lamp
+	* edef-dev/circuit/SimpleCanvasObjects.py:
+		- added _to_xml() to gModule
+		- added _getPinOffset() to gModule
+	* edef-dev/main.py, edef-dev/can_main.py:
+		are not needed anymore
+
+
 2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 103)
 	* modules/*:
 		added a small std. module distribution
@@ -5,6 +15,7 @@
 		gObject has now callbacks for mouse events
 	* edef-dev/modeditor/ModuleEditor.py:
 		fixed import bug 
+
 
 2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 102)
 	* edef-dev/circuit/SimpleCanvas.py:

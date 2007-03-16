@@ -7,14 +7,15 @@
         1.0
     </Version>
     <Archive>
-        logic-modules.zip
+        gui-modules.zip
     </Archive>
     <Class>
-        IDT
+        lamp
     </Class>
     <Requires/>
     <Provides>
         <Input name="in"/>
-        <Output name="out"/>
     </Provides>
+
+    <Layout class="lamp"/>
 </Module>

@@ -47,6 +47,7 @@ setup(  name = "edef",
                                       "modules/logic.NOT.xml","modules/logic.IDT.xml",
                                       "modules/logic.trigger.xml","modules/logic.gui.button.xml",
                                       "modules/logic.gui.lamp.xml"]),
-                      ("share/edef", ["modules/logic-modules.zip"])])
+                      ("share/edef", ["modules/logic-modules.zip",
+                                      "modules/gui-modules.zip"])])
 
 
