@@ -1,20 +1,23 @@
 <?xml version="1.0" ?>
 <Module version="1.0">
-    <Author>
-        Hannes Matuschek
-    </Author>
-    <Version>
-        0.1.0
-    </Version>
-    <Archive>
-        logic-modules.zip
-    </Archive>
-    <Class>
-        trigger
-    </Class>
-    <Requires>
-        <Parameter default="1.0" name="period"/>
+    <Author> Hannes Matuschek </Author>
+    <Version> 0.1.0 </Version>
+    
+    <Archive> logic-modules.zip </Archive>
+    <Class> trigger </Class>
+   
+    <Description lang="en">
+        This module generates trigger events with a defined period.
+    </Description>        
+
+    <Requires> 
+        <Parameter default="1.0" name="period">
+            <Description lang="en">
+                This parameter specifies the period of trigger-events.
+            </Description>
+        </Parameter>
     </Requires>
+    
     <Provides>
         <Output name="out"/>
     </Provides>

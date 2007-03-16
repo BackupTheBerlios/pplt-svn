@@ -1,7 +1,7 @@
 """ The L{Logger} class can be used to setup the logging system. """
     
 # ########################################################################## #
-# Importer.py
+# Logger.py
 #
 # 2007-01-24
 # Copyright 2007 Hannes Matuschek

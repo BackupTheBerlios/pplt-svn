@@ -1,18 +1,14 @@
 <?xml version="1.0" ?>
 <Module version="1.0">
-    <Author>
-        Hannes Matuschek
-    </Author>
-    <Version>
-        1.0
-    </Version>
-    <Archive>
-        logic-modules.zip
-    </Archive>
-    <Class>
-        IDT
-    </Class>
-    <Requires/>
+    <Author> Hannes Matuschek </Author>
+    <Version> 1.0 </Version>
+    
+    <Archive> logic-modules.zip </Archive>
+    <Class> IDT </Class>
+   
+    <Description lang="en">Identity</Description>
+    <Description lang="de">Identität</Description>
+
     <Provides>
         <Input name="in"/>
         <Output name="out"/>

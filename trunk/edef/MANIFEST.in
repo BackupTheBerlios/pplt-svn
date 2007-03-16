@@ -1,5 +1,6 @@
 include INSTALL
 include README
+include COPYING
 
 include epydoc.conf
 include edef-dev.py

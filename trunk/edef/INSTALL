@@ -2,15 +2,16 @@ To install the edef library and applications simply call as root:
 
     > python setup.py install
 
-There is an application called "edef-dev" (edef developer). You can develop 
+There is an application called "edef-dev.py" (edef developer). You can write 
 new modules with this application easiely. Also it has a simulation component
 to build circuits.
 
 
 Dependencies:
 =============
-    * pyXML         - Used to parse the meta-data of modules.
+    * pyXML         - Used to parse the meta-data of modules. 
+                      (http://pyxml.sf.net)
     * wxPython 2.8  - The GUI library. Only needed if you want to use the 
-                      edef-dev application.
+                      edef-dev application. (http://wxPython.org)
 
     Maybe some modules will need additional python-libraries.                      

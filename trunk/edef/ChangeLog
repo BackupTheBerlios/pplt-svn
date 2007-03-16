@@ -1,3 +1,9 @@
+2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 105)
+	--- Prepare for relase 0.1dev ---
+	* modules/*.xml:
+		updated module-meta for release
+
+
 2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 104)
 	* modules/gui/lamp.py, modules/gui/button.py:
 		- added two simple grafical modules a button and a lamp
