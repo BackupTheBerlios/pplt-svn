@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+
+<Module version="1.0">
+
+    <Author> Hannes Matuschek </Author>
+    <Version> 1.0.0 </Version>
+    <Archive>random-modules.zip</Archive>
+
+    <Class>random.RandomGen</Class>
+
+    <Provides>
+        <Output name="bool" type="bool"/>
+        <Output name="int" type="integer"/>
+        <Output name="float" type="float"/>
+        <Output name="complx" type="complex"/>
+        <Input name="trigger" type="bool"/>
+    </Provides>
+</Module>

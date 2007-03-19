@@ -28,9 +28,9 @@ setup(  name = "edef",
         description = "A simple discrete event simulation with GUI.",
         long_description = long_desc,
         author = "Hannes Matuschek",
-        author_email = "hmatuschek@gmx.net",
+        author_email = "hmatuschek@gmail.com",
         
-        url = "http://pplt.berlios.de",
+        url = "http://edef.sourceforge.net",
         
         classifiers = clsfy,
 
@@ -46,8 +46,10 @@ setup(  name = "edef",
 		data_files = [("share/edef", ["modules/logic.AND.xml","modules/logic.OR.xml",
                                       "modules/logic.NOT.xml","modules/logic.IDT.xml",
                                       "modules/logic.trigger.xml","modules/logic.gui.button.xml",
-                                      "modules/logic.gui.lamp.xml"]),
+                                      "modules/logic.gui.lamp.xml","modules/random.generator.xml",
+                                      "modules/random.randomize.xml"]),
                       ("share/edef", ["modules/logic-modules.zip",
-                                      "modules/gui-modules.zip"])])
+                                      "modules/gui-modules.zip",
+                                      "modules/random-modules.zip"])])
 
 

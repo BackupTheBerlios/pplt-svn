@@ -1,3 +1,5 @@
+= TODO for release 0.2dev =
+    * Add a logger-window
 
 = Things to be done =
 
@@ -10,7 +12,6 @@
         * A module can specify a grafical representation as a python-class!
             - define an interface 
         * Improove the A* algorithm in edef-dev/circuit/Canvas.py! 
-        * Add a logger-window
         * Write an Assembly-editor
         * Support dynamic inputs/outputs
     

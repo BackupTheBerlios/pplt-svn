@@ -1,3 +1,10 @@
+2007-03-19: Hannes Matuschek <hmatuschek@gmail.com> (rev. 106)
+	* modules/random/*:
+		added random module
+	* edef-dev/circuit/ElementMap.py:
+		fixed ctx-menu bug for "gModules"
+
+
 2007-03-16: Hannes Matuschek <hmatuschek@gmail.com> (rev. 105)
 	--- Prepare for relase 0.1dev ---
 	* modules/*.xml:

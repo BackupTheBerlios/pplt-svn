@@ -152,7 +152,7 @@ class ElementMap( Canvas ):
 
 
     def OnModRightClick(self, evt):
-        if not isinstance(evt.GetObject(), emModule):
+        if not isinstance(evt.GetObject(), gModule):
             evt.Skip()
             return
         

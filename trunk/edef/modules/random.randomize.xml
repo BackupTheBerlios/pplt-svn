@@ -1,0 +1,19 @@
+<?xml version="1.0"?>
+
+
+<Module version="1.0">
+
+    <Author> Hannes Matuschek </Author>
+    <Version> 1.0.0 </Version>
+    
+    <Archive>random-modules.zip</Archive>
+    <Class>random.Randomize</Class>
+
+    <Requires>
+        <Parameter name="variance" default="0.0"/>
+    </Requires>
+    <Provides>
+        <Input name="in" type="float"/>
+        <Output name="out" type="float"/>
+    </Provides>
+</Module>

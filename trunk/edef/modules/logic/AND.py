@@ -6,6 +6,8 @@ class AND:
         self._d_in_b = None
         self.o_out = edef.BoolOutput(False)
 
+
+
     def i_a(self, value):
         self._d_in_a = value
         if self._d_in_a and self._d_in_b:
@@ -18,4 +20,6 @@ class AND:
         if self._d_in_a and self._d_in_b:
             self.o_out(True)
         else:
-            self.o_out(False)     
+            self.o_out(False)
+
+    
