@@ -3,6 +3,15 @@ import edef.dev
 from edef.dev.circuit.SimpleCanvasObjects import gModule, gPin
 import wx
 
+
+# a dummy module for non grafical import
+class lamp_dummy:
+    def __init__(self): pass
+        
+    def i_in(self, value): pass    
+    
+    
+    
 class lamp(gModule):
     def __init__(self, canvas, coord):
         gModule.__init__(self, canvas, coord, "logic.gui.lamp", [])

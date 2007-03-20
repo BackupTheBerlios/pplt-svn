@@ -2,6 +2,12 @@ import edef
 import edef.dev
 from edef.dev.circuit.SimpleCanvasObjects import gModule, gPin
 
+
+class button_dummy:
+    def __init(self):
+        self.o_out = edef.ValueOutput(False)
+        
+        
 class button(gModule):
     def __init__(self, canvas, coord):
         gModule.__init__(self, canvas, coord, "logic.gui.button", [])

@@ -1,5 +1,9 @@
 """ This package contains the edef-core library. """
 
+# FIXME complete documentation:
+#   * important classes
+#   * examples
+
 # ########################################################################## #
 # __init__.py
 #
@@ -24,12 +28,6 @@
 #
 # ########################################################################## #
 
-
-
-#FIXME complete documentation:
-#   * important classes
-#   * examples
-#   * licence
 
 from Output import BaseOutput
 from Output import ValueOutput, StreamOutput, FrameOutput

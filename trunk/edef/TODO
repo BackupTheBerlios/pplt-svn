@@ -1,6 +1,14 @@
 = TODO for release 0.2dev =
     * Add a logger-window
+	* schema validation for edef/ModuleMeta.py and all models of edef-dev
 
+= TODO for release 0.3dev =
+	* type stuff for edef-dev/circuit	
+	
+= TODO for release 0.4dev =
+	* dynamic IOs for edef-dev/circuit
+	
+	
 = Things to be done =
 
     == Tasks for edef-core ==
@@ -14,6 +22,8 @@
         * Improove the A* algorithm in edef-dev/circuit/Canvas.py! 
         * Write an Assembly-editor
         * Support dynamic inputs/outputs
+        * types should be checked and represented grafical by color of the 
+          wire
     
 
 

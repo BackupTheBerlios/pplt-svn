@@ -1,10 +1,11 @@
 <?xml version="1.0" ?>
+
 <Module version="1.0">
     <Author>Hannes Matuschek</Author>
     <Version>1.0.0</Version>
     
     <Archive> gui-modules.zip </Archive>
-    <Class> button </Class>
+    <Class> button_dummy </Class>
     
     <Description lang="en">
         This module provides a grafical button module.

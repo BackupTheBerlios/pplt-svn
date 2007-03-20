@@ -4,13 +4,13 @@
     <Version> 1.0.0 </Version>
     
     <Archive> gui-modules.zip </Archive>
-    <Class> lamp </Class>
+    <Class> lamp_dummy </Class>
     
     <Description lang="en"> This module visualize boolean values. </Description>
     <Description lang="de"> Dieses Modul visualisiert boolsche Werte. </Description>
     
     <Provides>
-        <Input name="in"/>
+        <Input name="in" type="bool"/>
     </Provides>
 
     <Layout class="lamp"/>
