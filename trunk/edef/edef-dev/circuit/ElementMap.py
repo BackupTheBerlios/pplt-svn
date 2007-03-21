@@ -58,7 +58,11 @@ class ElementMap( Canvas ):
         name = ".".join(path.split("/"))
 
         self._logger.debug("Get prameter for module %s"%name)
-        (path, meta) = self._importer.getModuleMeta(name)
+        try:
+            (path, meta) = self._importer.getModuleMeta(name)
+        except:
+            showExceptionDialog(self, -1, "Unable to load module %s"%name)
+            return
         
         if len(meta.getParameters()) > 0 and params==None:
             param_dialog = ParameterDialog(self, -1, name)

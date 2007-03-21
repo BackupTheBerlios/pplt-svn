@@ -11,7 +11,7 @@
     <Description lang="de">Identität</Description>
 
     <Provides>
-        <Input name="in"/>
-        <Output name="out"/>
+        <Input name="in" type="bool"/>
+        <Output name="out" type="bool"/>
     </Provides>
 </Module>

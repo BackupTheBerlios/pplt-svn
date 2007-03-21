@@ -19,6 +19,6 @@
     </Requires>
     
     <Provides>
-        <Output name="out"/>
+        <Output name="out" type="bool"/>
     </Provides>
 </Module>

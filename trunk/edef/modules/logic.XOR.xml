@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+
+<Module version="1.0">
+	<Author>Hannes Matuschek</Author>
+	<Version>1.0</Version>
+	
+	<Archive>logic-modules.zip</Archive>
+	<Class>XOR</Class>
+
+	<Provides>
+		<Input name="a" type="bool"/>
+		<Input name="b" type="bool"/>
+		<Output name="out" type="bool"/>
+	</Provides>
+</Module>

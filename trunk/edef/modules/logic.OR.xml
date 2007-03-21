@@ -18,7 +18,7 @@
     <Description lang="en">
         OR gate
     </Description>
-    <Require/>
+
     <Provides>
         <Input name="a" type="bool">
             <Description lang="de">

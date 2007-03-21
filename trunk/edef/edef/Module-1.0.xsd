@@ -1,0 +1,146 @@
+<?xml version="1.0"?>
+
+<xsd:schema xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+	<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			This Schema specifies the description grammar for modules. The 
+			document-root element is "Module". 
+		</xsd:documentation>
+	</xsd:annotation>
+
+	
+	<xsd:simpleType name="edefVersion">
+		<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			This simple type specifies the pattern for version strings.
+		</xsd:documentation>
+		</xsd:annotation>
+
+		<xsd:restriction base="xsd:string">
+			<!-- FIXME: check regexp! //-->
+			<xsd:pattern value="[0-9](\.[0-9]){0,2}"/>
+		</xsd:restriction>
+	</xsd:simpleType> 
+
+
+
+	<xsd:complexType name="edefDescription" mixed="true">
+		<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			This simple complex type specifies the content of "Description"
+			elements.
+		</xsd:documentation>
+		</xsd:annotation>
+
+		<xsd:attribute name="lang" type="xsd:language" use="required"/>
+	</xsd:complexType>
+
+
+	<xsd:complexType name="edefParameter">
+		<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			This type specifies the grammar for parameter tags. These tags are
+			used inside the Require tags to specify the required parameters of 
+			a module.
+		</xsd:documentation>
+		</xsd:annotation>
+		
+		<xsd:sequence>
+			<xsd:element name="Description" type="edefDescription"
+						 minOccurs="0"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+		<xsd:attribute name="default" type="xsd:string"/>
+	</xsd:complexType>
+
+
+	<xsd:group name="edefRequirement">
+		<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			This group specifies what a Requirement tag should contain.
+		</xsd:documentation>
+		</xsd:annotation>
+	
+		<xsd:choice>
+			<xsd:element name="PyModule" type="xsd:string" minOccurs="0"/>
+			<xsd:element name="Parameter" type="edefParameter" minOccurs="0"/>
+		</xsd:choice>
+	</xsd:group>
+
+
+	<xsd:complexType name="edefRequires">
+		<xsd:annotation>
+		<xsd:documentation xml:lang="en">
+			This type specifies the Requirement tag. All elements inside this 
+			specify a requirement for a module. I.e a parameter needed or a 
+			python-module used.
+		</xsd:documentation>
+		</xsd:annotation>
+	
+		<xsd:sequence>
+			<xsd:group ref="edefRequirement" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+			
+			
+	<xsd:complexType name="edefIOput">			
+		<xsd:sequence>
+			<xsd:element name="Description" type="edefDescription"
+						 minOccurs="0" maxOccurs="unbounded"/>
+		</xsd:sequence>
+		<xsd:attribute name="name" type="xsd:string" use="required"/>
+		<xsd:attribute name="type" type="xsd:string" use="required"/>
+		<xsd:attribute name="pattern" type="xsd:string"/>
+	</xsd:complexType>
+	
+			
+	<xsd:group name="edefIOs">			
+		<xsd:choice>
+			<xsd:element name="Input" type="edefIOput"/>
+			<xsd:element name="Output" type="edefIOput"/>
+		</xsd:choice>
+	</xsd:group>
+
+
+	<xsd:complexType name="edefProvides">
+		<xsd:sequence>
+			<xsd:group ref="edefIOs" minOccurs="1" maxOccurs="unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
+
+
+	<xsd:complexType name="edefLayout">			
+		<xsd:attribute name="class" type="xsd:string" use="required"/>
+	</xsd:complexType>				
+			
+	
+			
+	<xsd:element name="Module">						
+		<xsd:complexType>
+
+		<xsd:sequence>
+			<xsd:element name="Author" type="xsd:string"/>
+			<xsd:element name="Version" type="xsd:string"/>
+			<xsd:element name="Archive" type="xsd:string"/>
+			<xsd:element name="Class" type="xsd:string"/>
+			
+			<xsd:element name="Description" type="edefDescription"
+						 minOccurs="0" maxOccurs="unbounded"/>
+						 
+			<xsd:element name="Requires" type="edefRequires"
+						 minOccurs="0"/>
+						 
+			<xsd:element name="Provides" type="edefProvides"
+						 minOccurs="0"/>
+						 
+			<xsd:element name="Layout" type="edefLayout"
+						 minOccurs="0"/>
+		</xsd:sequence>
+
+		<xsd:attribute name="version" type="xsd:string" fixed="1.0"/>
+	
+		</xsd:complexType>
+	</xsd:element>
+			
+</xsd:schema>			

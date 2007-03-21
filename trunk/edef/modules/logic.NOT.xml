@@ -18,7 +18,7 @@
     <Description lang="en">
         negation
     </Description>
-    <Require/>
+
     <Provides>
         <Input name="in" type="bool">
             <Description lang="de">

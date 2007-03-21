@@ -17,7 +17,6 @@
 
 #FIXME
 #   - extend ModuleMeta to provide all data 
-#   - write some tools to check a module or assembly files
 #   - find and solve all FIXMEs
 
 
@@ -415,12 +414,3 @@ class AssemblyMeta(ModuleBaseMeta):
 
         return self._d_importer.load(mod_name, mod_parameters)
 
-
-
-
-
-def validateMetaString(xml_str): pass   # FIXME implement
-def validateMetaFile(file_path): pass   # FIXME implement
-
-def validateModuleMeta(dom): pass       # FIXME implement
-def validateAssemblyMeta(dom): pass     # FIXME implement

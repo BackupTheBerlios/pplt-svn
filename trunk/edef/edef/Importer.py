@@ -37,9 +37,11 @@
 
 import xml.dom.minidom
 import xml.xpath
+import minixsv.pyxsval
 import logging
 from Exceptions import ModuleImportError
 import os
+from stat import ST_MTIME
 import os.path
 from glob import glob
 import sys
@@ -66,6 +68,9 @@ class Importer:
                              os.path.abspath(os.path.join(sys.prefix, 'share/edef'))]
 
         self._d_logger = logging.getLogger("edef.core")
+        
+        # maps modname -> timestamp 
+        self._validated_modules = dict()
 
         if isinstance(base_path, str):
             self._d_search_path = [base_path]
@@ -147,12 +152,19 @@ class Importer:
             
             This instance contains some meta-information about the module/assembly. """
         file_path = self._find_module_meta(mod_name)
-    
+  
         try:
-            xml_dom = xml.dom.minidom.parse(file_path).documentElement
-        except DOMException, e:
+            if self.wasValidated(mod_name):
+                xml_dom = xml.dom.minidom.parse(file_path)
+            else:
+                xml_dom = parseMetaFile(file_path)
+                self.markValidated(mod_name)
+            xml_dom = xml_dom.documentElement
+        except xml.dom.DOMException, e:
             raise ModuleImportError("Parse error: File %s: %s"%(file_path, str(e)))
-
+        except minixsv.XsvalError, e:
+            raise ModuleImportError("Invalid module description: %s"%str(e))
+        
         typ = xml.xpath.Evaluate("local-name(.)", xml_dom)
         if typ == "Module":
             mod_meta = ModuleMeta(xml_dom, file_path)
@@ -180,3 +192,86 @@ class Importer:
         return mod_list
 
 
+    def wasValidated(self, mod_name):
+        """ This method retuns True if the given module was allready 
+            validated. 
+            @param mod_name: A module name.
+            @return: True if module was validated earlier."""
+        # FIXME use a local stored validation cache
+        file_path = self._find_module_meta(mod_name)
+        if mod_name in self._validated_modules.keys():
+            if self._validated_modules[mod_name] == os.stat(file_path)[ST_MTIME]:
+                return True
+        return False
+    
+    
+    def markValidated(self, mod_name):
+        """ Marks a module as validated. The next wasValidated() method call 
+            will return True. 
+            @param mod_name: The name of the module that was validated. """
+        # FIXME use a local stored validation cache        
+        file_path = self._find_module_meta(mod_name)
+        self._validated_modules[mod_name] = os.stat(file_path)[ST_MTIME]
+        
+        
+        
+#
+# Parse and validate functions:
+#
+def parseMeta(xml_str):
+    """ This function will parse the given xml string and validate it. The 
+        content should be a module description or a assembly description!
+        
+        @param xml_str: A string containg the xml data.
+        @return: The minidom tree of the xml string."""
+    dom = xml.minidom.parsestring(xml_str)
+    if dom.documentElement.localName == "Module":
+        return parseModuleMeta(xml_str)
+    elif dom.documentElement.localName == "Assembly":
+        return parseAssemblyMeta(xml_str)
+    else:
+        raise Exception("Unknown meta-file type: %s"%dom.documentElement.localName)
+
+    
+def parseMetaFile(xml_file):    
+    """ This function will parse and validate the given xml file. 
+    
+        @param xml_file: Path to the xml file.
+        @return: The minidom tree of the xml document."""
+    dom = xml.dom.minidom.parse(xml_file)
+    if dom.documentElement.localName == "Module":
+        return parseModuleMetaFile(xml_file)
+    elif dom.documentElement.localName == "Assembly":
+        return parseAssemblyMetaFile(xml_file)
+    else:
+        raise Exception("Unknown meta-file type: %s"%dom.documentElement.localName)
+    
+    
+def parseModuleMeta(xml_str):
+    base_path = os.path.dirname(__file__)
+    xsd_file = os.path.join(base_path, "Module-1.0.xsd")
+    xsd_string = open(xsd_file).read()
+    val = minixsv.pyxsval.parseAndValidateXmlInputString(xml_str, xsd_string)
+    return val.getTree()
+
+
+def parseModuleMetaFile(xml_file):
+    base_path = os.path.dirname(__file__)
+    xsd_file = os.path.join(base_path, "Module-1.0.xsd")
+    val = minixsv.pyxsval.parseAndValidateXmlInput(xml_file, xsd_file)
+    return val.getTree()
+
+
+def parseAssemblyMeta(xml_str):
+    base_path = os.path.dirname(__file__)
+    xsd_file = os.path.join(base_path, "Assembly-1.0.xsd")
+    xsd_string = open(xsd_file).read()
+    val = minixsv.pyxsval.parseAndValidateXmlInputString(xml_str, xsd_string)
+    return val.getTree()
+
+
+def parseAssemblyMetaFile(xml_file):
+    base_path = os.path.dirname(__file__)
+    xsd_file = os.path.join(base_path, "Assembly-1.0.xsd")
+    val = minixsv.pyxsval.parseAndValidateXmlInput(xml_file, xsd_file)
+    return val.getTree()

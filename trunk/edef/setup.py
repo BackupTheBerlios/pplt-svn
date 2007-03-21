@@ -42,11 +42,14 @@ setup(  name = "edef",
         package_dir = {"edef.dev":"edef-dev"},
         
 		scripts=['edef-dev.py'],
+
+        package_data = {"edef": ["Module-1.0.xsd"]},
 		
-		data_files = [("share/edef", ["modules/logic.AND.xml","modules/logic.OR.xml",
+        data_files = [("share/edef", ["modules/logic.AND.xml","modules/logic.OR.xml",
                                       "modules/logic.NOT.xml","modules/logic.IDT.xml",
                                       "modules/logic.trigger.xml","modules/logic.gui.button.xml",
-                                      "modules/logic.gui.lamp.xml","modules/random.generator.xml",
+                                      "modules/logic.gui.lamp.xml", "modules/logic.XOR.xml",
+                                      "modules/random.generator.xml",
                                       "modules/random.randomize.xml"]),
                       ("share/edef", ["modules/logic-modules.zip",
                                       "modules/gui-modules.zip",
